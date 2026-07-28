@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电阻与欧姆定律 — 第1章 电的基本概念 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电阻的微观物理本质（自由电子晶格散射机制）、电阻率与几何影响因素，系统讲解欧姆定律的宏观与微分形式、非线性伏安特性、温度系数与超导现象，及其在大型网储电站直流母线降损与电池内阻（DCR/ACIR）测量中的工程实践。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <!-- MathJax 数学公式渲染引擎 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 1</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电的基本概念</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">电阻与欧姆定律</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_1_2_电流与电压.html" class="nav-prev" title="上一节">← 上节</a>
+        <a href="01_1_4_功率电能与电费单.html" class="nav-next" title="下一节">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 1</span>
+        <span class="sep">›</span>
+        <span>电的基本概念</span>
+        <span class="sep">›</span>
+        <span>电阻与欧姆定律</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_1_3</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>电阻与欧姆定律</h1>
+      <p class="chapter-lead">从自由电子的晶格散射微观机制到万兆瓦级储能电站母线热发热损耗——解构电流阻碍作用的物理规律与工程控制法则。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解电阻的微观物理本质与德鲁德散射模型</strong>：掌握自由电子在导体晶格中的平均自由程 $\lambda$、弛豫时间 $\tau$、电导率 $\sigma = \frac{n e^2 \tau}{m_e}$ 与电阻率 $\rho$ 的物理来源。</li>
+        <li><strong>熟练运用电阻定律与四大影响因素</strong>：掌握电阻公式 $R = \rho \frac{L}{A}$，厘清材料本征电阻率 $\rho$ 与几何尺寸（长度 $L$、截面积 $A$）对电阻的决定性作用。</li>
+        <li><strong>深入剖析欧姆定律的宏观与微分物理表达</strong>：深刻理解宏观欧姆定律 $U=IR$ 的适用前提，掌握微分形式 $\vec{J} = \sigma \vec{E}$，并能分析非线性电阻元件（二极管、电池内阻、MOV压敏电阻）的伏安特性（V-I Curve）。</li>
+        <li><strong>掌握温度系数、超导现象与网储系统发热控制工程实践</strong>：理解金属正温度系数（PTC）发热机制，掌握大型网储电站 1500V 直流汇流排选型计算与电池直流内阻（DCR）测试方法。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：百兆瓦级储能电站的“热税”与毫欧级阻抗保卫战</h2>
+      <p>在新疆达坂城风电基地，一座额定功率为 100MW / 400MWh 的大型锂电池储能电站正在全功率放电。当电站向 220kV 升压站送出 100MW 电力时，直流侧母线上的总电流达到了惊人的 5,000 安培（A）。在长达数公里的紫铜汇流排与成千上万个电池极柱接线端子之间，电流源源不断地流过。</p>
+      <p>如果我们使用红外热成像仪扫描电站直流舱，会发现连接电池簇的金属母线温度高达 65°C。为什么紫铜这样出色的电导体，在通电时依然会发热？根据焦耳定律（$P = I^2 R$），即使一根长 1 米的直流汇流排仅有极其微小的 0.1 毫欧（$0.1\text{ m}\Omega = 10^{-4}\ \Omega$）电阻，在 5,000A 的巨额电流下，每米母线产生的热功率就高达：</p>
+      $$P = I^2 R = (5000\text{ A})^2 \times 0.0001\ \Omega = 2,500\text{ W/m}$$
+      <p>这意味着每米母线就像一台开到最大挡位的家用电暖风机，在源源不断地向周围散发热量！在整个储能电站内，如果系统总内阻没有得到严格控制，成百上千千瓦的电能将白白转化为废热，不仅使电站充放电综合效率（RTE）下降 2%~5%，更可能引发局部过热甚至热失控安全事故。</p>
+      <p>这股阻碍电荷流动、将电能转化为内能的力量，正是物理学中所说的<strong>电阻（Resistance）</strong>。电阻究竟是从何而来的？自然界为什么会对电流征收这笔不可避免的“能量税”？我们又该如何利用欧姆定律在网储工程中精准控制电阻？本节将带你深入晶格内部的微观世界，揭开电阻与欧姆定律的本质。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、电阻的微观物理本质与电阻率：自由电子的晶格散射机制</h2>
+
+        <h3>1.1 自由电子在金属晶格中的散射与德鲁德（Drude）模型</h3>
+        <p>在宏观电路中，电阻（常用符号 $R$ 表示，单位为欧姆 $\Omega$）表现为导体对电流的阻碍能力。然而从微观物理层面来看，电阻并不是某种实体屏障，而是<strong>载流子（自由电子）在电场力驱动下移动时，与导体内部原子晶格热振动（声子散射）、杂质原子及晶界缺陷不断发生碰撞（散射）的宏观统计涌现现象</strong>。</p>
+
+        <p>1900年，物理学家保罗·德鲁德（Paul Drude）提出了经典的自由电子气体模型（Drude Model）。在金属导体内部，带正电的金属离子规则地排列在空间晶格结点上，而最外层的价电子摆脱原子核束缚，在晶格间自由穿梭。当导体内存在外加电场 $\vec{E}$ 时，自由电子受到电场力 $\vec{F} = -e\vec{E}$ 的作用产生加速度：</p>
+
+        $$a = \frac{eE}{m_e}$$
+
+        <p>其中 $e$ 为基本电荷量（$1.602 \times 10^{-19}\text{ C}$），$m_e$ 为电子静止质量（$9.109 \times 10^{-31}\text{ kg}$）。然而，电子并不能无限加速。它在沿着电场反方向漂移一小段距离后，就会不可避免地与正在热振动的晶格离子发生强烈的碰撞散射，将其获得的动能传递给晶格，转化为晶格原子的热振动能（在宏观上表现为导体发热）。碰撞后，电子的定向漂移速度归零，随后在电场作用下重新开始加速。</p>
+
+        <!-- SVG 图表 1：自由电子在金属晶格中的散射碰撞微观示意图 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="300" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <defs>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+              </marker>
+              <marker id="arrow-orange" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#F57C00"/>
+              </marker>
+            </defs>
+
+            <!-- 背景说明框 -->
+            <rect x="20" y="20" width="760" height="260" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5" rx="8"/>
+
+            <!-- 标题 -->
+            <text x="400" y="45" font-family="Noto Sans SC, sans-serif" font-size="16" font-weight="700" fill="#1A5F96" text-anchor="middle">自由电子在金属晶格中的散射与定向漂移（德鲁德模型）</text>
+
+            <!-- 外加电场方向 -->
+            <line x1="100" y1="70" x2="700" y2="70" stroke="#1A5F96" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+            <text x="400" y="65" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="600" fill="#1A5F96" text-anchor="middle">外加驱动电场方向 E →</text>
+            <text x="400" y="85" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#718096" text-anchor="middle">← 电子受电场力方向 F = -eE （向左漂移）</text>
+
+            <!-- 金属晶格离子 (带正电) -->
+            <g id="crystal-lattice">
+              <!-- 第一排 -->
+              <circle cx="150" cy="130" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="150" y="135" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="300" cy="130" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="300" y="135" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="450" cy="130" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="450" y="135" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="600" cy="130" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="600" y="135" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <!-- 第二排 -->
+              <circle cx="150" cy="220" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="150" y="225" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="300" cy="220" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="300" y="225" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="450" cy="220" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="450" y="225" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+
+              <circle cx="600" cy="220" r="16" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="600" y="225" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+            </g>
+
+            <!-- 晶格热振动波浪圈 -->
+            <path d="M 434 130 A 16 16 0 0 1 466 130" fill="none" stroke="#F57C00" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <path d="M 284 220 A 16 16 0 0 1 316 220" fill="none" stroke="#F57C00" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+            <!-- 电子轨迹 (向左碰撞轨迹) -->
+            <!-- 起点在右侧 680, 180 -> 碰撞 600,130 -> 碰撞 450,220 -> 碰撞 300,130 -> 100, 170 -->
+            <path d="M 670,175 L 610,140 L 460,208 L 310,142 L 160,210 L 80,160" fill="none" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="5,3"/>
+
+            <!-- 碰撞点高亮 -->
+            <circle cx="607" cy="142" r="5" fill="#E53E3E"/>
+            <circle cx="458" cy="209" r="5" fill="#E53E3E"/>
+            <circle cx="308" cy="144" r="5" fill="#E53E3E"/>
+
+            <!-- 电子粒子 -->
+            <circle cx="80" cy="160" r="7" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="80" y="164" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">e⁻</text>
+
+            <!-- 注释标记 -->
+            <text x="210" y="180" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#E53E3E" font-weight="600">💥 晶格碰撞散射 (动能转化为热)</text>
+            <text x="500" y="255" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#718096">平均自由程 λ | 平均弛豫时间 τ</text>
+          </svg>
+          <figcaption>图 1-3-1：自由电子在金属导体晶格中的加速与碰撞散射（德鲁德散射模型）</figcaption>
+        </figure>
+
+        <p>假设两次连续碰撞之间的平均时间间隔为 **平均弛豫时间（Relaxation Time，符号 $\tau$）**，两次碰撞之间电子移动的平均距离为 **平均自由程（Mean Free Path，符号 $\lambda$）**。在弛豫时间 $\tau$ 内，电场加速赋予电子的平均定向漂移速度 $v_d$ 为：</p>
+
+        $$v_d = a \tau = \frac{e E \tau}{m_e}$$
+
+        <p>将 $v_d$ 代入上节学到的微观电流密度公式 $J = n e v_d$（其中 $n$ 为载流子体密度），可得电流密度与电场强度的微观表达式：</p>
+
+        $$J = n e \left( \frac{e E \tau}{m_e} \right) = \left( \frac{n e^2 \tau}{m_e} \right) E$$
+
+        <p>定义系数 $\sigma = \frac{n e^2 \tau}{m_e}$ 为材料的<strong>电导率（Electrical Conductivity，单位 $\text{S/m}$ 或 $\Omega^{-1}\cdot\text{m}^{-1}$）</strong>，而电导率的倒数即为材料的<strong>电阻率（Resistivity，常用符号 $\rho$ 表示，单位 $\Omega\cdot\text{m}$）</strong>：</p>
+
+        $$\rho = \frac{1}{\sigma} = \frac{m_e}{n e^2 \tau}$$
+
+        <div class="key-concept">
+          <h4>📌 核心概念：微观电阻率与德鲁德物理公式</h4>
+          <p><strong>微观电阻率表达</strong>：$\rho = \frac{m_e}{n e^2 \tau}$</p>
+          <p><strong>物理含义</strong>：材料的电阻率 $\rho$ 由三个核心微观因素决定：</p>
+          <ol>
+            <li><strong>载流子体密度 $n$</strong>：单位体积内的自由电子数量。铜、银等良导体 $n \approx 10^{28}\text{ m}^{-3}$，电阻率极低；绝缘体 $n \approx 10^{10}\text{ m}^{-3}$，电阻率极高。</li>
+            <li><strong>电子质量 $m_e$ 与基本电荷 $e$</strong>：自然界基本物理常数。</li>
+            <li><strong>平均弛豫时间 $\tau$</strong>：两次碰撞间的平均时间。晶格热振动越剧烈（温度越高），碰撞越频繁，$\tau$ 越短，导致电阻率 $\rho$ 增大。</li>
+          </ol>
+        </div>
+
+        <h3>1.2 决定电阻大小的四大因素与电阻定律</h3>
+        <p>在宏观电路分析中，任意给定均匀导体的电阻大小取决于材料的本征物理属性以及导体的几何几何尺寸。总结为以下四大决定性因素：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>影响因素</th>
+                <th>物理符号与单位</th>
+                <th>对电阻 $R$ 的影响规律</th>
+                <th>网储工程设计对策</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>材料电阻率</strong></td>
+                <td>$\rho$ ($\Omega\cdot\text{m}$)</td>
+                <td>电阻与 $\rho$ 成正比。电阻率越小，导电性能越好</td>
+                <td>高电流主母线采用 T2 无氧紫铜（$\rho \approx 1.72 \times 10^{-8}\ \Omega\cdot\text{m}$）</td>
+              </tr>
+              <tr>
+                <td><strong>导体长度</strong></td>
+                <td>$L$ (m)</td>
+                <td>电阻与长度 $L$ 成正比。电子沿途遭遇散射次数随长度线性增加</td>
+                <td>储能集装箱舱内电池簇布局尽量紧凑，缩短 DC 母线长度</td>
+              </tr>
+              <tr>
+                <td><strong>截面积</strong></td>
+                <td>$A$ ($\text{m}^2$ 或 $\text{mm}^2$)</td>
+                <td>电阻与截面积 $A$ 成反比。通道越宽，单位时间内并联通道越多</td>
+                <td>大电流汇流排采用宽厚铜排（如 $100\text{mm} \times 10\text{mm}$），降低电阻</td>
+              </tr>
+              <tr>
+                <td><strong>环境温度</strong></td>
+                <td>$T$ (°C / K)</td>
+                <td>金属导体电阻率随温度升高而增大（温度系数 $\alpha > 0$）</td>
+                <td>配备高效率液冷/风冷系统，防止母线及电池因温升导致电阻剧增</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>对于横截面积均匀、长为 $L$、截面积为 $A$ 的各向同性导体，其宏观电阻计算公式称为<strong>电阻定律（Pouillet's Law）</strong>：</p>
+
+        $$R = \rho \frac{L}{A}$$
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>类比理解：高速公路车流与管道水流阻力</strong>
+            <p>理解电阻定律 $R = \rho \frac{L}{A}$ 可以直观地类比为<strong>节日高速公路的车流通行能力</strong>或<strong>长距离自来水管道的水阻</strong>：</p>
+            <ul>
+              <li><strong>材料电阻率 $\rho \leftrightarrow$ 路面状况与驾驶环境</strong>：如果是平整顺畅的八车道柏油路（低 $\rho$），车流阻力极小；如果是坑洼泥泞的破损土路（高 $\rho$），车辆频繁受阻慢行。</li>
+              <li><strong>导体长度 $L \leftrightarrow$ 拥堵路段总距离</strong>：施工拥堵路段越长（$L$ 越大），每辆车在拥堵区消耗的时间和燃油就越多，整体通行阻力成倍增加。</li>
+              <li><strong>截面积 $A \leftrightarrow$ 车道数量 / 管道粗细</strong>：单车道收费站（小 $A$）极易引发严重拥堵；而扩建为 16 车道超宽收费广场（大 $A$）时，车辆可以并行快速通过，整体阻力大幅下降。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>Tips：电阻 $R$ vs 电阻率 $\rho$ 的本质区别</strong>
+            <p>在工程交流中，初学者极易混淆“电阻”与“电阻率”：</p>
+            <ul>
+              <li><strong>电阻率 $\rho$ 是材料的“本征属性”（Intrinsic Property）</strong>：它只取决于材料的化学成分、微观晶体结构和温度，与材料做成什么形状、多长多粗无关。一根细铜丝和一块巨大铜锭，其材料的电阻率 $\rho$ 完全相同。</li>
+              <li><strong>电阻 $R$ 是元件的“外在参数”（Extrinsic Parameter）</strong>：它是具体的物理元件根据几何尺寸（$L, A$）裁剪加工后的最终阻抗测量值。</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、欧姆定律及其工程表达：从微分形式到宏观伏安特性</h2>
+
+        <h3>2.1 欧姆定律的宏观形式与成立条件</h3>
+        <p>1827年，德国物理学家格奥尔格·西蒙·欧姆（Georg Simon Ohm）通过大量的金属导电实验，总结出了电学中最基石的物理定律——<strong>欧姆定律（Ohm's Law）</strong>。</p>
+
+        <p>宏观欧姆定律指出：<strong>在恒定温度下，通过一段各向同性线性导体的电流 $I$，与加在导体两端的电压 $U$ 成正比，与导体的电阻 $R$ 成反比。</strong>其经典代数表达式为：</p>
+
+        $$I = \frac{U}{R} \quad \Longleftrightarrow \quad U = I \cdot R \quad \Longleftrightarrow \quad R = \frac{U}{R}$$
+
+        <p>在国际单位制中，当加在导体两端的电压为 $1\text{ V}$，产生的电流为 $1\text{ A}$ 时，该导体的电阻即被定义为 $1\ \Omega$（欧姆）。即：</p>
+
+        $$1\ \Omega = \frac{1\text{ V}}{1\text{ A}} = 1\text{ V/A}$$
+
+        <div class="key-concept">
+          <h4>📌 核心概念：欧姆定律的宏观与微分物理表达</h4>
+          <p><strong>宏观电路形式</strong>：$U = I \cdot R$</p>
+          <p><strong>微分/场形式</strong>：$\vec{J} = \sigma \vec{E} = \frac{\vec{E}}{\rho}$</p>
+          <p>微分形式是欧姆定律在连续介质电磁场中的普遍物理表达。它表明：空间任意一点的电流密度矢量 $\vec{J}$，与该点处的场强矢量 $\vec{E}$ 成正比，比例系数即为该点介质的电导率 $\sigma$。</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>注意：欧姆定律并不是“万能定律”！其适用边界与常见认知误区</strong>
+            <p>许多初学者误以为欧姆定律适用于自然界中的所有电路与器件，这在物理上是极其错误的。欧姆定律成立必须满足以下严格前提：</p>
+            <ol>
+              <li><strong>必须是“线性电阻材料”</strong>：仅适用于铜、铝、铁等大部分金属以及均匀电解液。</li>
+              <li><strong>温度必须基本恒定</strong>：如果电流过大导致导体发热、温度剧烈上升，电阻 $R$ 会随之发生动态变化，此时 $U-I$ 关系不再是直线。</li>
+              <li><strong>不适用于非线性电子器件</strong>：半导体二极管、三极管、晶闸管、气体放电电弧（如直流拉弧）、气体气体电离区等，均不服从欧姆定律。</li>
+              <li><strong>超导体不适用直接除法</strong>：超导体电阻 $R = 0$，通过超导体的电流由外部电路决定，不能用 $I = U/0$ 进行数学计算！</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>2.2 伏安特性曲线（V-I Characteristics）：线性 vs 非线性电阻</h3>
+        <p>在工程物理中，为了直观评估一个电路元件的电阻特性，我们通常测量其两端电压 $U$ 与流过电流 $I$ 之间的函数关系，并在直角坐标系中绘制出**伏安特性曲线（V-I Curve）**。</p>
+
+        <ul>
+          <li><strong>线性电阻（Linear Resistor）</strong>：伏安特性曲线是一条穿过坐标原点的直线。直线的斜率 $k = \frac{\Delta I}{\Delta U} = \frac{1}{R}$ 为常数，意味着电阻值与电压、电流大小无关（如铜汇流排、金属膜电阻）。</li>
+          <li><strong>非线性电阻（Non-linear Resistor）</strong>：伏安特性曲线呈现弯曲的非线性状态。器件的电阻值随施加的电压或电流动态改变，此时需要引入**静态电阻（$R_{\text{static}} = \frac{U}{I}$）**与**动态电阻（又称微分电阻，$R_{\text{dynamic}} = \frac{dU}{dI}$）**进行区分。</li>
+        </ul>
+
+        <!-- SVG 图表 2：线性电阻 vs 非线性电阻伏安特性曲线 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="320" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 背景网格与坐标轴 -->
+            <rect x="0" y="0" width="800" height="320" fill="#FAFAFA"/>
+
+            <!-- 坐标轴 -->
+            <line x1="80" y1="270" x2="750" y2="270" stroke="#4A5568" stroke-width="2" marker-end="url(#arrow-blue)"/>
+            <line x1="80" y1="270" x2="80" y2="30" stroke="#4A5568" stroke-width="2" marker-end="url(#arrow-blue)"/>
+            <text x="760" y="275" font-family="Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#1A1A2E">电压 U (V)</text>
+            <text x="75" y="20" font-family="Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#1A1A2E">电流 I (A)</text>
+            <text x="65" y="285" font-family="Inter, sans-serif" font-size="13" fill="#718096">0</text>
+
+            <!-- 网格虚线 -->
+            <line x1="80" y1="190" x2="720" y2="190" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="80" y1="110" x2="720" y2="110" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="300" y1="30" x2="300" y2="270" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="520" y1="30" x2="520" y2="270" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>
+
+            <!-- 1. 线性电阻 (斜直线 - 蓝色) -->
+            <line x1="80" y1="270" x2="680" y2="50" stroke="#1A5F96" stroke-width="3"/>
+            <text x="560" y="75" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#1A5F96">① 纯金属导体 (线性电阻 R = 常数)</text>
+
+            <!-- 2. PN结二极管/指数曲线 (红色) -->
+            <path d="M 80 270 Q 350 268 450 230 T 550 50" fill="none" stroke="#E53E3E" stroke-width="3"/>
+            <text x="460" y="160" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#E53E3E">② 晶体二极管 (正向导通指数曲线)</text>
+
+            <!-- 3. MOV 压敏电阻 / 防雷器曲线 (橙色) -->
+            <path d="M 80 270 L 400 265 L 420 230 L 430 50" fill="none" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="6,3"/>
+            <text x="310" y="245" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#F57C00">③ MOV压敏电阻 (高压击穿泄流)</text>
+
+            <!-- 4. 锂电池放电极化阻抗 (绿虚线) -->
+            <path d="M 180 270 Q 250 150 700 90" fill="none" stroke="#2E7D32" stroke-width="2.5" stroke-dasharray="4,4"/>
+            <text x="260" y="120" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#2E7D32">④ 锂电池电化学极化阻抗</text>
+
+            <!-- 图例说明 -->
+            <rect x="520" y="180" width="220" height="75" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1" rx="4"/>
+            <text x="530" y="200" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">斜率 k = ΔI / ΔU = 1 / R</text>
+            <text x="530" y="220" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">直线斜率固定 → 阻值固定</text>
+            <text x="530" y="240" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">曲线斜率变化 → 动态电阻 dU/dI</text>
+          </svg>
+          <figcaption>图 1-3-2：典型电气元件与储能器件的伏安特性曲线（V-I Characteristics）对比</figcaption>
+        </figure>
+
+        <p>在网储工程中，不同伏安特性曲线的元件扮演着截然不同的角色：</p>
+        <ul>
+          <li><strong>MOV 压敏电阻（Metal Oxide Varistor）</strong>：如图 1-3-2 曲线③所示，在正常工作电压下，MOV 呈现极高阻抗（相当于开路）；而当电网遭受雷击高压浪涌瞬间，电压超过钳位阈值，MOV 电阻在纳秒级内剧降至接近零，将数万安培的浪涌电流迅速泄放到大地，保护后级的储能变流器（PCS）与 BMS 系统。</li>
+          <li><strong>锂电池电化学阻抗</strong>：如图 1-3-2 曲线④所示，锂电池的端电压与电流关系并非纯直线，而是伴随着电化学浓差极化与欧姆内阻的非线性组合，在 BMS 状态估计中必须采用非线性等效电路模型（如二阶 RC 环路）进行精确拟合。</li>
+        </ul>
+
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、温度系数、超导现象与网储工程应用：从微观发热到千安级母线设计</h2>
+
+        <h3>3.1 电阻的温度系数（PTC/NTC）与热失控风险</h3>
+        <p>几乎所有材料的电阻都会随着温度的变化而改变。为了定量描述这种温度敏感性，物理学中引入了<strong>电阻温度系数（Temperature Coefficient of Resistance，常用符号 $\alpha$，单位为 $K^{-1}$ 或 $^\circ\text{C}^{-1}$）</strong>。其定义为温度每升高 $1^\circ\text{C}$ 时，电阻变化量与初始电阻的比值：</p>
+
+        $$\alpha = \frac{1}{R_0} \frac{dR}{dT}$$
+
+        <p>当温度变化范围不大时，金属导体的电阻随温度呈线性变化，计算近似公式为：</p>
+
+        $$R(T) = R_0 \left[ 1 + \alpha (T - T_0) \right]$$
+
+        <p>其中 $R_0$ 为参考温度 $T_0$（通常取 $20^\circ\text{C}$ 或 $0^\circ\text{C}$）时的电阻，$\alpha$ 为材料的电阻温度系数。</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>材料类型</th>
+                <th>温度系数 $\alpha$ 特性</th>
+                <th>物理微观机制</th>
+                <th>工程应用实例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>金属导体（铜/铝/银）</strong></td>
+                <td>正温度系数（PTC, $\alpha > 0$）<br>紫铜 $\alpha \approx +0.00393\ ^\circ\text{C}^{-1}$</td>
+                <td>温度升高导致晶格原子振幅剧增，自由电子碰撞散射概率显著上升，平均弛豫时间 $\tau$ 缩短</td>
+                <td>网储高压母线发热后阻值增大，线损进一步增加，需强力散热；PTC 高分子自恢复保险丝</td>
+              </tr>
+              <tr>
+                <td><strong>半导体材料（硅/锗/氧化金属）</strong></td>
+                <td>负温度系数（NTC, $\alpha < 0$）<br>或高非线性 PTC</td>
+                <td>温度升高激发更多本征本征载流子（电子-空穴对），载流子浓度 $n$ 成倍剧增，掩盖了散射的影响</td>
+                <td>NTC 热敏电阻（BMS 电池采集线束温度传感器，测量电芯表面温度）</td>
+              </tr>
+              <tr>
+                <td><strong>锰铜合金（Manganin）</strong></td>
+                <td>极低温度系数<br>$\alpha \approx \pm 0.00001\ ^\circ\text{C}^{-1}$</td>
+                <td>特殊合金成分使晶格散射与热激发相互抵消，在很大温度范围内阻值极其稳定</td>
+                <td>BMS 高精度电流采样分流器（Shunt），确保大电流下毫伏级采样不随温度漂移</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：零电阻与超导现象（Superconductivity）在未来电网储能中的应用</strong>
+            <p>1911年，荷兰物理学家昂尼斯（Heike Kamerlingh Onnes）在将汞冷却至 $4.2\text{ K}$（$-268.95^\circ\text{C}$）时，惊奇地发现其电阻突然完全消失降为绝对的零（$R \equiv 0$），这一现象被称为<strong>超导现象</strong>。</p>
+            <p>在超导状态下，电子结合成“库珀对”（Cooper Pairs），在晶格中实现无散散射穿行。基于超导状态建立的<strong>高温超导磁储能系统（SMES, Superconducting Magnetic Energy Storage）</strong>，将电能直接以毫秒级无损保存在超导线圈的强大磁场中。其充放电效率高达 95% 以上，响应时间小于 5 毫秒，是未来特高压电网频率调制与瞬态支撑的最前沿技术方向之一。</p>
+          </div>
+        </div>
+
+        <h3>3.2 网储工程实践：1500V 直流汇流排选型发热校核与电池内阻（DCR/ACIR）</h3>
+        <p>在大型网储电站的工程设计中，电阻不仅关乎系统充放电效率（RTE），更直接决定了设备的安全运行寿命。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实工程案例：张北风光储输示范工程中 1500V 直流汇流排紫铜 vs 铝合金选型与发热校核</strong>
+            <p>在我国国家电网河北张北风光储输示范工程（一期 100MW / 400MWh 储能系统）中，储能舱直流侧采用 1500V 高压架构。每个储能集装箱包含 12 个电池簇，额定放电电流达 1,500A。设计团队在直流母线选型时遇到了**紫铜母线 vs 铝合金母线**的经济与物理权衡：</p>
+            <ul>
+              <li><strong>紫铜母线方案</strong>：电阻率 $\rho_{\text{Cu}} = 1.72 \times 10^{-8}\ \Omega\cdot\text{m}$。采用 $100\text{mm} \times 10\text{mm}$（截面积 $A = 1000\text{ mm}^2$）紫铜排，长度 20 米的双极母线总电阻仅为 $R = 1.72 \times 10^{-8} \times \frac{40}{0.001} = 0.688\text{ m}\Omega$。在 1,500A 额定电流下，母线发热功率为 $P = 1500^2 \times 0.000688 = 1,548\text{ W}$。</li>
+              <li><strong>铝合金母线方案</strong>：铝电阻率 $\rho_{\text{Al}} = 2.82 \times 10^{-8}\ \Omega\cdot\text{m}$（约铜的 1.64 倍）。若要达到完全相同的导电电阻和发热量，铝母线截面积需扩大至 $1640\text{ mm}^2$（取 $120\text{mm} \times 15\text{mm}$）。虽然铝材料成本较低，但由于铝在空气中易表面氧化形成高电阻的氧化铝薄膜（$\text{Al}_2\text{O}_3$），在搭接螺栓处易产生搭接接触电阻过热风险。</li>
+            </ul>
+            <p><strong>工程决策</strong>：最终该示范工程在电池簇内部短距离连接采用镀锡无氧紫铜排，并使用高导热硅脂与力矩螺栓拧紧，将接触电阻降低至小于 $5\ \mu\Omega$；而在集装箱外部长距离直流汇流主干道上，采用载流量经过 1.5 倍冗余裕度校核的高强度铝合金母线，成功兼顾了低成本与高可靠性。</p>
+          </div>
+        </div>
+
+        <h3>3.3 电池直流内阻（DCR）与交流内阻（ACIR）测量物理</h3>
+        <p>在单体储能电芯（如 314Ah 或 280Ah 磷酸铁锂电芯）中，电池内部电阻称为<strong>内阻（Internal Resistance，符号 $R_{\text{int}}$）</strong>。电池内阻由两部分组成：</p>
+        <ol>
+          <li><strong>欧姆内阻（$R_{\Omega}$）</strong>：包括集流体（铜箔/铝箔）、极耳、电解液及隔膜的纯欧姆电子/离子传导电阻。遵循欧姆定律，响应时间在微秒级（$\mu\text{s}$）。</li>
+          <li><strong>极化阻抗（$R_p$）</strong>：包括电荷传递阻抗（$R_{ct}$）与固态电解质界面膜（SEI 膜）阻抗，以及锂离子在正负极活性物质晶格中扩散产生的浓差极化阻抗。响应时间在毫秒（ms）至秒（s）级。</li>
+        </ol>
+
+        <p>在工程测量中，BMS 采用两种不同的物理方法测试电池内阻：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>测试类型</th>
+                <th>物理测量原理</th>
+                <th>典型激励信号</th>
+                <th>网储工程主要应用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>交流内阻（ACIR）</strong></td>
+                <td>向电池注入 1kHz 高频微小正弦交流电流信号，测量对应交流电压响应：$Z_{\text{AC}} = \frac{U_{ac}}{I_{ac}}$</td>
+                <td>$1\text{ kHz}, 50\sim100\text{ mA}$ 交流信号</td>
+                <td>电芯出厂快速分选、BMS 实时在线硬件健康度（SOH）监测（仅反映纯欧姆内阻 $R_{\Omega}$）</td>
+              </tr>
+              <tr>
+                <td><strong>直流内阻（DCR）</strong></td>
+                <td>施加持续数秒的大电流直流脉冲步骤（如 1C 放电 10s），记录脉冲前后的静态电压与动态电压差：$\text{DCR} = \frac{\Delta U}{\Delta I}$</td>
+                <td>$1\text{C}$ 直流大电流脉冲（持续 10s）</td>
+                <td>电站热管理散热能力评估、发热功率计算、电池全生命周期 SOC/SOH 算法校准</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>微观散射本质</strong>：电阻是自由电子在电场力作用下定向漂移时与导体晶格离子发生频繁散射碰撞的宏观涌现。微观电阻率表达为 $\rho = \frac{m_e}{n e^2 \tau}$，弛豫时间 $\tau$ 越短或载流子体密度 $n$ 越低，电阻率越大。</li>
+        <li><strong>电阻定律四大要素</strong>：宏观电阻遵循 $R = \rho \frac{L}{A}$。电阻与材料电阻率 $\rho$ 和导体长度 $L$ 成正比，与截面积 $A$ 成反比。材料电阻率是本征属性，而电阻是几何元件参数。</li>
+        <li><strong>欧姆定律及其适用边界</strong>：宏观欧姆定律为 $U = IR$，微分形式为 $\vec{J} = \sigma \vec{E}$。欧姆定律仅适用于等温下的线性电阻材料，不适用于气体放电电弧、非线性半导体元件（如 MOV 压敏电阻、二极管）及超导体。</li>
+        <li><strong>温度效应与热控制</strong>：金属导体具有正温度系数（PTC，$\alpha > 0$），温度升高阻值增大。网储工程中需通过高精度锰铜分流器（极低温度系数）进行电流采样，并通过高导热紫铜母线与液冷强散热降低 $I^2R$ 线损。</li>
+        <li><strong>电池内阻测试</strong>：电池内阻由欧姆内阻与极化阻抗构成。1kHz 交流内阻（ACIR）反映电芯纯欧姆结构状态，而 10s 直流内阻（DCR = $\Delta U / \Delta I$）直接决定了大功率充放电时的热发热量与系统 RTE 效率。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>✅ 知识测验</h2>
+      <div class="quiz-container">
+
+        <!-- Q1 -->
+        <div class="quiz-question" id="q1">
+          <p class="question-text"><strong>1.</strong> 从微观德鲁德（Drude）模型来看，金属导体的电阻率 $\rho = \frac{m_e}{n e^2 \tau}$ 随温度升高而增大的根本物理原因是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 温度升高导致金属体内的自由电子体密度 $n$ 显著剧烈下降</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 温度升高导致基本电荷量 $e$ 与电子质量 $m_e$ 发生物理改变</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 温度升高加剧了晶格原子的热振动，使自由电子受散射概率增加，平均弛豫时间 $\tau$ 缩短</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 温度升高使外加驱动电场强度 $E$ 自动衰减为零</label>
+          </div>
+          <div class="quiz-answer" id="q1-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>在金属导体中，自由电子体密度 $n$ 几乎不随温度改变。温度升高时，金属晶格原子的热振动幅度和声子散射剧烈增加，导致自由电子在两次碰撞之间的平均弛豫时间 $\tau$ 显著缩短。根据德鲁德物理公式 $\rho = \frac{m_e}{n e^2 \tau}$，$\tau$ 在分母位置，其缩短必然导致电阻率 $\rho$ 增大，呈现正温度系数（PTC）。因此 C 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-question" id="q2">
+          <p class="question-text"><strong>2.</strong> 一根长为 $L$、横截面积为 $A$、电阻为 $R$ 的均匀紫铜汇流排。如果将其均匀拉长到原来的 2 倍（$L' = 2L$），假设其体积在拉伸过程中保持不变，则拉伸后该铜排的电阻 $R'$ 将变为原来的：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2" value="A"> A. $2$ 倍</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="B"> B. $4$ 倍</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="C"> C. $1/2$ 倍</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="D"> D. $1/4$ 倍</label>
+          </div>
+          <div class="quiz-answer" id="q2-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>导体体积 $V = A \cdot L$ 保持不变。当长度 $L' = 2L$ 时，截面积必然缩减为原来的二分之一（$A' = \frac{A}{2}$）。代入电阻定律公式 $R' = \rho \frac{L'}{A'} = \rho \frac{2L}{A/2} = 4 \left( \rho \frac{L}{A} \right) = 4R$。因此拉伸后的电阻变为原来的 4 倍。因此 B 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-question" id="q3">
+          <p class="question-text"><strong>3.</strong> 关于欧姆定律（$U = IR$）及其在工程中的适用范围，下列说法正确的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 欧姆定律普遍适用于自然界中所有的导电介质与电子器件</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 晶体二极管、金属氧化物压敏电阻（MOV）均严格服从欧姆定律，其伏安特性曲线为直线</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 欧姆定律的微分形式为 $\vec{J} = \sigma \vec{E}$，仅在等温条件下的线性电导介质中成立</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 当超导体处于超导态（$R = 0$）时，通过超导体的电流大小等于 $I = \frac{U}{0} = \infty$</label>
+          </div>
+          <div class="quiz-answer" id="q3-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>欧姆定律不是普遍物理法则，它仅适用于等温各向同性的线性电导介质。其微分形式 $\vec{J} = \sigma \vec{E}$ 描述了局域电场强度与电流密度的线性关系。二极管和 MOV 压敏电阻为非线性元件，伏安特性弯曲，不服从欧姆定律。超导态下电流由外部电源或回路电磁感应决定，不能直接除以零。因此 C 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-question" id="q4">
+          <p class="question-text"><strong>4.</strong> 在储能系统 BMS（电池管理系统）的大电流采样电路中，采样电阻（Shunt 分流器）为什么普遍采用“锰铜合金（Manganin）”材料制造？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 锰铜合金的电阻率是自然界中绝对最小的，远远低于纯紫铜与纯银</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 锰铜合金具有极低的电阻温度系数（$\alpha \approx \pm 10^{-5}\ ^\circ\text{C}^{-1}$），在发热温升时阻值极其稳定，采样不漂移</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 锰铜合金能够在 1000°C 高温下自动转化为超导体</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 纯粹是为了降低生产成本，锰铜的价格比普通铁丝还要廉价</label>
+          </div>
+          <div class="quiz-answer" id="q4-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>分流器（Shunt）通过测量大电流在已知精密电阻上产生的毫伏级压降（$U = IR$）来反算电流。如果电阻随温度剧烈变化，采样精度就会产生严重漂移。锰铜合金最大的物理优势在于其电阻温度系数（$\alpha$）极低（接近于零），即使在大电流通过发热升温时，阻值依然保持极其精确稳定。因此 B 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-question" id="q5">
+          <p class="question-text"><strong>5.</strong> 一电芯测试台对 314Ah 磷酸铁锂（LFP）储能电芯进行 1C（314A）直流脉冲放电测试。在施加 314A 直流放电脉冲 10 秒瞬间，测得电芯端电压由静态开路电压 $3.300\text{ V}$ 骤降至 $3.143\text{ V}$。根据直流内阻定义 $\text{DCR} = \frac{\Delta U}{\Delta I}$，该电芯的直流内阻（DCR）最接近于：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5" value="A"> A. $0.50\text{ m}\Omega$</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="B"> B. $1.00\text{ m}\Omega$</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="C"> C. $0.15\text{ m}\Omega$</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="D"> D. $5.00\text{ m}\Omega$</label>
+          </div>
+          <div class="quiz-answer" id="q5-answer" style="display:none">
+            <p>✅ <strong>正确答案：A</strong></p>
+            <p>📖 <strong>解析：</strong>计算放电前后的动态压降：$\Delta U = 3.300\text{ V} - 3.143\text{ V} = 0.157\text{ V}$。已知脉冲电流 $\Delta I = 314\text{ A}$。根据直流内阻公式：$\text{DCR} = \frac{\Delta U}{\Delta I} = \frac{0.157\text{ V}}{314\text{ A}} = 0.0005\ \Omega = 0.50\text{ m}\Omega$。现代 314Ah 大电芯的正常 DCR 阻值普遍在 $0.4\sim0.6\text{ m}\Omega$ 范围内。因此 A 选项正确。</p>
+          </div>
+        </div>
+
+        <button class="btn-check-answer" onclick="checkAnswers()">查看答案</button>
+        <p class="quiz-score" id="score-display"></p>
+      </div>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_1_2_电流与电压.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">电流与电压：流动的力量</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_1_4_功率电能与电费单.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">功率·电能·你的电费单</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul>
+        <li><a href="01_1_2_电流与电压.html">01_1_2 电流与电压：流动的力量</a> — 载流子定向漂移速度与空间电位差物理场</li>
+        <li><a href="01_1_4_功率电能与电费单.html">01_1_4 功率·电能·你的电费单</a> — 焦耳发热损耗计算（$P=I^2 R$）与系统充放电效率（RTE）</li>
+        <li><a href="01_2_3_串联与并联.html">01_2_3 串联与并联</a> — 串联等效电阻与并联分流等效阻抗计算</li>
+        <li><a href="../level_03/03_1_2_电池内阻与极化特性.html">03_1_2 电池内阻与极化特性</a> — 欧姆内阻、电荷传递阻抗与 EIS 电化学阻抗谱分析</li>
+        <li><a href="../level_04/04_2_1_BMS电流采样技术.html">04_2_1 BMS 电流采样技术</a> — 锰铜分流器（Shunt）与霍尔传感器高精度采样电路设计</li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_1_3</span> &nbsp;|&nbsp; 建议字数: 5,000+</p>
+    </footer>
+
+  </div>
+
+  <!-- ⑪ 返回顶端悬浮按钮 -->
+  <button class="btn-back-top" id="btnBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶端">
+    ↑
+  </button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>

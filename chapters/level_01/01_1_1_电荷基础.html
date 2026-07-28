@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电荷：万物皆有电 — 第1章 电的基本概念 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电荷的物理本质、原子结构模型与自由电子迁移机制，系统梳理导体、半导体与绝缘体的电学特性及其在锂电池与网储工程中的应用，并阐述静电现象与工业防护策略。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <!-- MathJax 数学公式渲染引擎 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 1</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电的基本概念</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">电荷：万物皆有电</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="../level_00/00_1_2_手册使用指南.html" class="nav-prev" title="上一节">← 上节</a>
+        <a href="01_1_2_电流与电压.html" class="nav-next" title="下一节">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 1</span>
+        <span class="sep">›</span>
+        <span>电的基本概念</span>
+        <span class="sep">›</span>
+        <span>电荷：万物皆有电</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_1_1</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>电荷：万物皆有电</h1>
+      <p class="chapter-lead">从电子微观世界到电池库仑效率——探索物质电属性如何铸就现代化电能与网储基石。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解电荷的物理本质与量子化特征</strong>：掌握元电荷 $e \approx 1.602 \times 10^{-19}\text{ C}$、库仑定律与电荷守恒定律的核心物理含义与数量级。</li>
+        <li><strong>剖析物质带电的微观机制</strong>：深刻理解原子核与核外电子的相互作用、价电子与自由电子的形成机理及电荷转移路径。</li>
+        <li><strong>掌握导体、绝缘体与半导体的能带区别</strong>：从禁带宽度 $E_g$ 与载流子迁移角度对比三类材料，理解其在储能电池集流体、隔膜与电解质中的工程选材逻辑。</li>
+        <li><strong>掌握静电现象及其在储能工业中的防护与利用</strong>：理清接触起电、感应起电与摩擦起电的机理，掌握电池制造洁净室防静电（ESD）规范及双电层超级电容的储能机制。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：超级电池工厂洁净室中的“微米级火花”与储能安全防线</h2>
+      <p>在位于四川宜宾的宁德时代（CATL）超级电池工厂（Gigafactory）内，自动化生产线正在以每秒数米的高速卷绕厚度仅为 4.5 微米的超薄铜箔与涂覆了氧化铝陶瓷的聚乙烯（PE）隔膜。在这种近乎极致的机械运动与高速摩擦中，若没有严格的环境湿度调控与离子风机除电装置，极片与隔膜表面积聚的静电电压可轻易冲破 10,000 伏特（10 kV）。</p>
+      <p>在电池制造的注液工序中，电解液包含易燃的碳酸二甲酯（DMC）与碳酸乙烯酯（EC）有机溶剂。倘若一个未经静电接地消散的微小电火花瞬间放电，不仅可能引发极片涂层的微米级击穿熔孔、导致日后电芯使用过程中发生致命的内部短路，甚至可能点燃空气中的有机溶剂蒸气，引发严重的工业火灾。</p>
+      <p>从微观上看，引发这一系列巨额经济风险与安全隐患的罪魁祸首，仅仅是质量只有 $9.11 \times 10^{-31}\text{ kg}$ 的微小粒子——电子。然而，正是这些微观粒子的定向迁移与重新分布，构成了人类现代电力文明与电化学储能系统的全部基石。电能从何而来？物质为什么会带电？一个百兆瓦时（100 MWh）的电网级储能电站究竟储存了多少电荷？要解答这些工业级难题，我们必须回到物理学的源头，揭开“电荷”（Electric Charge）的神秘面纱。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、微观世界的基石：电荷本质与原子结构模型</h2>
+
+        <h3>1.1 电荷的物理定义与发现简史</h3>
+        <p>“电荷”（Electric Charge）是物质的一种基本物理属性，正如质量是物质产生万有引力的属性一样，电荷是物质产生电磁相互作用的物理源泉。人类对电核现象的认知经历了漫长的探索过程：公元前 600 年左右，古希腊哲学家泰勒斯（Thales of Miletus）记录了用琥珀摩擦羊毛后能吸引轻小羽毛的现象；“电子”（Electron）一词即来源于希腊语中的“琥珀”（琥珀的希腊文为 $\eta\lambda\epsilon\kappa\tau\rho\omicron\nu$）。</p>
+        <p>18 世纪，美国科学家本杰明·富兰克林（Benjamin Franklin）通过著名的风筝实验与静电集聚研究，首次提出了“正电荷”（Positive Charge）与“负电荷”（Negative Charge）的概念，并规定被丝绸摩擦过的玻璃棒所带的电荷为正电荷，被毛皮摩擦过的橡胶棒所带的电荷为负电荷。这一经典命名法则一直沿用至今。物理学基本规律表明：<strong>同种电荷相互排斥，异种电荷相互吸引</strong>。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：电荷与库仑单位</h4>
+          <p><strong>电荷量（Quantity of Electric Charge，常用符号 $Q$ 或 $q$）</strong>：表示物体所带电荷多少的物理量。在国际单位制（SI）中，电荷量的单位是<strong>库仑（Coulomb，简称库，符号 C）</strong>。</p>
+          <p>1 库仑的宏观定义为：若恒定电流为 1 安培（A），则在 1 秒（s）时间内通过导体横截面的电荷量即为 1 库仑，即：
+          $$Q = I \times t \quad (1\text{ C} = 1\text{ A}\cdot\text{s})$$</p>
+        </div>
+
+        <h3>1.2 原子结构的“太阳系模型”与量子修正</h3>
+        <p>物质是由分子或原子组成的，而原子的内部结构决定了物质的电属性。1911 年，英国物理学家卢瑟福（Ernest Rutherford）通过 $\alpha$ 粒子散射实验提出了原子的“太阳系核式结构模型”，后经玻尔（Niels Bohr）与现代量子力学修正是：</p>
+        <ul>
+          <li><strong>原子核（Atomic Nucleus）</strong>：位于原子中心，体积极小（半径约 $10^{-15}\text{ m}$）但集中了原子 99.9% 以上的质量。原子核由<strong>质子（Proton）</strong>和<strong>中子（Neutron）</strong>组成（氢原子核除外，仅含一个质子）。质子带一个单位的正电荷，中子不带电。</li>
+          <li><strong>核外电子（Extranuclear Electrons）</strong>：围绕原子核高速运动的微观粒子（半径空间约 $10^{-10}\text{ m}$）。每个电子带有一个单位的负电荷，其质量约等于质子质量的 $\frac{1}{1836}$。</li>
+        </ul>
+        <p>在常态下，一个中性原子核内的质子数恰好等于核外的电子数。由于质子所带的正电量与电子所带的负电量在绝对值上完全相等，因此整个原子对外部呈现电中性。当原子由于某种外部作用（如摩擦、受热、高能碰撞、化学反应）失去或获得电子时，原有的电中性平衡被打破，原子就会转化为带电的<strong>离子（Ion）</strong>：失去电子的原子带正电，称为<strong>正离子（阳离子，Cation）</strong>；获得电子的原子带负电，称为<strong>负离子（阴离子, Anion）</strong>。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>类比理解：学校与外勤员工</strong>
+            <p>如果把原子比作一座大型学校，原子核就是行政大楼里的校长与教务处（质子与中子），质量巨大且位置稳固，一般不出楼门；而核外电子就像学校里的学生或外勤人员。内层电子就像受到严格规章约束的课前学生，紧紧围绕着行政楼活动；而最外层的“价电子”就像即将毕业实习的外勤人员，只要外部稍微施加一点能量（如摩擦拉扯或电场吸引），外勤人员就很容易脱离学校（原子核）的束缚，在社会（导体内部）自由漫游，成为“自由电子”。</p>
+          </div>
+        </div>
+
+        <h3>1.3 核心物理量：元电荷与电池库仑效率计算</h3>
+        <p>1909 年，美国物理学家密立根（Robert Millikan）通过著名的“油滴实验”证实了电荷的不连续性（即量子化特征）。实验表明：自然界中任何带电体所带的电荷量都不是连续任意变化的，而是某一个最小电荷量的整数倍。这个最小的独立电荷单元被称为<strong>元电荷（Elementary Charge）</strong>，用符号 $e$ 表示。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心物理常数：元电荷 $e$</h4>
+          <p>根据国际计量大会（CGPM）最新的物理常数定义，元电荷的精确值为：
+          $$e = 1.602176634 \times 10^{-19}\text{ C}$$</p>
+          <p>任何可独立存在的带电体，其电荷量 $Q$ 均满足量子化条件：
+          $$Q = n \cdot e \quad (n = \pm 1, \pm 2, \pm 3, \dots)$$</p>
+          <p>其中，1 库仑（1 C）电荷量相当于约 $6.24 \times 10^{18}$ 个电子所带电荷量的绝对值总和。</p>
+        </div>
+
+        <p>在储能工程中，“安时”（Ah）或“毫安时”（mAh）是度量电池容量的核心单位。利用电荷与电流的关系，我们可以建立起微观电荷数与宏观电池容量之间的精确定量转化关系：</p>
+        <p>例如，一个容量为 280 Ah 的磷酸铁锂（LFP）储能电芯（目前中国电网侧储能的主流大单体电芯），其满充状态下内部在正负极之间完成迁移转移的理论有效电荷总量为：</p>
+        $$Q = 280\text{ A}\cdot\text{h} = 280 \times 3600\text{ A}\cdot\text{s} = 1,008,000\text{ C} \quad (1.008 \times 10^6\text{ C})$$
+        <p>换算为微观锂离子（$\text{Li}^+$，单价正离子，带电量为 $+e$）的迁移数量：</p>
+        $$N_{\text{Li}^+} = \frac{Q}{e} = \frac{1.008 \times 10^6\text{ C}}{1.602 \times 10^{-19}\text{ C}} \approx 6.29 \times 10^{24}\text{ 个}$$
+        <p>这相当于约 10.45 摩尔（mol）的锂离子在电芯内部进行了嵌入与脱出。当我们在评测储能电池性能时，<strong>库仑效率（Coulombic Efficiency, CE）</strong>定义为电池放电阶段释放的电荷量与充电阶段注入的电荷量之比（$CE = \frac{Q_{\text{discharge}}}{Q_{\text{charge}}} \times 100\%$）。在长时储能应用中，库仑效率必须达到 99.9% 以上，才能保证电池经历数千次循环后不发生严重的活性锂损耗。</p>
+
+        <h3>1.4 库仑定律与介质极化效应</h3>
+        <p>1785 年，法国物理学家查尔斯·库仑（Charles-Augustin de Coulomb）利用扭秤实验，定量测定了真空中两个静止点电荷之间的相互作用力，这就是著名的<strong>库仑定律（Coulomb's Law）</strong>。</p>
+
+        <div class="key-concept">
+          <h4>📌 库仑定律数学表达</h4>
+          <p>真空中两个静止点电荷 $q_1$ 和 $q_2$ 之间的静电力 $F$ 大小与它们的电荷量乘积成正比，与它们之间距离 $r$ 的平方成反比，作用力的方向沿着它们的连线：
+          $$F = k \frac{|q_1 q_2|}{r^2}$$</p>
+          <p>其中，$k$ 为静电力常数，在国际单位制中精确值为 $k = \frac{1}{4\pi \varepsilon_0} \approx 8.98755 \times 10^9\text{ N}\cdot\text{m}^2/\text{C}^2$，其中 $\varepsilon_0 \approx 8.854 \times 10^{-12}\text{ F/m}$ 为真空介电常数。</p>
+        </div>
+
+        <p>当点电荷并非处于真空、而是处于某种绝缘介质（如电解液溶剂）中时，由于介质分子的极化效应，正负电荷之间的静电吸引力会被削弱。此时库仑力修正为：</p>
+        $$F = \frac{1}{4\pi \varepsilon_0 \varepsilon_r} \frac{|q_1 q_2|}{r^2}$$
+        <p>式中 $\varepsilon_r$ 为介质的相对介电常数（Relative Permittivity）。这一物理效应在电池电解液设计中至关重要：锂盐（如六氟磷酸锂 $\text{LiPF}_6$）晶体依靠极其强大的库仑吸引力将 $\text{Li}^+$ 与 $\text{PF}_6^-$ 紧密结合；当锂盐溶解在相对介电常数极高（$\varepsilon_r \approx 89$）的碳酸乙烯酯（EC）溶剂中时，溶剂分子强烈削弱了锂离子与阴离子之间的库仑力，从而使锂盐顺利解离为自由移动的溶剂化离子，赋予电解液良好的导电能力。</p>
+
+        <h3>1.5 电荷守恒定律与电化学电中性原理</h3>
+        <p>物理学最高法则之一是<strong>电荷守恒定律（Law of Conservation of Electric Charge）</strong>：在一个孤立系统内部，无论发生何种物理过程或化学反应，系统内所有正负电荷的代数和始终保持不变。电荷既不能被凭空创造，也不能被凭空消灭，只能从物体的一部分转移到另一部分，或者从一个物体转移到另一个物体。</p>
+        <p>在储能电芯充放电过程中，电荷守恒表现为严格的“电子-离子电荷等量对冲与电中性约束”。当外部电源将 $N$ 个电子推入锂电池的负极集流体时，负极材料（如石墨）必须同步从电解液中吸收 $N$ 个 $\text{Li}^+$ 嵌入石墨层间，以维持负极宏观上的电中性；与此同时，正极材料必须释放 $N$ 个 $\text{Li}^+$ 进电解液并向外电路输出 $N$ 个电子。任何局部电荷的不平衡都会瞬间产生极强的内建电场，阻止进一步的电荷分离。因此，“电荷守恒”与“宏观电中性”是维持所有电化学储能器件稳定工作的物理死命令。</p>
+      </section>
+
+      <!-- SVG 图表 -->
+      <figure class="svg-figure">
+        <svg width="100%" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+            </marker>
+            <marker id="arrow-orange" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#F57C00"/>
+            </marker>
+          </defs>
+
+          <!-- 背景 -->
+          <rect width="100%" height="100%" fill="#FAFAFA" rx="10"/>
+
+          <!-- 左图：原子微观模型与电荷组成 -->
+          <g transform="translate(40, 20)">
+            <rect width="330" height="330" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="8"/>
+            <text x="165" y="32" font-family="Noto Sans SC, sans-serif" font-size="16" font-weight="700" fill="#1A5F96" text-anchor="middle">图1a：原子微观结构与电荷分布</text>
+            
+            <!-- 轨道轨道线 -->
+            <circle cx="165" cy="180" r="100" fill="none" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <circle cx="165" cy="180" r="60" fill="none" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+            <!-- 原子核 -->
+            <circle cx="165" cy="180" r="28" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <circle cx="157" cy="174" r="8" fill="#1A5F96"/>
+            <text x="157" y="177" font-family="Inter, sans-serif" font-size="10" fill="#FFF" text-anchor="middle">+</text>
+            <circle cx="173" cy="174" r="8" fill="#94A3B8"/>
+            <circle cx="165" cy="188" r="8" fill="#1A5F96"/>
+            <text x="165" y="191" font-family="Inter, sans-serif" font-size="10" fill="#FFF" text-anchor="middle">+</text>
+
+            <!-- 内层电子 -->
+            <circle cx="165" cy="120" r="7" fill="#F57C00"/>
+            <text x="165" y="123" font-family="Inter, sans-serif" font-size="10" fill="#FFF" text-anchor="middle">-</text>
+            <circle cx="165" cy="240" r="7" fill="#F57C00"/>
+            <text x="165" y="243" font-family="Inter, sans-serif" font-size="10" fill="#FFF" text-anchor="middle">-</text>
+
+            <!-- 最外层价电子（自由倾向） -->
+            <circle cx="265" cy="180" r="7" fill="#F57C00" stroke="#E65100" stroke-width="1.5"/>
+            <text x="265" y="183" font-family="Inter, sans-serif" font-size="10" fill="#FFF" text-anchor="middle">-</text>
+            
+            <!-- 逃逸指示 -->
+            <path d="M 275 175 Q 300 160 310 140" fill="none" stroke="#F57C00" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-orange)"/>
+            <text x="285" y="145" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#F57C00">自由电子</text>
+
+            <!-- 说明标注 -->
+            <text x="165" y="295" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568" text-anchor="middle">原子核（质子+中子）与核外电子平衡</text>
+            <text x="165" y="315" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">单电子带电量 e ≈ 1.602×10⁻¹⁹ C</text>
+          </g>
+
+          <!-- 右图：储能电池集流体中的电子海与静电极化 -->
+          <g transform="translate(430, 20)">
+            <rect width="330" height="330" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="8"/>
+            <text x="165" y="32" font-family="Noto Sans SC, sans-serif" font-size="16" font-weight="700" fill="#1A5F96" text-anchor="middle">图1b：金属导体“自由电子海”模型</text>
+
+            <!-- 金属晶格点阵 -->
+            <g fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5">
+              <!-- 行1 -->
+              <circle cx="60" cy="90" r="16"/><text x="60" y="94" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="165" cy="90" r="16"/><text x="165" y="94" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="270" cy="90" r="16"/><text x="270" y="94" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <!-- 行2 -->
+              <circle cx="60" cy="170" r="16"/><text x="60" y="174" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="165" cy="170" r="16"/><text x="165" y="174" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="270" cy="170" r="16"/><text x="270" y="174" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <!-- 行3 -->
+              <circle cx="60" cy="250" r="16"/><text x="60" y="254" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="165" cy="250" r="16"/><text x="165" y="254" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+              <circle cx="270" cy="250" r="16"/><text x="270" y="254" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Cu⁺</text>
+            </g>
+
+            <!-- 自由电子云 (随机方向小箭头) -->
+            <g fill="#F57C00">
+              <circle cx="110" cy="80" r="5"/><circle cx="215" cy="100" r="5"/>
+              <circle cx="100" cy="140" r="5"/><circle cx="220" cy="150" r="5"/>
+              <circle cx="120" cy="210" r="5"/><circle cx="210" cy="230" r="5"/>
+              <circle cx="70" cy="210" r="5"/><circle cx="270" cy="200" r="5"/>
+            </g>
+            <!-- 电子漂移示意 -->
+            <path d="M 110 140 L 140 135" stroke="#F57C00" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+            <path d="M 220 150 L 250 155" stroke="#F57C00" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+            <text x="165" y="295" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568" text-anchor="middle">正离子正方晶格固定，自由电子自由穿梭</text>
+            <text x="165" y="315" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">高电子密度赋予铜/铝集流体优异的导电性</text>
+          </g>
+        </svg>
+        <figcaption>图1：微观原子电荷结构与金属导体内部“自由电子海”物理模型示意图</figcaption>
+      </figure>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、电荷的流动性：导体、绝缘体与半导体的材料图谱</h2>
+
+        <h3>2.1 能带理论简述：电子跃迁的物理关隘</h3>
+        <p>在孤立原子中，电子在固定的量子化能级上运动。当大量原子聚集形成宏观固体材料时，由于原子间轨道的重叠与相互作用，原本离散的能级分裂扩展成了连续的<strong>能带（Energy Band）</strong>。决定材料导电性能的关键能带有两个：</p>
+        <ul>
+          <li><strong>价带（Valence Band）</strong>：在绝对零度下被价电子完全填充的最高能带。</li>
+          <li><strong>导带（Conduction Band）</strong>：高于价带的能带。导带中的电子可以自由移动形成宏观电流。</li>
+          <li><strong>禁带/带隙（Bandgap, 符号 $E_g$）</strong>：价带顶与导带底之间的能量间隔。在此能量范围内不存在合法的电子量子态。</li>
+        </ul>
+        <p>电子要参与导电，必须获得足够的能量跨越禁带 $E_g$，从价带跃迁至导带。根据禁带宽度 $E_g$ 的差异，人类将宏观物质划分为导体、绝缘体与半导体三类。</p>
+
+        <h3>2.2 导体（Conductor）：自由电子海与电芯集流体工程</h3>
+        <p>导体的特征是<strong>禁带宽度 $E_g \approx 0\text{ eV}$</strong>（即价带与导带相互重叠），或者价带未被电子填满。金属（如铜、铝、银、金）是典型的导体。</p>
+        <p>在金属键作用下，金属原子的最外层价电子脱离原子核的束缚，形成在整个金属晶格内自由漫游的“自由电子海”（Sea of Free Electrons），而原子核与内层电子则构成固定在晶格节点上的正离子阵列。金属中自由电子的体密度极高，通常可达 $10^{28}\text{ m}^{-3}$ 数量级。只要施加微小的电场，自由电子就能产生定向漂移。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>Tips：储能电池为什么采用“正极铝箔、负极铜箔”？</strong>
+            <p>在锂离子电池工程中，正极集流体选用铝箔（Al），负极集流体选用铜箔（Cu），这不仅基于导电率考量，更受制于电荷转移与电化学热力学电位：</p>
+            <ul>
+              <li><strong>正极高电位（>3.0V vs. Li/Li⁺）</strong>：铝箔表面在空气与电解液中极易钝化生成一层极其致密的致密氧化铝（$\text{Al}_2\text{O}_3$）薄膜，阻止铝继续被氧化剥蚀；若使用铜，铜在 3.5V 以上高电位下会失去电子被溶解氧化为 $\text{Cu}^{2+}$。</li>
+              <li><strong>负极低电位（0~0.2V vs. Li/Li⁺）</strong>：铝在低电位下极易与锂发生嵌入反应形成“锂铝合金”，导致铝箔粉化破裂；而铜在低电位下化学性质极度稳定，不与锂发生嵌锂合金化反应。因此，“正铝负铜”是电荷电位安全窗口约束下的必然选择。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>2.3 绝缘体（Insulator）：高能禁带与高压安全屏障</h3>
+        <p>绝缘体的特征是<strong>禁带宽度极大（通常 $E_g > 5\text{ eV}$）</strong>。在常温下，热激发能量（$k_B T \approx 0.026\text{ eV}$）远不足以将价带中的电子推过如此宽阔的禁带到达导带，因此绝缘体内部几乎没有可以自由移动的载流子，其电阻率高达 $10^{10} \sim 10^{18}\ \Omega\cdot\text{m}$。</p>
+        <p>在储能电站中，绝缘材料扮演着防范短路与高压电击的“安全防火墙”角色：</p>
+        <ul>
+          <li><strong>电池隔膜（Separator）</strong>：微孔聚乙烯（PE）或聚丙烯（PP）薄膜，其禁带宽度 $E_g > 6\text{ eV}$。隔膜必须是卓越的电子绝缘体（阻止电子在电池内部直接短路），但同时必须允许锂离子通过微孔自由穿梭。</li>
+          <li><strong>电气绝缘介质</strong>：储能变压器与高压开关柜中使用的绝缘油、六氟化硫（$\text{SF}_6$）气体以及环氧树脂绝缘件，在数万伏的高压电场下能有效阻止电子击穿雪崩。</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>注意：高静电与强电场下的“绝缘击穿”（Dielectric Breakdown）</strong>
+            <p>绝缘体并非绝对不导电。当施加在绝缘体两端的电场强度超过其临界阈值（介电强度，Dielectric Strength）时，强大的静电力会将束缚在原子内部的电子强行剥离拉入导带，引发连锁碰撞电离，导致绝缘材料瞬间失去绝缘能力而损坏，这被称为“击穿”。干空气的击穿电场强度约为 $3\text{ kV/mm}$。在电池工厂或高压储能舱内，必须严格防止局部电场集中引发击穿放电。</p>
+          </div>
+        </div>
+
+        <h3>2.4 半导体（Semiconductor）：可控载流子与功率转换心脏</h3>
+        <p>半导体的禁带宽度介于导体与绝缘体之间（<strong>$0.1\text{ eV} < E_g < 3\text{ eV}$</strong>，如硅 Si 的 $E_g \approx 1.12\text{ eV}$，第三代半导体碳化硅 SiC 的 $E_g \approx 3.26\text{ eV}$）。在绝对零度下半导体不导电；但在常温下，部分价电子可获得足够的热能跃迁至导带，在导带产生<strong>自由电子</strong>，同时在价带留下空缺——<strong>空穴（Hole）</strong>。空穴表现为带一个单位正电荷的等效载流子。</p>
+        <p>通过在纯净半导体中微量掺杂杂质元素（如磷 P 掺杂形成 N 型半导体，硼 B 掺杂形成 P 型半导体），人类可以人为精确控制半导体内部的电荷载流子浓度。这构成了现代电力电子变流器（PCS）的核心——IGBT（绝缘栅双极型晶体管）与 SiC MOSFET。在网储系统中，PCS 变流器正是利用半导体的毫秒级电荷开关特性，实现兆瓦级交流电与直流电的高效转换。</p>
+
+        <!-- 数据表格 -->
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>材料类型</th>
+                <th>代表材料（网储应用）</th>
+                <th>禁带宽度 $E_g$</th>
+                <th>室温电阻率 $\rho\ (\Omega\cdot\text{m})$</th>
+                <th>主要电荷载流子</th>
+                <th>在网储工程中的功能定位</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>金属导体</strong></td>
+                <td>紫铜（铜箔负极集流体）<br>纯铝（铝箔正极集流体）</td>
+                <td>$0\text{ eV}$（重叠）</td>
+                <td>$1.68 \times 10^{-8}$<br>$2.65 \times 10^{-8}$</td>
+                <td>高密度自由电子<br>($\sim 10^{28}\text{ m}^{-3}$)</td>
+                <td>电芯内部电子收集与传导；储能直流母排、高压电缆与变流器导电回路。</td>
+              </tr>
+              <tr>
+                <td><strong>半导体</strong></td>
+                <td>高纯单晶硅 Si<br>碳化硅 SiC<br>硅碳复合负极</td>
+                <td>$1.12\text{ eV}$ (Si)<br>$3.26\text{ eV}$ (SiC)</td>
+                <td>$10^{-3} \sim 10^{3}$<br>（可随掺杂调控）</td>
+                <td>自由电子（N型）<br>空穴（P型）</td>
+                <td>PCS 变流器功率开关器件（IGBT/SiC）；高能量密度锂电池硅基负极活性材料。</td>
+              </tr>
+              <tr>
+                <td><strong>绝缘体</strong></td>
+                <td>聚乙烯 PE/PP (电池隔膜)<br>氧化铝 $\text{Al}_2\text{O}_3$ 陶瓷涂层<br>环氧树脂/绝缘油</td>
+                <td>$> 5.5\text{ eV}$</td>
+                <td>$10^{12} \sim 10^{18}$</td>
+                <td>无自由载流子<br>（束缚电子）</td>
+                <td>阻止正负极内部电子短路；储能集装箱高压隔离防护、电缆绝缘层。</td>
+              </tr>
+              <tr>
+                <td><strong>离子导体</strong></td>
+                <td>$\text{LiPF}_6$ 液态电解质<br>LPSCL 硫化物固态电解质</td>
+                <td>电子绝缘<br>($E_g > 5\text{ eV}$)</td>
+                <td>离子电阻率<br>$0.1 \sim 1.0$</td>
+                <td>溶剂化锂离子 $\text{Li}^+$<br>（电子禁行）</td>
+                <td>提供电池内部正负极之间的离子化学传导通道，同时严格绝缘电子。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、静电现象与宏观电场：起电机制与储能工程防护</h2>
+
+        <h3>3.1 物质带电的三种物理机制</h3>
+        <p>在宏观世界中，原本处于电中性的物体可以通过三种基本物理方式重新分配或获得净电荷：</p>
+        <ol>
+          <li><strong>摩擦起电（Triboelectricity）</strong>：当两种不同绝缘材料相互摩擦时，由于材料原子核对核外电子的束缚能力（逸出功，Work Function）不同，逸出功小的材料最外层电子会转移到逸出功大的材料上。失去电子的物体带正电，得到电子的物体带等量负电。例如，电池工厂中聚酯薄膜与辊筒的高速摩擦。</li>
+          <li><strong>接触起电（Contact Electrification）</strong>：当一个带电体与另一个不带电的导体直接接触时，电荷由于库仑排斥力从高电荷密度区域向低密度区域流动，使不带电的导体带上与带电体同性质的电荷。</li>
+          <li><strong>感应起电（Electrostatic Induction）</strong>：将一个带电体靠近（不接触）一个不带电的金属导体时，由于库仑力的远程作用，导体内部的自由电子会被吸引或排斥，导致导体靠近带电体的一端感应出异种电荷，远端感应出同种电荷。当导体的远端接地时，同种电荷入地，撤去接地并移走带电体后，该导体将带上与原带电体异性的净电荷。</li>
+        </ol>
+
+        <div class="key-concept">
+          <h4>📌 尖端放电与电晕（Corona Discharge）</h4>
+          <p>在带电导体表面，电荷的分布是不均匀的。导体曲率半径越小（即越尖锐）的地方，电荷面密度 $\sigma$ 越高，附近的电场强度 $E$ 也越强（$E \propto \sigma$）。当尖端附近的强电场足以使周围空气分子电离时，就会产生微弱的发光与放电现象，称为<strong>电晕放电（Corona Discharge）</strong>。</p>
+          <p>在储能电站高压直流母线（如 1500V DC 系统）与高压变压器设计中，必须将所有导体接头处理得平滑圆润，严禁留有金属毛刺，以防发生尖端放电击穿空气造成相间短路。</p>
+        </div>
+
+        <h3>3.2 储能工业中的静电危害与 ESD 静电防护规范</h3>
+        <p>静电放电（Electrostatic Discharge, ESD）是工业制造领域隐蔽性极强的“杀手”。人体由于与衣服摩擦，日常带有高达 $2,000 \sim 15,000\text{ V}$ 的静电电压。虽然其能量较小（毫焦耳级），但放电时间极短（纳秒级 $1 \sim 10\text{ ns}$），瞬间峰值电流可达数十安培。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实例：宁德时代与国家电网储能电站的防静电与电晕控制</strong>
+            <p>在吉林某 100MW/200MWh 大型锂电池储能电站的维护过程中，运维人员在进行 BMS（电池管理系统）从控板模组更换时，必须严格遵守电子制造业国际规范 ANSI/ESD S20.20 与国家标准 GB/T 39587：</p>
+            <ul>
+              <li><strong>人员防静电手环（ESD Wrist Strap）</strong>：运维人员必须佩戴串联了 $1\text{ M}\Omega$ 安全电阻的防静电手环，将人体静电缓慢泄放至大地，防止人体触碰 BMS 芯片管脚时释放数百伏静电瞬间击穿芯片内极其脆弱的栅极氧化层（MOSFET Gate Oxide）。</li>
+              <li><strong>储能集装箱极化放电与接地网</strong>：储能集装箱金属外壳与电池架必须通过双路 $35\text{ mm}^2$ 软铜线接入电站主接地网，确保接地电阻 $R_{\text{grid}} < 1\ \Omega$，使积聚的静电荷能够在毫秒级内安全消散。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>3.3 静电现象的正面应用：超级电容器的双电层储能机制</h3>
+        <p>虽然静电在工业中常被视为有害因素，但在现代电能储存技术中，人们巧妙地利用静电吸引力发明了<strong>双电层超级电容器（Electrochemical Double-Layer Capacitor, EDLC）</strong>。</p>
+        <p>当在浸入电解液的超级电容高比表面积活性炭电极两端施加电压时，正电极吸引电解液中的阴离子，负电极吸引阳离子。在电极与电解液相界处，形成了一个厚度仅为几埃（$\AA$，$10^{-10}\text{ m}$）的纳米级电荷分离层——<strong>Helmholtz 双电层（Double Layer）</strong>。</p>
+        <p>根据电容公式 $C = \frac{\varepsilon A}{d}$，由于电荷分离距离 $d$ 达到了纳米级的极致薄度，且活性炭材料具有巨大的有效表面积 $A$（可达 $2000\text{ m}^2/\text{g}$），超级电容器能够储存极其惊人的物理静电荷。由于这种存储过程完全依赖电荷的物理静电吸附与脱附，不发生化学相变，因此超级电容器可以在 几秒钟内完成满充满放，并具有高达 1,000,000 次 以上的超长循环寿命，在电网一次调频与超短时大功率应急响应中发挥着不可替代的作用。</p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：固态电池中的纳米级电荷空间电荷层（Space Charge Layer）</strong>
+            <p>在下一代全固态锂电池中，固态电解质（如氧化物或硫化物）与正负极活性颗粒界面处，由于两侧化学势与电子逸出功的不同，锂离子会在界面处自发发生微观迁移，形成一个厚度仅为数纳米的“空间电荷层”。这一静电荷积聚区域会产生巨大的界面阻抗，严重限制电池的大倍率充放电性能。当前全球顶尖学术界与产业界正致力于利用原子层沉积（ALD）技术在界面处涂覆纳米级缓冲层，以调控界面电荷分布、消除空间电荷层效应。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>电荷属性与元电荷</strong>：电荷是物质的基本物理属性。元电荷 $e \approx 1.602 \times 10^{-19}\text{ C}$ 是自然界独立带电体电荷量的最小单元；1 Ah 电池容量相当于 $3600\text{ C}$ 电荷量或约 $2.25 \times 10^{22}$ 个电子/单价离子的迁移。</li>
+        <li><strong>原子模型与离子化</strong>：原子由带正电的原子核（质子+中子）与带负电的核外电子组成。原子失去或得到电子转化为阳离子或阴离子，导致宏观带电。</li>
+        <li><strong>材料能带图谱与储能工程选材</strong>：
+          <ul>
+            <li><strong>导体（$E_g = 0$）</strong>：内部存在高密度自由电子海，如铜箔（负极集流体）与铝箔（正极集流体）；</li>
+            <li><strong>绝缘体（$E_g > 5\text{ eV}$）</strong>：禁带极宽无自由载流子，如 PE/PP 电池隔膜，用于阻断电子短路；</li>
+            <li><strong>半导体（$0.1 < E_g < 3\text{ eV}$）</strong>：载流子可控，构成 PCS 变流器（IGBT/SiC）的核心；</li>
+            <li><strong>离子导体</strong>：只导锂离子不导电子，是电解质的核心要求。</li>
+          </ul>
+        </li>
+        <li><strong>静电机制与工程应用</strong>：起电机制包含摩擦、接触与感应起电。在电池 Gigafactory 洁净室与电站运维中必须严防 ESD 静电击穿与电晕；而在超级电容器中，利用 Helmholtz 双电层物理静电吸附实现了兆瓦级超快储能。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>✅ 知识测验</h2>
+      <div class="quiz-container">
+        <!-- Q1 -->
+        <div class="quiz-question" id="q1">
+          <p class="question-text"><strong>1.</strong> 某一电网侧储能电站中的大容量单体磷酸铁锂（LFP）电芯标称容量为 320 Ah。若在理想放电状态下将其蕴含的有效电荷全部释放，请计算放电过程通过电芯端子的理论总电荷量为多少库仑（C）？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 320 C</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 19,200 C</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 1,152,000 C</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 3,600,000 C</label>
+          </div>
+          <div class="quiz-answer" id="q1-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>根据电荷量与电流、时间的定义公式 $Q = I \times t$，电池容量单位 $1\text{ A}\cdot\text{h} = 1\text{ A} \times 3600\text{ s} = 3,600\text{ C}$。因此，320 Ah 电芯对应的理论总电荷量为 $Q = 320 \times 3600\text{ C} = 1,152,000\text{ C}$（即 $1.152 \times 10^6\text{ C}$）。选项 A 混淆了 Ah 与 C 的换算；选项 B 误乘以 60 秒；选项 D 为 1000 Ah 的电荷量。</p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-question" id="q2">
+          <p class="question-text"><strong>2.</strong> 关于真空中两静止点电荷之间的库仑力，下列说法中正确的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 若两点电荷之间的距离 $r$ 增大为原来的 2 倍，则它们之间的库仑力变为原来的 1/2</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 若其中一个点电荷的电荷量翻倍，则两点电荷受到的库仑力均翻倍</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 库仑力的大小仅取决于电荷量，与介质的介电常数无关</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 同种电荷相互吸引，异种电荷相互排斥</label>
+          </div>
+          <div class="quiz-answer" id="q2-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>根据库仑定律 $F = k \frac{|q_1 q_2|}{r^2}$，库仑力与两点电荷电荷量乘积成正比，与距离的平方成反比。当其中一个电荷量翻倍时，乘积 $|q_1 q_2|$ 翻倍，由于牛顿第三定律（作用力与反作用力），两个电荷受到的库仑力大小相等且均翻倍，故 B 正确。距离 $r$ 变为 2 倍时，力应减小为原来的 $1/2^2 = 1/4$，故 A 错误；库仑力受介质介电常数 $\varepsilon_r$ 的强烈屏蔽影响，故 C 错误；物理规律为同种排斥、异种吸引，故 D 错误。</p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-question" id="q3">
+          <p class="question-text"><strong>3.</strong> 在商业化锂离子电池工程中，为什么正极集流体采用铝箔（Al），而负极集流体采用铜箔（Cu）？下列解释最科学合理的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 铝的导电性比铜好，因此正极使用铝箔可以降低内阻</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 铜在高电位下稳定，铝在低电位下稳定</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 铝箔在高电位下能形成致密氧化膜阻止溶蚀，而在低电位下会与锂发生嵌锂合金化破坏；铜箔在低电位下不嵌锂，但在高电位下会被氧化溶解</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 纯粹由于铜箔比铝箔昂贵，为了节省成本才在正极使用铝箔</label>
+          </div>
+          <div class="quiz-answer" id="q3-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>选材是由电位安全窗口和电化学反应决定的。正极电位高（>3.0V），铝箔表面会钝化生成致密的氧化铝（$\text{Al}_2\text{O}_3$）保护膜防止铝溶解，而铜在高电位下会被氧化溶解为铜离子；负极电位极低（近 0V），铝在低电位下会与锂发生嵌锂合金化反应致使极片粉化碎裂，而铜在低电位下性质稳定不与锂反应。因此 C 选项描述最准确。</p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-question" id="q4">
+          <p class="question-text"><strong>4.</strong> 下列材料属于能带禁带宽度 $E_g > 5\text{ eV}$，且在锂电池内部主要起到阻断电子流动功能的器件是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 铜箔集流体</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 石墨负极材料</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 微孔聚乙烯（PE）电池隔膜</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 绝缘栅双极型晶体管（IGBT）</label>
+          </div>
+          <div class="quiz-answer" id="q4-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>聚乙烯（PE）或聚丙烯（PP）电池隔膜属于高分子绝缘材料，其禁带宽度 $E_g > 5.5\text{ eV}$，常温下几乎没有自由电子，主要作用是隔绝正负极防止电子直接接触短路（同时保持离子通道打通）。铜箔为金属导体（$E_g=0$）；石墨为半金属导体；IGBT 为半导体器件（$E_g \approx 1.12\text{ eV}$）。</p>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-question" id="q5">
+          <p class="question-text"><strong>5.</strong> 关于双电层超级电容器（EDLC）的物理储能机制，下列说法正确的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 依靠电极材料内部发生深度的氧化还原化学反应储存电荷</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 依靠活性炭电极与电解质界面处纳米级 Helmholtz 双电层的静电吸引力物理吸附电荷</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 充放电速度极慢，通常需要数小时才能充满</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 循环寿命极短，仅能循环充放电约 1,000 次</label>
+          </div>
+          <div class="quiz-answer" id="q5-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>双电层超级电容器利用电极表面与电解液界面形成的纳米级 Helmholtz 双电层进行物理静电荷吸附与脱附。由于不涉及化学键破坏与晶格相变，其充放电速率极快（秒级），循环寿命高达 1,000,000 次以上。选项 A 描述的是电池或伪电容的化学储能机制，C、D 选项与超级电容性能特征完全相反。</p>
+          </div>
+        </div>
+
+        <button class="btn-check-answer" onclick="checkAnswers()">查看答案</button>
+        <p class="quiz-score" id="score-display"></p>
+      </div>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="../level_00/00_1_2_手册使用指南.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">手册使用指南</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_1_2_电流与电压.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">电流与电压：流动的力量</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul>
+        <li><a href="../level_00/00_1_2_手册使用指南.html">00_1_2 手册使用指南</a> — 理解全书结构与网储知识树体系</li>
+        <li><a href="01_1_2_电流与电压.html">01_1_2 电流与电压：流动的力量</a> — 从静止电荷跨越到定向漂移与电位差物理场</li>
+        <li><a href="01_1_3_电阻与欧姆定律.html">01_1_3 电阻与欧姆定律</a> — 材料对自由电子漂移的阻碍机制与微观散射</li>
+        <li><a href="../level_03/03_1_1_锂离子电池工作原理.html">03_1_1 锂离子电池工作原理</a> — 摇椅式锂离子脱嵌与电荷守恒原理应用</li>
+        <li><a href="../level_04/04_1_1_超级电容器技术.html">04_1_1 超级电容器技术</a> — Helmholtz 双电层物理静电储能工程实践</li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_1_1</span> &nbsp;|&nbsp; 建议字数: 5,000+</p>
+    </footer>
+
+  </div>
+
+  <!-- ⑪ 返回顶端悬浮按钮 -->
+  <button class="btn-back-top" id="btnBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶端">
+    ↑
+  </button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
