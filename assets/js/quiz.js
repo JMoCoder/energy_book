@@ -6,7 +6,7 @@
 // ── 测验逻辑 ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
 
-  // 绑定每道题的"查看答案"按钮
+  // 绑定每道题的单题"查看答案"按钮（如存在）
   document.querySelectorAll('.quiz-question').forEach(function (q) {
     const qId = q.id;
     const btn = q.querySelector('.quiz-btn');
@@ -22,50 +22,35 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       answer.style.display = 'block';
       btn.style.display = 'none';
-      // 高亮选项
+      
+      // 高亮正确与选择的选项
+      let correctValue = answer.dataset.correct;
+      if (!correctValue) {
+        const match = answer.textContent.match(/正确答案[：:]\s*([A-D])/i);
+        if (match) correctValue = match[1].toUpperCase();
+      }
+
       q.querySelectorAll('.quiz-option').forEach(function (opt) {
         opt.style.pointerEvents = 'none';
         opt.style.opacity = '0.7';
       });
-      const correctOpt = q.querySelector('.quiz-option input[value="' +
-        answer.dataset.correct + '"]');
-      if (correctOpt) {
-        correctOpt.closest('.quiz-option').style.opacity = '1';
-        correctOpt.closest('.quiz-option').style.background = '#D1FAE5';
-        correctOpt.closest('.quiz-option').style.borderColor = '#059669';
+
+      if (correctValue) {
+        const correctOpt = q.querySelector('.quiz-option input[value="' + correctValue + '"]');
+        if (correctOpt) {
+          const optLabel = correctOpt.closest('.quiz-option');
+          optLabel.style.opacity = '1';
+          optLabel.style.background = '#D1FAE5';
+          optLabel.style.borderColor = '#059669';
+        }
       }
+      
       // 记录进度
       markSectionProgress(window.location.pathname, qId);
     });
   });
 
-  // 全部回答完后显示总分
-  const quizSection = document.querySelector('.quiz-section');
-  if (quizSection) {
-    const scoreEl = quizSection.querySelector('.quiz-score');
-    if (scoreEl) {
-      document.querySelectorAll('.quiz-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          setTimeout(checkAllAnswered, 100);
-        });
-      });
-    }
-  }
-
-  function checkAllAnswered() {
-    const all = document.querySelectorAll('.quiz-question');
-    const answered = document.querySelectorAll('.quiz-answer[style*="block"]');
-    if (answered.length === all.length && all.length > 0) {
-      const scoreEl = document.querySelector('.quiz-score');
-      if (scoreEl) {
-        scoreEl.style.display = 'block';
-        scoreEl.textContent = '🎉 完成本节测验！共 ' + all.length + ' 题全部作答';
-        markSectionComplete(window.location.pathname);
-      }
-    }
-  }
-
-  // ── 返回顶端按钮 ───────────────────────────────────────────────
+  // 监听返回顶端按钮
   const btnTop = document.getElementById('btnBackTop');
   if (btnTop) {
     window.addEventListener('scroll', function () {
@@ -73,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
   }
 
-  // ── 阅读进度条（可选）──────────────────────────────────────────
+  // 阅读进度条（可选）
   const progressBar = document.getElementById('reading-progress');
   if (progressBar) {
     window.addEventListener('scroll', function () {
@@ -83,6 +68,82 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
   }
 });
+
+// ── 全局检查答案函数 (适用于底部 <button onclick="checkAnswers()">) ────
+function checkAnswers() {
+  const questions = document.querySelectorAll('.quiz-question');
+  if (!questions.length) return;
+
+  let totalCount = questions.length;
+  let correctCount = 0;
+  let answeredCount = 0;
+
+  questions.forEach(function (q) {
+    const qId = q.id;
+    const answerEl = q.querySelector('.quiz-answer');
+    if (answerEl) {
+      answerEl.style.display = 'block';
+    }
+
+    // 隐藏单题按键（如果存在）
+    const singleBtn = q.querySelector('.quiz-btn');
+    if (singleBtn) singleBtn.style.display = 'none';
+
+    // 确定正确选项 (优先 data-correct，其次从解析中匹配 "正确答案：X")
+    let correctValue = answerEl ? answerEl.dataset.correct : null;
+    if (!correctValue && answerEl) {
+      const match = answerEl.textContent.match(/正确答案[：:]\s*([A-D])/i);
+      if (match) {
+        correctValue = match[1].toUpperCase();
+      }
+    }
+
+    const selectedInput = q.querySelector('input[type="radio"]:checked');
+    if (selectedInput) {
+      answeredCount++;
+      if (correctValue && selectedInput.value.toUpperCase() === correctValue) {
+        correctCount++;
+      }
+    }
+
+    // 选项标记高亮
+    q.querySelectorAll('.quiz-option').forEach(function (optLabel) {
+      const input = optLabel.querySelector('input[type="radio"]');
+      if (!input) return;
+
+      const val = input.value.toUpperCase();
+      if (val === correctValue) {
+        optLabel.style.background = '#D1FAE5';
+        optLabel.style.borderColor = '#059669';
+        optLabel.style.fontWeight = 'bold';
+        optLabel.style.opacity = '1';
+      } else if (input.checked && val !== correctValue) {
+        optLabel.style.background = '#FEE2E2';
+        optLabel.style.borderColor = '#DC2626';
+        optLabel.style.opacity = '0.9';
+      }
+    });
+
+    markSectionProgress(window.location.pathname, qId);
+  });
+
+  // 显示总得分与结果展示
+  const scoreEl = document.getElementById('score-display') || document.querySelector('.quiz-score');
+  if (scoreEl) {
+    scoreEl.style.display = 'block';
+
+    if (answeredCount < totalCount) {
+      scoreEl.innerHTML = '📊 您已作答 <strong>' + answeredCount + ' / ' + totalCount + '</strong> 题（答对 ' + correctCount + ' 题）。答案与详细解析已在上方显示。';
+    } else {
+      scoreEl.innerHTML = '🎉 测验完成！您的得分：<strong>' + correctCount + ' / ' + totalCount + '</strong>（正确率 ' + Math.round(correctCount / totalCount * 100) + '%）。详细解析已在上方显示。';
+    }
+  }
+
+  markSectionComplete(window.location.pathname);
+}
+
+// 导出至全局 window 对象，确保 HTML 内联 onclick 可直接触发
+window.checkAnswers = checkAnswers;
 
 // ── 进度持久化（localStorage）────────────────────────────────────
 function getProgress() {
@@ -118,5 +179,5 @@ function markSectionComplete(path) {
   }
 }
 
-// 导出给章节页手动调用（可选）
-window.BESSQuiz = { getProgress, markSectionComplete };
+// 导出给章节页手动调用
+window.BESSQuiz = { getProgress, markSectionComplete, checkAnswers };

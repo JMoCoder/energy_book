@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>双碳目标、新型电力系统与储能使命 — 走进网储世界 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析国家‘双碳’战略下新型电力系统的‘双高’与‘双随机’物理特征，阐述网储系统在源-网-荷三端的核心调节使命，并首次全面揭示《中国网储系统性学习手册》280章八大LEVEL的知识图谱与学习路径。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <!-- MathJax 数学公式渲染引擎 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 0</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">走进网储世界</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">双碳目标、新型电力系统与储能使命</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="00_1_1_能源转型与储能使命.html" class="nav-prev" title="上一节：站在能源革命的十字路口">← 上节</a>
+        <a href="../level_01/01_1_1_电荷基础.html" class="nav-next" title="下一节：电荷：万物皆有电">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 0</span>
+        <span class="sep">›</span>
+        <span>走进网储世界</span>
+        <span class="sep">›</span>
+        <span>双碳目标、新型电力系统与储能使命</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">00_1_2</span>
+        <span class="reading-time">⏱ 约28分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>双碳目标、新型电力系统与储能使命</h1>
+      <p class="chapter-lead">解析新型电力系统“双高”与“双随机”物理挑战，构建涵盖280章八大LEVEL的网储全景知识图谱与专家进阶路径。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>深刻理解“双碳”目标与新型电力系统的核心特征</strong>：掌握“高比例可再生能源、高比例电力电子设备”（双高）以及“供给侧随机、需求侧随机”（双随机）对传统电力系统“源随荷动”模式的颠覆性重构。</li>
+        <li><strong>理清新型储能在新型电力系统中的“三端五类”战略使命</strong>：掌握储能在电源侧（削峰填谷/平滑出力）、电网侧（调频调压/缓解拥堵/黑启动）、负荷侧（需求响应/虚拟电厂）的核心功能定位与商业模式联动。</li>
+        <li><strong>建立全书280章八大LEVEL的系统知识图谱</strong>：理清从LEVEL 1（电能基础与电路）到LEVEL 7（项目评估与实操）的递进逻辑，掌握“理论-技术-系统-工程-市场”五位一体的学习方法。</li>
+        <li><strong>制定高效的个人学习路线图与防坑指南</strong>：学会利用本手册的交互测验、案例边栏、SVG拓扑图与真实工程参数指标，实现从零基础新手向复合型网储专家的高效蜕变。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：当“分布式光伏大爆发”遇到“配电网反向送电”</h2>
+      <p>2024年深春的某天正午，华东某县级供电公司的电网调度中心突然接连触发了数十条紧急告警信号。告警显示，辖区内多个35千伏及10千伏变电站的主变压器发生了严重的“功率反向倒灌”——原本应该由上级电网向下级负荷输送电力的变压器，此时却因为农村屋顶分布式光伏的全面大发，将海量的余电反向推回了高压电网。由于当地负荷无法实时消纳如此密集的电能，局部线路电压迅速飙升至额定值的115%以上，多台光伏逆变器因过压保护频繁跳闸，引发了当地居民与光伏投资商的强烈诉求。</p>
+      <p>类似的一幕正在全国乃至全球范围内频繁上演。从山东、河南等新能源大省在正午时段出现的“零电价”与“负电价”，到西北干线特高压直流通道在无风无光时段因缺乏有效支撑力而面临的输电能力受限，传统的“源随荷动”电网调度模式正在遭遇前所未有的物理瓶颈。2023年6月，国家发改委、国家能源局正式发布《新型电力系统发展蓝皮书》，明确指出：以风能、太阳能为主体的新型电力系统，必须将“新型储能”作为保障电网安全稳定运行、促进清洁能源高效利用的核心支柱。</p>
+      <p>然而，对于广大网储行业的从业者、科研人员、工程工程师以及跨界学习者来说，网储系统（Grid-scale Energy Storage Systems）绝非简单的“大号充电宝”。它横跨了材料电化学、电力电子拓扑、高压电气工程、热力学与液冷控制、数据通信与EMS策略、消防安全规范以及电力现货市场交易等十余个交叉学科。面对如此庞杂的知识体系，初学者极易陷入“只见树木、不见森林”的困境。本节作为《中国网储系统性学习手册》的导读与总纲，将带你拆解新型电力系统的底层演进逻辑，并全面揭示本手册280章八大LEVEL的系统知识全景。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 一、双碳战略下“新型电力系统”的演变逻辑与物理挑战 -->
+      <section>
+        <h2>一、双碳战略下“新型电力系统”的演变逻辑与物理挑战</h2>
+
+        <h3>1.1 从“源随荷动”到“源网荷储互动”的根本变革</h3>
+        <p>百余年来，传统交流电力系统的运行核心建立在“实时平衡”的基本物理法则之上。由于电能难以大规模直接储存，发电厂的输出功率必须在毫秒级时间内与用户的用电负荷完全匹配。在传统电力系统中，这一平衡通过“源随荷动”的控制逻辑来实现：电力调度中心根据日用电曲线预测，指挥具有强调节能力的火电机组、水电机组或燃气机组实时增减出力，从而追踪负荷的变化。</p>
+        <p>然而，在“双碳”（2030年碳达峰、2060年碳中和）战略目标的驱动下，中国电力系统的电源结构正在发生根本性重构。以风电和太阳能光伏为代表的可再生能源正从“补充能源”加速跨越为“主体能源”。可再生能源最大的物理特性在于其气象依赖性——光伏在阴雨天气或夜间出力归零，风电具有明显的“逆负荷特性”（夜间风大负荷低，白天风小负荷高）。这使得发电侧从传统的“可控确定性”全面转向“极强随机性、波动性与间歇性”。</p>
+        <p>当发电侧不再能够自由随负荷而动，而负荷侧又随着电动汽车、分布式冷热电联供等新型负荷的涌现而更加不可预测时，传统的“源随荷动”单向控制链条彻底失效。电力系统必须向发电（源）、输配（网）、用电（荷）、存储（储）四维高度协同的“源网荷储柔性互动”新范式跨越。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：新型电力系统的调频与储能，就像高速公路上的“缓冲避险车道与智能刹车系统”</strong>
+            <p>传统电力系统就像由经验丰富的司机驾驶的重型蒸汽火车，惯量巨大（重型转子），即使偶尔踩错刹车或遇到小坡，火车也能凭惯性平稳前行；而新型电力系统（高比例风光与电力电子器件）就像成千上万辆轻量化的电动滑板车在高速公路上并列行驶，虽然加速极快，但缺少重型机车提供的物理惯性。一旦某辆滑板车发生碰撞或突遇阵风（新能源突然脱网或光伏被阴云遮挡），若没有沿途安装的“超级弹簧缓冲避险车道”（储能系统毫秒级充放电），整个车队就会瞬间发生连锁连环追尾（引发全网频率崩溃与大面积停电）。</p>
+          </div>
+        </div>
+
+        <h3>1.2 新型电力系统的“双高”与“双随机”物理特征</h3>
+        <p>在电力系统工程学中，新型电力系统被总结为具有极其突出的“双高”与“双随机”物理特征：</p>
+        <ul>
+          <li><strong>高比例可再生能源（High Proportion of Renewable Energy）</strong>：可再生能源装机与发电量占比持续攀升。由于风光发电缺乏同步发电机转子的机械旋转惯量，系统整体惯量水平大幅下降，导致电网承受功率突变时的抗扰动能力（频率变化率 RoCoF）显著恶化。</li>
+          <li><strong>高比例电力电子设备（High Proportion of Power Electronics）</strong>：光伏逆变器、风电变流器、直流通道及PCS等电力电子器件全面取代传统的同步发电机接入电网。电力电子器件过载能力极弱（通常仅为1.2~1.5倍额定电流，而同步发电机可承受数倍短路电流），缺乏过载能力与转子阻尼特性，使电网易发生高频/低频振荡与电压失稳。</li>
+          <li><strong>供给侧随机性（Supply-side Randomness）</strong>：寒潮、极热无风、连续阴雨等极端气象事件直接导致新能源出力急剧下降甚至“零发”；相反，在晴朗无风的正午，光伏出力极大，易超出局部电网消纳能力。</li>
+          <li><strong>需求侧随机性（Demand-side Randomness）</strong>：极端天气下居民降温/采暖负荷呈爆发式增长，配合大功率快速充电桩的普及，负荷侧的峰谷差进一步拉大，尖峰负荷持续时间短但峰值极高。</li>
+        </ul>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>对比维度</th>
+                <th>传统电力系统（化石能源为主）</th>
+                <th>新型电力系统（新能源为主+新型储能）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>主力电源结构</strong></td>
+                <td>同步发电机（煤电、水电、核电），具备强确定性与高过载能力</td>
+                <td>风电、光伏为主，通过电力电子逆变器接入，具备随机性与弱过载能力</td>
+              </tr>
+              <tr>
+                <td><strong>系统物理惯量</strong></td>
+                <td>高惯量（转子巨大旋转动能），抗频率突变能力强（RoCoF低）</td>
+                <td>低惯量/无惯量（电子器件无机械转子），必须依靠构网型储能提供虚拟惯量</td>
+              </tr>
+              <tr>
+                <td><strong>平衡控制模式</strong></td>
+                <td>“源随荷动”：单向刚性调度火电/水电机组追赶负荷曲线</td>
+                <td>“源网荷储协同”：多能互补、双向柔性互动，利用储能实现时空解耦</td>
+              </tr>
+              <tr>
+                <td><strong>电网安全风险</strong></td>
+                <td>主要为单一设备故障导致的过载与低频相干失步风险</td>
+                <td>宽频振荡、高频脱网、电压无功支撑不足、极端天气引发的供需双枯风险</td>
+              </tr>
+              <tr>
+                <td><strong>储能定位与角色</strong></td>
+                <td>辅助角色（抽水蓄能为主，主要用于腰荷/调峰与日夜平衡）</td>
+                <td>核心支柱（抽蓄+多元新型储能，涵盖毫秒级调频到小时/天/季节级存储）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1.3 网储系统：打破电网“时空平衡枷锁”的唯一解</h3>
+        <p>面对新型电力系统的物理挑战，依靠传统的扩大电网基建或增加火电备用容量存在成本过高、碳排放超标以及建设周期长等不可调和的矛盾。网储系统（Grid-scale Energy Storage Systems）作为一种兼具“电源”与“负荷”双重属性的灵活性资源，成为了打破电网“实时时空平衡枷锁”的唯一钥匙：</p>
+        <p>在<strong>时间维度</strong>上，储能系统可以在风光大发、电价低洼的平谷时段吸收电能（充当负荷），在用电高峰、气象大发间歇或电价高昂时段释放电能（充当电源），实现电能在分钟级、小时级直至天级维度的平滑转移与高效利用。</p>
+        <p>在<strong>空间维度</strong>上，通过在电网关键节点（如变电站侧、交直流汇集站侧）部署网储系统，可以有效缓解特高压输电线路的局部阻塞，避免为了满足短时间尖峰负荷而盲目扩建高压输电线路，大幅提升既有电网资产的整体利用率。</p>
+      </section>
+
+      <!-- 二、新型储能在源-网-荷全环节的核心使命与拓扑形态 -->
+      <section>
+        <h2>二、新型储能在源-网-荷全环节的核心使命与拓扑形态</h2>
+
+        <h3>2.1 源端（电源侧储能）：从“被动配储”向“主动构网”跨越</h3>
+        <p>在集中式风电场与大型光伏基地侧部署储能，最初主要源于各省政策要求的“新能源强制配储”（通常按装机容量的10%~20%、时长2~4小时配置）。然而，随着技术的演进，电源侧储能正在从早期被动的“政策履约工具”向主动提升新能源品质的“主力电源部件”跨越。</p>
+        <p>电源侧储能的核心使命包括：<strong>平滑风光出力曲线</strong>（消除短时云遮或突发阵风造成的功率陡降）、<strong>一次调频与二次调频</strong>（响应电网频率波动）、<strong>减少弃风弃光率</strong>（将午间无法上网的弃电存入电池）。更重要的是，基于构网型控制（Grid-forming Control）技术的新型储能PCS，能够模拟同步发电机的主动电压支撑能力，为弱电网环境下的新能源汇集站提供必需的短路容量与虚拟惯量，彻底解决了“新能源大发引发电网脱网”的技术难题。</p>
+
+        <h3>2.2 网端（电网侧独立/共享储能）：电网的“巨型水库”与无形支柱</h3>
+        <p>电网侧储能通常直接接入变电站母线或输电网关键枢纽，具备独立法人地位，以“独立储能”或“共享储能”的商业形态运行。由于其直接服务于区域电网整体，具备更高的调度优先级与更宽广的响应范围。</p>
+        <p>电网侧储能的核心使命包含：<strong>调频与调压辅助服务</strong>（利用电化学储能毫秒级响应特性，提供远优于传统火电的高品质调频服务）、<strong>缓解输配电阻塞</strong>（在电力传输狭窄通道部署，避免线路过载）、<strong>备用容量与黑启动支撑</strong>（当电网发生重大故障停电时，作为无外部电源支撑下的启动电源，引导大电网恢复运行）。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：山东鲁能三不店100MW/200MWh独立储能电站现货套利与辅助服务实操</strong>
+            <p>作为中国最早批次投入商业化运行的独立共享储能示范项目之一，山东鲁能三不店电站（位于山东省菏泽市）采用了磷酸铁锂电池与高压级联/集中式PCS集成方案。在山东省电力现货市场与容量补偿机制下，该电站打破了传统“靠单一租赁费回款”的模式：通过每天“两充两放”参与现货市场套利（正午低电价充、晚高峰高电价放，日均价差可达0.6~0.8元/kWh），同时为当地电网提供毫秒级一次调频服务并收取容量补偿费，年综合收益率显著高于传统配储项目，成为中国电网侧共享储能商业化落地的典型标杆。</p>
+          </div>
+        </div>
+
+        <h3>2.3 荷端（用户侧与虚拟电厂）：分布式微网与负荷柔性化</h3>
+        <p>用户侧储能广泛安装于工商业园区、数据中心、5G基站以及居民住宅侧。随着各省工商业峰谷分时电价价差的持续扩大（许多省份最大价差已超过0.7~1.0元/kWh），工商业储能凭借“两充两放峰谷套利”获得了极其明确的投资回报周期（通常在3.5~5年之间）。</p>
+        <p>除了峰谷套利外，用户侧储能还能帮助企业实现<strong>容量电费管理</strong>（降低需量电费）、<strong>动态增容</strong>（避免因临时扩大产能而申请高额变压器扩容）、<strong>应急备电与防雷保电</strong>（在停电瞬间微秒级切换为离网模式，保障精密制造线与数据中心不中断）。通过虚拟电厂（Virtual Power Plant, VPP）平台，海量的分布式用户侧储能更被聚合为一个庞大的“柔性可调负荷”，统一参与电力现货市场与需求侧响应，释放出庞大的分布式生态价值。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <h4>📌 核心概念：储能系统平准化度电成本 (LCOE) 模型</h4>
+            <p>评估网储系统全生命周期经济性的核心指标为度电成本（Levelized Cost of Storage, LCOE），其数学计算式为：</p>
+
+            <div class="formula-block">
+              <div class="formula-main">
+                $$\text{LCOE} = \frac{\text{CAPEX} + \sum_{t=1}^{N} \frac{\text{OPEX}_t + \text{Cost}_{\text{charge},t}}{(1+r)^t}}{\sum_{t=1}^{N} \frac{E_{\text{discharge},t}}{(1+r)^t}}$$
+              </div>
+              <ul class="formula-param-list">
+                <li><strong>CAPEX</strong>（Capital Expenditure）：电站初始建设总投资（包含电池、PCS、BMS、EMS、消防与EPC工程成本）；</li>
+                <li><strong>OPEX<sub>t</sub></strong>（Operational Expenditure）：第 <em>t</em> 年电站运营维护与检修费用；</li>
+                <li><strong>Cost<sub>charge,t</sub></strong>：第 <em>t</em> 年吸收的总充电电费成本；</li>
+                <li><strong>E<sub>discharge,t</sub></strong>：第 <em>t</em> 年向电网放出的总电量（受系统循环效率 RTE 影响）；</li>
+                <li><strong>r</strong>：贴现率 / 折现率（Discount Rate）；</li>
+                <li><strong>N</strong>：系统设计运行寿命周期（年）。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 800x450 SVG 拓扑图 -->
+        <figure class="svg-figure">
+          <svg width="100%" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bgGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#E8F2FF"/>
+                <stop offset="100%" stop-color="#F4F6F8"/>
+              </linearGradient>
+              <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+                <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#1A5F96" flood-opacity="0.12"/>
+              </filter>
+            </defs>
+
+            <!-- 背景 -->
+            <rect x="10" y="10" width="780" height="430" rx="12" fill="url(#bgGlow)" stroke="#E2E8F0" stroke-width="1.5"/>
+
+            <!-- 标题 -->
+            <text x="400" y="42" font-family="Noto Sans SC, sans-serif" font-size="18" font-weight="700" fill="#1A5F96" text-anchor="middle">新型电力系统“源-网-荷-储”多能互补与时空解耦拓扑架构图</text>
+
+            <!-- 1. 源端 (Power Source) -->
+            <g filter="url(#shadow)">
+              <rect x="40" y="80" width="200" height="150" rx="8" fill="#FFFFFF" stroke="#1A5F96" stroke-width="2"/>
+              <rect x="40" y="80" width="200" height="32" rx="8" fill="#1A5F96"/>
+              <text x="140" y="102" font-family="Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">⚡ 发电侧（源端）</text>
+              <text x="55" y="135" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 大型沙漠/戈壁光伏基地</text>
+              <text x="55" y="158" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 陆上 / 海上风电场</text>
+              <text x="55" y="181" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 梯级大水电 / 调峰火电</text>
+              <text x="55" y="210" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#F57C00">核心痛点：波动/间歇/无惯量</text>
+            </g>
+
+            <!-- 2. 网端 (Power Grid) -->
+            <g filter="url(#shadow)">
+              <rect x="290" y="80" width="220" height="150" rx="8" fill="#FFFFFF" stroke="#1A5F96" stroke-width="2"/>
+              <rect x="290" y="80" width="220" height="32" rx="8" fill="#1A5F96"/>
+              <text x="400" y="102" font-family="Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">🌐 输配电网（网端）</text>
+              <text x="305" y="135" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• ±800kV 特高压直流 (UHVDC)</text>
+              <text x="305" y="158" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 500kV/220kV 区域主干电网</text>
+              <text x="305" y="181" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 10kV/35kV 智能配电网</text>
+              <text x="305" y="210" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#F57C00">核心痛点：线路阻塞/动态调频</text>
+            </g>
+
+            <!-- 3. 荷端 (Power Load) -->
+            <g filter="url(#shadow)">
+              <rect x="560" y="80" width="200" height="150" rx="8" fill="#FFFFFF" stroke="#1A5F96" stroke-width="2"/>
+              <rect x="560" y="80" width="200" height="32" rx="8" fill="#1A5F96"/>
+              <text x="660" y="102" font-family="Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">🏭 负荷侧（荷端）</text>
+              <text x="575" y="135" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 高耗能工业企业 / 园区</text>
+              <text x="575" y="158" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• IDC数据中心 / 5G基站</text>
+              <text x="575" y="181" font-family="Noto Sans SC, sans-serif" font-size="12" fill="#4A5568">• 居民负荷 / EV超充站</text>
+              <text x="575" y="210" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#F57C00">核心痛点：峰谷差大/需量费高</text>
+            </g>
+
+            <!-- 4. 储能枢纽 (Energy Storage Hub - 底部中央) -->
+            <g filter="url(#shadow)">
+              <rect x="140" y="280" width="520" height="130" rx="10" fill="#1A5F96" stroke="#0D3F6F" stroke-width="2"/>
+              <text x="400" y="308" font-family="Noto Sans SC, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">🔋 储能系统协同枢纽（网储系统 - 时空解耦核心）</text>
+
+              <!-- 三种储能子形态 -->
+              <rect x="160" y="325" width="140" height="70" rx="6" fill="#FFFFFF"/>
+              <text x="230" y="348" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#1A5F96" text-anchor="middle">电源侧构网储能</text>
+              <text x="230" y="370" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">一次调频 / 平滑输出</text>
+              <text x="230" y="385" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">抑制弃风弃光</text>
+
+              <rect x="330" y="325" width="140" height="70" rx="6" fill="#FFFFFF"/>
+              <text x="400" y="348" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#1A5F96" text-anchor="middle">电网侧独立/共享储能</text>
+              <text x="400" y="370" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">调频调压 / 现货套利</text>
+              <text x="400" y="385" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">容量租赁 / 黑启动</text>
+
+              <rect x="500" y="325" width="140" height="70" rx="6" fill="#FFFFFF"/>
+              <text x="570" y="348" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="600" fill="#1A5F96" text-anchor="middle">用户侧工商业/VPP</text>
+              <text x="570" y="370" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">峰谷套利 / 动态增容</text>
+              <text x="570" y="385" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#718096" text-anchor="middle">需求响应 / 离网保电</text>
+            </g>
+
+            <!-- 连接线与箭头 -->
+            <path d="M 140 230 L 140 255 L 240 255 L 240 280" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="4,4" fill="none"/>
+            <path d="M 400 230 L 400 280" stroke="#1A5F96" stroke-width="2.5" fill="none"/>
+            <path d="M 660 230 L 660 255 L 560 255 L 560 280" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="4,4" fill="none"/>
+
+            <polygon points="240,280 235,270 245,270" fill="#F57C00"/>
+            <polygon points="400,280 395,270 405,270" fill="#1A5F96"/>
+            <polygon points="560,280 555,270 565,270" fill="#F57C00"/>
+
+            <!-- 双向能量流动标注 -->
+            <rect x="230" y="145" width="60" height="20" rx="4" fill="#F57C00"/>
+            <text x="260" y="159" font-family="Noto Sans SC, sans-serif" font-size="10" font-weight="600" fill="#FFFFFF" text-anchor="middle">单向输电 ➔</text>
+
+            <rect x="505" y="145" width="60" height="20" rx="4" fill="#F57C00"/>
+            <text x="535" y="159" font-family="Noto Sans SC, sans-serif" font-size="10" font-weight="600" fill="#FFFFFF" text-anchor="middle">配电分发 ➔</text>
+
+            <rect x="340" y="245" width="120" height="22" rx="4" fill="#E8F2FF" stroke="#1A5F96"/>
+            <text x="400" y="260" font-family="Noto Sans SC, sans-serif" font-size="11" font-weight="600" fill="#1A5F96" text-anchor="middle">⮂ 双向毫秒级充放电调节</text>
+          </svg>
+          <figcaption>图 00-1-2：新型电力系统“源-网-荷-储”多能互补与时空解耦拓扑架构示意图</figcaption>
+        </figure>
+      </section>
+
+      <!-- 三、手册全景图谱：从零基础到网储专家的八大LEVEL架构 -->
+      <section>
+        <h2>三、手册全景图谱：从零基础到网储专家的八大LEVEL架构</h2>
+
+        <h3>3.1 280章知识图谱的八层认知阶梯</h3>
+        <p>为了帮助读者从零基础开始，建立起严密、系统且可工程落地的网储知识体系，《中国网储系统性学习手册》将全书280个独立章节划分为八个由浅入深、层层递进的 LEVEL。每一层均聚焦于网储产业链的一个核心环节：</p>
+
+        <ul>
+          <li><strong>LEVEL 0：写在前面（2节）</strong>—— 阐述全球能源转型背景、双碳战略意义、新型电力系统的物理瓶颈以及全手册的使用指南与学习路线。</li>
+          <li><strong>LEVEL 1：电能基础知识（21节）</strong>—— 筑牢电气与物理学底座。从电荷、电流、电压、电阻与欧姆定律，到交流电相角、三相交流系统、电磁感应、电容电感组件以及功率因数补偿。</li>
+          <li><strong>LEVEL 2：储能技术全景（28节）</strong>—— 横向梳理物理储能（抽水蓄能、压缩空气、飞轮储能）、电化学储能（锂离子电池、钠离子电池、液流电池、铅碳电池）、热储能与氢储能等全家族路线的技术原理、能量密度与适用场景。</li>
+          <li><strong>LEVEL 3：电池系统深度拆解（45节）</strong>—— 纵向深钻电化学储能的核心主体。详细拆解磷酸铁锂与三元电芯材料学、正负极界面 (SEI)、电池单体到Pack集成工艺、BMS（电池管理系统）三层架构、SOX算法（SOC/SOH/SOP/SOE）以及液冷与风冷热管理设计。</li>
+          <li><strong>LEVEL 4：PCS与电气集成（42节）</strong>—— 聚焦电能转换与电气工程。涵盖储能变流器（PCS）拓扑结构、IGBT/SiC功率器件驱动、跟网与构网控制算法、高低压开关柜、隔离变压器、接地保护及防雷系统。</li>
+          <li><strong>LEVEL 5：EMS与软件控制（38节）</strong>—— 打造电站的“大脑”。系统讲解能量管理系统（EMS）软件架构、Modbus/IEC 61850/MQTT通信协议、云边协同调度策略、削峰填谷/防逆流算法、虚拟电厂（VPP）聚合平台与AI电池健康度预测。</li>
+          <li><strong>LEVEL 6：安全、消防与标准（36节）</strong>—— 守牢储能项目的生死红线。深度剖析锂电池热失控机理、气体产物演变、可燃气体预警、全氟己酮与水喷淋灭火系统、舱体泄爆设计、NFPA 855/GB/T 36547等国内外最新消防安全标准。</li>
+          <li><strong>LEVEL 7：商业模式、项目评估与实战（68节）</strong>—— 连接技术与工程商业落地。涵盖电力现货市场交易策略、辅助服务补偿机制、共享储能租赁契约、项目财务LCOE/IRR测算模型、EPC工程建设计划、招投标合规性以及经典大厂项目实战案例。</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>关键要点：高效学习网储的“三跨越”方法论</strong>
+            <p>1. <strong>跨越电化学与电气工程边界</strong>：搞电气的工程师要懂电池SEI膜与热失控机理，搞材料的工程师要懂PCS三相逆变与电网谐波要求；<br>
+            2. <strong>跨越硬件硬件与软件控制边界</strong>：理解硬件Pack结构的同时，必须明白BMS的SOC均衡算法与EMS的云端通信时延如何共同影响系统可用容量；<br>
+            3. <strong>跨越技术原理与商业市场边界</strong>：技术选型（如LFP vs 钠电）绝不能脱离当地电力现货市场的峰谷价差、充放电频次要求与容量补偿政策。</p>
+          </div>
+        </div>
+
+        <h3>3.2 本手册独特的“8段式”模块化写作规范</h3>
+        <p>为保证280个章节拥有极高的教学质量与统一的阅读体验，本手册每一节均严格遵循相同的“8段式”模块化结构：</p>
+        <ol>
+          <li><strong>场景引入（200-400字）</strong>：拒绝干瘪的“定义轰炸”，统一采用真实工程痛点、极端天气事件或现场数据引入；</li>
+          <li><strong>学习目标（3-5条）</strong>：明确本节核心知识落地指标；</li>
+          <li><strong>正文核心内容（不少于5,000字纯文本）</strong>：划分为2~4个H2子模块，穿插中国真实案例、生活类比、关键公式与矢量SVG图表；</li>
+          <li><strong>本节小结（200-300字）</strong>：精炼Bullet要点，便于快速复习；</li>
+          <li><strong>底部导航（bottom-nav）</strong>：无缝链接上一节、主页与下一节；</li>
+          <li><strong>知识测验（5道单选题）</strong>：每题附带100-150字深度解析，计入巩固成果；</li>
+          <li><strong>相关章节（3-5个关联链接）</strong>：形成交叉索引网；</li>
+          <li><strong>标准化页脚</strong>。</li>
+        </ol>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索方向：数字孪生与大模型在网储全生命周期中的前沿应用</strong>
+            <p>随着集中式储能电站迈向百兆瓦级（100MW/200MWh）甚至吉瓦时级（GWh），传统的定期人工巡检模式难以为继。目前业内前沿正结合物理电化学模型与机理-数据混合驱动的“数字孪生”（Digital Twin）技术，在云端对每一个电芯的内阻、析锂状态与SOH衰减曲线进行毫秒级映射。同时，生成式AI与强化学习算法正被应用于EMS交易决策模块，根据日前电力现货价格预测与天气预报，自动生成收益最大化的充放电调度方案。读者可在 LEVEL 5 与 LEVEL 7 中重点关注该方向。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 四、高效学习路径指南与防坑避坑法则 -->
+      <section>
+        <h2>四、高效学习路径指南与防坑避坑法则</h2>
+
+        <h3>4.1 针对不同从业者的个性化定制学习路线</h3>
+        <p>由于网储行业的复合型特征，不同背景的读者在阅读本手册时无需从头到尾平铺直叙，可根据自身知识背景选择最适配的快速进阶路线：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>读者背景 / 岗位目标</th>
+                <th>建议重点研读LEVEL顺序</th>
+                <th>核心能力突破点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>电气 / 电力系统工程师</strong></td>
+                <td>LEVEL 0 ➔ LEVEL 3 ➔ LEVEL 5 ➔ LEVEL 6</td>
+                <td>突破电芯电化学热失控机理、BMS SOC算法与消防安全规范</td>
+              </tr>
+              <tr>
+                <td><strong>电池材料 / 电芯工程师</strong></td>
+                <td>LEVEL 0 ➔ LEVEL 1 ➔ LEVEL 4 ➔ LEVEL 5</td>
+                <td>突破交流电路、PCS变流器拓扑、电网接入规范与EMS控制逻辑</td>
+              </tr>
+              <tr>
+                <td><strong>项目经理 / EPC工程人员</strong></td>
+                <td>LEVEL 0 ➔ LEVEL 2 ➔ LEVEL 6 ➔ LEVEL 7</td>
+                <td>掌握全套储能技术选型、消防安规验收、EPC施工计划与招投标</td>
+              </tr>
+              <tr>
+                <td><strong>投资分析师 / 商务 / 决策层</strong></td>
+                <td>LEVEL 0 ➔ LEVEL 2 ➔ LEVEL 7</td>
+                <td>掌握LCOE/IRR财务模型、现货套利机制、政策补贴与容量租赁</td>
+              </tr>
+              <tr>
+                <td><strong>零基础跨界学习者</strong></td>
+                <td>LEVEL 0 ➔ LEVEL 1 ➔ LEVEL 2 ➔ ... ➔ LEVEL 7</td>
+                <td>循序渐进，利用每节的“生活类比”与“交互测验”打牢基础</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.2 防坑避坑：网储学习与实务中的四大误区</h3>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区与避坑指南：警惕网储工程与学习中的“四大陷阱”</strong>
+            <p>1. <strong>误区一：把网储简单等同于“大号电动汽车电池”</strong>。电动汽车电池追求极高的体积能量密度，充放电倍率较高但循环寿命要求通常在1500~3000次；而网储系统追求全生命周期极低的LCOE，要求电芯循环寿命达到6000~15000次，且对Pack的热均衡性与舱级消防提出了近乎苛刻的要求。<br>
+            2. <strong>误区二：只谈“额定容量”，忽视“系统充放电效率 (RTE)”</strong>。不少初学者在算账时默认充放电效率为100%，实际上由于PCS转换损耗、BMS自耗电、液冷机组/空调散热消耗以及电池内阻发热，集中式电站的AC-AC RTE普遍在85%~90%之间。漏算5%的RTE将导致项目投资收益率测算严重偏离实际。<br>
+            3. <strong>误区三：脱离“电价机制与市场规则”空谈技术优劣</strong>。某种储能技术（如长时液流电池）在技术参数上可能非常优秀，但在当地电力市场缺乏长时容量补偿机制的情况下，其经济性可能远逊于磷酸铁锂电池。技术的商业生命力完全取决于政策与市场规则。<br>
+            4. <strong>误区四：忽视“安全与消防”的红线地位</strong>。储能电站一旦发生热失控起火，往往伴随着氢气、一氧化碳等可燃毒性气体的复燃爆炸。忽视GB/T 36547、NFPA 855等强制标准，轻则导致工程无法通过验收开工，重则引发重大安全事故。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>新型电力系统转型必然性</strong>：在双碳战略推动下，电力系统正从“源随荷动”向“源网荷储协同”转变，呈现出高比例可再生能源、高比例电力电子设备（双高）及供给侧/需求侧随机性（双随机）的典型特征。</li>
+        <li><strong>网储系统的战略调节使命</strong>：储能作为兼具电源与负荷双重属性的灵活性资源，在源端平滑输出与主动构网，在网端调频调压与缓解阻塞，在荷端峰谷套利与虚拟电厂聚合，是实现电网时空解耦的唯一解。</li>
+        <li><strong>全书280章八大LEVEL图谱</strong>：本手册构建了从 LEVEL 0（写在前面）到 LEVEL 7（商业与项目评估）的完整认知阶梯，覆盖电能基础、技术全景、电池拆解、PCS电气集成、EMS软件、安全消防及项目实操。</li>
+        <li><strong>“8段式”教学与避坑法则</strong>：每节遵循场景引入、学习目标、正文、小结、导航、测验、相关章节与页脚。学习网储需跨越电化学、电气与市场边界，警惕忽视RTE、脱离市场政策与轻视安全红线等误区。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="chapter-quiz">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在新型电力系统工程学中，常常提到的“双高”特征指的是以下哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 高用电负荷、高输电电压</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 高比例可再生能源、高比例电力电子设备</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 高建设成本、高投资收益率</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 高二氧化碳排放、高煤炭消耗占比</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：新型电力系统的“双高”特征特指“高比例可再生能源”与“高比例电力电子设备”。前者导致系统缺乏传统的转子机械惯量，使电网频率抗扰能力下降；后者由于电力电子逆变器件过载能力弱且无固有阻尼特性，容易引发宽频振荡与电压失稳。选项B准确概括了这一物理特征。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于“构网型”（Grid-forming）储能变流器（PCS）与传统“跟网型”（Grid-following）PCS的本质区别，下列说法正确的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 跟网型PCS能够主动构建电网电压与频率，而构网型必须依赖外部大电网相角锁相</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 构网型PCS能够呈现电压源外特性，主动提供虚拟惯量与短路容量支撑</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 构网型PCS仅适用于小功率工商业储能，无法用于百兆瓦级集中式电站</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 跟网型PCS的转换效率比构网型PCS低30%以上</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：跟网型PCS作为电流源运行，必须依赖外部电网的电压与频率进行锁相（PLL）；而构网型PCS呈现理想电压源外特性，通过算法模拟同步发电机的转子运动方程，能够在弱电网或孤网环境下主动构建稳定的电压与频率，并为电网提供虚拟惯量和短路电流支撑。因此选项B正确。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在评估网储电站全生命周期经济性时，系统循环效率（RTE）对度电成本（LCOE）有直接影响。若某电站的电池Pack效率为95%，PCS逆变效率为98%，变压器效率为99%，BMS/液冷散热等自耗电占2%，该电站的AC-AC RTE最接近以下哪个数值？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 98.0%</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 95.0%</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 87.5%</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 70.0%</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：储能电站系统交流到交流（AC-AC）总效率为全路径各环节效率的乘积并扣除辅助自用电。充电阶段 AC-DC 效率与放电阶段 DC-AC 效率双向叠加：<br><code>RTE ≈ η<sub>PCS</sub><sup>2</sup> × η<sub>trans</sub><sup>2</sup> × η<sub>battery</sub> × (1 - 自耗电比例) ≈ 0.98<sup>2</sup> × 0.99<sup>2</sup> × 0.95 × (1 - 0.02) ≈ 87.6%</code>。因此最接近 87.5%，选项 C 正确。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在本手册的八大LEVEL体系中，涉及BMS三层架构、电池SOX估计算法（SOC/SOH）与液冷/风冷热管理设计的是哪一个LEVEL？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. LEVEL 1 电能基础知识</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. LEVEL 3 电池系统深度拆解</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. LEVEL 5 EMS与软件控制</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. LEVEL 7 商业模式与项目评估</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：在本手册的八大LEVEL划分中，LEVEL 3 专门聚焦于“电池系统深度拆解”，涵盖电芯电化学材料、正负极界面、Pack结构集成、BMS三层硬件架构、SOX核心算法以及风冷/液冷热管理设计。选项B正确。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 关于用户侧工商业储能的商业模式，下列说法错误的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 最核心的收益来源是利用当地工商业峰谷分时电价价差进行“两充两放”套利</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 储能系统可以降低企业的需量电费（容量电费管理）</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 用户侧储能无法接入虚拟电厂（VPP）平台参与电网需求响应</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 在外部电网突然停电时，具备孤网切换功能的工商业储能可充当应急备用电源</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项C说法错误。目前工商业储能正广泛通过物联网通信接口接入虚拟电厂（VPP）聚合平台。通过云端统一协同，成千上万个用户侧储能可以被聚合为毫秒/秒级响应的“虚拟发电厂”，共同参与电网的需求侧响应与电力现货市场，从而获得额外的辅助服务补偿。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑧ 相关章节 -->
+    <section class="related-chapters">
+      <h2>🔗 相关章节</h2>
+      <ul>
+        <li><a href="00_1_1_能源转型与储能使命.html">00_1_1 站在能源革命的十字路口</a></li>
+        <li><a href="../level_01/01_1_1_电荷基础.html">01_1_1 电荷：万物皆有电</a></li>
+        <li><a href="../level_02/02_1_1_储能技术全景图.html">02_1_1 储能技术全景图与技术路线对比</a></li>
+        <li><a href="../level_07/07_1_1_储能商业模式与电价机制.html">07_1_1 中国储能商业模式、现货交易与电价机制</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑨ 底部章节导航 -->
+    <nav class="bottom-nav">
+      <a href="00_1_1_能源转型与储能使命.html" class="nav-btn nav-prev">
+        <span class="nav-dir">← 上一节</span>
+        <span class="nav-title">00_1_1 站在能源革命的十字路口</span>
+      </a>
+      <a href="../../index.html" class="nav-btn nav-home">
+        <span class="nav-dir">返回</span>
+        <span class="nav-title">📋 目录主页</span>
+      </a>
+      <a href="../level_01/01_1_1_电荷基础.html" class="nav-btn nav-next">
+        <span class="nav-dir">下一节 →</span>
+        <span class="nav-title">01_1_1 电荷：万物皆有电</span>
+      </a>
+    </nav>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="site-footer">
+      <p>中国网储系统性学习手册 · 从零基础到网储专家 | 遵循 MIT 开源协议</p>
+      <p>© 2026 Grid Energy Storage Knowledge Base. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
