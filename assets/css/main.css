@@ -503,7 +503,8 @@ a:hover { text-decoration: underline; }
 }
 
 /* ── 14. 知识测验 ───────────────────────────────────────────────── */
-.quiz-section {
+.quiz-section,
+.chapter-quiz {
   background: var(--c-bg-card);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-xl);
@@ -511,7 +512,8 @@ a:hover { text-decoration: underline; }
   margin: 2.5rem 0;
   box-shadow: var(--shadow-md);
 }
-.quiz-section > h2 {
+.quiz-section > h2,
+.chapter-quiz > h2 {
   font-size: var(--text-xl) !important;
   border: none !important;
   margin-top: 0 !important;
@@ -583,37 +585,50 @@ a:hover { text-decoration: underline; }
 }
 
 /* ── 15. 相关章节 ───────────────────────────────────────────────── */
-.cross-refs {
-  margin: 2rem 0;
+.cross-refs,
+.related-chapters {
+  margin: 3rem 0 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--c-border-light);
 }
-.cross-refs h2 {
+.cross-refs h2,
+.related-chapters h2 {
   font-size: var(--text-lg) !important;
   border: none !important;
   margin-top: 0 !important;
-  margin-bottom: 1rem !important;
+  margin-bottom: 1.25rem !important;
+  color: var(--c-text-primary);
 }
-.cross-ref-list {
+.cross-ref-list,
+.related-chapters ul,
+.cross-refs ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.65rem;
   list-style: none;
   padding: 0;
 }
-.cross-ref-list li a {
+.cross-ref-list li a,
+.related-chapters ul li a,
+.cross-refs ul li a {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.4rem 0.85rem;
+  padding: 0.45rem 0.95rem;
   border: 1px solid var(--c-primary);
   border-radius: 20px;
   font-size: var(--text-sm);
   color: var(--c-primary);
+  background: var(--c-bg-card);
   transition: all var(--transition);
 }
-.cross-ref-list li a:hover {
+.cross-ref-list li a:hover,
+.related-chapters ul li a:hover,
+.cross-refs ul li a:hover {
   background: var(--c-primary);
   color: white;
   text-decoration: none;
+  box-shadow: var(--shadow-sm);
 }
 
 /* ── 16. 页脚 ───────────────────────────────────────────────────── */

@@ -19,3 +19,7 @@ build/
 
 # Antigravity temporary files
 .gemini/
+
+# User runtime data
+data/user_data/
+
