@@ -45,7 +45,7 @@ energy_book/
 │   ├── level_07/             # Level 7 商业投资与项目评估
 │   └── level_08/             # Level 8 前沿技术与专家视野
 ├── assets/                   # 静态资源目录（图片、样式图解等）
-└── documents/                # 原始资料与大纲文档（本地保留，已被 .gitignore 忽略不推送）
+└── documents/                # 原始资料与大纲文档
 ```
 
 ### 1. 数据规范 (`data/toc.json`)

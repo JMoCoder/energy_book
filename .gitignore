@@ -19,6 +19,3 @@ build/
 
 # Antigravity temporary files
 .gemini/
-
-# Local documents / raw drafts (do not push to git)
-documents/
