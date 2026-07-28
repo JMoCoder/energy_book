@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国网储系统性学习手册 · 导览</title>
+  <meta name="description" content="从零基础到网储专家——280个独立章节，正文约140万字，覆盖电能基础、电力系统、电力市场、电化学、储能设备、系统运营、商业投资等全领域。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* ── CSS Variables ─────────────────────────────────────────── */
+    :root {
+      --c-primary:#1A5F96; --c-primary-dark:#0D3F6F; --c-primary-light:#E8F2FF;
+      --c-bg:#F8FAFF; --c-card:#FFFFFF; --c-border:#E2E8F0;
+      --c-text:#1A1A2E; --c-muted:#718096; --c-sec:#4A5568;
+      --font-body:'Noto Sans SC','PingFang SC',sans-serif;
+      --font-ui:'Inter','Noto Sans SC',sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+      --radius:12px; --radius-lg:20px;
+      --shadow:0 4px 16px rgba(0,0,0,0.07);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.1);
+      --transition:0.22s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{font-family:var(--font-body);color:var(--c-text);background:var(--c-bg);line-height:1.7;min-height:100vh}
+    a{text-decoration:none;color:inherit}
+    button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+    /* ── Site Header ────────────────────────────────────────────── */
+    .site-header{
+      position:sticky;top:0;z-index:200;
+      background:rgba(255,255,255,0.93);
+      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--c-border);
+      box-shadow:0 1px 8px rgba(0,0,0,0.05);
+    }
+    .header-inner{
+      max-width:1200px;margin:0 auto;padding:0 2rem;
+      height:60px;display:flex;align-items:center;gap:1.5rem;
+    }
+    .site-logo{
+      display:flex;align-items:center;gap:0.6rem;
+      font-family:var(--font-ui);font-weight:900;font-size:1.05rem;
+      color:var(--c-primary);white-space:nowrap;
+    }
+    .logo-icon{font-size:1.3rem}
+    .header-search{
+      flex:1;max-width:720px;position:relative;
+    }
+    .search-input{
+      width:100%;padding:0.5rem 1rem 0.5rem 2.6rem;
+      border:1.5px solid var(--c-border);border-radius:30px;
+      font-size:0.875rem;font-family:var(--font-body);
+      background:var(--c-bg);color:var(--c-text);
+      transition:border-color var(--transition),box-shadow var(--transition);
+      outline:none;
+    }
+    .search-input:focus{border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(26,95,150,0.1)}
+    .search-icon{
+      position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);
+      color:var(--c-muted);font-size:0.95rem;pointer-events:none;
+    }
+    .header-stats{
+      display:flex;align-items:center;gap:1.25rem;
+      font-family:var(--font-ui);font-size:0.8rem;color:var(--c-muted);
+      white-space:nowrap;
+    }
+    .stat-pill{
+      display:flex;align-items:center;gap:0.35rem;
+      background:var(--c-primary-light);color:var(--c-primary);
+      padding:0.25rem 0.7rem;border-radius:20px;font-weight:600;
+    }
+    .progress-global{
+      display:flex;align-items:center;gap:0.6rem;
+    }
+    .progress-ring-wrap{position:relative;width:36px;height:36px}
+    .progress-ring-svg{transform:rotate(-90deg)}
+    .progress-ring-bg{stroke:#E2E8F0;fill:none;stroke-width:3}
+    .progress-ring-fill{stroke:var(--c-primary);fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease}
+    .progress-ring-text{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-size:0.6rem;font-weight:700;color:var(--c-primary);font-family:var(--font-ui);
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────── */
+    .hero{
+      background:linear-gradient(135deg,#0D3F6F 0%,#1A5F96 45%,#1E7AC4 100%);
+      color:white;padding:5rem 2rem 4rem;text-align:center;
+      position:relative;overflow:hidden;
+    }
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:0.5rem;
+      background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);
+      padding:0.35rem 1rem;border-radius:20px;font-size:0.8rem;
+      font-family:var(--font-ui);margin-bottom:1.5rem;
+      backdrop-filter:blur(8px);
+    }
+    .hero h1{
+      font-family:var(--font-ui);font-size:clamp(2rem,5vw,3.2rem);
+      font-weight:900;line-height:1.15;margin-bottom:0.75rem;
+      text-shadow:0 2px 16px rgba(0,0,0,0.2);
+    }
+    .hero-sub{
+      font-size:1.1rem;opacity:0.85;margin-bottom:2.5rem;max-width:560px;margin-left:auto;margin-right:auto;
+    }
+    .hero-stats{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:0.5rem;
+    }
+    .hero-stat{
+      background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+      padding:0.9rem 1.5rem;border-radius:var(--radius);
+      backdrop-filter:blur(8px);min-width:120px;
+    }
+    .hero-stat-num{
+      font-family:var(--font-ui);font-size:1.75rem;font-weight:900;
+      display:block;line-height:1;margin-bottom:0.3rem;
+    }
+    .hero-stat-label{font-size:0.78rem;opacity:0.8}
+
+    /* ── Main Layout ─────────────────────────────────────────────── */
+    .main-wrap{max-width:1200px;margin:0 auto;padding:3rem 2rem 5rem}
+
+    /* ── Section Title ───────────────────────────────────────────── */
+    .section-title{
+      display:flex;align-items:center;gap:0.75rem;
+      font-family:var(--font-ui);font-size:1.2rem;font-weight:700;
+      color:var(--c-text);margin-bottom:1.75rem;
+    }
+    .section-title::after{
+      content:'';flex:1;height:1px;background:var(--c-border);
+    }
+
+    /* ── Level Grid ──────────────────────────────────────────────── */
+    .level-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:1.25rem;margin-bottom:3.5rem;
+    }
+    .level-card{
+      background:var(--c-card);border:1px solid var(--c-border);
+      border-radius:var(--radius-lg);padding:1.5rem;
+      box-shadow:var(--shadow);cursor:pointer;
+      transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);
+      position:relative;overflow:hidden;
+    }
+    .level-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:4px;
+      background:var(--level-color);
+    }
+    .level-card:hover{
+      transform:translateY(-3px);box-shadow:var(--shadow-lg);
+      border-color:var(--level-color);
+    }
+    .level-card.active{ border-color:var(--level-color); box-shadow:0 0 0 2px var(--level-color); }
+    .level-card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.85rem}
+    .level-badge{
+      display:inline-flex;align-items:center;gap:0.4rem;
+      padding:0.25rem 0.7rem;border-radius:20px;
+      font-family:var(--font-ui);font-size:0.72rem;font-weight:700;
+      background:color-mix(in srgb,var(--level-color) 12%,transparent);
+      color:var(--level-color);
+    }
+    .level-sections-count{
+      font-family:var(--font-mono);font-size:0.75rem;color:var(--c-muted);
+    }
+    .level-card h3{
+      font-size:1.05rem;font-weight:700;color:var(--c-text);
+      margin-bottom:0.35rem;line-height:1.3;
+    }
+    .level-card p{font-size:0.8rem;color:var(--c-muted);line-height:1.5;margin-bottom:1rem}
+    .level-progress-bar{
+      height:5px;background:var(--c-border);border-radius:3px;overflow:hidden;margin-bottom:0.6rem;
+    }
+    .level-progress-fill{
+      height:100%;background:var(--level-color);border-radius:3px;
+      transition:width 0.6s ease;
+    }
+    .level-progress-text{
+      display:flex;justify-content:space-between;
+      font-size:0.72rem;color:var(--c-muted);font-family:var(--font-ui);
+    }
+    .level-card-footer{
+      display:flex;align-items:center;justify-content:space-between;margin-top:0.75rem;
+    }
+    .level-open-btn{
+      font-size:0.78rem;color:var(--level-color);font-weight:600;
+      font-family:var(--font-ui);display:flex;align-items:center;gap:0.3rem;
+    }
+    .level-open-icon{transition:transform var(--transition)}
+    .level-card.active .level-open-icon{transform:rotate(90deg)}
+
+    /* ── Level Expand Panel ──────────────────────────────────────── */
+    .level-panel{
+      display:none;background:var(--c-card);border:1px solid var(--c-border);
+      border-radius:var(--radius-lg);margin-bottom:2rem;
+      overflow:hidden;box-shadow:var(--shadow);
+    }
+    .level-panel.open{display:block;animation:slideDown 0.25s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .level-panel-header{
+      padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1px solid var(--c-border);
+      background:linear-gradient(135deg,color-mix(in srgb,var(--level-color) 6%,transparent),transparent);
+    }
+    .level-panel-title{font-size:1.1rem;font-weight:700;color:var(--c-text)}
+    .level-panel-close{
+      width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      color:var(--c-muted);transition:background var(--transition);font-size:1.2rem;
+    }
+    .level-panel-close:hover{background:var(--c-border)}
+    .chapters-list{padding:1rem 1.75rem}
+    .chapter-group{margin-bottom:1.25rem}
+    .chapter-group-title{
+      font-size:0.78rem;font-weight:700;color:var(--c-muted);
+      text-transform:uppercase;letter-spacing:0.06em;
+      padding:0.5rem 0;border-bottom:1px solid var(--c-border-light,#EDF2F7);
+      margin-bottom:0.6rem;
+      display:flex;align-items:center;gap:0.5rem;
+    }
+    .chapter-group-num{
+      width:22px;height:22px;border-radius:50%;
+      background:color-mix(in srgb,var(--level-color) 15%,transparent);
+      color:var(--level-color);font-size:0.7rem;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .sections-grid{display:flex;flex-wrap:wrap;gap:0.5rem}
+    .section-chip{
+      display:inline-flex;align-items:center;gap:0.4rem;
+      padding:0.35rem 0.8rem;border-radius:8px;font-size:0.8rem;
+      border:1px solid var(--c-border);transition:all var(--transition);
+      position:relative;
+    }
+    .section-chip.available{
+      background:var(--c-card);color:var(--c-text);cursor:pointer;
+    }
+    .section-chip.available:hover{
+      border-color:var(--level-color);background:color-mix(in srgb,var(--level-color) 8%,transparent);
+      color:var(--level-color);transform:translateY(-1px);
+    }
+    .section-chip.planned{
+      background:#FAFAFA;color:var(--c-muted);cursor:default;
+      border-style:dashed;
+    }
+    .section-chip.completed{
+      background:color-mix(in srgb,var(--level-color) 10%,transparent);
+      border-color:var(--level-color);color:var(--level-color);
+    }
+    .chip-icon{font-size:0.7rem}
+    .chip-diff{font-size:0.65rem;opacity:0.7}
+
+    /* ── Search Results ──────────────────────────────────────────── */
+    #search-results{
+      display:none;margin-bottom:2rem;
+    }
+    #search-results.visible{ display:block; }
+    .search-result-list{
+      display:flex;flex-direction:column;gap:0.5rem;
+    }
+    .search-result-item{
+      display:flex;align-items:center;gap:1rem;
+      padding:0.75rem 1.25rem;background:var(--c-card);
+      border:1px solid var(--c-border);border-radius:var(--radius);
+      transition:all var(--transition);
+    }
+    .search-result-item:hover{border-color:var(--c-primary);box-shadow:var(--shadow)}
+    .result-level-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .result-title{font-size:0.9rem;font-weight:500;flex:1}
+    .result-path{font-size:0.75rem;color:var(--c-muted);font-family:var(--font-mono)}
+    .result-link{
+      font-size:0.78rem;color:var(--c-primary);font-weight:600;
+      padding:0.25rem 0.6rem;border:1px solid currentColor;border-radius:6px;
+      white-space:nowrap;
+    }
+    .result-link.locked{color:var(--c-muted);border-color:var(--c-border);cursor:default}
+    .no-results{text-align:center;padding:2rem;color:var(--c-muted);font-size:0.9rem}
+
+    /* ── Progress Summary ────────────────────────────────────────── */
+    .progress-summary{
+      background:var(--c-card);border:1px solid var(--c-border);
+      border-radius:var(--radius-lg);padding:1.75rem 2rem;
+      margin-bottom:2.5rem;box-shadow:var(--shadow);
+    }
+    .progress-bars{display:flex;flex-direction:column;gap:0.6rem;margin-top:1rem}
+    .prog-row{display:grid;grid-template-columns:140px 1fr 48px;align-items:center;gap:0.75rem}
+    .prog-name{font-size:0.8rem;color:var(--c-sec);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .prog-bar{height:6px;background:var(--c-border);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+    .prog-pct{font-size:0.72rem;color:var(--c-muted);font-family:var(--font-ui);text-align:right}
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    .site-footer{
+      text-align:center;padding:2.5rem 2rem;
+      border-top:1px solid var(--c-border);
+      font-size:0.8rem;color:var(--c-muted);
+    }
+    .site-footer a{color:var(--c-primary)}
+
+    /* ── Back to Top ─────────────────────────────────────────────── */
+    #btnTop{
+      position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;
+      border-radius:50%;background:var(--c-primary);color:white;
+      box-shadow:0 4px 16px rgba(26,95,150,0.35);
+      opacity:0;transform:translateY(10px);
+      transition:opacity 0.25s,transform 0.25s;
+      z-index:99;font-size:1.1rem;
+      display:flex;align-items:center;justify-content:center;
+    }
+    #btnTop.visible{opacity:1;transform:translateY(0)}
+    #btnTop:hover{background:#0D3F6F;transform:translateY(-2px) !important}
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media(max-width:900px){
+      .header-stats{display:none}
+      .level-grid{grid-template-columns:1fr 1fr}
+      .prog-row{grid-template-columns:90px 1fr 36px}
+    }
+    @media(max-width:600px){
+      .hero{padding:3rem 1.25rem 2.5rem}
+      .hero h1{font-size:1.75rem}
+      .level-grid{grid-template-columns:1fr}
+      .header-search{display:none}
+      .main-wrap{padding:2rem 1rem 4rem}
+      .chapters-list{padding:1rem}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Site Header ─────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-logo">
+      <span class="logo-icon">⚡</span>
+      <span>网储手册</span>
+    </div>
+    <div class="header-search">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="搜索章节标题、知识点…" autocomplete="off">
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill" id="completedPill">0 / 280</div>
+      <div class="progress-global">
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring-svg" width="36" height="36" viewBox="0 0 36 36">
+            <circle class="progress-ring-bg" cx="18" cy="18" r="15.5"/>
+            <circle class="progress-ring-fill" id="progressRingFill"
+              cx="18" cy="18" r="15.5"
+              stroke-dasharray="97.39" stroke-dashoffset="97.39"/>
+          </svg>
+          <div class="progress-ring-text" id="progressRingPct">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-badge">📚 中国网储系统性学习手册 · v1.0</div>
+  <h1>从零基础到网储专家</h1>
+  <p class="hero-sub">从电荷到碳市场，从电芯到投资决策 · 系统掌握新型储能全知识体系</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="heroTotal">280</span>
+      <span class="hero-stat-label">独立章节</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">155<small style="font-size:0.9rem">万</small></span>
+      <span class="hero-stat-label">预计字数</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">10</span>
+      <span class="hero-stat-label">知识模块</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">~245</span>
+      <span class="hero-stat-label">学习时长（小时）</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="heroCompleted">0</span>
+      <span class="hero-stat-label">已完成章节</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Main ────────────────────────────────────────────────────── -->
+<main class="main-wrap">
+
+  <!-- 搜索结果 -->
+  <div id="search-results">
+    <div class="section-title">🔎 搜索结果</div>
+    <div class="search-result-list" id="searchResultList"></div>
+  </div>
+
+  <!-- 学习进度 -->
+  <section class="progress-summary" id="progressSection">
+    <div class="section-title">📈 整体进度</div>
+    <div class="progress-bars" id="progressBars">
+      <!-- 动态渲染 -->
+    </div>
+  </section>
+
+  <!-- 章节导览 -->
+  <div class="section-title" id="levelGridTitle">📖 学习路径总览</div>
+  <div class="level-grid" id="levelGrid">
+    <!-- 动态渲染 -->
+  </div>
+  <!-- 展开面板（单独区域，防止破坏 grid 布局） -->
+  <div id="levelPanels">
+    <!-- 动态渲染 -->
+  </div>
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p>中国网储系统性学习手册 · v3.1 · 2026</p>
+  <p style="margin-top:0.5rem">每节约5,000字 · 含知识测验 · 进度云同步（浏览器本地存储）</p>
+</footer>
+
+<button id="btnTop" title="返回顶端" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ── JavaScript ───────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  // ── 状态 ────────────────────────────────────────────────────
+  let tocData = null;
+  let progress = {};
+  let activeLevel = null;
+  let searchIndex = [];  // [{id,title,levelId,levelColor,levelLabel,file,chapterTitle,levelDir}]
+
+  // ── 读取进度 ─────────────────────────────────────────────────
+  function getProgress() {
+    try { return JSON.parse(localStorage.getItem('bess_progress') || '{}'); }
+    catch(e) { return {}; }
+  }
+
+  function countCompleted(tocData) {
+    const prog = getProgress();
+    let n = 0;
+    tocData.levels.forEach(lv => {
+      lv.chapters.forEach(ch => {
+        ch.sections.forEach(sec => {
+          const key = sec.file.replace('.html','');
+          if (prog[key] && prog[key].completed) n++;
+        });
+      });
+    });
+    return n;
+  }
+
+  function countLevelCompleted(lv) {
+    const prog = getProgress();
+    let n = 0;
+    lv.chapters.forEach(ch => {
+      ch.sections.forEach(sec => {
+        const key = sec.file.replace('.html','');
+        if (prog[key] && prog[key].completed) n++;
+      });
+    });
+    return n;
+  }
+
+  function getSectionStatus(sec) {
+    const prog = getProgress();
+    const key = sec.file.replace('.html','');
+    if (sec.status === 'planned') return 'planned';
+    if (prog[key] && prog[key].completed) return 'completed';
+    return 'available';
+  }
+
+  // ── 渲染进度条 ────────────────────────────────────────────────
+  function renderProgressBars(toc) {
+    const container = document.getElementById('progressBars');
+    if (!container) return;
+    let html = '';
+    toc.levels.forEach(lv => {
+      const done = countLevelCompleted(lv);
+      const total = lv.sections;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      html += `<div class="prog-row">
+        <div class="prog-name" title="${lv.title}">${lv.label}</div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${lv.color}"></div></div>
+        <div class="prog-pct">${done}/${total}</div>
+      </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  // ── 渲染 Header 进度环 ────────────────────────────────────────
+  function renderGlobalProgress(total, completed) {
+    const pct = total > 0 ? (completed / total) : 0;
+    const circ = 97.39;
+    const fill = document.getElementById('progressRingFill');
+    const pctEl = document.getElementById('progressRingPct');
+    const pill = document.getElementById('completedPill');
+    const heroComp = document.getElementById('heroCompleted');
+    if (fill) fill.style.strokeDashoffset = circ * (1 - pct);
+    if (pctEl) pctEl.textContent = Math.round(pct * 100) + '%';
+    if (pill) pill.textContent = completed + ' / ' + total;
+    if (heroComp) heroComp.textContent = completed;
+  }
+
+  // ── 构建搜索索引 ─────────────────────────────────────────────
+  function buildSearchIndex(toc) {
+    const idx = [];
+    toc.levels.forEach(lv => {
+      const dir = lv.id === 'appendix' ? 'appendix' : lv.id;
+      lv.chapters.forEach(ch => {
+        ch.sections.forEach(sec => {
+          idx.push({
+            id: sec.id,
+            title: sec.title,
+            file: sec.file,
+            status: sec.status,
+            difficulty: sec.difficulty,
+            levelId: lv.id,
+            levelDir: dir,
+            levelColor: lv.color,
+            levelLabel: lv.label,
+            levelTitle: lv.title,
+            chapterTitle: ch.title
+          });
+        });
+      });
+    });
+    return idx;
+  }
+
+  // ── 渲染 Level 卡片 ───────────────────────────────────────────
+  function renderLevelGrid(toc) {
+    const grid = document.getElementById('levelGrid');
+    const panels = document.getElementById('levelPanels');
+    if (!grid || !panels) return;
+
+    let gridHtml = '';
+    let panelHtml = '';
+
+    toc.levels.forEach(lv => {
+      const done = countLevelCompleted(lv);
+      const total = lv.sections;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const availCount = lv.chapters.reduce((a, ch) =>
+        a + ch.sections.filter(s => s.status !== 'planned').length, 0);
+
+      gridHtml += `
+      <div class="level-card" id="card-${lv.id}"
+        style="--level-color:${lv.color}"
+        onclick="toggleLevel('${lv.id}')">
+        <div class="level-card-head">
+          <span class="level-badge">${lv.label}</span>
+          <span class="level-sections-count">${total}节</span>
+        </div>
+        <h3>${lv.title}</h3>
+        <p>${lv.subtitle}</p>
+        <div class="level-progress-bar">
+          <div class="level-progress-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="level-progress-text">
+          <span>${done}/${total} 完成</span>
+          <span>${availCount > 0 ? availCount + '节可读' : '即将上线'}</span>
+        </div>
+        <div class="level-card-footer">
+          <span class="level-open-btn">
+            展开章节 <span class="level-open-icon">▶</span>
+          </span>
+        </div>
+      </div>`;
+
+      // ── 展开面板 ──────────────────────────────────
+      let chaptersHtml = '';
+      lv.chapters.forEach(ch => {
+        let sectionsHtml = '';
+        ch.sections.forEach(sec => {
+          const status = getSectionStatus(sec);
+          const href = status !== 'planned'
+            ? `chapters/${lv.id}/${sec.file}`
+            : '#';
+          const icon = status === 'completed' ? '✅'
+                     : status === 'available' ? '📖' : '🔒';
+          sectionsHtml += `
+            <${status !== 'planned' ? 'a href="' + href + '"' : 'span'}
+              class="section-chip ${status}"
+              title="${sec.title}">
+              <span class="chip-icon">${icon}</span>
+              <span>${sec.title}</span>
+              <span class="chip-diff">${sec.difficulty}</span>
+            </${status !== 'planned' ? 'a' : 'span'}>`;
+        });
+
+        chaptersHtml += `
+          <div class="chapter-group">
+            <div class="chapter-group-title">
+              <span class="chapter-group-num">${ch.no}</span>
+              ${ch.title}
+            </div>
+            <div class="sections-grid">${sectionsHtml}</div>
+          </div>`;
+      });
+
+      panelHtml += `
+      <div class="level-panel" id="panel-${lv.id}" style="--level-color:${lv.color}">
+        <div class="level-panel-header">
+          <span class="level-panel-title">${lv.label} · ${lv.title}</span>
+          <button class="level-panel-close" onclick="toggleLevel('${lv.id}')">✕</button>
+        </div>
+        <div class="chapters-list">${chaptersHtml}</div>
+      </div>`;
+    });
+
+    grid.innerHTML = gridHtml;
+    panels.innerHTML = panelHtml;
+  }
+
+  // ── 切换展开面板 ─────────────────────────────────────────────
+  window.toggleLevel = function(id) {
+    const panel = document.getElementById('panel-' + id);
+    const card  = document.getElementById('card-' + id);
+    if (!panel || !card) return;
+
+    if (activeLevel && activeLevel !== id) {
+      const oldPanel = document.getElementById('panel-' + activeLevel);
+      const oldCard  = document.getElementById('card-' + activeLevel);
+      if (oldPanel) oldPanel.classList.remove('open');
+      if (oldCard)  oldCard.classList.remove('active');
+    }
+
+    const isOpen = panel.classList.toggle('open');
+    card.classList.toggle('active', isOpen);
+    activeLevel = isOpen ? id : null;
+
+    if (isOpen) {
+      setTimeout(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+  };
+
+  // ── 搜索 ─────────────────────────────────────────────────────
+  function initSearch() {
+    const input = document.getElementById('searchInput');
+    const resultsDiv = document.getElementById('search-results');
+    const resultList = document.getElementById('searchResultList');
+    const levelGridTitle = document.getElementById('levelGridTitle');
+    if (!input) return;
+
+    input.addEventListener('input', function () {
+      const q = this.value.trim().toLowerCase();
+      if (!q) {
+        resultsDiv.classList.remove('visible');
+        levelGridTitle.style.display = '';
+        return;
+      }
+      const hits = searchIndex.filter(s =>
+        s.title.toLowerCase().includes(q) ||
+        s.chapterTitle.toLowerCase().includes(q) ||
+        s.levelTitle.toLowerCase().includes(q)
+      ).slice(0, 20);
+
+      levelGridTitle.style.display = 'none';
+      resultsDiv.classList.add('visible');
+
+      if (!hits.length) {
+        resultList.innerHTML = '<div class="no-results">🔎 未找到匹配内容，请尝试其他关键词</div>';
+        return;
+      }
+
+      let html = '';
+      hits.forEach(h => {
+        const status = getSectionStatus(h);
+        const href = status !== 'planned' ? `chapters/${h.levelDir}/${h.file}` : '#';
+        html += `<div class="search-result-item">
+          <div class="result-level-dot" style="background:${h.levelColor}"></div>
+          <div style="flex:1;min-width:0">
+            <div class="result-title">${h.title}</div>
+            <div class="result-path">${h.levelLabel} › ${h.chapterTitle}</div>
+          </div>
+          <span class="chip-diff">${h.difficulty}</span>
+          ${status !== 'planned'
+            ? `<a href="${href}" class="result-link">开始阅读</a>`
+            : `<span class="result-link locked">即将上线</span>`}
+        </div>`;
+      });
+      resultList.innerHTML = html;
+    });
+  }
+
+  // ── 主入口：加载 toc.json ─────────────────────────────────────
+  // 内嵌 TOC 数据，支持直接以 file:// 打开
+  const _INLINE_TOC = {"meta":{"title":"中国网储系统性学习手册","subtitle":"从零基础到网储专家","version":"v3.2","lastUpdated":"2026-07-28","totalSections":280,"totalWords":1400000,"totalHours":245},"levels":[{"id":"level_00","code":"00","label":"LEVEL 0","title":"写在前面","subtitle":"能源革命的背景与手册导读","color":"#64748B","gradient":"linear-gradient(135deg,#64748B,#94A3B8)","sections":2,"words":10000,"hours":2,"chapters":[{"no":1,"title":"走进网储世界","sections":[{"id":"00_1_1","file":"00_1_1_能源转型与储能使命.html","title":"站在能源革命的十字路口","difficulty":"🟢","words":5000,"status":"planned"},{"id":"00_1_2","file":"00_1_2_手册使用指南.html","title":"双碳目标、新型电力系统与储能使命","difficulty":"🟢","words":5000,"status":"planned"}]}]},{"id":"level_01","code":"01","label":"LEVEL 1","title":"电能基础知识","subtitle":"从电荷到交流电——理解电的语言","color":"#2563EB","gradient":"linear-gradient(135deg,#2563EB,#60A5FA)","sections":21,"words":105000,"hours":18,"chapters":[{"no":1,"title":"电的基本概念","sections":[{"id":"01_1_1","file":"01_1_1_电荷基础.html","title":"电荷：万物皆有电","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_1_2","file":"01_1_2_电流与电压.html","title":"电流与电压：流动的力量","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_1_3","file":"01_1_3_电阻与欧姆定律.html","title":"电阻与欧姆定律","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_1_4","file":"01_1_4_功率电能与电费单.html","title":"功率·电能·你的电费单","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":2,"title":"电路基础理论","sections":[{"id":"01_2_1","file":"01_2_1_电路元件与电路图.html","title":"电路元件与电路图","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_2_2","file":"01_2_2_基尔霍夫定律.html","title":"基尔霍夫定律","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_2_3","file":"01_2_3_串联与并联.html","title":"串联与并联","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_2_4","file":"01_2_4_功率守恒与保护装置.html","title":"功率守恒与保护装置","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":3,"title":"交流电理论","sections":[{"id":"01_3_1","file":"01_3_1_交流电的历史之争.html","title":"交流还是直流？历史上的电流大战","difficulty":"🟢","words":5000,"status":"planned"},{"id":"01_3_2","file":"01_3_2_正弦波数学语言.html","title":"正弦波：交流电的数学语言","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_3_3","file":"01_3_3_相位与功率因数.html","title":"相位与功率因数","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_3_4","file":"01_3_4_三相交流电.html","title":"三相交流：工业的脊梁","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_3_5","file":"01_3_5_50Hz中国电网心跳.html","title":"50Hz：中国电网的心跳","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":4,"title":"电磁感应与变压器","sections":[{"id":"01_4_1","file":"01_4_1_法拉第电磁感应.html","title":"法拉第的发现：磁能生电","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_4_2","file":"01_4_2_电感与电容.html","title":"电感与电容：能量的暂时居所","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_4_3","file":"01_4_3_变压器原理.html","title":"变压器原理：升压的魔法","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_4_4","file":"01_4_4_变压器类型与应用.html","title":"变压器的种类与应用","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"电能质量","sections":[{"id":"01_5_1","file":"01_5_1_电能质量概述.html","title":"好电与坏电的区别","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_5_2","file":"01_5_2_电压偏差与频率偏差.html","title":"电压偏差与频率偏差","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_5_3","file":"01_5_3_谐波污染.html","title":"谐波：电网里的噪音","difficulty":"🟡","words":5000,"status":"planned"},{"id":"01_5_4","file":"01_5_4_无功补偿.html","title":"无功功率与补偿","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_02","code":"02","label":"LEVEL 2","title":"电力系统","subtitle":"发输变配——电从哪里来如何到达你家","color":"#7C3AED","gradient":"linear-gradient(135deg,#7C3AED,#A78BFA)","sections":39,"words":195000,"hours":32,"chapters":[{"no":1,"title":"发电技术总览","sections":[{"id":"02_1_1","file":"02_1_1_中国发电版图.html","title":"中国发电版图：谁点亮了万家灯火","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_1_2","file":"02_1_2_各类电源特性对比.html","title":"各类电源横向对比","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_1_3","file":"02_1_3_西电东送格局.html","title":"西电东送：能源的千里大迁徙","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_1_4","file":"02_1_4_能源转型趋势.html","title":"能源转型：数据背后的趋势","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":2,"title":"火力发电","sections":[{"id":"02_2_1","file":"02_2_1_朗肯循环原理.html","title":"朗肯循环：热变电的奥秘","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_2_2","file":"02_2_2_超超临界与热电联产.html","title":"超超临界与热电联产","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_2_3","file":"02_2_3_煤电调峰灵活性.html","title":"煤电调峰：被逼出来的灵活性","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_2_4","file":"02_2_4_气电特性与碳排放.html","title":"气电与碳排放","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"可再生能源发电","sections":[{"id":"02_3_1","file":"02_3_1_风电出力特性.html","title":"风电：捕捉风的脾气","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_3_2","file":"02_3_2_光伏出力特性.html","title":"光伏：太阳的馈赠与挑战","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_3_3","file":"02_3_3_鸭子曲线.html","title":"鸭子曲线：可再生能源的困境","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_3_4","file":"02_3_4_水电调节能力.html","title":"水电：最成熟的调节资源","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_3_5","file":"02_3_5_弃风弃光问题.html","title":"弃风弃光：浪费的绿色电力","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"输电系统","sections":[{"id":"02_4_1","file":"02_4_1_升压输电原理.html","title":"为什么要升压输电","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_4_2","file":"02_4_2_输电线路参数与损耗.html","title":"输电线路参数与损耗","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_4_3","file":"02_4_3_直流特高压输电.html","title":"直流输电：特高压的王者","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_4_4","file":"02_4_4_柔性输电技术.html","title":"柔性输电技术","difficulty":"🔴","words":5000,"status":"planned"}]},{"no":5,"title":"变电系统","sections":[{"id":"02_5_1","file":"02_5_1_变电站概述.html","title":"变电站是什么","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_5_2","file":"02_5_2_主接线方式.html","title":"主接线方式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_5_3","file":"02_5_3_继电保护系统.html","title":"继电保护：电网的免疫系统","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_5_4","file":"02_5_4_变电站自动化.html","title":"变电站自动化","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"配电系统","sections":[{"id":"02_6_1","file":"02_6_1_配电网概述.html","title":"配电网：最后一公里","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_6_2","file":"02_6_2_中压配电网架构.html","title":"中压配电网架构","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_6_3","file":"02_6_3_低压台区与用户接入.html","title":"低压台区与用户接入","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_6_4","file":"02_6_4_分布式能源接入挑战.html","title":"分布式能源接入挑战","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"电网调度与运行","sections":[{"id":"02_7_1","file":"02_7_1_五级调度体系.html","title":"五级调度体系","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_7_2","file":"02_7_2_频率与功率平衡.html","title":"频率：电网的速度表","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_7_3","file":"02_7_3_一次调频与AGC.html","title":"一次调频与AGC","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_7_4","file":"02_7_4_调度计划制定.html","title":"调度计划如何制定","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_7_5","file":"02_7_5_负荷与新能源预测.html","title":"负荷预测与新能源预测","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_7_6","file":"02_7_6_N1安全准则与事故处置.html","title":"N-1安全准则与事故处置","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":8,"title":"电网稳定性","sections":[{"id":"02_8_1","file":"02_8_1_三类稳定问题.html","title":"三类稳定问题","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_8_2","file":"02_8_2_功角稳定.html","title":"功角稳定：钟摆类比","difficulty":"🔴","words":5000,"status":"planned"},{"id":"02_8_3","file":"02_8_3_惯量下降危机.html","title":"惯量下降：新能源的危机","difficulty":"🔴","words":5000,"status":"planned"},{"id":"02_8_4","file":"02_8_4_大停电事故复盘.html","title":"大停电复盘","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":9,"title":"新型电力系统","sections":[{"id":"02_9_1","file":"02_9_1_新型电力系统概念.html","title":"新型电力系统概念解析","difficulty":"🟢","words":5000,"status":"planned"},{"id":"02_9_2","file":"02_9_2_数字化电网.html","title":"数字化电网","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_9_3","file":"02_9_3_柔性负荷与需求响应.html","title":"柔性负荷与需求响应","difficulty":"🟡","words":5000,"status":"planned"},{"id":"02_9_4","file":"02_9_4_源网荷储协调.html","title":"源网荷储协调","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_03","code":"03","label":"LEVEL 3","title":"电力市场与政策","subtitle":"电改、现货、辅助服务、碳市场——玩转规则","color":"#059669","gradient":"linear-gradient(135deg,#059669,#34D399)","sections":33,"words":165000,"hours":27,"chapters":[{"no":1,"title":"中国电改历程","sections":[{"id":"03_1_1","file":"03_1_1_计划经济时代电力.html","title":"计划经济时代的电力","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_1_2","file":"03_1_2_2002年厂网分开.html","title":"2002年：厂网分开","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_1_3","file":"03_1_3_2015年9号文电改.html","title":"2015年9号文：新一轮电改","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_1_4","file":"03_1_4_售电放开与增量配电.html","title":"售电公司放开与增量配电","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_1_5","file":"03_1_5_电改现状与方向.html","title":"电改现状与未来方向","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":2,"title":"电力市场体系架构","sections":[{"id":"03_2_1","file":"03_2_1_四类市场体系.html","title":"四类市场：完整体系图","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_2_2","file":"03_2_2_中长期合同市场.html","title":"中长期合同市场","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_2_3","file":"03_2_3_市场参与者规则.html","title":"市场参与者与竞争规则","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_2_4","file":"03_2_4_交易机构与监管.html","title":"交易机构与电力监管","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_2_5","file":"03_2_5_南方区域电力市场.html","title":"南方区域电力市场案例","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"电力现货市场","sections":[{"id":"03_3_1","file":"03_3_1_现货市场设计原理.html","title":"现货市场设计原理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_3_2","file":"03_3_2_日前市场出清.html","title":"日前市场出清","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_3_3","file":"03_3_3_实时市场运行.html","title":"实时市场运行","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_3_4","file":"03_3_4_节点电价LMP.html","title":"节点电价LMP详解","difficulty":"🔴","words":5000,"status":"planned"},{"id":"03_3_5","file":"03_3_5_储能现货市场机会.html","title":"储能在现货市场中的机会","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"辅助服务市场","sections":[{"id":"03_4_1","file":"03_4_1_辅助服务概述.html","title":"辅助服务概述","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_4_2","file":"03_4_2_调频服务三档调节.html","title":"调频服务：三档调节","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_4_3","file":"03_4_3_调峰与备用服务.html","title":"调峰与备用服务","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_4_4","file":"03_4_4_储能参与调频案例.html","title":"储能参与调频：速度优势","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_4_5","file":"03_4_5_辅助服务收益计算.html","title":"辅助服务收益计算实例","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"绿证与碳市场","sections":[{"id":"03_5_1","file":"03_5_1_绿色电力证书.html","title":"绿色电力证书","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_5_2","file":"03_5_2_CCER与全国碳市场.html","title":"CCER与全国碳市场","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_5_3","file":"03_5_3_碳价形成与走势.html","title":"碳价形成与走势","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_5_4","file":"03_5_4_储能项目碳资产开发.html","title":"储能项目碳资产开发","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"储能相关政策法规","sections":[{"id":"03_6_1","file":"03_6_1_储能政策演变梳理.html","title":"2017-2024储能政策演变","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_6_2","file":"03_6_2_强制配储政策.html","title":"强制配储：逻辑与争议","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_6_3","file":"03_6_3_独立储能政策路径.html","title":"独立储能政策路径","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_6_4","file":"03_6_4_各省补贴政策.html","title":"各省补贴政策大全","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_6_5","file":"03_6_5_安全管理政策.html","title":"安全管理政策体系","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"峰谷电价与两部制","sections":[{"id":"03_7_1","file":"03_7_1_中国电价体系全景.html","title":"中国电价体系全景","difficulty":"🟢","words":5000,"status":"planned"},{"id":"03_7_2","file":"03_7_2_峰谷分时电价.html","title":"峰谷分时电价机制","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_7_3","file":"03_7_3_两部制电价需量管理.html","title":"两部制电价与需量管理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"03_7_4","file":"03_7_4_峰谷套利窗口计算.html","title":"峰谷套利窗口计算","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_04","code":"04","label":"LEVEL 4","title":"电化学基础","subtitle":"从氧化还原到SEI膜——读懂电池的语言","color":"#D97706","gradient":"linear-gradient(135deg,#D97706,#FCD34D)","sections":22,"words":110000,"hours":20,"chapters":[{"no":1,"title":"电化学基础","sections":[{"id":"04_1_1","file":"04_1_1_氧化还原反应.html","title":"氧化还原：电子的得与失","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_1_2","file":"04_1_2_电极与电解质.html","title":"电极与电解质","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_1_3","file":"04_1_3_电化学势与标准电位.html","title":"电化学势与标准电极电位","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_1_4","file":"04_1_4_法拉第定律.html","title":"法拉第定律：量化电化学","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":2,"title":"电池热力学与动力学","sections":[{"id":"04_2_1","file":"04_2_1_吉布斯自由能与电压.html","title":"吉布斯自由能与电池电压","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_2_2","file":"04_2_2_能斯特方程与SOC.html","title":"能斯特方程与SOC关系","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_2_3","file":"04_2_3_活化极化.html","title":"活化极化：过渡态能垒","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_2_4","file":"04_2_4_浓度极化与欧姆极化.html","title":"浓度极化与欧姆极化","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_2_5","file":"04_2_5_充放电能量分析.html","title":"充放电能量分析与效率","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"电极材料科学","sections":[{"id":"04_3_1","file":"04_3_1_正极材料体系.html","title":"正极材料体系","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_3_2","file":"04_3_2_负极材料.html","title":"负极材料","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_3_3","file":"04_3_3_嵌锂脱锂机制.html","title":"嵌锂脱锂机制","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_3_4","file":"04_3_4_SEI膜.html","title":"SEI膜：保护膜的双面性","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_3_5","file":"04_3_5_容量衰减机理.html","title":"容量衰减机理","difficulty":"🔴","words":5000,"status":"planned"}]},{"no":4,"title":"电解质体系","sections":[{"id":"04_4_1","file":"04_4_1_液态电解质.html","title":"液态电解质组成","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_4_2","file":"04_4_2_隔膜.html","title":"隔膜：无形的防火墙","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_4_3","file":"04_4_3_固态电解质.html","title":"固态电解质体系","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_4_4","file":"04_4_4_电解质与安全.html","title":"电解质与安全","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"电池表征与测试","sections":[{"id":"04_5_1","file":"04_5_1_充放电曲线解读.html","title":"充放电曲线解读","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_5_2","file":"04_5_2_倍率特性.html","title":"倍率特性：快充的代价","difficulty":"🟡","words":5000,"status":"planned"},{"id":"04_5_3","file":"04_5_3_阻抗谱EIS分析.html","title":"阻抗谱EIS分析","difficulty":"🔴","words":5000,"status":"planned"},{"id":"04_5_4","file":"04_5_4_SOC_SOH_SOP状态参数.html","title":"SOC/SOH/SOP：电池状态三兄弟","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_05","code":"05","label":"LEVEL 5","title":"储能设备与技术","subtitle":"锂电、液流、抽蓄、氢储能——全技术路线扫描","color":"#DC2626","gradient":"linear-gradient(135deg,#DC2626,#F87171)","sections":41,"words":205000,"hours":34,"chapters":[{"no":1,"title":"储能技术路线总览","sections":[{"id":"05_1_1","file":"05_1_1_储能技术分类.html","title":"储能技术分类框架","difficulty":"🟢","words":5000,"status":"planned"},{"id":"05_1_2","file":"05_1_2_核心性能指标体系.html","title":"核心性能指标体系","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_1_3","file":"05_1_3_各技术路线对比.html","title":"各技术路线横向对比","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_1_4","file":"05_1_4_场景适配原则.html","title":"场景适配选择原则","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":2,"title":"锂离子电池（重点）","sections":[{"id":"05_2_1","file":"05_2_1_磷酸铁锂vs三元.html","title":"磷酸铁锂vs三元：全面对比","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_2_2","file":"05_2_2_电芯形态.html","title":"方形/圆柱/软包电芯形态","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_2_3","file":"05_2_3_模组与Pack设计.html","title":"模组与Pack结构设计","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_2_4","file":"05_2_4_热管理系统.html","title":"热管理：液冷vs风冷","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_2_5","file":"05_2_5_储能与动力电芯差异.html","title":"储能电芯vs动力电芯差异","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_2_6","file":"05_2_6_主流厂商与成本拆解.html","title":"主流厂商技术与成本拆解","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"液流电池","sections":[{"id":"05_3_1","file":"05_3_1_液流电池原理.html","title":"液流电池工作原理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_3_2","file":"05_3_2_全钒液流电池.html","title":"全钒液流详解","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_3_3","file":"05_3_3_其他液流路线.html","title":"锌溴/铁铬等新兴路线","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_3_4","file":"05_3_4_大连液流电站案例.html","title":"大连100MW液流电站案例","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"钠离子电池","sections":[{"id":"05_4_1","file":"05_4_1_钠离子电池原理.html","title":"钠离子电池工作原理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_4_2","file":"05_4_2_钠电正极材料.html","title":"正极材料与商业化进展","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_4_3","file":"05_4_3_钠电vs锂电.html","title":"钠电vs锂电：平替还是补充","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"抽水蓄能","sections":[{"id":"05_5_1","file":"05_5_1_抽水蓄能原理.html","title":"巨型充电宝的工作原理","difficulty":"🟢","words":5000,"status":"planned"},{"id":"05_5_2","file":"05_5_2_抽蓄选址要素.html","title":"选址四大要素","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_5_3","file":"05_5_3_中国抽蓄规划.html","title":"中国抽蓄规划与电价机制","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_5_4","file":"05_5_4_抽蓄vs电化学储能.html","title":"抽蓄vs电化学：互补格局","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"压缩空气与重力储能","sections":[{"id":"05_6_1","file":"05_6_1_压缩空气储能原理.html","title":"压缩空气储能原理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_6_2","file":"05_6_2_盐穴CAES案例.html","title":"盐穴CAES：肥城案例","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_6_3","file":"05_6_3_重力储能.html","title":"重力储能：物理创新者","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"飞轮与超级电容","sections":[{"id":"05_7_1","file":"05_7_1_飞轮储能.html","title":"飞轮储能：旋转的能量","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_7_2","file":"05_7_2_超级电容.html","title":"超级电容：功率的王者","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_7_3","file":"05_7_3_混合储能.html","title":"混合储能：功率+能量的搭档","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":8,"title":"氢储能","sections":[{"id":"05_8_1","file":"05_8_1_制氢路径.html","title":"制氢路径：灰氢到绿氢","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_8_2","file":"05_8_2_储氢方式.html","title":"储氢方式（高压/液态/固态）","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_8_3","file":"05_8_3_燃料电池.html","title":"燃料电池：PEMFC详解","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_8_4","file":"05_8_4_氢储能全链路效率.html","title":"绿电-绿氢-电全链路效率","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_8_5","file":"05_8_5_中国氢能产业.html","title":"中国氢能政策与产业现状","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":9,"title":"热储能","sections":[{"id":"05_9_1","file":"05_9_1_熔盐储热与CSP.html","title":"熔盐储热与CSP电站","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_9_2","file":"05_9_2_冰蓄冷.html","title":"冰蓄冷：商业建筑的峰谷利器","difficulty":"🟢","words":5000,"status":"planned"},{"id":"05_9_3","file":"05_9_3_电热耦合储能.html","title":"电热耦合储能","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":10,"title":"BESS系统集成","sections":[{"id":"05_10_1","file":"05_10_1_BESS层级架构.html","title":"BESS层级架构：电芯到电站","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_10_2","file":"05_10_2_集装箱储能单元.html","title":"标准集装箱储能单元解析","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_10_3","file":"05_10_3_PCS在BESS中的角色.html","title":"PCS在BESS中的位置与作用","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_10_4","file":"05_10_4_EMS系统概览.html","title":"EMS系统概览","difficulty":"🟡","words":5000,"status":"planned"},{"id":"05_10_5","file":"05_10_5_系统集成商价值.html","title":"系统集成商的核心价值","difficulty":"🟢","words":5000,"status":"planned"},{"id":"05_10_6","file":"05_10_6_主流BESS产品对比.html","title":"主流BESS产品参数对比","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_06","code":"06","label":"LEVEL 6","title":"系统工程与运营","subtitle":"PCS/BMS/EMS/并网/安全——做一个懂工程的人","color":"#0891B2","gradient":"linear-gradient(135deg,#0891B2,#67E8F9)","sections":42,"words":210000,"hours":35,"chapters":[{"no":1,"title":"储能应用场景","sections":[{"id":"06_1_1","file":"06_1_1_发电侧储能应用.html","title":"发电侧储能应用","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_1_2","file":"06_1_2_电网侧储能应用.html","title":"电网侧储能应用","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_1_3","file":"06_1_3_用户侧储能应用.html","title":"用户侧储能应用","difficulty":"🟢","words":5000,"status":"planned"},{"id":"06_1_4","file":"06_1_4_三侧对比决策树.html","title":"三侧对比与选择决策树","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_1_5","file":"06_1_5_典型项目规模参数.html","title":"典型项目规模与技术参数","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":2,"title":"PCS技术","sections":[{"id":"06_2_1","file":"06_2_1_PCS核心功能.html","title":"PCS核心功能：双向变换","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_2_2","file":"06_2_2_PCS主流拓扑.html","title":"主流拓扑与IGBT基础","difficulty":"🔴","words":5000,"status":"planned"},{"id":"06_2_3","file":"06_2_3_并网控制策略.html","title":"并网控制策略（PQ/Vf）","difficulty":"🔴","words":5000,"status":"planned"},{"id":"06_2_4","file":"06_2_4_孤岛检测与保护.html","title":"孤岛检测与保护","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_2_5","file":"06_2_5_PCS选型对比.html","title":"组串式vs集中式选型对比","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"BMS","sections":[{"id":"06_3_1","file":"06_3_1_BMS系统架构.html","title":"BMS系统架构（从电芯到系统级）","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_3_2","file":"06_3_2_数据采集与处理.html","title":"数据采集与信号处理","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_3_3","file":"06_3_3_SOC估算算法.html","title":"SOC估算算法详解","difficulty":"🔴","words":5000,"status":"planned"},{"id":"06_3_4","file":"06_3_4_均衡策略与保护逻辑.html","title":"均衡策略与保护逻辑","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_3_5","file":"06_3_5_BMS通信协议.html","title":"BMS通信协议与接口","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"EMS","sections":[{"id":"06_4_1","file":"06_4_1_EMS层级定位.html","title":"EMS层级定位","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_4_2","file":"06_4_2_EMS核心功能.html","title":"EMS核心功能模块","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_4_3","file":"06_4_3_调度策略规则vs优化.html","title":"调度策略：规则型vs优化型","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_4_4","file":"06_4_4_优化算法.html","title":"优化算法（LP/DP/强化学习引入）","difficulty":"🔴","words":5000,"status":"planned"},{"id":"06_4_5","file":"06_4_5_EMS与调度系统对接.html","title":"EMS与调度系统对接","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"储能并网","sections":[{"id":"06_5_1","file":"06_5_1_并网技术要求.html","title":"并网技术要求","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_5_2","file":"06_5_2_核心并网标准解读.html","title":"GB/T 36547等核心标准解读","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_5_3","file":"06_5_3_保护配置方案.html","title":"保护配置方案","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_5_4","file":"06_5_4_并网测试流程.html","title":"并网测试流程","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"储能系统设计","sections":[{"id":"06_6_1","file":"06_6_1_需求分析方法.html","title":"需求分析方法","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_6_2","file":"06_6_2_容量配置方法.html","title":"容量配置方法","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_6_3","file":"06_6_3_设备选型要点.html","title":"设备选型要点","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_6_4","file":"06_6_4_主接线与系统设计.html","title":"主接线与系统设计","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_6_5","file":"06_6_5_百兆瓦储能电站案例.html","title":"100MW/200MWh设计案例","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"储能安全","sections":[{"id":"06_7_1","file":"06_7_1_热失控机理.html","title":"热失控机理：三个阶段","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_7_2","file":"06_7_2_热蔓延抑制方案.html","title":"热蔓延抑制方案","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_7_3","file":"06_7_3_消防系统设计.html","title":"消防系统设计","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_7_4","file":"06_7_4_储能火灾事故复盘.html","title":"储能火灾事故复盘","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_7_5","file":"06_7_5_安全标准体系.html","title":"安全标准体系","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":8,"title":"运维管理","sections":[{"id":"06_8_1","file":"06_8_1_运维管理体系.html","title":"运维管理体系建立","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_8_2","file":"06_8_2_巡检与预防性维护.html","title":"巡检与预防性维护","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_8_3","file":"06_8_3_性能监测指标.html","title":"性能监测指标体系","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_8_4","file":"06_8_4_退役与梯次利用.html","title":"退役处理与梯次利用","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":9,"title":"虚拟电厂","sections":[{"id":"06_9_1","file":"06_9_1_虚拟电厂概念.html","title":"虚拟电厂：分散力量的集合","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_9_2","file":"06_9_2_聚合商商业模式.html","title":"聚合商商业模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_9_3","file":"06_9_3_需求响应机制.html","title":"需求响应机制","difficulty":"🟡","words":5000,"status":"planned"},{"id":"06_9_4","file":"06_9_4_国内VPP案例.html","title":"国内VPP典型案例","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_07","code":"07","label":"LEVEL 7","title":"商业投资与项目评估","subtitle":"商业模式、财务分析、选址DD、监控——成为投资决策者","color":"#EA580C","gradient":"linear-gradient(135deg,#EA580C,#FB923C)","sections":53,"words":265000,"hours":46,"chapters":[{"no":1,"title":"储能商业模式","sections":[{"id":"07_1_1","file":"07_1_1_独立储能商业模式.html","title":"独立储能商业模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_1_2","file":"07_1_2_新能源配套储能.html","title":"新能源配套储能模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_1_3","file":"07_1_3_用户侧储能商业模式.html","title":"用户侧储能商业模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_1_4","file":"07_1_4_EMC能源托管模式.html","title":"EMC能源托管合同模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_1_5","file":"07_1_5_投资主体类型.html","title":"投资主体类型与行为差异","difficulty":"🟢","words":5000,"status":"planned"}]},{"no":2,"title":"储能收益模型","sections":[{"id":"07_2_1","file":"07_2_1_调频收益计算.html","title":"调频收益计算","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_2_2","file":"07_2_2_现货套利收益.html","title":"现货市场套利收益","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_2_3","file":"07_2_3_容量租赁收益.html","title":"容量租赁收益","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_2_4","file":"07_2_4_需量管理节省.html","title":"需量管理节省计算","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_2_5","file":"07_2_5_独立储能收益建模案例.html","title":"山东100MW独立储能收益建模","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":3,"title":"财务分析","sections":[{"id":"07_3_1","file":"07_3_1_总投资成本拆解.html","title":"总投资成本拆解","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_3_2","file":"07_3_2_LCOE计算.html","title":"LCOE计算（储能版）","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_3_3","file":"07_3_3_IRR与NPV回收期.html","title":"IRR/NPV/回收期计算实例","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_3_4","file":"07_3_4_资本结构与融资.html","title":"资本结构与融资模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_3_5","file":"07_3_5_税收优惠与收益预期.html","title":"税收优惠与投资收益预期","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"采购与EPC","sections":[{"id":"07_4_1","file":"07_4_1_采购模式对比.html","title":"储能项目采购模式对比","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_4_2","file":"07_4_2_EPC合同核心条款.html","title":"EPC合同核心条款","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_4_3","file":"07_4_3_供应链管理.html","title":"供应链管理与价格风险","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_4_4","file":"07_4_4_系统集成商实力排名.html","title":"主要系统集成商综合实力","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"产业链全景","sections":[{"id":"07_5_1","file":"07_5_1_上游材料产业链.html","title":"上游材料：从锂矿到电芯","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_5_2","file":"07_5_2_中游设备竞争格局.html","title":"中游设备竞争格局","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_5_3","file":"07_5_3_下游集成与运营.html","title":"下游集成与运营市场","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_5_4","file":"07_5_4_各环节利润与议价权.html","title":"各环节利润率与议价权","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_5_5","file":"07_5_5_锂价波动影响分析.html","title":"锂价波动对储能成本的影响","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"市场动态","sections":[{"id":"07_6_1","file":"07_6_1_中国储能市场数据.html","title":"中国储能市场数据解读","difficulty":"🟢","words":5000,"status":"planned"},{"id":"07_6_2","file":"07_6_2_区域市场特点.html","title":"区域市场特点分析","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_6_3","file":"07_6_3_头部企业市场份额.html","title":"头部企业市场份额","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_6_4","file":"07_6_4_未来市场规模预测.html","title":"未来5年市场规模预测","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"储能项目开发全流程","sections":[{"id":"07_7_1","file":"07_7_1_项目开发七大阶段.html","title":"项目开发七大阶段概述","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_7_2","file":"07_7_2_关键决策节点.html","title":"关键决策节点","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_7_3","file":"07_7_3_各参与方角色.html","title":"各参与方角色与诉求","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_7_4","file":"07_7_4_失败案例与教训.html","title":"典型失败案例与教训","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":8,"title":"选址与资源评估","sections":[{"id":"07_8_1","file":"07_8_1_发电侧储能选址.html","title":"发电侧储能选址要素","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_8_2","file":"07_8_2_电网侧与用户侧选址.html","title":"电网侧与用户侧选址","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_8_3","file":"07_8_3_电网接入可行性.html","title":"电网接入可行性研究","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_8_4","file":"07_8_4_选址评分卡工具.html","title":"选址评分卡（可直接使用工具）","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":9,"title":"技术方案选择","sections":[{"id":"07_9_1","file":"07_9_1_技术路线决策矩阵.html","title":"技术路线选择决策矩阵","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_9_2","file":"07_9_2_磷酸铁锂厂商筛选.html","title":"磷酸铁锂电芯厂商筛选标准","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_9_3","file":"07_9_3_功率型vs能量型配置.html","title":"功率型vs能量型系统配置","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_9_4","file":"07_9_4_集成商选择标准.html","title":"集成商选择标准与评价方法","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":10,"title":"技术尽职调查","sections":[{"id":"07_10_1","file":"07_10_1_技术尽职调查概述.html","title":"什么是技术DD（与金融DD的区别）","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_10_2","file":"07_10_2_设备与系统DD.html","title":"设备与系统设计DD要点","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_10_3","file":"07_10_3_施工与运营数据审查.html","title":"施工质量与运营数据审查","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_10_4","file":"07_10_4_DD报告模板.html","title":"技术DD报告结构模板","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":11,"title":"项目风险评估","sections":[{"id":"07_11_1","file":"07_11_1_项目风险全景图.html","title":"储能项目风险全景图","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_11_2","file":"07_11_2_政策与市场风险.html","title":"政策与市场风险","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_11_3","file":"07_11_3_技术与安全风险.html","title":"技术与安全风险","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_11_4","file":"07_11_4_风险缓解与合同结构.html","title":"风险缓解措施与合同结构","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":12,"title":"运营数据监控（投资人视角）","sections":[{"id":"07_12_1","file":"07_12_1_投资人监控逻辑.html","title":"投资人为何需要独立监控系统","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_12_2","file":"07_12_2_核心KPI体系.html","title":"核心KPI体系：关注什么才是重点","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_12_3","file":"07_12_3_数据到财务的传导链.html","title":"从底层数据到财务收益的传导链","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_12_4","file":"07_12_4_收益数据核验.html","title":"收益数据核验：不能只看结算单","difficulty":"🟡","words":5000,"status":"planned"},{"id":"07_12_5","file":"07_12_5_监控系统设计方案.html","title":"投资人独立监控系统设计方案","difficulty":"🟡","words":5000,"status":"planned"}]}]},{"id":"level_08","code":"08","label":"LEVEL 8","title":"前沿技术与专家视野","subtitle":"固态电池、AI、V2G、全球对比——站在行业最前沿","color":"#7C3AED","gradient":"linear-gradient(135deg,#7C3AED,#EC4899)","sections":27,"words":135000,"hours":23,"chapters":[{"no":1,"title":"下一代电池","sections":[{"id":"08_1_1","file":"08_1_1_全固态电池.html","title":"全固态电池：挑战与进展","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_1_2","file":"08_1_2_锂硫电池.html","title":"锂硫电池：高能量密度的诱惑","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_1_3","file":"08_1_3_钠硫与锂空气电池.html","title":"钠硫/锂空气电池","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_1_4","file":"08_1_4_技术成熟度评估.html","title":"技术成熟度评估方法","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":2,"title":"AI与储能","sections":[{"id":"08_2_1","file":"08_2_1_机器学习电池状态估算.html","title":"ML在SOC/SOH估算中的应用","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_2_2","file":"08_2_2_预测性维护与故障诊断.html","title":"预测性维护与故障诊断","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_2_3","file":"08_2_3_强化学习调度优化.html","title":"强化学习调度优化","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_2_4","file":"08_2_4_数字孪生应用.html","title":"数字孪生在储能中的应用","difficulty":"🔴","words":5000,"status":"planned"}]},{"no":3,"title":"构网型储能","sections":[{"id":"08_3_1","file":"08_3_1_跟网型vs构网型.html","title":"跟网型vs构网型：本质区别","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_3_2","file":"08_3_2_虚拟同步机控制.html","title":"虚拟同步机控制算法","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_3_3","file":"08_3_3_虚拟惯量与频率支撑.html","title":"虚拟惯量与频率支撑","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_3_4","file":"08_3_4_构网型储能应用.html","title":"构网型储能应用与中国试点","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":4,"title":"微电网与离网","sections":[{"id":"08_4_1","file":"08_4_1_微电网类型与控制.html","title":"微电网类型与控制策略","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_4_2","file":"08_4_2_海岛微电网案例.html","title":"海岛微电网案例","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_4_3","file":"08_4_3_工业园区微电网.html","title":"工业园区微电网经济性","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":5,"title":"V2G/V2X","sections":[{"id":"08_5_1","file":"08_5_1_电动汽车储能潜力.html","title":"电动汽车：隐藏的巨型储能库","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_5_2","file":"08_5_2_V2G技术挑战.html","title":"V2G技术挑战与解决方案","difficulty":"🔴","words":5000,"status":"planned"},{"id":"08_5_3","file":"08_5_3_V2G商业模式.html","title":"V2G商业模式探索","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_5_4","file":"08_5_4_国内V2G试点.html","title":"国内V2G试点案例","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":6,"title":"全球对比","sections":[{"id":"08_6_1","file":"08_6_1_美国储能市场.html","title":"美国储能：IRA与FERC Order","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_6_2","file":"08_6_2_欧洲储能模式.html","title":"欧洲储能发展模式","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_6_3","file":"08_6_3_澳大利亚储能经验.html","title":"澳大利亚：Hornsdale启示录","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_6_4","file":"08_6_4_中国模式出海.html","title":"中国模式的出海之路","difficulty":"🟡","words":5000,"status":"planned"}]},{"no":7,"title":"未来展望","sections":[{"id":"08_7_1","file":"08_7_1_碳中和路径与储能需求.html","title":"碳中和路径与储能需求规模","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_7_2","file":"08_7_2_2030年电力系统情景.html","title":"2030电力系统情景推演","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_7_3","file":"08_7_3_长时储能必要性.html","title":"长时储能：70%新能源后的必需","difficulty":"🟡","words":5000,"status":"planned"},{"id":"08_7_4","file":"08_7_4_储能从业者职业展望.html","title":"储能从业者的职业展望","difficulty":"🟢","words":5000,"status":"planned"}]}]}]};
+
+  async function init() {
+    try {
+      // 优先尝试 fetch（服务器模式），失败则用内嵌数据
+      const resp = await fetch('data/toc.json');
+      tocData = await resp.json();
+    } catch(e) {
+      tocData = _INLINE_TOC;
+    }
+
+    progress = getProgress();
+    searchIndex = buildSearchIndex(tocData);
+
+    const completed = countCompleted(tocData);
+    const total = tocData.meta.totalSections;
+
+    renderGlobalProgress(total, completed);
+    renderProgressBars(tocData);
+    renderLevelGrid(tocData);
+    initSearch();
+  }
+
+  // ── 返回顶端按钮 ─────────────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('btnTop').classList.toggle('visible', scrollY > 400);
+  }, { passive: true });
+
+  // ── 监听章节完成消息（来自 iframe） ──────────────────────────
+  window.addEventListener('message', e => {
+    if (e.data && e.data.type === 'section_complete') {
+      progress = getProgress();
+      const completed = countCompleted(tocData);
+      renderGlobalProgress(tocData.meta.totalSections, completed);
+      renderProgressBars(tocData);
+      renderLevelGrid(tocData);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

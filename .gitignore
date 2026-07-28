@@ -1,0 +1,24 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node & Build artifacts (if any future tooling is added)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+
+# Antigravity temporary files
+.gemini/
+
+# Local documents / raw drafts (do not push to git)
+documents/
