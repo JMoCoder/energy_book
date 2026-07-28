@@ -438,10 +438,37 @@
   let activeLevel = null;
   let searchIndex = [];  // [{id,title,levelId,levelColor,levelLabel,file,chapterTitle,levelDir}]
 
-  // ── 读取进度 ─────────────────────────────────────────────────
-  function getProgress() {
+  // ── 读取与同步进度（双路备份） ──────────────────────────────
+  function getLocalProgress() {
     try { return JSON.parse(localStorage.getItem('bess_progress') || '{}'); }
     catch(e) { return {}; }
+  }
+
+  function setLocalProgress(data) {
+    try { localStorage.setItem('bess_progress', JSON.stringify(data)); } catch (e) {}
+  }
+
+  // 优先尝试容器端 API (/api/progress)，失败静默回退 localStorage
+  async function fetchProgressServer() {
+    const localData = getLocalProgress();
+    try {
+      const res = await fetch('/api/progress', { cache: 'no-cache' });
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.success && json.progress) {
+          const merged = { ...localData, ...json.progress };
+          setLocalProgress(merged);
+          return merged;
+        }
+      }
+    } catch (e) {
+      // 容器 API 未启动或静态模式，降级回退 localStorage
+    }
+    return localData;
+  }
+
+  function getProgress() {
+    return progress && Object.keys(progress).length > 0 ? progress : getLocalProgress();
   }
 
   function countCompleted(tocData) {
@@ -707,7 +734,8 @@
       tocData = _INLINE_TOC;
     }
 
-    progress = getProgress();
+    // 优先：同步容器端进度 API，降级：回退至浏览器缓存
+    progress = await fetchProgressServer();
     searchIndex = buildSearchIndex(tocData);
 
     const completed = countCompleted(tocData);
@@ -725,9 +753,9 @@
   }, { passive: true });
 
   // ── 监听章节完成消息（来自 iframe） ──────────────────────────
-  window.addEventListener('message', e => {
+  window.addEventListener('message', async e => {
     if (e.data && e.data.type === 'section_complete') {
-      progress = getProgress();
+      progress = await fetchProgressServer();
       const completed = countCompleted(tocData);
       renderGlobalProgress(tocData.meta.totalSections, completed);
       renderProgressBars(tocData);

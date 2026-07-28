@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  energy-book:
+    build: .
+    container_name: energy-book-app
+    ports:
+      - "8080:8080"
+    volumes:
+      # 持久化存储用户同步的阅读进度
+      - progress-data:/app/data/user_data
+    restart: always
+
+volumes:
+  progress-data:

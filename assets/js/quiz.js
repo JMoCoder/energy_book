@@ -145,39 +145,79 @@ function checkAnswers() {
 // 导出至全局 window 对象，确保 HTML 内联 onclick 可直接触发
 window.checkAnswers = checkAnswers;
 
-// ── 进度持久化（localStorage）────────────────────────────────────
-function getProgress() {
+// ── 进度持久化与云端/本地双路同步 ─────────────────────────────────
+function getLocalProgress() {
   try {
     return JSON.parse(localStorage.getItem('bess_progress') || '{}');
   } catch (e) { return {}; }
 }
 
-function saveProgress(data) {
+function setLocalProgress(data) {
   try { localStorage.setItem('bess_progress', JSON.stringify(data)); } catch (e) {}
 }
 
+// 优先：从容器服务端 API (/api/progress) 获取进度，降级：回退至 localStorage 浏览器缓存
+async function fetchProgressServer() {
+  const localData = getLocalProgress();
+  try {
+    const res = await fetch('/api/progress', { cache: 'no-cache' });
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.success && json.progress) {
+        const merged = { ...localData, ...json.progress };
+        setLocalProgress(merged);
+        return merged;
+      }
+    }
+  } catch (e) {
+    // API 不可用或纯静态模式，降级回退本地缓存
+  }
+  return localData;
+}
+
+// 优先：向容器服务端 API (/api/progress) 推送进度，降级：同时保存至 localStorage 浏览器缓存
+async function saveProgressSync(data) {
+  setLocalProgress(data); // 确保本地瞬间保存响应
+  try {
+    await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch (e) {
+    // API 不可用（如 file:// 或纯静态 Nginx），静默降级为 localStorage
+  }
+}
+
 function markSectionProgress(path, questionId) {
-  const data = getProgress();
+  const data = getLocalProgress();
   const key = path.split('/').pop().replace('.html', '');
   if (!data[key]) data[key] = { started: true, questions: [] };
+  if (!data[key].questions) data[key].questions = [];
   if (!data[key].questions.includes(questionId)) {
     data[key].questions.push(questionId);
   }
-  saveProgress(data);
+  saveProgressSync(data);
 }
 
 function markSectionComplete(path) {
-  const data = getProgress();
+  const data = getLocalProgress();
   const key = path.split('/').pop().replace('.html', '');
   if (!data[key]) data[key] = {};
   data[key].completed = true;
   data[key].completedAt = new Date().toISOString();
-  saveProgress(data);
+  saveProgressSync(data);
+
   // 通知导览页刷新（如在 iframe 内）
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({ type: 'section_complete', key: key }, '*');
   }
 }
 
-// 导出给章节页手动调用
-window.BESSQuiz = { getProgress, markSectionComplete, checkAnswers };
+// 导出至全局 window 对象
+window.BESSQuiz = { 
+  getProgress: getLocalProgress, 
+  fetchProgressServer, 
+  markSectionComplete, 
+  checkAnswers 
+};
