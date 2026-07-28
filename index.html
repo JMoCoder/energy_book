@@ -439,9 +439,36 @@
   let searchIndex = [];  // [{id,title,levelId,levelColor,levelLabel,file,chapterTitle,levelDir}]
 
   // ── 读取与同步进度（双路备份） ──────────────────────────────
+  function normalizeProgressKeys(data) {
+    if (!data || typeof data !== 'object') return {};
+    const normalized = {};
+    for (const key in data) {
+      let decodedKey = key;
+      try {
+        decodedKey = decodeURIComponent(key);
+      } catch (e) {}
+      if (!normalized[decodedKey]) {
+        normalized[decodedKey] = data[key];
+      } else {
+        normalized[decodedKey] = {
+          ...normalized[decodedKey],
+          ...data[key],
+          completed: normalized[decodedKey].completed || data[key].completed,
+          questions: Array.from(new Set([
+            ...(normalized[decodedKey].questions || []),
+            ...(data[key].questions || [])
+          ]))
+        };
+      }
+    }
+    return normalized;
+  }
+
   function getLocalProgress() {
-    try { return JSON.parse(localStorage.getItem('bess_progress') || '{}'); }
-    catch(e) { return {}; }
+    try {
+      const raw = JSON.parse(localStorage.getItem('bess_progress') || '{}');
+      return normalizeProgressKeys(raw);
+    } catch(e) { return {}; }
   }
 
   function setLocalProgress(data) {
@@ -456,7 +483,7 @@
       if (res.ok) {
         const json = await res.json();
         if (json && json.success && json.progress) {
-          const merged = { ...localData, ...json.progress };
+          const merged = normalizeProgressKeys({ ...localData, ...json.progress });
           setLocalProgress(merged);
           return merged;
         }
@@ -468,7 +495,7 @@
   }
 
   function getProgress() {
-    return progress && Object.keys(progress).length > 0 ? progress : getLocalProgress();
+    return normalizeProgressKeys(progress && Object.keys(progress).length > 0 ? progress : getLocalProgress());
   }
 
   function countCompleted(tocData) {
@@ -752,14 +779,45 @@
     document.getElementById('btnTop').classList.toggle('visible', scrollY > 400);
   }, { passive: true });
 
-  // ── 监听章节完成消息（来自 iframe） ──────────────────────────
+  async function refreshUIProgress() {
+    progress = await fetchProgressServer();
+    if (!tocData) return;
+    const completed = countCompleted(tocData);
+    renderGlobalProgress(tocData.meta.totalSections, completed);
+    renderProgressBars(tocData);
+    renderLevelGrid(tocData);
+  }
+
+  // ── 监听章节完成消息（跨窗口/iframe/广播/存储） ────────────
   window.addEventListener('message', async e => {
     if (e.data && e.data.type === 'section_complete') {
-      progress = await fetchProgressServer();
-      const completed = countCompleted(tocData);
-      renderGlobalProgress(tocData.meta.totalSections, completed);
-      renderProgressBars(tocData);
-      renderLevelGrid(tocData);
+      await refreshUIProgress();
+    }
+  });
+
+  // 广播频道监听
+  try {
+    if ('BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('bess_progress_channel');
+      bc.onmessage = async (e) => {
+        if (e.data && e.data.type === 'section_complete') {
+          await refreshUIProgress();
+        }
+      };
+    }
+  } catch (e) {}
+
+  // 页面从历史缓存(bfcache)恢复或后退时自动刷新进度
+  window.addEventListener('pageshow', async (e) => {
+    if (e.persisted || performance.navigation.type === 2) {
+      await refreshUIProgress();
+    }
+  });
+
+  // 监听同域 LocalStorage 变化
+  window.addEventListener('storage', async (e) => {
+    if (e.key === 'bess_progress') {
+      await refreshUIProgress();
     }
   });
 

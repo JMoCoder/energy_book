@@ -146,9 +146,35 @@ function checkAnswers() {
 window.checkAnswers = checkAnswers;
 
 // ── 进度持久化与云端/本地双路同步 ─────────────────────────────────
+function normalizeProgressKeys(data) {
+  if (!data || typeof data !== 'object') return {};
+  const normalized = {};
+  for (const key in data) {
+    let decodedKey = key;
+    try {
+      decodedKey = decodeURIComponent(key);
+    } catch (e) {}
+    if (!normalized[decodedKey]) {
+      normalized[decodedKey] = data[key];
+    } else {
+      normalized[decodedKey] = {
+        ...normalized[decodedKey],
+        ...data[key],
+        completed: normalized[decodedKey].completed || data[key].completed,
+        questions: Array.from(new Set([
+          ...(normalized[decodedKey].questions || []),
+          ...(data[key].questions || [])
+        ]))
+      };
+    }
+  }
+  return normalized;
+}
+
 function getLocalProgress() {
   try {
-    return JSON.parse(localStorage.getItem('bess_progress') || '{}');
+    const raw = JSON.parse(localStorage.getItem('bess_progress') || '{}');
+    return normalizeProgressKeys(raw);
   } catch (e) { return {}; }
 }
 
@@ -164,7 +190,7 @@ async function fetchProgressServer() {
     if (res.ok) {
       const json = await res.json();
       if (json && json.success && json.progress) {
-        const merged = { ...localData, ...json.progress };
+        const merged = normalizeProgressKeys({ ...localData, ...json.progress });
         setLocalProgress(merged);
         return merged;
       }
@@ -177,12 +203,13 @@ async function fetchProgressServer() {
 
 // 优先：向容器服务端 API (/api/progress) 推送进度，降级：同时保存至 localStorage 浏览器缓存
 async function saveProgressSync(data) {
-  setLocalProgress(data); // 确保本地瞬间保存响应
+  const normalized = normalizeProgressKeys(data);
+  setLocalProgress(normalized); // 确保本地瞬间保存响应
   try {
     await fetch('/api/progress', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(normalized)
     });
   } catch (e) {
     // API 不可用（如 file:// 或纯静态 Nginx），静默降级为 localStorage
@@ -191,7 +218,8 @@ async function saveProgressSync(data) {
 
 function markSectionProgress(path, questionId) {
   const data = getLocalProgress();
-  const key = path.split('/').pop().replace('.html', '');
+  const rawKey = path.split('/').pop().replace('.html', '');
+  const key = decodeURIComponent(rawKey);
   if (!data[key]) data[key] = { started: true, questions: [] };
   if (!data[key].questions) data[key].questions = [];
   if (!data[key].questions.includes(questionId)) {
@@ -202,7 +230,8 @@ function markSectionProgress(path, questionId) {
 
 function markSectionComplete(path) {
   const data = getLocalProgress();
-  const key = path.split('/').pop().replace('.html', '');
+  const rawKey = path.split('/').pop().replace('.html', '');
+  const key = decodeURIComponent(rawKey);
   if (!data[key]) data[key] = {};
   data[key].completed = true;
   data[key].completedAt = new Date().toISOString();
@@ -212,6 +241,15 @@ function markSectionComplete(path) {
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({ type: 'section_complete', key: key }, '*');
   }
+
+  // 跨标签页/跨窗口广播通知
+  try {
+    if ('BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('bess_progress_channel');
+      bc.postMessage({ type: 'section_complete', key: key });
+      bc.close();
+    }
+  } catch (e) {}
 }
 
 // 导出至全局 window 对象
@@ -221,3 +259,4 @@ window.BESSQuiz = {
   markSectionComplete, 
   checkAnswers 
 };
+
