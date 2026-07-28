@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>功率·电能·你的电费单 — 第1章 电的基本概念 | 网储学习手册</title>
+  <meta name="description" content="本节系统剖析电功率与电能的物理本质与数学推导，深入拆解中国居民与工商业电费单结构（分时电价TOU、最大需量电费、阶梯电价），并详细讲解大规网储系统中的功率（MW）与能量（MWh）量纲、充放电循环效率（RTE）、C倍率及其在峰谷套利与度电成本（LCOS）中的工程算力模型。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <!-- MathJax 数学公式渲染引擎 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 1</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电的基本概念</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">功率·电能·你的电费单</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_1_3_电阻与欧姆定律.html" class="nav-prev" title="上一节">← 上节</a>
+        <a href="01_2_1_电路元件与电路图.html" class="nav-next" title="下一节">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 1</span>
+        <span class="sep">›</span>
+        <span>电的基本概念</span>
+        <span class="sep">›</span>
+        <span>功率·电能·你的电费单</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_1_4</span>
+        <span class="reading-time">⏱ 约28分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>功率·电能·你的电费单</h1>
+      <p class="chapter-lead">从微观电场做功速率到百兆瓦级储能电站的收益算力账单——解构能量转换、电价机制与新型储能商业价值的物理与经济学基石。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>厘清电功率与电能的物理本质与导出公式</strong>：深刻理解电功率（$P$）作为做功速率与电能（$W$）作为能量累积的转换关系，熟练运用 $P=UI$、$P=I^2 R$ 与 $P=\frac{U^2}{R}$ 分析电路做功，理解特高压与 1500V 储能系统高压降损的物理根源。</li>
+        <li><strong>掌握电能量纲与单位换算的物理量级</strong>：熟练进行焦耳（J）、千瓦时（kWh/度）、兆瓦时（MWh）与吉瓦时（GWh）之间的精确换算，建立大型网储电站的能量规模直觉。</li>
+        <li><strong>拆解中国电力市场电费账单结构</strong>：全面读懂居民阶梯电价、工商业分时电价（TOU）、尖峰电价机制以及“最大需量电费”（基本电费）的惩罚逻辑。</li>
+        <li><strong>掌握网储系统核心指标与算力模型</strong>：精通储能功率（MW）与容量（MWh）的区别、C倍率（C-rate）物理含义、系统循环效率（RTE）对峰谷套利的盈亏临界影响及度电成本（LCOS）基础算力模型。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：一张电费账单背后的“能量时空魔法”</h2>
+      <p>2024年7月，珠三角某大型精密机械制造厂的财务总监拿到了一张令人心跳加速的月度电费账单。账单显示，该厂当月总用电量为 120 万千瓦时（度），但电费总额竟高达 135 万元，折合平均电价高达 1.125 元/度。仔细查看明细发现，工厂因为在下午 14:00 至 17:00 的“尖峰电价”时段集中启动了高功率熔炼炉，不仅支付了高达 1.48 元/度的尖峰电量电费，还因为瞬间功率冲顶，触发了按“最大需量”收取的 18 万元基本电费惩罚！</p>
+      <p>而在距离该厂仅 3 公里的某新型工商业储能示范园区内，景象却截然相反。一套额定功率为 2 兆瓦（MW）、总能量容量为 4 兆瓦时（MWh）的集装箱式磷酸铁锂储能系统正在无声运行：每天凌晨 0:00 至 8:00 的低谷电价时段，它以 0.28 元/度的低廉价格从电网“买入”4000 度电；到了下午 14:00 至 17:00 的工业用电高峰期，它又以 1.35 元/度的价格向厂区全额“卖出”放电。除去系统损耗，这套储能设备每天仅靠“低买高卖”搬运电能，就能为园区净赚近 4000 元的峰谷差价收益，同时成功将厂区最大需量降低了 1.5MW，一个月额外节省需量电费 5.7 万元。</p>
+      <p>为什么同样的电，在不同的时间、不同的做工速率下，其价值相差数倍？“功率”与“电能”在物理上究竟如何界定？电网是如何通过价格杠杆指挥千家万户与万兆瓦级储能电站的？本节将带你彻底剥开电费单的神秘面纱，建立从物理学能量定理到网储商业算力模型的完整认知。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、电功率与电能：从微观能量转换到宏观能量累积</h2>
+
+        <h3>1.1 电功率的物理定义与公式推导</h3>
+        <p>在物理学中，<strong>功率（Power）</strong>是衡量能量转换或做功能力快慢的物理量。对于电路系统而言，当微观载流子（电子）在电场力作用下跨越电位差 $U$ 移动电荷量 $dq$ 时，电场力对电荷所做的功为 $dW = U \cdot dq$。根据定义，<strong>电功率（Electric Power, $P$）</strong>即为单位时间内电场力所做的功（或电能转化为其他形式能量的速率）：</p>
+
+        $$P = \frac{dW}{dt} = \frac{U \cdot dq}{dt} = U \cdot \frac{dq}{dt}$$
+
+        <p>由于电流的定义为单位时间内通过导体横截面的电荷量 $I = \frac{dq}{dt}$，因此我们导出了电功率最基本的物理计算公式：</p>
+
+        $$P = U \cdot I$$
+
+        <p>在国际单位制（SI）中，电功率的单位是<strong>瓦特（Watt, W）</strong>。当一段电路两端的电压为 1 伏特（V），通过的电流为 1 安培（A）时，其电功率即为 1 瓦特（$1\text{ W} = 1\text{ V} \times 1\text{ A} = 1\text{ J/s}$）。</p>
+
+        <h3>1.2 焦耳热损耗与高压输电/储能降损的物理根源</h3>
+        <p>将欧姆定律 $U = I \cdot R$ 代入基本功率公式 $P = U \cdot I$，在纯电阻性电路或具有内阻的导体中，我们可以推导出电功率的另外两种表达形式：</p>
+
+        $$P = I^2 \cdot R \quad \text{与} \quad P = \frac{U^2}{R}$$
+
+        <div class="key-concept">
+          <h3>📌 关键概念：焦耳定律与两种功率表达形式的适用边界</h3>
+          <ul>
+            <li><strong>$P = I^2 R$（电流主导形式）</strong>：适用于已知通过导体的电流 $I$ 与导体电阻 $R$ 时计算焦耳热发热损耗。这表明<strong>发热功率与电流的平方成正比</strong>。只要电流翻倍，导线上的发热功率就会暴增至 4 倍！</li>
+            <li><strong>$P = \frac{U^2}{R}$（电压主导形式）</strong>：适用于已知施加在负载两端的电压 $U$ 时计算做功功率（如恒压电源下的加热丝、电灯泡）。电压翻倍，做功功率同样暴增至 4 倍。</li>
+          </ul>
+        </div>
+
+        <p>公式 $P = I^2 R$ 深刻揭示了人类电力系统发展史上的核心矛盾：<strong>如何以最小的热损耗输送巨量的电能？</strong></p>
+
+        <p>假设我们需要向 100 公里外的工业区输送额定功率为 $P_{\text{trans}} = 100\text{ MW}$（$10^8\text{ W}$）的电力，输电线路的总电阻为 $R_{\text{line}} = 10\ \Omega$。根据输电公式 $P_{\text{trans}} = U \cdot I$，线路中的电流为 $I = \frac{P_{\text{trans}}}{U}$。将电流代入线路热损耗公式：</p>
+
+        $$P_{\text{loss}} = I^2 R_{\text{line}} = \left(\frac{P_{\text{trans}}}{U}\right)^2 R_{\text{line}} = \frac{P_{\text{trans}}^2 \cdot R_{\text{line}}}{U^2}$$
+
+        <p>这个公式推导给出了一个震撼的物理结论：<strong>输电线路上的焦耳热损耗功率与输电电压 $U$ 的平方成反比！</strong></p>
+
+        <ul>
+          <li>若采用 <strong>10kV</strong> 低压输电：$I = \frac{10^8}{10^4} = 10,000\text{ A}$，线路发热损耗 $P_{\text{loss}} = (10000)^2 \times 10 = 1,000,000,000\text{ W} = 1000\text{ MW}$！损耗竟是输送功率的 10 倍，电能还没送到就已全部转化为热能把导线烧熔。</li>
+          <li>若采用 <strong>220kV</strong> 高压输电：$I = \frac{10^8}{2.2 \times 10^5} \approx 454.5\text{ A}$，线路损耗 $P_{\text{loss}} = (454.5)^2 \times 10 \approx 2.06\text{ MW}$，损耗率大幅降低至 2.06%。</li>
+          <li>若采用中国特高压（UHV）<strong>±1100kV</strong> 直流输电：电流降至仅 $90.9\text{ A}$，线路损耗仅为 $0.0826\text{ MW}$（$82.6\text{ kW}$），损耗率微乎其微（小于 0.1%）！</li>
+        </ul>
+
+        <p>同样的降损物理逻辑，在现代网储电站的架构演进中得到了完全相同的体现。早期储能系统普遍采用 <strong>1000V DC</strong> 直流母线架构；而从 2021 年起，行业迅速全面转向 <strong>1500V DC</strong> 架构。当提升直流母线电压至 1500V 时，在输送相同功率下，系统直流侧电流降低了 33.3%，直流电缆与母排的热损耗（$P=I^2 R$）直接降低了 <strong>44.4%</strong>，同时允许使用更细的铜缆，极大地提升了储能电站的系统效率（RTE）并降低了建设 CAPEX 成本。</p>
+
+        <h3>1.3 额定功率与实际功率</h3>
+        <p>在工程应用中，必须严格区分设备的“额定功率”与“实际功率”：</p>
+        <ul>
+          <li><strong>额定功率（Rated / Nominal Power）</strong>：制造厂商在铭牌上标注的限制参数，指设备在设计允许的标准环境温度（如 25°C）、额定电压和正常散热条件下，能够长期安全稳定连续运行的最大功率。</li>
+          <li><strong>实际功率（Actual / Instantaneous Power）</strong>：设备在实际运行过程中，由当前实际施加的电压、负载电阻及运行状态决定的瞬时功率。实际功率可以小于额定功率（轻载运行），但在安全保护机制下不允许长期超过额定功率（过载运行），否则将导致严重发热绝缘损坏。</li>
+        </ul>
+
+        <div class="callout callout-analogy">
+          <div class="callout-header">
+            <span class="callout-icon">🔍</span>
+            <strong>生活类比：水库蓄水量与水龙头流量</strong>
+          </div>
+          <div class="callout-body">
+            <p>理解“功率”与“电能”的关系，最形象的类比是<strong>水库里的水</strong>：</p>
+            <ul>
+              <li><strong>电能（$W$）相当于水库里积蓄的总水量（立方米）</strong>：代表你拥有的能量财富总量。</li>
+              <li><strong>电功率（$P$）相当于水龙头打开时的出水流量（升/秒 或 立方米/小时）</strong>：代表你消耗或释放能量的快慢速率。</li>
+            </ul>
+            <p>水龙头开得越大（功率越高），水库里的水（电能）消耗得就越快。如果一个蓄水量为 1000 立方米的水库（电能 1000 kWh），你用细小的水龙头以 1 立方米/小时（功率 1 kW）慢慢放水，可以放 1000 小时；但如果你把闸门彻底拉开，以 1000 立方米/小时（功率 1000 kW）的巨浪宣泄而出，只需 1 小时就会把水库抽干。</p>
+          </div>
+        </div>
+
+        <h3>1.4 电能的单位与量纲换算：从焦耳到千瓦时、兆瓦时与吉瓦时</h3>
+        <p>将功率在时间上进行积分，即可得到一段时间内电路所消耗或释放的总能量——<strong>电能（Electric Energy, $W$）</strong>：</p>
+
+        $$W = \int_{0}^{t} P(\tau) \, d\tau$$
+
+        <p>若功率 $P$ 为不随时间变化的恒定值，则公式简化为：</p>
+
+        $$W = P \cdot t = U \cdot I \cdot t$$
+
+        <p>在物理学国际单位制中，能量的标准单位是<strong>焦耳（Joule, J）</strong>。1 焦耳等于 1 瓦特功率在 1 秒钟内所做的功（$1\text{ J} = 1\text{ W}\cdot\text{s}$）。然而在宏观电力工程与日常生活中，焦耳的量级实在太小了（例如开一台 2000W 的空调运行 1 小时就会消耗 $7.2 \times 10^6\text{ J}$），因此工业界和电力公司采用了更大的工程计算单位——<strong>千瓦时（Kilowatt-hour, kWh）</strong>，在我国俗称为<strong>“1度电”</strong>。</p>
+
+        <p><strong>千瓦时与焦耳的精确换算关系：</strong></p>
+
+        $$1\text{ kWh} = 1\text{ kW} \times 1\text{ h} = 1000\text{ W} \times 3600\text{ s} = 3,600,000\text{ J} = 3.6 \times 10^6\text{ J} = 3.6\text{ MJ}$$
+
+        <p>在新型储能与国家大电网工程中，能量的标尺被进一步放大到<strong>兆瓦时（MWh）</strong>和<strong>吉瓦时（GWh）</strong>级别：</p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>能量单位</th>
+              <th>符号</th>
+              <th>折算度数 (kWh)</th>
+              <th>折算焦耳 (J)</th>
+              <th>典型应用场景</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>千瓦时（度）</td>
+              <td>kWh</td>
+              <td>$1\text{ kWh}$</td>
+              <td>$3.6 \times 10^6\text{ J}$</td>
+              <td>家庭月度用电、户用储能系统（如 10kWh 墙挂电池）、电动汽车电池包（50~100kWh）</td>
+            </tr>
+            <tr>
+              <td>兆瓦时</td>
+              <td>MWh</td>
+              <td>$1,000\text{ kWh}$</td>
+              <td>$3.6 \times 10^9\text{ J}$</td>
+              <td>工商业储能柜（215kWh~372kWh）、标准 20 尺集装箱储能系统（3.35MWh~5.0MWh）</td>
+            </tr>
+            <tr>
+              <td>吉瓦时</td>
+              <td>GWh</td>
+              <td>$1,000,000\text{ kWh}$</td>
+              <td>$3.6 \times 10^{12}\text{ J}$</td>
+              <td>大型超级电池工厂年产能（如 50GWh 产线）、省级大型风光储基地联合调度能量标尺</td>
+            </tr>
+            <tr>
+              <td>太瓦时</td>
+              <td>TWh</td>
+              <td>$1,000,000,000\text{ kWh}$</td>
+              <td>$3.6 \times 10^{15}\text{ J}$</td>
+              <td>国家级全社会年用电总量（2023年中国全社会用电量达 9.22 万亿千瓦时，即 9220 TWh）</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、拆解你的电费单：中国电力市场的价格机制与结构</h2>
+
+        <h3>2.1 电费单的核心组成要素：账单结构全景</h3>
+        <p>对于普通居民而言，电费单似乎很简单：`用电度数 × 单价 = 总金额`。然而对于大工业、商业综合体以及储能电站运营商来说，一张正规的电力公司结算电费单是一份包含多维价格杠杆的复杂财务账单。现代电费账单通常由以下四大核心模块组合而成：</p>
+
+        $$\text{月度电费总额} = \text{电度电费} + \text{基本电费} + \text{功率因数调整电费} + \text{政府性基金与附加}$$
+
+        <ol>
+          <li><strong>电度电费（Energy Charge）</strong>：按用户在结算周期内实际消耗的电能量总量（kWh）乘以相应的电度单价计算。这是电费账单中最基础的部分。</li>
+          <li><strong>基本电费（Capacity / Demand Charge）</strong>：针对大工业用电（变压器容量在 315kVA 及以上的用户），电力公司为了补偿为其准备供电容量所付出的固定投资而收取的费用。基本电费有两种可选计费方式：
+            <ul>
+              <li><strong>按变压器容量计费</strong>：固定按照用户安装的变压器额定容量（元/kVA·月）收取（如 30 元/kVA·月）。</li>
+              <li><strong>按最大需量计费</strong>：按照用户当月实际出现的最高 15 分钟（或 30 分钟）平均功率——即<strong>最大需量（Maximum Demand, kW）</strong>（元/kW·月）收取（如 40 元/kW·月）。</li>
+            </ul>
+          </li>
+          <li><strong>功率因数调整电费（力率电费）</strong>：电力公司根据用户月平均功率因数（$\cos\phi$）的高低，对电费进行奖励或惩罚。我国规定大工业用户标准功率因数为 0.90。若低于 0.90，电费按比例上浮罚款；若高于 0.90，电费获得一定比例的减免奖励。</li>
+          <li><strong>政府性基金及附加</strong>：包括国家重大水利工程建设基金、可再生能源电价附加、大中型水库移民后期扶持基金等代收费用（通常约每度电 0.03~0.05 元）。</li>
+        </ol>
+
+        <h3>2.2 居民阶梯电价与工商业分时电价（TOU）机制剖析</h3>
+        <p>为了兼顾社会公平与引导高效用电，我国建立了分类分级的电价体系：</p>
+
+        <h4>（1）居民阶梯电价（Tiered Pricing）</h4>
+        <p>居民用电实行按月（或按年）累进加价的阶梯机制，通常分为三档：</p>
+        <ul>
+          <li><strong>第一档（基底电量）</strong>：覆盖 80% 以上居民家庭的日常基本用电量（如 0~260 度/月），执行基准电价（如 0.60 元/度），保障基本民生。</li>
+          <li><strong>第二档（合理用电）</strong>：超出第一档但未达到上限的电量（如 261~400 度/月），电价每度加价 0.05 元（即 0.65 元/度）。</li>
+          <li><strong>第三档（高耗能惩罚）</strong>：超出第二档上限的高用电量（如 401 度以上/月），电价每度显著加价 0.30 元（即 0.90 元/度），以此抑制资源浪费。</li>
+        </ul>
+
+        <h4>（2）工商业分时电价（Time-of-Use, TOU）</h4>
+        <p>电能无法像水或煤炭那样以极低成本大量天然储存。在一天 24 小时内，全网用电需求存在巨大的峰谷起伏。为了利用价格杠杆“削峰填谷”，我国自 2021 年发改规〔2021〕1093号文印发以来，全面升级了工商业分时电价机制。一天 24 小时被精准划分为 4 至 5 个时段：</p>
+
+        <div class="key-concept">
+          <h3>📌 分时电价（TOU）五大时段界定与浮动比例规则</h3>
+          <ul>
+            <li><strong>尖峰时段（Critical Peak / Tip）</strong>：夏季高温（如 7-8月 14:00-17:00）或冬季寒潮极寒日全网负荷最大的数小时。电价在高峰电价基础上<strong>再上浮不低于 20%</strong>（相对平段电价可达 170%~200%）。</li>
+            <li><strong>高峰时段（Peak）</strong>：白天工厂集中生产、商场空调全开的用电高峰期。电价在平段电价基础上<strong>上浮不低于 50%</strong>。</li>
+            <li><strong>平段时段（Flat / Shoulder）</strong>：早晚过渡时段。执行基准电价（100%）。</li>
+            <li><strong>低谷时段（Valley / Off-Peak）</strong>：深夜 0:00 至早晨 8:00。居民熟睡、工厂停工，电网电力严重过剩。电价在平段电价基础上<strong>下浮不低于 50%</strong>。</li>
+            <li><strong>深谷时段（Deep Valley）</strong>：针对西北、山东等分布式光伏爆满地区，正午 11:00-14:00 日照最强时太阳能发电严重倒灌，电网不得不设立“深谷电价”（电价低至平段的 10%~20%），引导企业在正午开工用电。</li>
+          </ul>
+        </div>
+
+        <p>在浙江、广东、江苏等经济发达省份，工商业高峰/尖峰电价可高达 1.2~1.5 元/度，而夜间低谷电价仅为 0.25~0.35 元/度，<strong>峰谷价差突破了 1.0~1.2 元/度，峰谷比高达 3.5:1 至 4.5:1</strong>！这巨大的价格鸿沟，正是新型储能电站获得商业回报最核心的“利润温床”。</p>
+
+        <h3>2.3 “最大需量”电费惩罚机制：为什么瞬间功率冲顶会引发巨额账单？</h3>
+        <p>大工业用户经常踩中的一个电费陷阱是<strong>“最大需量电费”</strong>。电力公司的电表每 15 分钟（或 30 分钟）会自动滑动计算一次全厂的平均功率（kW）。在整整一个月（约 2880 个 15 分钟窗口）中，这 2880 个数值里的<strong>最大值</strong>，就被锁定为当月的“最大需量”。</p>
+
+        <p>假设某金属加工厂当月其他所有时间的运行功率都平稳保持在 500 kW，但在 7 月 15 日下午 15:00，因为操作失误，工人同时启动了 3 台大功率烘烤炉和 2 台冲压机，导致厂区功率在 15 分钟内剧烈冲高到了 <strong>2,500 kW</strong>。接下来的一个月里，尽管这几台大设备立刻关停了，该厂当月的基本电费结算单依然会按照 2,500 kW 来收取：</p>
+
+        $$\text{月度基本电费} = 2,500\text{ kW} \times 40\text{ 元/kW·月} = 100,000\text{ 元}$$
+
+        <p>如果该厂学会了“需量控制”，在烘烤炉启动的同时，联动储能系统瞬间发出 1,500 kW 的功率抵消负荷，将从电网抽取的最大功率死死压制在 1,000 kW 以内，那么当月的基本电费立刻降至：</p>
+
+        $$\text{优化后基本电费} = 1,000\text{ kW} \times 40\text{ 元/kW·月} = 40,000\text{ 元}$$
+
+        <p><strong>仅仅通过平抑这 15 分钟的功率尖峰，储能系统在一个月内就为工厂省下了 6 万元的硬性基本电费！</strong></p>
+
+        <div class="callout callout-case">
+          <div class="callout-header">
+            <span class="callout-icon">🏗️</span>
+            <strong>中国真实案例：广东东莞某电子制造厂 1MW / 2MWh 储能项目电费账单实测</strong>
+          </div>
+          <div class="callout-body">
+            <p><strong>项目背景</strong>：东莞某精密电子厂月均用电量 60 万度，供电电压 10kV，采用按最大需量缴纳基本电费（单价 38 元/kW·月）。工厂白天生产线负荷高，夜间低。</p>
+            <p><strong>储能配置</strong>：2023年安装一套 1MW / 2MWh 集装箱储能系统，采用“两充两放”运行策略：</p>
+            <ul>
+              <li><strong>第一次充放</strong>：深夜 00:00-08:00（低谷电价 0.31 元/度）充电 2MWh；上午 10:00-12:00（高峰电价 1.18 元/度）放电 1.7MWh。</li>
+              <li><strong>第二次充放</strong>：中午 12:00-14:00（平段电价 0.68 元/度）充电 2MWh；下午 15:00-17:00（尖峰电价 1.45 元/度）放电 1.7MWh。</li>
+            </ul>
+            <p><strong>收益实测明细（2024年5月月度结算）</strong>：</p>
+            <ol>
+              <li><strong>峰谷套利直接收益</strong>：当月共放电 10.2 万度，通过“低买高卖”搬运电能，扣除充电成本与自耗电后，净赚峰谷差价 <strong>8.7 万元</strong>。</li>
+              <li><strong>最大需量削峰收益</strong>：储能系统在下午尖峰负荷时段动态放电，将厂区最大需量由 3,200 kW 压低至 2,300 kW，成功削减需量 900 kW。节省基本电费：$900\text{ kW} \times 38\text{ 元/kW·月} = \mathbf{3.42\text{ 万元}}$。</li>
+              <li><strong>全月总收益</strong>：$8.7 + 3.42 = \mathbf{12.12\text{ 万元}}$。该储能项目总投资约 280 万元，预计在 2.1 年内即可完全收回建站成本！</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-tips">
+          <div class="callout-header">
+            <span class="callout-icon">💡</span>
+            <strong>工商业用户省电费的三大硬核“组合拳”</strong>
+          </div>
+          <div class="callout-body">
+            <ol>
+              <li><strong>第一拳：峰谷移相（TOU Arbitrage）</strong>——配置储能系统，在低谷/深谷时段充电，高峰/尖峰时段放电，吃透电价差。</li>
+              <li><strong>第二拳：需量防爆（Demand Control）</strong>——在 BMS/EMS 系统中设定最大功率阈值，一旦厂区用电接近临界点，储能系统毫秒级响应放电顶峰，避免触发高额基本电费。</li>
+              <li><strong>第三拳：力率补偿（Power Factor Correction）</strong>——通过无功补偿装置或双向储能变流器（PCS）的无功调节功能，将全厂功率因数维持在 0.95 以上，每月从电力公司赚取 0.5%~1% 的力率电费奖励。</li>
+            </ol>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、网储工程中的电能与功率量纲：从 kWh 到 GWh 系统</h2>
+
+        <h3>3.1 储能系统的两大核心名片：功率（MW）与容量（MWh）</h3>
+        <p>在新闻报道或招投标文件中，我们经常看到诸如“某地建设 100MW / 200MWh 储能电站”的表述。初学者极易混淆 MW 与 MWh。这两个物理量分别代表了储能电站不同的核心能力：</p>
+
+        <ul>
+          <li><strong>额定功率 $P_{\text{nom}}$（单位：兆瓦 MW）</strong>：表示储能系统最大的吞吐做工速率。它决定了该电站<strong>一次性最大能帮电网顶多大的功率缺口</strong>（即水龙头能开多大）。</li>
+          <li><strong>额定能量容量 $E_{\text{nom}}$（单位：兆瓦时 MWh）</strong>：表示储能电池充满电后所包含的总电能量。它决定了该电站在额定功率下<strong>能够持续供电多久</strong>（即水库蓄水量有多大）。</li>
+        </ul>
+
+        <p>由此，工业界引入了<strong>C倍率（C-rate）</strong>这一关键概念，用以刻画储能系统的充放电快慢能力：</p>
+
+        $$C\text{-rate} = \frac{\text{额定充放电功率 } P_{\text{nom}}\text{ (MW)}}{\text{额定能量容量 } E_{\text{nom}}\text{ (MWh)}} = \frac{1}{\text{额定持续放电时间 } t\text{ (h)}}$$
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>系统配置</th>
+              <th>C倍率</th>
+              <th>持续放电时间</th>
+              <th>典型网储工程应用领域</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>100MW / 400MWh</td>
+              <td>0.25C</td>
+              <td>4 小时</td>
+              <td>长时储能（LDES）、大比例可再生能源消纳、替代高成本燃气电厂备用容量</td>
+            </tr>
+            <tr>
+              <td>100MW / 200MWh</td>
+              <td>0.5C</td>
+              <td>2 小时</td>
+              <td>中国大储（独立/共享储能）标准主流配置，兼顾峰谷套利与电网调峰需求</td>
+            </tr>
+            <tr>
+              <td>100MW / 100MWh</td>
+              <td>1.0C</td>
+              <td>1 小时</td>
+              <td>工商业短时高倍率削峰、火电厂联合调频、紧急备用电源（UPS）</td>
+            </tr>
+            <tr>
+              <td>50MW / 25MWh</td>
+              <td>2.0C</td>
+              <td>0.5 小时（30分钟）</td>
+              <td>一次调频（Primary Frequency Regulation）、电网惯性响应、高频次短时动态稳压</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-warning">
+          <div class="callout-header">
+            <span class="callout-icon">⚠️</span>
+            <strong>工程警示：混淆 MW 与 MWh 导致的重大招投标事故</strong>
+          </div>
+          <div class="callout-body">
+            <p>在某省风光储一体化项目招标中，某不专业的投标方在编制技术方案时，将业主要求的“采购 100MWh 储能电池系统”误理解为“采购 100MW 储能系统”，并按 100MW / 50MWh（0.5小时高倍率系统）进行了设备报价。结果报价比其他合规厂商低了近一半。中标后在交货阶段发现，50MWh 的电池容量根本无法满足电网要求持续 2 小时（200MWh）放电的考核标准，不仅面临巨额电网违约罚款，最终导致项目整体废标。</p>
+            <p><strong>记住：MW 代表速率，MWh 代表总量！在任何网储工程文档中，必须时刻保持对量纲的极致严谨。</strong></p>
+          </div>
+        </div>
+
+        <h3>3.2 系统循环效率（RTE）对电费套利的盈亏临界影响</h3>
+        <p>储能电站并不是一个 100% 完美的“电能搬运工”。把 100 度电存入电池，再从电池里放出来时，你绝对拿不回 100 度电。在整个“充电-储存-放电”过程中，电能会在多个物理环节发生不可逆的热损耗：</p>
+
+        <!-- SVG 图表：储能系统低谷充电-高峰放电与 Duck Curve 负荷曲线及系统能量损耗全景图 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="340" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <defs>
+              <marker id="arrow-blue2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+              </marker>
+              <marker id="arrow-orange2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#F57C00"/>
+              </marker>
+            </defs>
+
+            <!-- 背景外框 -->
+            <rect x="15" y="15" width="770" height="310" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5" rx="8"/>
+
+            <!-- 标题 -->
+            <text x="400" y="38" font-family="Noto Sans SC, sans-serif" font-size="15" font-weight="700" fill="#1A5F96" text-anchor="middle">网储电站电价鸭子曲线（Duck Curve）与系统循环效率（RTE）能量损耗链</text>
+
+            <!-- 左侧：鸭子曲线图 -->
+            <g transform="translate(35, 55)">
+              <rect x="0" y="0" width="340" height="240" fill="#F8FAFC" stroke="#E2E8F0" rx="6"/>
+              <text x="170" y="22" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#2D3748" text-anchor="middle">电网负荷与分时电价曲线 (24小时)</text>
+
+              <!-- 坐标轴 -->
+              <line x1="40" y1="200" x2="320" y2="200" stroke="#718096" stroke-width="1.5"/>
+              <line x1="40" y1="200" x2="40" y2="40" stroke="#718096" stroke-width="1.5"/>
+              <text x="320" y="215" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096">时间(h)</text>
+              <text x="35" y="35" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096" text-anchor="end">功率/电价</text>
+
+              <!-- 时间刻度 -->
+              <text x="40" y="212" font-family="Inter, sans-serif" font-size="9" fill="#718096">0</text>
+              <text x="110" y="212" font-family="Inter, sans-serif" font-size="9" fill="#718096">6</text>
+              <text x="180" y="212" font-family="Inter, sans-serif" font-size="9" fill="#718096">12</text>
+              <text x="250" y="212" font-family="Inter, sans-serif" font-size="9" fill="#718096">18</text>
+              <text x="310" y="212" font-family="Inter, sans-serif" font-size="9" fill="#718096">24</text>
+
+              <!-- 鸭子曲线 (负荷) -->
+              <path d="M 40 150 Q 80 170 110 180 T 180 185 Q 230 160 260 80 T 310 130" fill="none" stroke="#4A5568" stroke-width="2" stroke-dasharray="4,3"/>
+              <text x="265" y="70" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#4A5568">晚高峰负荷</text>
+
+              <!-- 储能行为区 -->
+              <!-- 谷充电 (0-6) -->
+              <rect x="40" y="150" width="60" height="50" fill="#E8F2FF" opacity="0.8" stroke="#1A5F96"/>
+              <text x="70" y="178" font-family="Noto Sans SC, sans-serif" font-size="11" font-weight="700" fill="#1A5F96" text-anchor="middle">低谷充电</text>
+              <text x="70" y="192" font-family="Inter, sans-serif" font-size="9" fill="#1A5F96" text-anchor="middle">0.30元/度</text>
+
+              <!-- 峰放电 (17-21) -->
+              <rect x="235" y="80" width="55" height="120" fill="#FFF3E0" opacity="0.8" stroke="#F57C00"/>
+              <text x="262" y="130" font-family="Noto Sans SC, sans-serif" font-size="11" font-weight="700" fill="#F57C00" text-anchor="middle">尖峰放电</text>
+              <text x="262" y="145" font-family="Inter, sans-serif" font-size="9" fill="#F57C00" text-anchor="middle">1.35元/度</text>
+            </g>
+
+            <!-- 右侧：RTE能量流向与损耗分解 -->
+            <g transform="translate(400, 55)">
+              <rect x="0" y="0" width="370" height="240" fill="#F8FAFC" stroke="#E2E8F0" rx="6"/>
+              <text x="185" y="22" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#2D3748" text-anchor="middle">储能系统循环效率 (RTE ≈ 85%) 损耗分解</text>
+
+              <!-- 电网输入 -->
+              <rect x="20" y="45" width="80" height="40" fill="#1A5F96" rx="4"/>
+              <text x="60" y="62" font-family="Noto Sans SC, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">低谷电网输入</text>
+              <text x="60" y="77" font-family="Inter, sans-serif" font-size="10" fill="#E8F2FF" text-anchor="middle">100 kWh</text>
+
+              <line x1="100" y1="65" x2="140" y2="65" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrow-blue2)"/>
+
+              <!-- 储能系统本体 -->
+              <rect x="140" y="45" width="100" height="170" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="6"/>
+              <text x="190" y="68" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#1A5F96" text-anchor="middle">储能集装箱</text>
+
+              <!-- 内部损耗模块 -->
+              <rect x="150" y="80" width="80" height="25" fill="#FFFFFF" stroke="#E2E8F0" rx="3"/>
+              <text x="190" y="96" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096" text-anchor="middle">PCS 逆变损耗 4%</text>
+
+              <rect x="150" y="112" width="80" height="25" fill="#FFFFFF" stroke="#E2E8F0" rx="3"/>
+              <text x="190" y="128" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096" text-anchor="middle">电池 I²R 发热 6%</text>
+
+              <rect x="150" y="144" width="80" height="25" fill="#FFFFFF" stroke="#E2E8F0" rx="3"/>
+              <text x="190" y="160" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096" text-anchor="middle">液冷温控自耗 3%</text>
+
+              <rect x="150" y="176" width="80" height="25" fill="#FFFFFF" stroke="#E2E8F0" rx="3"/>
+              <text x="190" y="192" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#718096" text-anchor="middle">变压器铁损 2%</text>
+
+              <!-- 有效输出 -->
+              <line x1="240" y1="130" x2="275" y2="130" stroke="#F57C00" stroke-width="2" marker-end="url(#arrow-orange2)"/>
+
+              <rect x="275" y="110" width="80" height="40" fill="#F57C00" rx="4"/>
+              <text x="315" y="127" font-family="Noto Sans SC, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">高峰有效放电</text>
+              <text x="315" y="142" font-family="Inter, sans-serif" font-size="10" fill="#FFF3E0" text-anchor="middle">85 kWh</text>
+
+              <!-- RTE公式提示框 -->
+              <text x="185" y="230" font-family="Noto Sans SC, sans-serif" font-size="10" font-weight="700" fill="#E53E3E" text-anchor="middle">系统循环效率 RTE = 85 / 100 = 85% (总热损耗 15%)</text>
+            </g>
+          </svg>
+          <figcaption>图 1-4-1：网储电站电价鸭子曲线（Duck Curve）削峰填谷与系统循环效率（RTE）能量损耗链结构图</figcaption>
+        </figure>
+
+        <p><strong>系统循环效率（Round-Trip Efficiency, RTE）</strong>即为储能系统最终放出的有效电能与充电时从电网吸收的总电能之比：</p>
+
+        $$\text{RTE} = \frac{E_{\text{discharge}}}{E_{\text{charge}}} \times 100\%$$
+
+        <p>目前行业内先进的磷酸铁锂（LFP）储能系统，直流侧电池舱效率可达 92%~94%，加上 PCS 变流器与升压变压器后，<strong>交流到交流（AC-to-AC）系统全寿命周期 RTE 通常在 85%~88% 之间</strong>。</p>
+
+        <p><strong>RTE 对峰谷套利盈亏临界点的算力模型：</strong></p>
+        <p>假设某储能系统 RTE 为 85%，低谷充电电价为 $P_{\text{valley}} = 0.30\text{ 元/度}$。不考虑设备折旧与维护成本，要实现“充放电电费保本”，高峰放电电价 $P_{\text{peak}}$ 必须满足：</p>
+
+        $$E_{\text{discharge}} \cdot P_{\text{peak}} \ge E_{\text{charge}} \cdot P_{\text{valley}} \implies \text{RTE} \cdot P_{\text{peak}} \ge P_{\text{valley}}$$
+
+        $$P_{\text{peak}} \ge \frac{P_{\text{valley}}}{\text{RTE}} = \frac{0.30}{0.85} \approx 0.353\text{ 元/度}$$
+
+        <p>这意味着，光是弥补 15% 的系统能量发热损耗，高峰电价就必须比低谷电价高出至少 0.053 元/度！如果再算上储能电池全寿命周期折旧成本（目前锂电池储能度电衰减折旧成本约 0.25~0.35 元/度），<strong>当地的峰谷价差必须稳定大于 0.60 元/度，储能电站才具有真正的商业盈利价值</strong>。</p>
+
+        <h3>3.3 储能度电成本（LCOS）算力模型</h3>
+        <p>正如发电侧使用“平准化度电成本（LCOE）”来衡量风电、光伏的发电成本一样，储能行业采用了<strong>平准化储能成本（Levelized Cost of Storage, LCOS）</strong>来精确评估储能电站在整个生命周期内每释放 1 度电所承担的综合成本（元/kWh）：</p>
+
+        $$\text{LCOS} = \frac{\text{初始建设投资 CAPEX} + \sum_{t=1}^{n} \frac{\text{运维成本 OPEX}_t + \text{充电成本 ChargeCost}_t}{(1 + r)^t}}{\sum_{t=1}^{n} \frac{\text{年放电总量 } E_{\text{discharge}, t}}{(1 + r)^t}}$$
+
+        <p>在工程初步测算中，可使用以下简化公式快速评估纯电池部分的<strong>单次循环度电衰减成本 $C_{\text{cycle}}$</strong>：</p>
+
+        $$C_{\text{cycle}} = \frac{\text{电池系统 EPC 初始单千瓦时造价 (元/kWh)}}{\text{全生命周期等效总循环次数 (Cycles)} \times \text{系统充放电效率 (RTE)}}$$
+
+        <p>以 2024 年中国储能市场典型数据为例：若集装箱储能系统 EPC 初始造价降至 0.65 元/Wh（即 650 元/kWh），磷酸铁锂电池在 70% EOL 寿命下可实现 6000 次深度循环（DOD 90%），系统 RTE 为 85%：</p>
+
+        $$C_{\text{cycle}} = \frac{650\text{ 元/kWh}}{6000 \times 0.85} \approx 0.127\text{ 元/kWh}$$
+
+        <p>这意味着随着锂电池产业链技术进步与造价大幅下降，储能系统的度电循环成本已由几年前的 0.4~0.5 元/度骤降到了 <strong>0.13 元/度左右</strong>！这为全球规模化“光储结合”与工商业自建储能扫清了最重要的经济性障碍。</p>
+
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、实战演练：家用电器与工业储能的电费计算算力模型</h2>
+
+        <h3>4.1 家用高功率电器耗电量与电费精确推算</h3>
+        <p>让我们运用本节学到的物理与电价公式，对家庭日常生活中常见的高功率电器进行实际耗电量与电费测算：</p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>家用电器设备</th>
+              <th>额定功率 (W)</th>
+              <th>单次/日均使用时长</th>
+              <th>月消耗电能量 (kWh)</th>
+              <th>月度电费支出 (元)<br>(按 0.6 元/度)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>3匹变频冷暖空调（全负荷）</td>
+              <td>2,200 W (2.2 kW)</td>
+              <td>夏季每天开 8 小时</td>
+              <td>$2.2 \times 8 \times 30 = \mathbf{528\text{ kWh}}$</td>
+              <td>$528 \times 0.6 = \mathbf{316.8\text{ 元}}$</td>
+            </tr>
+            <tr>
+              <td>60升储水式电热水器（加热）</td>
+              <td>3,000 W (3.0 kW)</td>
+              <td>每天累计加热 2 小时</td>
+              <td>$3.0 \times 2 \times 30 = \mathbf{180\text{ kWh}}$</td>
+              <td>$180 \times 0.6 = \mathbf{108.0\text{ 元}}$</td>
+            </tr>
+            <tr>
+              <td>新能源车 7kW 家用交流充电桩</td>
+              <td>7,000 W (7.0 kW)</td>
+              <td>每周充满一次 60kWh 电池包</td>
+              <td>$60 \times 4 = \mathbf{240\text{ kWh}}$</td>
+              <td>$240 \times 0.6 = \mathbf{144.0\text{ 元}}$<br>(若用谷电仅需 74 元)</td>
+            </tr>
+            <tr>
+              <td>公用 120kW 直流极速充电桩</td>
+              <td>120,000 W (120 kW)</td>
+              <td>快充 20 分钟（0.333 小时）</td>
+              <td>$120 \times 0.333 = \mathbf{40\text{ kWh}}$</td>
+              <td>按快充服务费 1.5元/度<br>$40 \times 1.5 = \mathbf{60.0\text{ 元}}$</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4.2 工商业“削峰填谷”与“需量控制”双重收益算力模型</h3>
+        <p>以下是电网工程师在编制工商业储能可行性研究报告（可研报告）时使用的标准收益算力模型：</p>
+
+        <div class="key-concept">
+          <h3>🧮 算力模型实战题目</h3>
+          <p><strong>已知条件</strong>：某纺织印染厂安装了一套 <strong>1MW / 2.15MWh</strong> 的工商业储能集装箱，项目采用“两充两放”模式运行，每年运营 330 天。</p>
+          <ul>
+            <li><strong>电价数据</strong>：尖峰电价 1.40 元/度，高峰电价 1.15 元/度，平段电价 0.65 元/度，低谷电价 0.30 元/度。基本电费需量单价 40 元/kW·月。</li>
+            <li><strong>运行策略</strong>：
+              <ul>
+                <li>第一次：夜间谷时（0.30元）充满，上午高峰（1.15元）放完 1.8MWh（放电深度 DOD 85%）。</li>
+                <li>第二次：中午平时（0.65元）充满，下午尖峰（1.40元）放完 1.8MWh。</li>
+              </ul>
+            </li>
+            <li><strong>需量控制</strong>：储能系统成功协助厂区将月度最高需量从 4000kW 压低到了 3200kW（削峰 800kW）。</li>
+            <li><strong>系统效率</strong>：综合循环效率 RTE = 86%。</li>
+          </ul>
+        </div>
+
+        <p><strong>收益计算推导过程：</strong></p>
+
+        <p><strong>第一步：计算每天的充电电量与充电成本</strong></p>
+        <ul>
+          <li>第一次充电：放电 1.8MWh，需充电量 $E_{\text{charge1}} = \frac{1.8}{0.86} \approx 2.093\text{ MWh} = 2093\text{ kWh}$。成本：$2093 \times 0.30 = 627.9\text{ 元}$。</li>
+          <li>第二次充电：放电 1.8MWh，需充电量 $E_{\text{charge2}} = \frac{1.8}{0.86} \approx 2.093\text{ MWh} = 2093\text{ kWh}$。成本：$2093 \times 0.65 = 1360.45\text{ 元}$。</li>
+          <li><strong>每日总充电成本</strong>：$627.9 + 1360.45 = \mathbf{1988.35\text{ 元}}$。</li>
+        </ul>
+
+        <p><strong>第二步：计算每天的放电收入与峰谷差价净收益</strong></p>
+        <ul>
+          <li>第一次放电收入（高峰）：$1800\text{ kWh} \times 1.15\text{ 元} = 2070\text{ 元}$。</li>
+          <li>第二次放电收入（尖峰）：$1800\text{ kWh} \times 1.40\text{ 元} = 2520\text{ 元}$。</li>
+          <li><strong>每日总放电收入</strong>：$2070 + 2520 = \mathbf{4590\text{ 元}}$。</li>
+          <li><strong>每日峰谷套利净收益</strong>：$4590 - 1988.35 = \mathbf{2601.65\text{ 元}}$。</li>
+          <li><strong>全年峰谷套利总收益</strong>：$2601.65\text{ 元/天} \times 330\text{ 天} = \mathbf{85.85\text{ 万元}}$。</li>
+        </ul>
+
+        <p><strong>第三步：计算全年需量基本电费节省金额</strong></p>
+        $$\text{月度需量节省} = 800\text{ kW} \times 40\text{ 元/kW·月} = 3.2\text{ 万元/月}$$
+
+        $$\text{全年需量总收益} = 3.2\text{ 万元/月} \times 12\text{ 个月} = \mathbf{38.4\text{ 万元}}$$
+
+        <p><strong>第四步：计算储能项目全年综合总收益</strong></p>
+
+        $$\text{全年综合总收益} = 85.85\text{ (峰谷套利)} + 38.4\text{ (需量削峰)} = \mathbf{124.25\text{ 万元}}$$
+
+        <p>测算结果表明，该套成本约 220 万元的储能系统，依靠峰谷套利与需量削峰双重收益，<strong>在约 1.77 年内即可收回初始投资</strong>，展示出惊人的经济回报率！</p>
+
+        <h3>4.3 虚拟电厂（VPP）与实时电力现货市场（Spot Market）展望</h3>
+        <p>随着我国电力体制改革深入，电力市场正逐步从传统固定分时电价向<strong>实时电力现货交易（Real-time Spot Market）</strong>演进。在现货市场中，电价每 15 分钟变动一次。</p>
+
+        <div class="callout callout-extension">
+          <div class="callout-header">
+            <span class="callout-icon">🔭</span>
+            <strong>深入探索：电力现货市场中的“负电价（Negative Price）”现象</strong>
+          </div>
+          <div class="callout-body">
+            <p>在山东、甘肃等新能源装机占比极高（光伏+风电）的省份，正午日照强劲而全省用电负荷较低时，电力市场会出现供极为过于求的现象。由于大型火电机组无法随意停机，市场出清电价会跌至 0 元甚至 <strong>-0.08 元/度（负电价）</strong>！</p>
+            <p>“负电价”意味着发电厂宁可掏钱请别人用电，也不愿停机。此时，分布式储能与**虚拟电厂（Virtual Power Plant, VPP）**聚合商通过智能 EMS 算法开启充电，不仅获得了免费的电能，还能从电力市场拿到额外的“帮忙消纳电能补贴”。新型储能正在从单一的静态电费套利工具，进化为具备高度智慧的分布式数字能源资产。</p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>功率与电能物理界定</strong>：电功率（$P=UI$）代表做工速率（单位 W/kW/MW），焦耳热损耗 $P=I^2 R$ 决定了系统发热与高压降损物理根源；电能（$W=Pt$）代表能量累积总量（单位 J/kWh/MWh/GWh）。</li>
+        <li><strong>工程单位换算关系</strong>：$1\text{ kWh（度）} = 3.6 \times 10^6\text{ J}$；$1\text{ MWh} = 1000\text{ kWh}$；$1\text{ GWh} = 10^6\text{ kWh}$。在网储工程中时刻厘清 MW（速率）与 MWh（容量）的量纲区别。</li>
+        <li><strong>中国电费账单结构</strong>：由电度电费、基本电费（按容量/最大需量）、功率因数调整电费及附加组成。工商业分时电价（TOU）划分尖峰、高峰、平段、低谷与深谷，巨大的峰谷价差（>0.6~1.0元/度）是储能套利的基础。</li>
+        <li><strong>储能两大核心指标与效率</strong>：C倍率 $C = P/E$ 刻画充放电速率（如 0.5C 为 2小时系统）。系统循环效率（RTE ≈ 85%）决定了充放电能量损耗，高峰电价必须大于 $P_{\text{valley}}/\text{RTE}$ 才能实现保本。</li>
+        <li><strong>双重商业收益算力模型</strong>：工商业储能通过“低买高卖峰谷套利”与“毫秒级顶峰平抑最大需量基本电费”，能够显著缩短投资回收期，并在虚拟电厂与现货市场中释放更大价值。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="chapter-quiz">
+      <h2>🧠 知识测验</h2>
+
+      <div class="quiz-container">
+
+        <!-- Q1 -->
+        <div class="quiz-question" id="q1">
+          <p class="question-text"><strong>1.</strong> 根据焦耳定律与线路损耗公式 $P_{\text{loss}} = I^2 R = \frac{P_{\text{trans}}^2 \cdot R}{U^2}$，当网储集装箱的直流母线工作电压从 1000V 提高到 1500V，在输送相同额定功率时，直流电缆上的焦耳热损耗功率将降低：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 33.3%</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 44.4%</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 50.0%</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 66.7%</label>
+          </div>
+          <div class="quiz-answer" id="q1-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>输送相同功率 $P$ 时，电流 $I = \frac{P}{U}$。当电压由 $U_1 = 1000\text{V}$ 提升至 $U_2 = 1500\text{V}$ 时，新电流 $I_2 = \frac{1000}{1500} I_1 = \frac{2}{3} I_1$。线路损耗 $P_{\text{loss}} \propto I^2$，因此提升后的损耗为原来的 $\left(\frac{2}{3}\right)^2 = \frac{4}{9} \approx 55.6\%$。损耗降低的比例为 $1 - 55.6\% = 44.4\%$。因此 B 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-question" id="q2">
+          <p class="question-text"><strong>2.</strong> 某独立储能电站集装箱标称能量容量为 5 MWh。请计算该储能集装箱完全充满电时所包含的物理电能量折算为国际标准单位焦耳（J）为多少？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2" value="A"> A. $1.8 \times 10^{10}\text{ J}$</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="B"> B. $3.6 \times 10^9\text{ J}$</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="C"> C. $5.0 \times 10^6\text{ J}$</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="D"> D. $1.8 \times 10^7\text{ J}$</label>
+          </div>
+          <div class="quiz-answer" id="q2-answer" style="display:none">
+            <p>✅ <strong>正确答案：A</strong></p>
+            <p>📖 <strong>解析：</strong>已知 $1\text{ kWh} = 3.6 \times 10^6\text{ J}$。容量 $5\text{ MWh} = 5,000\text{ kWh}$。换算为焦耳：$W = 5000 \times 3.6 \times 10^6\text{ J} = 18 \times 10^9\text{ J} = 1.8 \times 10^{10}\text{ J}$（即 18 吉焦耳 GJ）。因此 A 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-question" id="q3">
+          <p class="question-text"><strong>3.</strong> 某大工业用户按“最大需量”缴纳基本电费（单价为 40 元/kW·月）。7月份该厂在某 15 分钟内因为突发高负荷使平均功率达到了 3000kW（全月其他时间均为 1000kW）。若该厂安装了储能系统，使该月最大需量成功控制在 1800kW，则储能系统仅凭需量控制在 7 月份节省的基本电费为：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 3.2 万元</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 4.8 万元</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 7.2 万元</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 12.0 万元</label>
+          </div>
+          <div class="quiz-answer" id="q3-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>最大需量削峰值为 $\Delta P = 3000\text{ kW} - 1800\text{ kW} = 1200\text{ kW}$。节省的基本电费为 $\Delta P \times \text{单价} = 1200\text{ kW} \times 40\text{ 元/kW·月} = 48,000\text{ 元} = 4.8\text{ 万元}$。因此 B 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-question" id="q4">
+          <p class="question-text"><strong>4.</strong> 关于储能系统的 C 倍率（C-rate）与持续充放电时间的关系，下列说法正确的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 100MW / 200MWh 的储能系统，其充放电 C 倍率为 2C</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 0.5C 的储能系统，在额定功率下完全充放电一次所需的时间约为 2 小时</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="C"> C. C 倍率越高，说明电池持续放电的时间越长</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="D"> D. C 倍率的物理单位是 A/h（安培每小时）</label>
+          </div>
+          <div class="quiz-answer" id="q4-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>解析：</strong>C倍率定义为 $C = P_{\text{nom}} / E_{\text{nom}} = 1 / t$。对于 100MW / 200MWh 系统，其 $C = 100/200 = 0.5\text{C}$，完全充放电时间为 $1/0.5 = 2$ 小时（A选项计算错为2C）。C倍率越高代表充放电越快，持续放电时间越短（C选项错误）。C倍率是无量纲或以 $\text{h}^{-1}$ 为量纲的倍数比值（D选项错误）。因此 B 选项正确。</p>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-question" id="q5">
+          <p class="question-text"><strong>5.</strong> 某工商业储能系统 AC-to-AC 循环效率 RTE 为 80%。若低谷充电电价为 0.32 元/度，不考虑电池衰减与运维成本，该储能系统在高峰放电时，保本的最低放电电价必须达到：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 0.32 元/度</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 0.384 元/度</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 0.40 元/度</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 0.50 元/度</label>
+          </div>
+          <div class="quiz-answer" id="q5-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>解析：</strong>根据电费套利保本公式：$P_{\text{peak\_min}} = \frac{P_{\text{valley}}}{\text{RTE}} = \frac{0.32\text{ 元}}{0.80} = 0.40\text{ 元/度}$。这意味着因为有 20% 的能量系统发热损耗，高峰电价必须不低于 0.40 元/度才能弥补充电电费成本。因此 C 选项正确。</p>
+          </div>
+        </div>
+
+        <button class="btn-check-answer" onclick="checkAnswers()">查看答案</button>
+        <p class="quiz-score" id="score-display"></p>
+      </div>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_1_3_电阻与欧姆定律.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">电阻与欧姆定律</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_2_1_电路元件与电路图.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">电路元件与电路图</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul>
+        <li><a href="01_1_2_电流与电压.html">01_1_2 电流与电压：流动的力量</a> — 电位差做功与载流子能量传输本质</li>
+        <li><a href="01_1_3_电阻与欧姆定律.html">01_1_3 电阻与欧姆定律</a> — 导体电阻发热与德鲁德散射模型</li>
+        <li><a href="01_2_4_功率守恒与保护装置.html">01_2_4 功率守恒与保护装置</a> — 电路节点功率平衡与断路器/熔断器选型</li>
+        <li><a href="01_3_3_相位与功率因数.html">01_3_3 相位与功率因数</a> — 交流有功功率、无功功率与视在功率解析</li>
+        <li><a href="../level_06/06_1_1_储能电站收益模型.html">06_1_1 储能电站收益模型</a> — 独立储能容量租赁、现货套利与辅助服务测算</li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_1_4</span> &nbsp;|&nbsp; 建议字数: 5,000+</p>
+    </footer>
+
+  </div>
+
+  <!-- ⑪ 返回顶端悬浮按钮 -->
+  <button class="btn-back-top" id="btnBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶端">
+    ↑
+  </button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>

@@ -67,7 +67,7 @@
               "title": "电荷：万物皆有电",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "01_1_2",
@@ -75,7 +75,7 @@
               "title": "电流与电压：流动的力量",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "01_1_3",
@@ -83,7 +83,7 @@
               "title": "电阻与欧姆定律",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "01_1_4",
@@ -91,7 +91,7 @@
               "title": "功率·电能·你的电费单",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             }
           ]
         },
