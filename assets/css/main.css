@@ -644,28 +644,52 @@ a:hover { text-decoration: underline; }
 /* ── 17. 返回顶端按钮 ───────────────────────────────────────────── */
 .btn-back-top {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 44px;
-  height: 44px;
+  bottom: 2.2rem;
+  right: 2.2rem;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: var(--c-primary);
-  color: white;
-  border: none;
-  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--c-primary, #1A5F96) 0%, #0F4570 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(26,95,150,0.35);
+  box-shadow: 0 4px 16px rgba(26, 95, 150, 0.35), 0 2px 6px rgba(0, 0, 0, 0.15);
   opacity: 0;
   pointer-events: none;
-  transform: translateY(12px);
-  transition: opacity 0.25s, transform 0.25s;
+  transform: translateY(14px) scale(0.92);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.3s ease;
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.btn-back-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-.btn-back-top:hover { background: var(--c-primary-dark); transform: translateY(-2px) !important; }
+.btn-back-top svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.btn-back-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.btn-back-top:hover {
+  background: linear-gradient(135deg, #1D6FB0 0%, #0D3B61 100%);
+  box-shadow: 0 8px 24px rgba(26, 95, 150, 0.5), 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px) scale(1.06) !important;
+}
+.btn-back-top:hover svg {
+  transform: translateY(-2px);
+}
+.btn-back-top:active {
+  transform: translateY(-1px) scale(0.96) !important;
+  box-shadow: 0 2px 8px rgba(26, 95, 150, 0.35);
+}
+
 
 /* ── 18. 代码块 ─────────────────────────────────────────────────── */
 code {

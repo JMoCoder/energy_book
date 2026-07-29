@@ -94,9 +94,11 @@
         <p>电能在金属导线中的传输，本质上是自由电子在电场力驱动下的定向漂移。然而，金属内部并非真空，漂移的电子会频繁与金属原子晶格发生剧烈碰撞，将一部分动能转化为晶格振动热能——这就是**电阻（Resistance）**的微观物理起源。当电能需要跨越省界进行长距离传输时，这一微观碰撞就会演变为宏观工程上的“热量灾难”。</p>
 
         <h3>1. 输电线路电阻的宏观物理决定因素</h3>
-        <p>一条架空输电线路的电阻 $，由导体材料的电阻率 $ho$、线路物理长度 $ 以及导线截面积 $ 共同决定：</p>
+        <p>一条架空输电线路的电阻 $，由导体材料的电阻率 $
+ho$、线路物理长度 $ 以及导线截面积 $ 共同决定：</p>
 
-        63764R = ho rac{L}{S}63764
+        63764R = 
+ho rac{L}{S}63764
 
         <p>在工程实践中，为了降低线路重量与建造成本，主干输电线路普遍采用**钢芯铝绞线（ACSR）**。铝的电阻率约为 .82 	imes 10^{-8} \ \Omega\cdot	ext{m}$。假定一条双回路 500 千伏输电线路，单相导线总截面积为  	imes 400 \ 	ext{mm}^2 = 1.6 	imes 10^{-3} \ 	ext{m}^2$。当传输距离长达 1000 公里（ = 1,000,000 \ 	ext{m}$）时，单相线路的直流电阻就高达：</p>
 
@@ -153,14 +155,19 @@
               <li><strong>低压大电流方案</strong>：就像动用 10 万辆电动三轮车（低电压 $、大电流 $）。公路（输电线路）会被挤得水泄不通，车轮与地面的摩擦热量（线损）极大，道路严重拥堵瘫痪，大部分能量都耗费在路途摩擦中；</li>
               <li><strong>高压小电流方案</strong>：就像将货物装入一艘 10 万吨级超大型集装箱巨轮或重载铁路（高电压 $、小电流 $）。整条干线上只需要一辆/一艘巨型载具在运行，道路极其顺畅，摩擦损耗微乎其微。</li>
             </ul>
-            <p><strong>元素对应表</strong>：货物总量 $ightarrow$ 传输电功率 $；载具容积 $ightarrow$ 输电电压 $；公路上的车流密度 $ightarrow$ 输电电流 $；轮胎与路面的摩擦热散失 $ightarrow$ 焦耳热损耗 {loss}$。</p>
+            <p><strong>元素对应表</strong>：货物总量 $
+ightarrow$ 传输电功率 $；载具容积 $
+ightarrow$ 输电电压 $；公路上的车流密度 $
+ightarrow$ 输电电流 $；轮胎与路面的摩擦热散失 $
+ightarrow$ 焦耳热损耗 {loss}$。</p>
           </div>
         </div>
 
         <h3>2. 二次方反比定律的严密数学推导</h3>
         <p>现在，我们将电流表达式  = rac{P}{\sqrt{3} U \cos\phi}$ 代入焦耳损耗公式 {loss} = I^2 R$ 中：</p>
 
-        63764P_{loss} = \left( rac{P}{\sqrt{3} \cdot U \cdot \cos\phi} ight)^2 \cdot R = rac{P^2 \cdot R}{3 \cdot U^2 \cdot \cos^2\phi}63764
+        63764P_{loss} = \left( rac{P}{\sqrt{3} \cdot U \cdot \cos\phi} 
+ight)^2 \cdot R = rac{P^2 \cdot R}{3 \cdot U^2 \cdot \cos^2\phi}63764
 
         <p>在给定传输功率 $、线路电阻 $ 和功率因数 $\cos\phi$ 的条件下，我们可以推导出输电学中最核心的底层物理铁律：</p>
 
@@ -180,25 +187,29 @@
           </thead>
           <tbody>
             <tr>
-              <td>提升 <strong>2 倍</strong>（如 110kV $ightarrow$ 220kV）</td>
+              <td>提升 <strong>2 倍</strong>（如 110kV $
+ightarrow$ 220kV）</td>
               <td>降至原有的 <strong>1/2</strong></td>
               <td>暴跌至原有的 <strong>1/4</strong>（25%）</td>
               <td>线损直接砍掉 75%</td>
             </tr>
             <tr>
-              <td>提升 <strong>5 倍</strong>（如 100kV $ightarrow$ 500kV）</td>
+              <td>提升 <strong>5 倍</strong>（如 100kV $
+ightarrow$ 500kV）</td>
               <td>降至原有的 <strong>1/5</strong></td>
               <td>暴跌至原有的 <strong>1/25</strong>（4%）</td>
               <td>线损直接砍掉 96%</td>
             </tr>
             <tr>
-              <td>提升 <strong>10 倍</strong>（如 35kV $ightarrow$ 350kV）</td>
+              <td>提升 <strong>10 倍</strong>（如 35kV $
+ightarrow$ 350kV）</td>
               <td>降至原有的 <strong>1/10</strong></td>
               <td>暴跌至原有的 <strong>1/100</strong>（1%）</td>
               <td>线损惊人地缩减到 1%</td>
             </tr>
             <tr>
-              <td>提升 <strong>4.5 倍</strong>（如 220kV $ightarrow$ 1000kV 特高压）</td>
+              <td>提升 <strong>4.5 倍</strong>（如 220kV $
+ightarrow$ 1000kV 特高压）</td>
               <td>降至原有的 <strong>1/4.5</strong></td>
               <td>暴跌至原有的 <strong>1/20.25</strong>（4.9%）</td>
               <td>损耗仅为 220kV 的约 5%</td>
@@ -218,7 +229,10 @@
           <div class="callout-content">
             <strong>记忆口诀与直觉规律</strong>
             <p>“升压即降流，电流立减九；线损平方降，万里电尚留。”<br>
-            记住：电压升高 $ 倍 $ightarrow$ 电流变为 /N$ $ightarrow$ 线损降为 /N^2$ $ightarrow$ 导线截面积要求同步降低！</p>
+            记住：电压升高 $ 倍 $
+ightarrow$ 电流变为 /N$ $
+ightarrow$ 线损降为 /N^2$ $
+ightarrow$ 导线截面积要求同步降低！</p>
           </div>
         </div>
       </section>
@@ -379,7 +393,11 @@
 
         <h3>1. 大型风光储能基地的升压拓扑架构</h3>
         <p>在一个典型的大型新能源送出基地中，电能的流动与升压拓扑如下所示：</p>
-        <p><strong>光伏组件/风电机组（低压 AC 690V / DC 1500V） $ightarrow$ 逆变器/箱变升压（35kV 基地汇集网） $ightarrow$ 新型储能电站（35kV 侧并网削峰） $ightarrow$ 主变压器升压（220kV / 500kV） $ightarrow$ 特高压换流站（±800kV / 1000kV）送出。</strong></p>
+        <p><strong>光伏组件/风电机组（低压 AC 690V / DC 1500V） $
+ightarrow$ 逆变器/箱变升压（35kV 基地汇集网） $
+ightarrow$ 新型储能电站（35kV 侧并网削峰） $
+ightarrow$ 主变压器升压（220kV / 500kV） $
+ightarrow$ 特高压换流站（±800kV / 1000kV）送出。</strong></p>
 
         <h3>2. 储能解决特高压通道的“过载与闲置”矛盾</h3>
         <p>建设一条特高压输电线路投资往往高达两三百亿元。为了收回巨额投资，特高压通道要求常年处于**高利用率、平稳满载输送**状态。然而，风电与光伏具有极强的随机性与间歇性（午间剧烈大发，夜间归零）。</p>
@@ -515,7 +533,7 @@
   </div>
 
   <!-- 返回页首悬浮按钮 -->
-  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
 
   <script src="../../assets/js/quiz.js"></script>
 </body>

@@ -196,6 +196,7 @@
      * 全局初始化与保障返回顶端按钮
      */
     initBackToTopButton() {
+      const svgArrow = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
       let btnTop = document.getElementById('btnBackTop');
       if (!btnTop) {
         btnTop = document.createElement('button');
@@ -203,9 +204,10 @@
         btnTop.className = 'btn-back-top';
         btnTop.setAttribute('aria-label', '返回顶端');
         btnTop.setAttribute('title', '返回顶端');
-        btnTop.innerHTML = '↑';
         document.body.appendChild(btnTop);
       }
+      btnTop.innerHTML = svgArrow;
+
 
       const handleScroll = () => {
         const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
