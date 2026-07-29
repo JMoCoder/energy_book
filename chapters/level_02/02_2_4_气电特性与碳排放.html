@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>气电与碳排放 — 火力发电 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析气电（燃气轮机发电）在新型电力系统中的热力学基础（布雷顿循环与CCGT联合循环）、极速响应调峰特性与机组疲劳损耗、全生命周期碳排放核算与甲烷泄漏隐患、掺氢/掺氨零碳燃烧前沿路线，以及气电与新型储能在未来电网中的终极竞合大棋局。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">火力发电</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">气电与碳排放</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_2_3_煤电调峰灵活性.html" class="nav-prev" title="上一节：煤电调峰：被逼出来的灵活性">← 上节</a>
+        <a href="02_3_1_风电出力特性.html" class="nav-next" title="下一节：风电：捕捉风的脾气">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>火力发电</span>
+        <span class="sep">›</span>
+        <span>气电与碳排放</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_2_4</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 入门</span>
+      </div>
+      <h1>气电与碳排放 —— 从“调峰之王”到“零碳枢纽”的清洁演进与竞合博弈</h1>
+      <p class="chapter-lead">在以风电、光伏为主体的新型电力系统中，电网急需具备极速启停与剧烈变负荷能力的“尖峰卫士”。燃气轮机发电（气电）凭借其几分钟内快速起落的物理优势，被公认为电力系统中最灵敏的“顶级调峰者”。然而在双碳目标约束下，天然气虽比煤炭清洁，但依然带有碳排放标签。本节将带你透彻拆解燃气轮机热力学基础（布雷顿循环与 CCGT 联合循环）、极速响应特性与机组疲劳损耗、全生命周期碳足迹与甲烷泄漏陷阱、掺氢/掺氨零碳燃烧前沿路线，以及气电与新型储能在未来电网中的终极竞合大棋局。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一</strong>：透彻理解燃气轮机热力学基本原理（布雷顿循环 Brayton Cycle），掌握单循环（SCGT）与燃气-蒸气联合循环（CCGT）的核心区别与效率跃升机理，厘清天然气发电作为“调峰之王”的技术优势。</li>
+        <li><strong>核心目标二</strong>：对比气电与煤电、水电及新型储能（锂电池）在启停速度、爬坡率、短路容量与大惯量支撑上的物理特性，掌握频繁启停对燃气轮机透平叶片热应力疲劳与当量运行小时数（EOH）的折算惩罚。</li>
+        <li><strong>核心目标三</strong>：掌握气电全生命周期碳排放核算方法（对比煤电约 850 g/kWh 与 CCGT 气电约 380 g/kWh），分析天然气供应链中“甲烷逃逸”的温室效应放大效应，理解掺氢/掺氨零碳燃烧改造（H2/NH3 Co-firing）、CCUS 技术路线及气电与长时储能的终极博弈。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：华东电网“晚高峰 15 分钟急剧爬坡”的惊心时刻</h2>
+      <p>2026 年 7 月的一个炎热傍晚 18 时 15 分，华东某特大城市突遭强对流天气，雷暴云团迅速覆盖了全域数百平方公里的分布式光伏顶棚。在短短 15 分钟内，全网光伏发电出力雪崩式下跌了 3,800 MW！与此同时，由于夜幕降临与闷热天气加剧，全市数百万台居民空调同时开机，电力负荷曲线直线上冲。</p>
+      <p>控制中心的电网频率指示仪急剧下挫，跌破了 49.85 Hz 的安全警戒线。传统的特高压外来电无法瞬间增发，大型煤电机组从收到指令到拉满负荷需要近一个小时，爬坡速度根本赶不及补足缺口；而当地抽水蓄能电站已在午间抽水完毕，上水库水位正处于调度调度等待区。</p>
+      <p>“启动气电！开启 9F 级联合循环机组自控升负荷！”调度员果断下达指令。周边两座大型燃气轮机电厂集控室内，工程师按下一键启动控制系统。伴随着巨大的轰鸣声，重型燃气轮机的压气机快速转动，天然气在燃烧室点火爆燃，高温燃气推动透平转子瞬间冲上 3000 rpm 额定转速。仅仅 12 分钟，2,000 MW 的气电功率如狂潮般涌入电网，瞬间压住了下挫的频率曲线，避免了一场可能波及数百万户大面积停电事故。</p>
+      <p>为什么天然气发电能像“超级跑车”一样在十几分钟内实现起死回生的极速响应？它在为电网保驾护航的同时，面临着怎样的碳排放约束与燃料脱碳挑战？它与近年来异军突起的新型电池储能又将构成怎样的未来生态？让我们展开本节的系统探秘。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、 气电在电力系统中的角色与热力学基础</h2>
+
+        <p>在讨论气电的调峰与碳排放之前，我们首先需要搞清楚：天然气发电机组（Gas-fired Power Generation）究竟是用什么物理原理将天然气的化学能转化为电能的？为什么它的运行逻辑与传统煤电截然不同？</p>
+
+        <h3>1.1 天然气发电在电力系统中的战略定位</h3>
+        <p>天然气发电以天然气（主要成分为甲烷，$	ext{CH}_4$）为燃料。在传统电力系统中，气电由于具备<b>占地面积小（仅为同等规模煤电的 1/3）、建设周期短（1-2年）、水耗低、无粉尘与二氧化硫排放</b>等优点，被广泛部署于临近负荷中心的经济发达地区。</p>
+
+        <p>而在新型电力系统中，气电的核心价值被重新定位为<b>“电网灵活调节与尖峰容量支撑的顶级选手”</b>。由于其独特的物理结构，气电拥有任何大型热电机组都无法企及的启停速度与变负荷能力，是应对新能源高比例并网引发的“波动性与间歇性”的关键支撑。</p>
+
+        <h3>1.2 燃气轮机的热力学心脏：布雷顿循环</h3>
+        <p>煤电使用的是“水蒸气”作为工作介质（朗肯循环），而燃气轮机（Gas Turbine，GT）直接使用<b>“高温高压的燃烧气体”</b>作为工作介质，其热力学基础是<b>布雷顿循环（Brayton Cycle）</b>。</p>
+
+        <p>布雷顿循环由四个连续的热力学过程组成：</p>
+        <ol>
+          <li><b>等熵压缩 process（压气机 Compressor）</b>：吸入外界空气，将其剧烈压缩至十几甚至二十几个大气压（压比高达 15~24），空气温度升至 300℃~400℃。</li>
+          <li><b>等压加热 process（燃烧室 Combustor）</b>：高压空气进入燃烧室，与喷入的天然气混合爆燃，气体温度剧烈飙升至 1400℃~1600℃ 的极致状态。</li>
+          <li><b>等熵膨胀做功 process（透平 Turbine）</b>：高温高压的燃气冲入透平（涡轮），推动叶片高速旋转做功，带动发电机发电，同时也带动同轴的压气机继续旋转。</li>
+          <li><b>等压放热 process（排气 Exhaust）</b>：做功后的气体从透平排出，将热量释放到大气中（或进入余热利用设备）。</li>
+        </ol>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：布雷顿循环与汽车涡轮增压发动机</strong>
+            <p>你可以把燃气轮机想象成一个<b>放大了一万倍的航空喷气式发动机或汽车涡轮增压器</b>：</p>
+            <ul>
+              <li><b>压气机</b>就像巨大的车载增压风扇，把空气死死压缩吸入；</li>
+              <li><b>燃烧室</b>就是暴烈燃烧的气缸爆震区，天然气在这里喷入瞬间被点燃；</li>
+              <li><b>透平</b>就是被爆风狂吹的重型风车，燃气喷出来的巨大冲力推动风车旋转带发电；</li>
+              <li>它不需要漫长的“烧水煮蒸汽”过程，气体一燃，转子即刻飞转！</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>在热力学中，理想布雷顿循环的热效率主要取决于<b>压气机的压比（Pressure Ratio）</b>与气体特性：</p>
+
+        <div class="key-concept">
+          <span class="concept-title">📌 布雷顿循环热效率公式</span>
+          <p>$$\eta_{	ext{Brayton}} = 1 - rac{1}{\pi^{rac{\gamma - 1}{\gamma}}}$$</p>
+          <p><strong>工程含义解析：</strong></p>
+          <ul>
+            <li>$\pi$ 表示压气机的压比（出口压力与进口压力之比，$P_{	ext{out}}/P_{	ext{in}}$）；</li>
+            <li>$\gamma$ 为气体的绝热指数（空气约为 1.4）；</li>
+            <li><strong>直觉规律：</strong>压比 $\pi$ 越高，理想热效率越高。然而，过高的压比会导致压气机出口空气温度过高，限制了燃烧室的加温空间。因此现代重型燃气轮机不仅追求高压比，更追求极高的<b>透平进口温度（Turbine Inlet Temperature，TIT）</b>。目前最新的 H 级和 J 级重型燃机 TIT 已突破 1,600℃，这对叶片高温合金材料与定向冷却技术提出了接近物理极限的要求。</li>
+          </ul>
+        </div>
+
+        <h3>1.3 从单循环（SCGT）到联合循环（CCGT）：效率从 38% 到 64% 的飞跃</h3>
+        <p>燃气轮机做功后排出的烟气温度高达 550℃~650℃。如果直接排入大气，大量的热能将被白白浪费。根据对排气热量的利用方式，气电分为两大架构：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>单循环（SCGT）与联合循环（CCGT）对比</strong>
+            <ul>
+              <li><b>单循环燃气轮机（Simple Cycle Gas Turbine，SCGT）</b>：做功后的高温排气直接经烟囱排入大气。
+                <ul>
+                  <li><b>特点</b>：设备简单、占地极小、投资低，启动极其敏捷（10~15 分钟拉满）；</li>
+                  <li><b>缺点</b>：热效率较低（仅 35%~40%），燃料成本高；</li>
+                  <li><b>定位</b>：专门用于一年只运行几百小时的<b>纯尖峰调峰（Peaking Unit）</b>。</li>
+                </ul>
+              </li>
+              <li><b>燃气-蒸气联合循环（Combined Cycle Gas Turbine，CCGT）</b>：将燃气轮机排出的高温烟气引入<b>余热锅炉（Heat Recovery Steam Generator，HRSG）</b>，利用余热烧水产生高压蒸汽，驱动一台<b>蒸汽轮机（Steam Turbine，ST）</b>进行二次发电（即“上顶燃机，下压汽机”）。
+                <ul>
+                  <li><b>特点</b>：实现了对能量的梯级利用（高阶热能给燃机，低阶热能给汽机）；</li>
+                  <li><b>效率</b>：热效率实现质的飞跃，最新 H 级联合循环效率高达 <b>62%~64%</b>，是人类目前商用化效率最高的热力发电方式；</li>
+                  <li><b>定位</b>：承担电网<b>腰荷（Mid-merit Load）与连续高效运行</b>。</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>1.4 中国气电的发展格局与“气源/气价”瓶颈</h3>
+        <p>虽然气电性能卓越，但中国气电的发展一直受到严苛的经济与资源约束：</p>
+        <ol>
+          <li><b>燃料成本高昂</b>：中国天然气资源相对匮乏，对外依存度长期高于 40%。天然气价格（约 2.5~4.0 元/立方米）使得气电的燃料边际成本高达 0.5~0.7 元/kWh，远高于煤电（约 0.25~0.40 元/kWh）。</li>
+          <li><b>地域分布集中</b>：中国气电主要集中在东南沿海经济发达且环保要求高的省份（如广东、浙江、江苏、上海），以及“西气东输”管网节点区域。</li>
+          <li><b>“多调峰、少基荷”运行模式</b>：由于天然气贵，中国绝大部分气电厂无法像欧美国家那样作为低成本基荷全天满载运行，而是被定位为辅助服务、调峰与紧急备用电源。</li>
+        </ol>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、 气电的极速响应特性与调峰调频工程实践</h2>
+
+        <p>为什么说气电是电网调度员手里响应最快、最听话的“王牌调峰武器”？在实际工程中，它的动态响应性能究竟有多强？频繁启停又会付出怎样的代价？</p>
+
+        <h3>2.1 极速启停与变负荷性能的物理根源</h3>
+        <p>煤电之所以慢，是因为它需要将上百吨的水在密闭的高压锅炉里慢慢加热成高温高压蒸汽，汽包、主蒸汽管道和汽轮机厚壁转子受热膨胀非常缓慢，一旦加热过快就会产生毁灭性的热应力撕裂（热疲劳）。</p>
+
+        <p>而燃气轮机不需要“烧水”这个巨大热惯性环节。气体燃烧瞬间产生高温高压气体，直接吹动透平。因此，气电拥有令人震撼的响应指标：</p>
+
+        <table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem;">
+          <thead>
+            <tr style="background-color: var(--color-primary-light); color: var(--color-primary-dark); border-bottom: 2px solid var(--color-primary);">
+              <th style="padding: 10px; text-align: left;">性能指标</th>
+              <th style="padding: 10px; text-align: left;">单循环气电 (SCGT)</th>
+              <th style="padding: 10px; text-align: left;">联合循环气电 (CCGT)</th>
+              <th style="padding: 10px; text-align: left;">常规煤电 (灵活性改造后)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td style="padding: 10px;"><b>冷态启动时间</b>（到达 100% 负荷）</td>
+              <td style="padding: 10px; color: #2E7D32; font-weight: bold;">8 ~ 15 分钟</td>
+              <td style="padding: 10px;">30 ~ 60 分钟</td>
+              <td style="padding: 10px; color: #C62828;">2 ~ 4 小时</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-section);">
+              <td style="padding: 10px;"><b>热态启动时间</b>（停机时间 < 8小时）</td>
+              <td style="padding: 10px; color: #2E7D32; font-weight: bold;">5 ~ 8 分钟</td>
+              <td style="padding: 10px;">20 ~ 30 分钟</td>
+              <td style="padding: 10px;">1 ~ 1.5 小时</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td style="padding: 10px;"><b>负荷爬坡速率</b>（% 额定容量/分钟）</td>
+              <td style="padding: 10px; color: #2E7D32; font-weight: bold;">15% ~ 20% / min</td>
+              <td style="padding: 10px;">5% ~ 10% / min</td>
+              <td style="padding: 10px;">1.5% ~ 3% / min</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-section);">
+              <td style="padding: 10px;"><b>最小技术出力</b>（不跳闸下限）</td>
+              <td style="padding: 10px;">20% ~ 30%</td>
+              <td style="padding: 10px;">30% ~ 40%</td>
+              <td style="padding: 10px;">20% ~ 30% (需深调改造)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2.2 气电在“黑启动”与电网紧急支撑中的不可替代性</h3>
+        <p>除了常规调峰，气电在电网发生毁灭性大停电时，扮演着<b>“火种启动者”</b>的角色，即<b>黑启动（Black Start）</b>。</p>
+
+        <p>当大电网全网失电、毫无外部电源供给时，大型煤电机组由于需要数万千瓦的庞大厂用电（启动给水泵、引风机、磨煤机等）而无法自己启动。而气电厂只需配置一套几百千瓦的柴油发电机组或小型蓄电池组，就能启动本身的燃气轮机辅助设备，在 15 分钟内点火自启动发电。随后，气电厂将这第一缕电流送往周边大型煤电厂和核电厂，带动全网从瘫痪中复苏。</p>
+
+        <p>此外，重型燃气轮机的巨大金属转子以 3000 rpm 高速旋转，能够为电网提供极其宝贵的<b>物理旋转惯量（Inertia）与高短路容量（Short Circuit Capacity）</b>，这在风光等电子电力设备大量取代传统旋转发电机导致的“惯量危机”时代，具有不可替代的电网稳定支撑价值。</p>
+
+        <h3>2.3 频繁启停的热疲劳与经济代价：当量运行小时数（EOH）</h3>
+        <p>天底下没有免费的午餐。虽然气电能实现极速启停，但频繁的剧烈升降温对燃气轮机的核心金属部件（尤其是透平第一级静叶和动叶）构成了极其严酷的损伤。</p>
+
+        <p>重型燃机透平叶片工作在 1400℃~1600℃ 的超高温环境下，全靠叶片内部极其精密的微孔冷却通道和表面涂刷的<b>热障涂层（Thermal Barrier Coatings，TBC）</b>才不至于熔化。每次快速启动和停机，叶片金属就会经历从常温到上千度的骤热骤冷，产生剧烈的交变热应力。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>核心概念：当量运行小时数（EOH）</strong>
+            <p>在燃气轮机工程维护中，设备的寿命不是简单按日历小时计算的，而是按<b>当量运行小时数（Equivalent Operating Hours，EOH）</b>折算：</p>
+            <ul>
+              <li>机组平稳运行 1 小时，计入 <b>1 个 EOH</b>；</li>
+              <li>机组进行一次正常的启停（Start-Stop Cycle），因热应力疲劳对材料造成的损伤，相当于连续平稳运行了 <b>20 ~ 30 个 EOH</b>；</li>
+              <li>如果发生一次紧急跳闸（Tripping），材料受到的剧烈热冲击相当于连续运行了 <b>80 ~ 100 个 EOH</b>！</li>
+            </ul>
+            <p>这意味着：如果一台气电机组每天启停两次用于尖峰调峰，一年启停 500 次，仅启停折算出来的 EOH 就高达 10,000~15,000 小时！这会导致燃机叶片迅速达到退役期限，带来数千万元的高昂维修与更换成本。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：广东气电调峰与“两部制电价”破局</strong>
+            <p>广东省是中国气电装机规模最大的省份（截至 2025 年装机超 4,000 万千瓦）。在早年，由于天然气价格昂贵且电力市场只有“发电才能赚电费”的单一电价，许多专门用于尖峰调峰的气电机组一年只运行几百小时，发电量极少，导致电厂严重亏损、难以为继。</p>
+            <p>为了破局，广东省率先出台了<b>气电“两部制电价”政策</b>：</p>
+            <ol>
+              <li><b>容量电价（基本电价）</b>：无论电厂发不发电，只要设备随时准备好供电调度，电网每个月按固定千瓦容量支付固定补贴（如 30-40 元/千瓦·月），用于覆盖电厂的折旧、维护与人员固定成本；</li>
+              <li><b>电量电价（电度电价）</b>：当电网需要调度气电发电时，按实际发电量结算，电价联动天然气燃料成本。</li>
+            </ol>
+            <p>这一机制彻底解放了气电的调峰天性，使其不必为了生存去抢占基荷电量，而是安心做好“平时备用、关键时刻救场”的电网卫士。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、 气电碳排放核算与低碳演进路线</h2>
+
+        <p>在新能源大力发展的今天，天然气常被称为“清洁能源”。然而，天然气本质上依然是化石燃料（Fossil Fuel）。从严谨的碳排放角度来看，气电究竟有多清洁？在双碳目标下，它能走多远？</p>
+
+        <h3>3.1 气电与煤电的直接碳排放强度对比</h3>
+        <p>为什么天然气发电产生的二氧化碳比煤电少得多？这源于分子化学层面的天然优势：</p>
+        <ul>
+          <li><b>煤炭的主要成分是元素碳（C）</b>：燃烧反应基本上是 $C + O_2 ightarrow CO_2$，每释放一份热量，绝大部分化学键能都来自碳原子的氧化，因此必然产生大量的 $CO_2$。</li>
+          <li><b>天然气的主要成分是甲烷（$	ext{CH}_4$）</b>：分子中包含 4 个氢原子与 1 个碳原子。燃烧时，氢原子氧化生成水（$H_2O$），氢的质量热值（120 MJ/kg）是碳（32.8 MJ/kg）的 3.6 倍！</li>
+        </ul>
+
+        <div class="key-concept">
+          <span class="concept-title">📌 甲烷燃烧反应与碳排放强度</span>
+          <p>$$	ext{CH}_4 + 2	ext{O}_2 ightarrow 	ext{CO}_2 + 2	ext{H}_2	ext{O} + Q \quad (	ext{释放热量 } Q = 890.3 	ext{ kJ/mol})$$</p>
+          <p><strong>碳排放强度定量数据对比（g $	ext{CO}_2$/kWh）：</strong></p>
+          <ul>
+            <li><b>亚临界/超临界煤电机组</b>：约 <b>800 ~ 900 g $	ext{CO}_2$/kWh</b>；</li>
+            <li><b>超超临界先进煤电机组</b>：约 <b>720 ~ 780 g $	ext{CO}_2$/kWh</b>；</li>
+            <li><b>单循环燃气轮机 (SCGT)</b>：约 <b>500 ~ 600 g $	ext{CO}_2$/kWh</b>；</li>
+            <li><b>燃气-蒸气联合循环 (CCGT)</b>：仅约 <b>350 ~ 400 g $	ext{CO}_2$/kWh</b>。</li>
+          </ul>
+          <p><b>直觉结论：</b>先进联合循环气电的单位发电碳排放量，<b>不及同等电量煤电的一半（减排约 50%~55%）</b>！这是气电作为“替代煤电的过渡性清洁电源”的最有力依据。</p>
+        </div>
+
+        <h3>3.2 全生命周期碳足迹与“甲烷泄漏”陷阱</h3>
+        <p>然而，如果我们将视线放大到<b>全生命周期（Life Cycle Assessment，LCA）</b>，气电的环保光环就会面临一个致命威胁——<b>甲烷泄漏（Methane Slip / Methane Leakage）</b>。</p>
+
+        <p>天然气从地下气田开采（水力压裂）、长途管道运输、LNG 加压液化与海运，再到城市管网分配，每一个环节的泵站、阀门和管道都有可能发生天然气的微量逃逸。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>隐藏的温室气体放大器：甲烷逃逸</strong>
+            <p>甲烷（$	ext{CH}_4$）本身是一种极其强烈的温室气体。根据联合国政府间气候变化专门委员会（IPCC）的数据：</p>
+            <ul>
+              <li>在 <b>100 年时间尺度</b>上，1 kg 甲烷的温室效应潜势（GWP）是 $	ext{CO}_2$ 的 <b>28 ~ 30 倍</b>；</li>
+              <li>在 <b>20 年短时间尺度</b>上，1 kg 甲烷的温室效应潜势更是高达 $	ext{CO}_2$ 的 <b>84 ~ 86 倍</b>！</li>
+            </ul>
+            <p><b>算账结论：</b>科学家算过一笔账，如果在天然气开采到电厂燃烧的全供应链中，<b>天然气的泄漏率超过 2.7%~3.0%</b>，那么天然气发电在 20 年尺度上的综合温室效应，将彻底抹平其相比于煤电的减排优势！因此，严控天然气供应链的甲烷逃逸，是气电维持“低碳”属性的生命线。</p>
+          </div>
+        </div>
+
+        <h3>3.3 碳中和背景下气电的“低碳”悖论与脱碳路线</h3>
+        <p>在 2030 碳达峰之前，用气电替代煤电是显而易见的减排举措。然而在 2060 碳中和目标下，<b>“低碳”（350 g/kWh）绝不等于“零碳”（0 g/kWh）</b>。</p>
+
+        <p>如果电网要实现 100% 净零排放，天然气电厂必须走出以下两条脱碳演进路线：</p>
+
+        <ol>
+          <li><b>路线一：加装 CCUS（碳捕集、利用与封存）</b>
+            <p>在气电厂烟囱后部加装化学吸收塔，捕捉烟气中的 $	ext{CO}_2$。但气电加装 CCUS 面临巨大的工程挑战：与煤电烟气中 $	ext{CO}_2$ 体积浓度高达 12%~15% 不同，气电由于燃烧时通入了大量过量空气，其烟气中 $	ext{CO}_2$ 浓度极低（仅为 <b>3.5% ~ 4.5%</b>）。</p>
+            <p>极低浓度导致吸收塔体积庞大、再生加热能耗极高，会导致气电厂发电效率直接扣减 5%~8%，度电成本攀升 40% 以上。</p>
+          </li>
+          <li><b>路线二：燃料替代（掺氢/纯氢/掺氨燃烧）</b>
+            <p>不改变燃气轮机发电的本质，而是将其烧的天然气，逐步替换为<b>绿氢（Green Hydrogen）或绿氨（Green Ammonia）</b>。这是目前全球能源界最看好的终极零碳气电路线。</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、 零碳气电终极探索：掺氢/掺氨燃烧与燃料替代</h2>
+
+        <p>如果把天然气换成氢气，燃气轮机燃烧后唯一的产物就是纯净的水蒸气（$H_2O$），碳排放直接归零！然而，给燃气轮机“喂氢气”绝非换个管道接头那么简单，这涉及到极其严酷的燃烧物理挑战。</p>
+
+        <h3>4.1 天然气管网掺氢与燃机改造阶段</h3>
+        <p>将氢气注入天然气管网与燃气轮机燃烧，通常遵循“循序渐进”的技术演进路线：</p>
+
+        <ul>
+          <li><b>低比例掺氢（0% ~ 15% 容积比）</b>：现有绝大多数商用重型燃气轮机与天然气管网无需进行重大结构改造，即可直接混烧。由于氢气体积热值较低，掺氢 20%（体积比）大约可减少 7%~8% 的直接碳排放。</li>
+          <li><b>中高比例掺氢（20% ~ 50% 容积比）</b>：需要对燃气轮机的<b>燃烧器（Combustor）</b>、燃料喷嘴和控制系统进行深度改造，更换为防回火低排放燃烧器。</li>
+          <li><b>100% 纯氢燃烧（Zero-Carbon Power）</b>：需要全新设计的微孔喷射燃烧器与超强冷却系统，实现彻底的零碳发电。目前全球四大重型燃机巨头（三菱重工、西门子能源、GE Vernova、上海电气/重燃）均已制定了 2030 年前实现 100% 纯氢重型燃机商用的路线图。</li>
+        </ul>
+
+        <h3>4.2 氢气燃烧的四大物理挑战与工程破解</h3>
+        <p>为什么氢气难烧？因为氢气的物理化学性质极度霸道：</p>
+
+        <ol>
+          <li><b>挑战一：回火现象（Flashback）</b>
+            <p>氢气的层流燃烧速度（约 2.5 m/s）是天然气（约 0.4 m/s）的 <b>6 倍以上</b>！如果气流喷射速度不够快，氢气火焰传播的速度会超越气流速度，火焰会沿着燃料管道“倒烧”回燃烧室前部的喷嘴内，在几毫秒内将昂贵的金属喷嘴熔化烧毁。<b>破解方案：</b>采用微孔阵列喷射（Micromixing）技术，将燃料与空气在几毫米的微小空间内瞬间极速混合并喷出，让气流速度远超回火速度。</p>
+          </li>
+          <li><b>挑战二：高 $	ext{NO}_x$ 排放（氮氧化物）</b>
+            <p>氢气燃烧剧烈，火焰温度高达 2200℃ 以上（天然气约 1800℃）。高温会导致空气中的氮气与氧气剧烈反应，生成大量的热力型 $	ext{NO}_x$ 污染气体。<b>破解方案：</b>采用贫燃料预混燃烧（Lean Premixed Combustion）或引入蒸汽/水注入冷却技术，压低火焰峰值温度。</p>
+          </li>
+          <li><b>挑战三：燃烧不稳定性与热声震荡（Thermoacoustic Instability）</b>
+            <p>氢火焰对压力波动极度敏感，燃烧释放的热量与声波相位耦合时，会引发燃烧室内部剧烈的“热声震荡”，犹如在燃烧室内部引爆声波炸弹，几秒钟内就能震碎透平叶片。</p>
+          </li>
+          <li><b>挑战四：氢脆与材料泄漏</b>
+            <p>氢分子是宇宙中最小的分子，极易渗透进高压管道的金属晶格间隙中，导致金属发生“氢脆（Hydrogen Embrittlement）”断裂，且对阀门密封提出了极苛刻的要求。</p>
+          </li>
+        </ol>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国前沿示范：湖北荆门燃机 30% 掺氢示范工程</strong>
+            <p>2022 年，国家电投在湖北荆门成功完成了天然气 - 氢气混合燃气轮机（SGT-800）的 30% 掺氢燃烧改造并成功并网发电。这是中国首个在商用重型燃机上实现高比例掺氢的工程实践。</p>
+            <p>经测算，该机组在 30% 掺氢条件下运行，每年可减少二氧化碳排放上万吨。这一项目验证了中国现役天然气电厂通过掺氢改造升级为“氢气电厂”的可行性。</p>
+          </div>
+        </div>
+
+        <h3>4.3 “绿氢 + 燃气轮机”构筑跨季节长时储能（LDES）闭环</h3>
+        <p>掺氢/纯氢气电的最终愿景，并不是去买昂贵的工业氢气来发高价电，而是与风电、光伏构成<b>长周期跨季节储能（Long-Duration Energy Storage，LDES）的闭环</b>：</p>
+
+        <ul>
+          <li><b>春季/夏季丰水期与大风期</b>：光伏与风电极度过剩，电网无法吸收。此时利用过剩的零碳电力驱动电解水制氢厂，生产数万吨“绿氢”，并将其高压注入地下盐穴（Salt Caverns）或跨国氢气管道中进行超大规模存储。</li>
+          <li><b>冬季/无风无光期（如持续数周的极端寒潮）</b>：锂电池只能支撑 2~4 小时，早已耗尽；此时抽取盐穴中的绿氢，输送至掺氢/纯氢燃气轮机电厂，连续数周满功率发电，为全网提供大容量、持续性的零碳电力。</li>
+        </ul>
+        <p>在这一闭环中，<b>燃气轮机不再是化石能源的消耗者，而是氢能长时储能系统的“最终做功释放终端”</b>！</p>
+      </section>
+
+      <!-- 第五部分 -->
+      <section>
+        <h2>五、 气电与储能的协同、竞争与未来电网格局</h2>
+
+        <p>随着锂电池、液流电池、压缩空气等新型储能技术的爆发式增长，电力系统中出现了一个热议话题：<b>未来到底是储能会彻底淘汰气电，还是气电与储能将长期共存？</b></p>
+
+        <h3>5.1 气电与新型储能的全时空维度竞合</h3>
+        <p>答案取决于<b>时间维度与存储时长（Duration）</b>：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>气电 vs 新型储能的竞合矩阵</strong>
+            <ul>
+              <li><b>在短时间尺度（1 秒 ~ 2 小时）—— 锂电池绝对主导</b>
+                <p>对于毫秒级的一次调频、15 分钟内的短时功率波动，锂电池储能响应速度（< 100ms）远超气电，且没有燃料消耗与备用热损失。在短时辅助服务市场中，电池储能正在剧烈挤压单循环气电（SCGT）的生存空间。</p>
+              </li>
+              <li><b>在长时间尺度（8 小时 ~ 数周/跨季节）—— 气电（含氢气电）绝对统治</b>
+                <p>电化学储能的造价是随着“储能时长”成线性增加的（要存 10 小时的电，就得买 10 倍的电池包，成本高不可攀）。而气电的功率与容量是解耦的——增加发电时长只需要多烧天然气或氢气，电厂本身不需要增加设备投资！因此，在长时间调峰、应对极端阴雨寒潮天气方面，气电拥有巨大的经济优势。</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>5.2 碳交易市场（CEA）对气电经济性的重塑</h3>
+        <p>在中国全国碳排放权交易市场（CEA）与电力现货市场深化的背景下，碳价（Carbon Price）正在深刻改变气电与煤电、储能的竞争天平：</p>
+
+        <p>假设碳价从当前的 100 元/吨升至未来 200 元/吨：</p>
+        <ul>
+          <li><b>煤电（碳排 ~800g/kWh）</b>：度电碳成本将增加 $0.8 	ext{ kg} 	imes 0.2 	ext{ 元/kg} = 0.16 	ext{ 元/kWh}$；</li>
+          <li><b>CCGT 气电（碳排 ~350g/kWh）</b>：度电碳成本仅增加 $0.35 	ext{ kg} 	imes 0.2 	ext{ 元/kg} = 0.07 	ext{ 元/kWh}$。</li>
+        </ul>
+        <p>碳价越高，气电相比于煤电的边际成本劣势就被抹平得越多；而一旦气电完成掺氢改造，更能在碳市场中获得可观的零碳溢价收益。</p>
+
+        <h3>5.3 新型电力系统多元调峰资源全景对比</h3>
+        <p>为了清晰展现气电在未来电网中的生态位，我们将主要调节资源的物理与工程特性总结如下：</p>
+
+        <table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem;">
+          <thead>
+            <tr style="background-color: var(--color-primary-light); color: var(--color-primary-dark); border-bottom: 2px solid var(--color-primary);">
+              <th style="padding: 8px;">调节资源类型</th>
+              <th style="padding: 8px;">响应时间</th>
+              <th style="padding: 8px;">持续供电时长</th>
+              <th style="padding: 8px;">碳排放强度</th>
+              <th style="padding: 8px;">电网物理惯量</th>
+              <th style="padding: 8px;">核心优势与定位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td><b>锂电池储能</b></td>
+              <td>毫秒级 (<100ms)</td>
+              <td>1 ~ 4 小时</td>
+              <td>0 (运行期)</td>
+              <td>无 (需构网逆变器)</td>
+              <td>日内短时调频调峰、极速响应</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-section);">
+              <td><b>抽水蓄能</b></td>
+              <td>1 ~ 3 分钟</td>
+              <td>6 ~ 12 小时</td>
+              <td>0 (运行期)</td>
+              <td>极强 (水轮发电机)</td>
+              <td>大规模日间移峰填谷、基石调节</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td><b>常规煤电 (深调)</b></td>
+              <td>15 ~ 45 分钟</td>
+              <td>连续数月</td>
+              <td>720~850 g/kWh</td>
+              <td>极强 (重型汽轮机)</td>
+              <td>长时间基础兜底、容量压舱石</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-section);">
+              <td><b>单循环气电 (SCGT)</b></td>
+              <td>8 ~ 15 分钟</td>
+              <td>连续数天</td>
+              <td>500~600 g/kWh</td>
+              <td>强 (燃气透平)</td>
+              <td>电网紧急尖峰救场、黑启动</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td><b>联合循环气电 (CCGT)</b></td>
+              <td>20 ~ 40 分钟</td>
+              <td>连续数周</td>
+              <td>350~400 g/kWh</td>
+              <td>极强 (燃机+汽机)</td>
+              <td>腰荷调节、替代煤电低碳过渡</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border); background-color: var(--color-bg-section);">
+              <td><b>掺氢/纯氢气电</b></td>
+              <td>10 ~ 30 分钟</td>
+              <td>连续数周/季</td>
+              <td><b>0 ~ 100 g/kWh</b></td>
+              <td>极强 (重型透平)</td>
+              <td><b>长时跨季节零碳储能终极释放端</b></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>工业皇冠上的明珠：自主重型燃气轮机的跨越</strong>
+            <p>重型燃气轮机被誉为高端制造业“工业皇冠上的明珠”，涉及流体力学、传热学、高温材料学与精密制造的极端工程。长期以来，全球重型燃机市场被 GE、西门子、三菱三大巨头高度垄断。</p>
+            <p>近年来，中国在重型燃机自主化领域取得了突破性历史飞跃：国家电投成功研制出中国首台具有自主知识产权的 300 MW 级 F 级重型燃气轮机（“太行110”与“G50”机组），并成功并网运行。这不仅撕破了西方在能源装备领域的“卡脖子”封锁，更为中国未来构建自主可控的“零碳氢能燃机电网”奠定了最坚实的重器基石。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 章节小结 -->
+    <section class="chapter-summary">
+      <h2>📋 本节小结</h2>
+      <ul>
+        <li><strong>热力学核心</strong>：燃气轮机基于布雷顿循环（Brayton Cycle），直接以高温燃气推动透平做功。单循环（SCGT）启动极快（10分钟）但效率较低（38%）；燃气-蒸气联合循环（CCGT）通过余热锅炉梯级利用能量，热效率高达 62%~64%，是商用效率最高的发电方式。</li>
+        <li><strong>调峰与损耗</strong>：气电变负荷速率达 15%~20%/min，且具备无外电“黑启动”能力。但频繁启停会导致透平叶片承受巨大热应力疲劳，一次启停相当于连续平稳运行 20~30 个当量运行小时数（EOH）。广东等地采用“两部制电价”保障气电调峰收益。</li>
+        <li><strong>碳排放特征</strong>：由于天然气（CH4）含氢量高，CCGT 气电直接碳排放强度（~380 g/kWh）仅为煤电的一半。但在全生命周期中需严防天然气供应链的“甲烷逃逸”（甲烷 20 年 GWP 潜势为 CO2 的 84 倍）。</li>
+        <li><strong>零碳演进路线</strong>：气电向零碳跨越的核心在于掺氢/掺氨燃烧。需克服回火（Flashback）、高 NOx 与热声震荡四大物理障碍。绿氢制备与纯氢燃机构成长周期跨季节储能（LDES）闭环。</li>
+        <li><strong>未来竞合格局</strong>：新型电池储能主导 2-4 小时内的短时调频调峰，而气电（含氢气电）在长时间、跨天、跨季节调峰及大惯量支撑中具有无可替代的绝对统治力。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>📝 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 燃气-蒸气联合循环（CCGT）相比于单循环燃气轮机（SCGT），能够将发电热效率从约 38% 剧增至 60% 以上，其核心热力学机制是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 在燃烧室中通入了纯氧气，使天然气燃烧更加彻底</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 利用余热锅炉吸收燃气轮机做功后排放的高温烟气余热，产生蒸汽驱动蒸汽轮机进行二次发电</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 将压气机的压比大幅降低，从而减少压气机消耗的机械功</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 将透平做功后的气体重新抽回压气机进口循环使用</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：单循环燃机做功后排放的烟气温度高达 550℃~650℃，蕴含巨大热能。CCGT 通过余热锅炉（HRSG）回收这部分低阶热能产生高压蒸汽，驱动蒸汽轮机做功（即“布雷顿循环 + 朗肯循环”梯级利用），因此总效率出现质的飞跃。<br>
+          ❌ A 错在工业燃机普遍直接使用空气而非昂贵的纯氧；<br>
+          ❌ C 错在降低压比反而会降低布雷顿循环的理论效率；<br>
+          ❌ D 错在燃机排气缺氧且富含二氧化碳和水蒸气，无法直接抽回作为助燃气体。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 当电网发生全网大面积停电、完全失去外部电压支撑时，气电机组相比大型煤电机组在“黑启动（Black Start）”中具备绝对优势，根本原因在于：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 气电机组发电不需要消耗任何水资源</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 气电机组的启动辅机功耗极小，仅需小型柴油机或蓄电池即可带动作业并在十几分钟内完成自启动</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 气电机组的发电频率可以随意改变，不受电网 50Hz 限制</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 气电厂内部配备了超大型锂电池储能电站</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：黑启动的核心瓶颈在于无外电时“如何启动厂用电”。煤电需要数万千瓦电力去带动给水泵、磨煤机等庞大设备；而气电没有繁重的采煤磨煤和烧水系统，启动辅机功率小，靠一台小柴油机驱动即可快速点火冲转并网。<br>
+          ❌ A 错在水资源不是黑启动的电能瓶颈；<br>
+          ❌ C 错在黑启动建立的孤网频率必须严格维持在 50Hz 工频；<br>
+          ❌ D 错在黑启动能力由气电物理结构本身决定，无需依赖大型锂电池电站。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在燃气轮机工程运维中，为什么频繁将机组用于尖峰启停调峰会导致设备维护成本剧增？以下解释最准确的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 频繁启停会导致天然气在管道内发生剧烈化学腐蚀</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 极速骤热骤冷产生巨大的交变热应力，导致透平高温叶片发生热疲劳损伤，一次启停相当于平稳运行 20~30 当量运行小时（EOH）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 频繁启停会使压气机叶片产生严重的磨损与飞溅损耗</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 每次启停都会导致发电机绝缘层彻底烧毁</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：透平叶片工作在接近 1600℃ 的极限温度下。快速启停时，冷热交替产生的巨大温差在金属内部形成剧烈的交变热应力，加速了热障涂层脱落与金属疲劳裂纹萌生。工程上将一次启停折算为 20-30 个 EOH，使昂贵叶片的更换周期大幅缩短。<br>
+          ❌ A 错在天然气为清洁气体，不会在启停时腐蚀管道；<br>
+          ❌ C 错在压气机工作在低温区，疲劳主因在高温透平段；<br>
+          ❌ D 错在发电机绝缘层具有良好耐热性，不会因启停而彻底烧毁。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 关于天然气发电全生命周期（LCA）碳排放与温室效应的评估，以下哪项说法是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 气电是绝对的零碳能源，燃烧过程完全不产生二氧化碳</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 气电直接燃烧产生的二氧化碳约为煤电的一半，但若上游供应链天然气（甲烷）泄漏率超过约 3%，其短周期综合温室效应将赶超煤电</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 甲烷的温室效应潜势（GWP）远低于二氧化碳，因此微量泄漏无足轻重</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 气电加装 CCUS（碳捕集）技术相比煤电更容易且成本更低，因为气电烟气中二氧化碳浓度极高</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：CH4 燃烧碳排虽只有煤电一半，但 CH4 本身是强效温室气体（20年 GWP 为 CO2 的 84 倍）。若开采运输中天然气泄漏率高于 2.7%~3%，甲烷逃逸的温室效应将抵消其发电端的减排优势。<br>
+          ❌ A 错在 CH4 含有碳元素，燃烧必然产生 CO2；<br>
+          ❌ C 错在甲烷的 GWP 远高于 CO2（高数十倍）；<br>
+          ❌ D 错在气电烟气中 CO2 体积浓度极低（仅 3.5%~4.5%），导致捕集能耗与成本反而显著高于煤电。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 燃气轮机在进行高比例掺氢（如掺氢 30% 以上）改造时，燃烧器工程上面临的最核心物理风险是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 氢气无法被点燃，导致爆震熄火</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 氢气燃烧速度极快（为天然气的 6 倍），火焰极易发生“回火（Flashback）”倒烧入喷嘴并烧毁设备</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 氢气燃烧产生的排烟温度过低，导致余热锅炉无法工作</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 氢气会与空气中的氮气反应生成毒气一氧化碳</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：氢气层流燃烧速度高达 2.5 m/s。在预混燃烧中，如果气流喷射速度小于火焰传播速度，火焰就会向 upstream 燃料管道回传播（回火），在瞬间烧毁金属喷嘴与燃烧室。必须设计微孔喷射（Micromixing）等新技术防止回火。<br>
+          ❌ A 错在氢气点火能量极低，极易点燃而非难点燃；<br>
+          ❌ C 错在氢气燃烧火焰温度更高（>2200℃），排烟温度绝不会过低；<br>
+          ❌ D 错在氢与氮反应可能生成 NOx，一氧化碳（CO）需要碳元素存在，氢气燃烧绝不可能生成 CO。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_2_3_煤电调峰灵活性.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">煤电调峰：被逼出来的灵活性</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_3_1_风电出力特性.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">风电：捕捉风的脾气</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_2_1_朗肯循环原理.html">02_2_1 朗肯循环：热变电的奥秘</a></li>
+        <li><a href="02_2_2_超超临界与热电联产.html">02_2_2 超超临界与热电联产</a></li>
+        <li><a href="02_2_3_煤电调峰灵活性.html">02_2_3 煤电调峰：被逼出来的灵活性</a></li>
+        <li><a href="02_3_1_风电出力特性.html">02_3_1 风电：捕捉风的脾气</a></li>
+        <li><a href="02_8_3_惯量下降危机.html">02_8_3 惯量下降：新能源的危机</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.5 &nbsp;|&nbsp; <span class="file-id">02_2_4</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
