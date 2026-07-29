@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>煤电调峰：被逼出来的灵活性 — 火力发电 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析煤电调峰与灵活性改造的核心物理原理、工程约束、热电解耦、火储联合调频调峰及实战案例。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">火力发电</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">煤电调峰：被逼出来的灵活性</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_2_2_超超临界与热电联产.html" class="nav-prev" title="上一节：超超临界与热电联产">← 上节</a>
+        <a href="02_2_4_气电特性与碳排放.html" class="nav-next" title="下一节：气电与碳排放">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>火力发电</span>
+        <span class="sep">›</span>
+        <span>煤电调峰：被逼出来的灵活性</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_2_3</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>煤电调峰：被逼出来的灵活性 —— 从“基荷主力”到“调峰卫士”的系统性重构</h1>
+      <p class="chapter-lead">在传统电力系统中，燃煤电厂是追求稳态、满负荷高效运行的“基荷压舱石”。然而在风电与光伏爆发式增长的新型电力系统中，面对“靠天吃饭”的巨大功率波动，煤电被推向了全新的历史舞台——必须学会像猎豹一样敏捷地升降负荷，在最低 20% 甚至 15% 的极低负荷下保持稳定燃烧。本节将带你透彻拆解煤电深调峰背后的物理约束、改造路线、热电解耦机制以及火储联合调频的终极协同。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一</strong>：深刻理解新型电力系统下“鸭子曲线”对电网调峰的剧烈压迫，厘清煤电机组在低负荷下受制于稳燃极限、水动力不稳定性、厚壁部件热应力与脱硝烟温窗口四大物理枷锁。</li>
+        <li><strong>核心目标二</strong>：掌握煤电灵活性改造的三大核心技术路线（锅炉侧低负荷稳燃与烟气旁路改造、热电联产机组热电解耦技术、协调控制系统 AGC 快速响应升级），理解其将最小出力从 50% 下压至 20%~30% 铭牌功率的工程机理。</li>
+        <li><strong>核心目标三</strong>：分析深度调峰带来的“煤耗惩罚”与设备低周疲劳损耗代价，结合中国东北电网等辅助服务市场补偿机制，掌握“火储联合（火电 + 电池/飞轮储能）”在毫秒级调频与长时间调峰中的协同优势。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：西北电网大风大光正午的“调度警报”</h2>
+      <p>2026 年 4 月的一个清朗正午，西北某省电网调度控制中心的巨型屏幕上，一条代表全网“净负荷（Net Load）”的曲线正在急剧下坠——形成了一条标准的“鸭子曲线”腹部。</p>
+      <p>此时，戈壁滩上的光伏电站与风电场出力飙升至全网用电需求的 72%。为了防止电网频率飙升引发系统崩溃，调度员发出了紧急指令：要求辖区内一座 2×600 MW 的亚临界燃煤电厂在 45 分钟内，将发电出力从 85%（单机 510 MW）紧急压低至 20%（单机 120 MW）！</p>
+      <p>在电厂集控室内，气氛瞬间绷紧到极点。随着制粉系统相续停运、给煤量剧烈减少，主控盘面上的报警灯开始频闪：炉膛内部温度急剧下跌，煤粉火焰发生剧烈晃动，随时面临着“熄火塌膛”的毁灭性风险；锅炉过热器管壁温度剧烈起伏，汽轮机高压转子承受着巨大的热应力扩张；更棘手的是，该电厂同时承担着周边 1500 万平方米居民区与工业园区的集中供暖任务，发电负荷急剧下压导致汽轮机抽汽压力骤降，供暖管网的水温迅速跌破临界报警线！</p>
+      <p>“原本设计用来以 100% 满功率平稳运行三四十年的庞大钢铁重器，如今却被逼着每天要在极低负荷与满负荷之间剧烈震荡。”这正是现代电力系统赋予传统煤电的全新生存法则：<b>在新能源大潮的倒逼下，煤电必须从“电量供应的主力”全面跨越为“灵活调节与容量支撑的卫士”</b>。那么，煤电究竟如何打破自身的物理极限？“热电解耦”与“火储联合”又是如何化解这一矛盾的？让我们展开本节的系统探秘。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、 从“基荷支撑”到“调峰主力”：煤电角色重构与物理限制</h2>
+
+        <p>在传统的电力系统运行范式中，电源结构呈现出明确的“分工体系”：燃煤电厂（尤其是大型超临界、超超临界机组）因其巨大的热惯性和高昂的启停成本，被指定为<b>基荷电源（Base Load Power Plant）</b>，全年绝大部分时间保持在 80%~100% 的额定功率下平稳运行；而水电、抽水蓄能与燃气轮机则承担动态变化的<b>调峰负荷（Peaking Load）</b>。</p>
+
+        <p>然而，随着风力发电与光伏发电的大规模并网，这一维持了半个多世纪的平衡被彻底打破。</p>
+
+        <h3>1.1 新型电力系统下的“鸭子曲线”与调峰压迫感</h3>
+        <p>风电与光伏具有天然的<b>间歇性、波动性与随机性</b>。特别是光伏发电，呈现出“正午大发、夜间为零”的日类型曲线。当光伏渗透率不断提高时，用电总负荷减去风光发电量后所剩下的<b>净负荷（Net Load）</b>，会在正午时段急剧下凹，而在傍晚太阳落山、用电高峰到来时陡峭攀升。在坐标轴上，这条净负荷曲线的形状极像一只游水的鸭子，因此被称为<b>“鸭子曲线（Duck Curve）”</b>。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>关键概念：什么是“深度调峰（Deep Peaking）”？</strong>
+            <p>传统煤电机组的正常调峰范围通常在 50%~100% 额定功率（铭牌功率）。当电网要求煤电机组突破 50% 的额定负荷下限，进一步将出力下压至 40%、30%、20% 甚至 15% 运行，或者频繁启停机组以消纳新能源时，这一运行状态被称为<b>深度调峰（Deep Peaking）</b>。</p>
+          </div>
+        </div>
+
+        <p>在鸭子曲线的“腹部”（正午新能源大发时），电网面临着巨大的电能过剩风险。由于抽水蓄能与新型化学储能的建设周期和容量仍受限制，作为电力主力的煤电必须“腰斩”自己的发电量，甚至把负荷压到极低的边缘，为无碳的新能源让出电网通道；而在鸭子曲线的“颈部”（傍晚光伏陡降、负荷陡升时），煤电又必须在短短 1~2 小时内快速拉满功率。这种“深压、陡拉”的运行模式，对传统的煤电热力系统提出了严苛的物理挑战。</p>
+
+        <h3>1.2 煤电机组深度调峰的四大物理/工程“枷锁”</h3>
+        <p>煤发电机组绝非简单调节油门就能随意改变功率的汽车引擎，它是一套由数万个高温高压部件组成的复杂热力与化学平衡系统。深度压低负荷时，机组将直接触碰以下四条物理“红线”：</p>
+
+        <h4>(1) 锅炉燃烧稳定性与“稳燃极限”</h4>
+        <p>煤粉在锅炉炉膛内燃烧，必须依赖高温烟气对刚喷入的冷煤粉进行持续剧烈的辐射加热。炉膛内必须维持高位温度场（通常大于 800℃~900℃），才能确保煤粉中的挥发分与固定碳稳定着火。当负荷降至 50% 以下时，给煤量骤减，炉膛热负荷大幅下降，炉温随之下跌。如果温度低于煤粉着火点，火焰就会发生剧烈脉动甚至熄火，引发极为危险的<b>“炉膛灭火塌膛”事故</b>。</p>
+
+        <h4>(2) 水动力循环稳定性与管壁过热爆管</h4>
+        <p>在锅炉的水冷壁管网中，水吸收热量转化为汽水混合物。亚临界机组依赖密度差进行自然循环，而超临界机组依赖给水泵进行直流强制循环。在低负荷低压力下，管内蒸汽流速大幅降低，受热不均易导致管内水流停滞、倒流或出现蒸发干涸（Drying out），导致局部水冷壁管管壁温度飙升，发生<b>高温爆管</b>。</p>
+
+        <h4>(3) 厚壁部件的热应力与低周疲劳（Low-Cycle Fatigue）</h4>
+        <p>锅炉的汽包、主蒸汽管道、阀门以及汽轮机的高压转子等关键部件，均由厚达数厘米甚至数十厘米的合金钢铸造而成。当机组功率剧烈变动时，内部高温蒸气温度迅速改变，而金属壁厚内部的温度传递存在滞后，导致金属内外壁产生巨大的<b>温差应力（热应力）</b>。长期频繁的升降负荷，会使金属材料发生<b>低周疲劳（Low-Cycle Fatigue）</b>，微观上萌生裂纹，大幅缩短设备的使用寿命。</p>
+
+        <h4>(4) 尾部烟气脱硝（SCR）温度窗口限制</h4>
+        <p>为了消除有害的氮氧化物（$\text{NO}_x$），煤电厂烟道尾部配置有选择性催化还原（SCR）脱硝系统。SCR 催化剂的最佳反应温度窗口通常在 <b>310℃~420℃</b>。当机组处于低负荷运行时，锅炉吸热量减少，省煤器出口的烟气温度会大幅下跌至 300℃ 以下。一旦温度低于催化剂活性门槛，反应产物中的副产物——<b>硫酸氢铵（$\text{NH}_4\text{HSO}_4$，简称 ABS）</b>就会呈黏稠态凝结，极易黏附飞灰并严重堵塞下游的空气预热器，甚至造成脱硝失效、环保超标停机。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：煤电深调峰与“40 吨超级重卡在陡坡低速怠速”</strong>
+            <p>把一架 600 MW 的燃煤机组比作一辆重达 40 吨、搭载老式大排量柴油发动机的超级重卡。</p>
+            <ul>
+              <li><b>满负荷运行（100%）</b>：相当于重卡在平坦的高速公路上以 90 km/h 巡航，引擎轰鸣平稳，燃烧最充分，油耗最低，发动机磨损极小。</li>
+              <li><b>深度调峰（降至 20%）</b>：相当于强行让这辆重卡在拥堵且陡峭的市区斜坡上，以极低的怠速走走停停。发动机随时可能因转速过低而熄火（<b>锅炉灭火塌膛</b>）；频繁踩刹车与拉手刹使刹车片剧烈发热磨损（<b>厚壁部件热应力疲劳</b>）；发动机低转速燃烧不充分导致尾气排气管严重积碳堵塞（<b>SCR 低温硫酸氢铵堵塞</b>）；而且低档位怠速爬行使百公里油耗飙升了三倍（<b>供电煤耗急剧攀升</b>）。</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、 煤电灵活性改造的三大核心技术路线</h2>
+
+        <p>为了打破上述物理枷锁，中国能源行业自“十三五”与“十四五”期间全面实施了<b>煤电灵活性改造行动</b>。通过对锅炉、热力系统与控制系统的全方位技术升级，将煤电的最小稳燃功率从传统的 50%~60% 削减至 20%~30%，部分先进机组甚至实现了 15% 铭牌功率的极低负荷连续稳定运行。</p>
+
+        <p>下图展示了现代煤电机组灵活性改造的三大核心技术路线图与热电解耦结构：</p>
+
+        <!-- SVG 1: 煤电灵活性改造三大技术路线与热电解耦示意图 -->
+        <div class="svg-container" style="text-align: center; margin: 2rem 0;">
+          <svg viewBox="0 0 800 460" width="100%" height="auto" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <title>煤电灵活性改造三大技术路线与热电解耦示意图</title>
+            
+            <!-- 背景分类区域框 -->
+            <rect x="20" y="20" width="230" height="420" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <rect x="270" y="20" width="260" height="420" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+            <rect x="550" y="20" width="230" height="420" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+
+            <!-- 区域 1 标题：锅炉侧灵活性改造 -->
+            <text x="135" y="45" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">🔥 锅炉侧稳燃与烟温改造</text>
+            
+            <!-- 锅炉侧节点 -->
+            <rect x="40" y="75" width="190" height="75" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="135" y="100" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">低负荷稳燃燃烧器</text>
+            <text x="135" y="122" font-size="11" fill="#64748b" text-anchor="middle">等离子体/富氧微油点火</text>
+            <text x="135" y="138" font-size="11" fill="#64748b" text-anchor="middle">煤粉浓淡分离与风粉优化</text>
+
+            <rect x="40" y="175" width="190" height="75" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="135" y="200" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">省煤器烟气旁路 (Bypass)</text>
+            <text x="135" y="222" font-size="11" fill="#64748b" text-anchor="middle">抽抽取高温烟气直达 SCR</text>
+            <text x="135" y="238" font-size="11" fill="#059669" font-weight="bold" text-anchor="middle">保证低负荷下烟温 &ge; 310℃</text>
+
+            <rect x="40" y="275" width="190" height="75" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="135" y="300" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">水动力循环强化</text>
+            <text x="135" y="322" font-size="11" fill="#64748b" text-anchor="middle">加装低负荷强制循环泵</text>
+            <text x="135" y="338" font-size="11" fill="#64748b" text-anchor="middle">防止水冷壁管高温爆管</text>
+
+            <!-- 区域 2 标题：汽机侧热电解耦 -->
+            <text x="400" y="45" font-size="15" font-weight="bold" fill="#047857" text-anchor="middle">⚡ 汽机侧热电解耦 (CHP)</text>
+
+            <rect x="290" y="75" width="220" height="100" rx="6" fill="#ffffff" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="400" y="100" font-size="13" font-weight="bold" fill="#065f46" text-anchor="middle">电锅炉 / 固体蓄砖 / 水蓄热</text>
+            <text x="400" y="122" font-size="11" fill="#166534" text-anchor="middle">电网低谷时消纳弃电制热</text>
+            <text x="400" y="142" font-size="11" fill="#166534" text-anchor="middle">储存热能用于城市夜间供暖</text>
+            <text x="400" y="160" font-size="11" fill="#059669" font-weight="bold" text-anchor="middle">实现“切断发电，保持供热”</text>
+
+            <rect x="290" y="195" width="220" height="100" rx="6" fill="#ffffff" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="400" y="220" font-size="13" font-weight="bold" fill="#065f46" text-anchor="middle">高低压旁路联合供热</text>
+            <text x="400" y="242" font-size="11" fill="#166534" text-anchor="middle">锅炉主蒸汽绕过汽轮机</text>
+            <text x="400" y="262" font-size="11" fill="#166534" text-anchor="middle">直接经减温减压器供入热网</text>
+            <text x="400" y="280" font-size="11" fill="#059669" font-weight="bold" text-anchor="middle">电功率降至最低，热功率维持</text>
+
+            <rect x="290" y="315" width="220" height="100" rx="6" fill="#ffffff" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="400" y="340" font-size="13" font-weight="bold" fill="#065f46" text-anchor="middle">吸收式热泵余热回收</text>
+            <text x="400" y="362" font-size="11" fill="#166534" text-anchor="middle">回收汽轮机排汽冷凝废热</text>
+            <text x="400" y="382" font-size="11" fill="#166534" text-anchor="middle">提升供热能力与能源利用率</text>
+
+            <!-- 区域 3 标题：控制系统与火储联合 -->
+            <text x="665" y="45" font-size="15" font-weight="bold" fill="#1d4ed8" text-anchor="middle">💻 控制优化与火储联合</text>
+
+            <rect x="570" y="75" width="190" height="100" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="665" y="100" font-size="13" font-weight="bold" fill="#1e3a8a" text-anchor="middle">协调控制系统 (CCS) 升级</text>
+            <text x="665" y="122" font-size="11" fill="#1e40af" text-anchor="middle">前馈自适应控制算法</text>
+            <text x="665" y="142" font-size="11" fill="#1e40af" text-anchor="middle">爬坡速率提升至 2%~3%/min</text>
+
+            <rect x="570" y="195" width="190" height="220" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+            <text x="665" y="220" font-size="13" font-weight="bold" fill="#1e3a8a" text-anchor="middle">火电 + 储能 (BESS) 联合</text>
+            <text x="665" y="245" font-size="11" fill="#1e40af" text-anchor="middle"><b>储能</b>：毫秒级响应 AGC 频调</text>
+            <text x="665" y="265" font-size="11" fill="#1e40af" text-anchor="middle"><b>火电</b>：承担平缓大趋势负荷</text>
+            <text x="665" y="290" font-size="11" fill="#dc2626" font-weight="bold" text-anchor="middle">优势 1：调频指标 Kp 翻 3 倍</text>
+            <text x="665" y="315" font-size="11" fill="#dc2626" font-weight="bold" text-anchor="middle">优势 2：保护机械阀门与寿命</text>
+            <text x="665" y="340" font-size="11" fill="#dc2626" font-weight="bold" text-anchor="middle">优势 3：顶峰/深调极速响应</text>
+          </svg>
+        </div>
+
+        <h3>2.1 路线一：锅炉侧低负荷稳燃与烟气温升改造</h3>
+        <p>锅炉侧改造的核心目标是解决“低负荷下火焰易熄灭”和“烟温太低脱硝瘫痪”两大难题：</p>
+        <ul>
+          <li><b>低负荷稳燃燃烧器</b>：采用浓淡分离技术，将送入炉膛的煤粉气流分离为“高浓度煤粉流”和“低浓度煤粉流”。高浓度煤粉流在局部极易着火，形成稳定的“微型火种”，进而点燃全炉膛，使锅炉在 20% 负荷下无需喷油助燃即可稳燃。</li>
+          <li><b>省煤器烟气旁路（Economizer Bypass）</b>：在省煤器前的烟道上开辟一条旁路管。当机组低负荷运行、烟温降至 310℃ 以下时，开启旁路阀门，让一部分未经省煤器冷却的高温烟气直接引入 SCR 脱硝反应器，强行把烟温拉回催化剂活性窗口内（保持在 310℃~340℃），确保环保合规。</li>
+        </ul>
+
+        <h3>2.2 路线二：热电联产（CHP）的热电解耦技术</h3>
+        <p>在中国北方，大量的燃煤电厂同时属于<b>热电联产（Combined Heat and Power，CHP）</b>机组。在冬季采暖期，这些电厂遵循“以热定电”的铁律：为了保障几十万户居民供暖，必须从汽轮机中抽出大量蒸汽输送给采暖管网。这就导致<b>发电负荷被刚性锁死在 70%~80% 以上，根本无法下压</b>。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>核心概念：热电解耦（Thermal-Electric Decoupling）</strong>
+            <p>热电解耦是指通过物理、热力或储能手段，解开热电联产机组“发电功率与供热功率强行绑定”的刚性约束。其物理实质是：在电网需要煤电大幅削减发电量（低电功率）时，通过旁路或外部储热设备，继续向城市输送满足温度和流量要求的供暖蒸汽（高热功率），实现<b>发电与供热的独立自由控制</b>。</p>
+          </div>
+        </div>
+
+        <p>目前工程中最主流的热电解耦方案包括：</p>
+        <ol>
+          <li><b>加装大容量电锅炉 / 蓄热罐（TES）</b>：在电网弃风弃光严重的正午，煤电厂将多余电能直接切给电锅炉制热，或者将锅炉产生的蒸气直接送入大型水/固体蓄热罐储存起来。夜间或供暖高峰时再释放热量，从而把发电负荷压到极低（如 20%），而供热中断风险降为零。</li>
+          <li><b>高低压旁路联合供热</b>：当需要极低发电负荷时，开启汽轮机的高压 bypass（高旁）与低压 bypass（低旁），让锅炉产生的高温高压蒸汽<b>不经过汽轮机膨胀做功发电</b>，而是直接减温减压后充入供暖热网。这相当于把汽轮机“旁路遮蔽”，实现“发极少的电，供极多的热”。</li>
+        </ol>
+
+        <h3>2.3 路线三：控制系统优化与 AGC 快速响应</h3>
+        <p>传统的单元制机组协调控制系统（CCS）响应较为迟缓。通过引入<b>自适应前馈控制算法</b>与<b>多变量预测控制（MPC）</b>，优化给煤、送风、引风与给水阀门在低负荷区间的非线性动态特性。使得机组的变负荷速率（爬坡率）从传统的 $1\% P_n/\text{min}$ 提升至 $2\% \sim 3\% P_n/\text{min}$，并实现了在全负荷范围内自动响应电网<b>自动发电控制（AGC）</b>指令。</p>
+
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、 深度调峰的工程代价与经济性博弈</h2>
+
+        <p>天下没有免费的午餐。煤电机组进行深度调峰虽然为风电光伏腾出了宝贵的消纳空间，但电厂自身却付出了沉重的物理与经济代价。</p>
+
+        <h3>3.1 供电煤耗与碳排放的“惩罚性增加”</h3>
+        <p>火力发电机组的热效率在额定负荷（100% $P_n$）附近达到最高峰。当负荷持续下压时，由于锅炉过量空气系数增大、排烟损失上升、汽轮机节流损失加大，以及给水泵、引风机等大功率辅机的<b>厂用电率（Auxiliary Power Ratio）</b>从 5% 剧烈攀升至 10%~12%，机组的<b>供电煤耗（g/kWh）</b>呈现指数级飙升。</p>
+
+        <p>下图展示了典型 600 MW 超临界机组在不同负荷率下的供电煤耗变化曲线：</p>
+
+        <!-- 公式 1：供电煤耗定义式 -->
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>供电煤耗计算公式（g/kWh）</strong>
+            <p>供电煤耗 $b_{net}$ 是衡量火力发电厂能源转化效率的核心指标，其定义为：</p>
+            $$b_{net} = \frac{b_{gross}}{1 - \eta_{aux}} = \frac{123.8}{\eta_{plant} \cdot (1 - \eta_{aux})} \quad (\text{g/kWh})$$
+            <p>其中 $b_{gross}$ 为发电标准煤耗，$\eta_{plant}$ 为电厂整体热效率，$\eta_{aux}$ 为厂用电率。当负荷从 100% 下降到 20% 时，$\eta_{plant}$ 从 42% 跌至 28%，$\eta_{aux}$ 从 5% 升至 11%，导致供电煤耗从 <b>282 g/kWh 激增至 395 g/kWh</b>！每发一度电多消耗近 40% 的煤炭，碳排放量随之剧增。</p>
+          </div>
+        </div>
+
+        <h3>3.2 机组寿命损耗与折耗成本（Ramping & Fatigue Costs）</h3>
+        <p>频繁的深调峰与启停调峰（Two-Shift Operation，即白天开机发峰值、夜间关机）对合金金属部件造成了不可逆的塑性损伤。根据工程统计，一台 600 MW 机组每进行一次冷态启动，消耗的燃油与优质煤折合人民币高达 <b>30 万~50 万元</b>；而长期在 20% 负荷下交变运行所造成的低周疲劳，相当于将机组 30 年的设计寿命压缩了近三分之一。</p>
+
+        <h3>3.3 中国电力辅助服务市场与阶梯式调峰补偿机制</h3>
+        <p>由于深度调峰会大幅增加火电厂的燃煤成本与设备折旧成本，如果完全由火电厂自行承担，企业将陷入严重亏损。为了理顺这一经济关系，中国各区域电网（如东北、华北、西北、华东电网）建立了<b>电力辅助服务市场（Electricity Auxiliary Services Market）</b>。</p>
+
+        <p>在辅助服务市场规则中，调峰被划分为两个阶梯：</p>
+        <ol>
+          <li><b>基本调峰（Base Peaking）</b>：机组在 50%~100% 额定负荷范围内的负荷调节，属于电网运行的法定义务，<b>不给予经济补偿</b>。</li>
+          <li><b>深度调峰（Deep Peaking）</b>：当机组负荷压低至 50% 以下时，开启有偿辅助服务交易。负荷压得越低，补偿单价越高（阶梯式报价）。例如：
+            <ul>
+              <li>50% ~ 40% 负荷档：补偿 0.1 ~ 0.2 元/kWh；</li>
+              <li>40% ~ 30% 负荷档：补偿 0.3 ~ 0.5 元/kWh；</li>
+              <li>30% 以下极低负荷档：补偿飙升至 0.6 ~ 1.0 元/kWh！</li>
+            </ul>
+          </li>
+        </ol>
+
+        <p>这种补偿资金遵循<b>“谁受益，谁承担”</b>的原则，由未能参与调峰的其他火电厂以及获得消纳空间的新能源发电企业共同分摊分流，极大地激发了火电企业进行灵活性改造与深度调峰的积极性。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：东北电网“煤电灵活性改造 + 辅助服务市场”破局之路</strong>
+            <p>中国东北地区（辽宁、吉林、黑龙江）拥有极为丰富的风电资源，但冬季长达 5 个月的高寒采暖期使得绝大多数火电机组因“以热定电”而被锁死在高负荷运行状态，引发了严重的“弃风”危机（历史弃风率一度超过 30%）。</p>
+            <p>2016 年起，国家能源局在东北率先启动了全国首个<b>电力辅助服务市场试点</b>。东北地区的大型火电厂（如辽宁庄河电厂、黑龙江双鸭山电厂等）全面实施了灵活性改造，通过加装大功率电锅炉、高低压旁路改造与水蓄热系统，成功实现了在冬季极寒期将发电最小负荷压低至 <b>20% 铭牌功率</b>。</p>
+            <p>数据显示，改造后东北电网每年多消纳风电光伏超 <b>100 亿千瓦时</b>。火电企业虽然因低负荷运行增加了煤耗，但通过在辅助服务市场中出售深度调峰容量，获得了数亿元的合理补偿，成功实现了“风电多发电、火电获补偿、电网保安全”的三方赢局。</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、 “火储联合”：新型储能与煤电灵活性的终极协同</h2>
+
+        <p>尽管经过改造的煤电机组能够将负荷降至 20%，但由于其庞大的热力学惯性，煤电在<b>响应速度</b>上依然存在天然短板：煤电负荷改变需要经过给煤机调整、炉膛燃烧响应、过热器集箱蓄热、汽轮机阀门开度调节等一系列物理过程，滞后时间长达数分钟。</p>
+
+        <p>而在电网自动发电控制（AGC）的频率微幅波动调节中，调度指令是以<b>秒级（1~4 秒）</b>为单位下发的。如果强制让煤电阀门和锅炉频繁跟随秒级波动，会导致汽轮机调节阀剧烈磨损、主蒸汽压力剧烈振荡，使机组寿命加速衰减。</p>
+
+        <h3>4.1 “火电 + 储能（BESS / 飞轮）”联合调频/调峰拓扑</h3>
+        <p>为了解决这一物理滞后矛盾，现代电力工程推出了<b>“火储联合系统”</b>：在燃煤电厂的发电机出口或厂用电母线侧，并联加装一套高倍率的新型储能系统（如磷酸铁锂电池储能 BESS 或飞轮储能）。</p>
+
+        <p>下图对比了单纯煤电与“火储联合”系统在响应电网 AGC 调频指令时的性能差异：</p>
+
+        <!-- SVG 2: 火储联合系统响应曲线与优势对比 -->
+        <div class="svg-container" style="text-align: center; margin: 2rem 0;">
+          <svg viewBox="0 0 800 380" width="100%" height="auto" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <title>单纯煤电 vs 火储联合系统 AGC 调频响应曲线对比</title>
+            
+            <!-- 坐标轴 -->
+            <line x1="80" y1="320" x2="740" y2="320" stroke="#475569" stroke-width="2" marker-end="url(#arrow2)"/>
+            <line x1="80" y1="320" x2="80" y2="40" stroke="#475569" stroke-width="2"/>
+            <text x="740" y="355" font-size="13" font-weight="bold" fill="#1e293b">时间 t (秒)</text>
+            <text x="25" y="45" font-size="13" font-weight="bold" fill="#1e293b">功率 P (MW)</text>
+
+            <!-- 目标 AGC 阶跃指令曲线 (虚线) -->
+            <path d="M 80,240 L 200,240 L 200,100 L 500,100 L 500,280 L 720,280" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5"/>
+            <text x="310" y="90" font-size="12" fill="#64748b" font-weight="bold">电网 AGC 目标指令 (秒级阶跃)</text>
+
+            <!-- 单纯煤电响应曲线 (滞后、爬坡慢、超调) -->
+            <path d="M 80,240 L 200,240 Q 260,240 320,130 T 420,100 L 500,100 Q 560,100 620,250 T 700,280" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <text x="350" y="160" font-size="12" fill="#dc2626" font-weight="bold">单纯煤电响应 (响应滞后 30-60s，爬坡慢)</text>
+
+            <!-- 火储联合响应曲线 (毫秒级完美贴合) -->
+            <path d="M 80,240 L 200,240 L 205,100 L 500,100 L 505,280 L 720,280" fill="none" stroke="#16a34a" stroke-width="3"/>
+            <text x="215" y="120" font-size="12" fill="#15803d" font-weight="bold">火储联合响应 (储能毫秒级补齐，完全贴合指令)</text>
+
+            <!-- 标注储能补齐区域 -->
+            <path d="M 200,240 L 200,100 Q 260,240 320,130 L 200,240 Z" fill="#22c55e" opacity="0.25"/>
+            <text x="215" y="200" font-size="11" fill="#166534" font-weight="bold">储能毫秒级放电补偿</text>
+
+            <!-- 箭头标记 definitions -->
+            <defs>
+              <marker id="arrow2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <h3>4.2 火储联合的双重工程价值</h3>
+        <p>“火储联合”形成了绝佳的<b>强弱互补</b>：</p>
+        <ol>
+          <li><b>完美出击调频市场（毫秒级 + 分钟级）</b>：电网下发秒级 AGC 调频指令时，容量相对较小（如 9 MW / 9 MWh）但功率极高的储能系统在 200 毫秒内瞬间响应，吸收或输出高频小功率；而几百兆瓦的燃煤机组则保持平稳运行，只负责跟随平缓的分钟级大趋势。这使得联合系统的调频综合性能指标 $K_p$ 从 0.8 暴增至 3.5 以上，在调频辅助服务市场中获得高额收益。</li>
+          <li><b>大幅保护煤电设备寿命</b>：由于储能过滤掉了 90% 以上的高频微小振荡，汽轮机的发电机调节阀门动作次数减少了 70% 以上，主蒸汽压力稳定，厚壁金属部件的热应力循环大幅减少，显著延长了火电机组的运行寿命。</li>
+        </ol>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：熔盐储热（Molten Salt Energy Storage）与煤电改造的融合</strong>
+            <p>除了电池储能外，目前前沿的技术方向是将<b>熔盐储热技术</b>（原用于光热发电）引入煤电厂。煤电在低负荷时，将锅炉产生的多余高温蒸汽抽取出来，通过换热器将二元硝酸盐（熔盐）加热至 500℃ 以上储存起来；在电网高峰时，再利用高温熔盐产生蒸汽驱动高压汽轮机补发电力。这种方案不仅实现了长时间热电解耦，而且全过程无化学电池退化风险，寿命长达 30 年。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区与安全警示</strong>
+            <ul>
+              <li><b>误区一：煤电灵活性改造就是“随便开慢一点发少量电”？</b><br>错！深调峰涉及复杂的相变、热应力、脱硝烟温、水动力等多物理场耦合。未经科学改造与参数调试的机组盲目下压负荷，极易引发炉膛爆炸、水冷壁爆管或空气预热器被硫酸氢铵严重堵塞塌陷事故。</li>
+              <li><b>误区二：高比例新能源并网后，煤电就可以被完全淘汰？</b><br>错！至少在未来数十年内，煤电依然是电力系统最坚固的“安全底座”与“容量压舱石”。煤电的地位并非消失，而是从“电量主体”转变为“容量支撑与灵活性调节卫士”。</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>定位重构</strong>：新型电力系统中“鸭子曲线”倒逼传统煤电从满负荷“基荷电源”转向“宽负荷调节性电源”。深调峰必须突破稳燃极限、水动力稳定性、热应力疲劳与脱硝烟温四大物理限制。</li>
+        <li><strong>改造路线</strong>：主要包括锅炉低负荷稳燃与烟气旁路改造、热电联产（CHP）热电解耦（电锅炉/蓄热罐/高低旁路）、协调控制系统 AGC 算法升级，可将机组最小稳燃出力下压至 20%~30% 铭牌功率。</li>
+        <li><strong>经济与协同</strong>：深调峰会带来“煤耗惩罚效应”（供电煤耗激增）与设备低周疲劳，依赖电力辅助服务市场进行阶梯式经济补偿；而“火储联合”通过毫秒级储能与分钟级煤电协同，实现了调频性能与设备寿命的双重突破。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在煤电机组深度调峰过程中，当负荷大幅下调（如降至 20%~30% 额定负荷）时，尾部烟气脱硝系统（SCR）面临的主要工程技术瓶颈是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 烟气中二氧化硫浓度过高导致脱硝催化剂发生中毒瘫痪</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 省煤器出口烟气温度降低低于催化剂活性窗口，易生成黏稠的硫酸氢铵堵塞空气预热器</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 烟气流速过快导致催化剂结构被剧烈冲刷破坏</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 炉膛温度过高导致生成大量超过脱硝处理上限的氮氧化物</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：煤电低负荷运行时锅炉吸收热量减少，省煤器出口烟气温度会显著下跌（低于 310℃~320℃）。此时 SCR 催化剂失去活性，且反应生成的副产物硫酸氢铵（ABS）呈黏稠态凝结，极易黏附飞灰并严重堵塞下游的空气预热器。<br>
+          ❌ A 错在低负荷时 SO2 浓度并非突然飙升毒化催化剂，核心瓶颈是温度不足；<br>
+          ❌ C 错在低负荷时烟气量和流速实际上是明显降低而非变快；<br>
+          ❌ D 错在低负荷时炉膛温度下降，NOx 生成量实际上是减少而非升高。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于热电联产（CHP）机组的“热电解耦（Thermal-Electric Decoupling）”技术，以下哪项叙述最为准确？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 该技术通过切断供暖管网，将原本用于采暖的热能全部强行转化为电能输出</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 该技术旨在打破“以热定电”的刚性约束，使机组在维持稳定供暖的同时能够大幅下调发电功率以响应电网调峰需求</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 该技术利用高压汽轮机将供暖蒸汽加压至超超临界状态以提高发电效率</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 该技术是指将煤电机组彻底改造为纯发电机组，不再向外输送任何热能</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：冬季热电联产机组因居民供暖需求被迫维持高负荷运行（“以热定电”），无法下压发电量给新能源让路。热电解耦通过加装蓄热罐、电锅炉或高低压旁路供热等手段，解开供热与发电的刚性绑定，实现“发极少的电，供极多的热”。<br>
+          ❌ A 错在热电解耦绝非停止供暖，而是在保障供暖前提下调低发电；<br>
+          ❌ C 错在供暖蒸汽是低品位抽汽，无法也不需要加压至超超临界状态；<br>
+          ❌ D 错在机组依然保持供热功能，并未变成纯凝发电机组。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 煤电机组在进行深度调峰（如负荷从 100% 降至 20%）时，其“供电煤耗”会发生怎样的变化？为什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 供电煤耗显著降低，因为低负荷下单位时间消耗的煤炭总量大幅减少了</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 供电煤耗保持不变，因为煤炭的热值与燃烧化学反应本质没有改变</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 供电煤耗显著升高，因为低负荷下锅炉热效率下降且厂用电率显著上升</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 供电煤耗呈先升高后降低的抛物线变化</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：当机组在 20%~30% 极低负荷运行时，炉膛燃烧效率降低、排烟与散热损失占比增大，且给水泵、引风机等大功率辅机的厂用电率相对暴增（从 5% 升至 10% 以上），导致每发一度电所消耗的煤炭量（供电煤耗）大幅攀升（出现“煤耗惩罚”）。<br>
+          ❌ A 错在混淆了“耗煤总量”与“供电煤耗（g/kWh）”；<br>
+          ❌ B 错在忽视了热力学效率与辅机功耗随负荷率降低而恶化的物理事实；<br>
+          ❌ D 错在变化趋势是单调飙升的，不存在后段降落的抛物线。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在新型电力系统中，“火储联合系统（火电 + 电池/飞轮储能）”相比于单纯依赖煤电自身调频，其核心工程优势在于：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 完全替代煤电的锅炉燃烧系统，实现无煤发电</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 利用储能系统的毫秒级响应能力承担高频微小频率波动，减少汽轮机阀门频繁动作与热应力损耗</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 彻底消除煤电深度调峰时的碳排放</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 将煤电的额定发电容量扩大 2 至 3 倍</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：电网 AGC 调频指令具有高频、小幅、随机变动的特点，煤电机械阀门与热力系统响应滞后且易造成汽轮机阀门磨损和热应力疲劳。储能毫秒级响应接管高频微调，使煤电只需维持平滑的大趋势负荷，大幅提升调频性能 Kp 值并延长机械寿命。<br>
+          ❌ A 错在储能只是辅助调节，无法替代煤电庞大的能量供给；<br>
+          ❌ C 错在储能无法消除煤电燃烧本身产生的碳排放；<br>
+          ❌ D 错在储能配置容量较小（如 2%~5% 额定功率），无法将煤电总容量翻倍。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 以下关于煤电机组“低周疲劳（Low-Cycle Fatigue）”与机组寿命损耗的说法中，错误的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 低周疲劳主要由频繁深度调峰导致的交变热应力引起</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 厚壁部件（如汽包、汽轮机高压转子）比薄壁管道更容易受到低周疲劳损伤</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 频繁的启停调峰（Two-Shift Operation）对机组金属寿命的损耗远高于长期平稳运行</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 低周疲劳是一种可在机组停止调峰后自动恢复和自我修复的金属弹性变形</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：低周疲劳属于金属材料在大交变热应力作用下积累的塑性应变损伤，会导致微观裂纹萌生与扩展，是不可逆的永久性累积损伤，绝不可能在停止调峰后自动恢复或自我修复。<br>
+          ❌ A、B、C 均为对低周疲劳物理特性的正确表述。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_2_2_超超临界与热电联产.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">超超临界与热电联产</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_2_4_气电特性与碳排放.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">气电与碳排放</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_2_1_传统煤电工作原理.html">02_2_1 传统煤电工作原理：朗肯循环与热效率</a></li>
+        <li><a href="02_2_2_超超临界与热电联产.html">02_2_2 超超临界与热电联产：火力发电的极致效率</a></li>
+        <li><a href="02_2_4_气电特性与碳排放.html">02_2_4 气电特性与碳排放：快速响应与清洁化过渡</a></li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_2_3</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
