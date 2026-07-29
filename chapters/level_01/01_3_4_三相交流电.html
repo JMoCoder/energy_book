@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三相交流：工业的脊梁 — 交流电理论 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析三相交流电的物理本质、发电机原理、星形与三角形接法、线/相电压电流关系、三相平衡与中性线作用、旋转磁场物理机制，以及储能系统在三相电网中的核心工程应用。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_01</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">交流电理论</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">三相交流：工业的脊梁</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_3_3_相位与功率因数.html" class="nav-prev" title="上一节：相位与功率因数">← 上节</a>
+        <a href="01_3_5_50Hz中国电网心跳.html" class="nav-next" title="下一节：50Hz：中国电网的心跳">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_01</span>
+        <span class="sep">›</span>
+        <span>交流电理论</span>
+        <span class="sep">›</span>
+        <span>三相交流：工业的脊梁</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_3_4</span>
+        <span class="reading-time">⏱ 约 35 分钟</span>
+        <span class="difficulty">🟡 进阶</span>
+      </div>
+      <h1>三相交流：工业的脊梁</h1>
+      <p class="chapter-lead">解密现代化工业与新型电力系统的“动力心脏”：从三相正弦对称量的物理产生机制，到星形（Y）与三角形（Δ）连接的几何数学解密；从中性线（零线）断线的致命危险，到三相旋转磁场驱动电机的神奇机制；并深度拆解新型储能变流器（PCS）与升压变压器在三相电网中的并网控制实战。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解三相正弦对称交流电的物理本质</strong>：掌握三相交流电的产生机制，深刻理解三相对称向量相差 120° 的数学表达以及瞬时功率恒定（无脉动）的核心物理特性。</li>
+        <li><strong>掌握星形（Y）与三角形（Δ）接法及其线/相关系</strong>：熟练推导并掌握星形与三角形连接中线电压与相电压、线电流与相电流的定量数学关系（$\sqrt{3}$ 倍关系与 30° 相位差）。</li>
+        <li><strong>剖析供电制式与中性点漂移物理机制</strong>：理清三相三线、三相四线与三相五线（TN-S）制式的演进逻辑，透彻理解三相不平衡导致中性点漂移的危害与防范措施。</li>
+        <li><strong>透彻理解三相旋转磁场与电机驱动原理</strong>：掌握三相对称电流在空间对称绕组中产生恒速旋转磁场的物理过程，掌握同步转速计算公式 $n_s = 60f/p$。</li>
+        <li><strong>掌握储能系统（PCS与变压器）在三相电网中的工程应用</strong>：深入理解储能变流器（PCS）三相拓扑架构、dq解耦控制，以及储能升压变压器 Dyn11 联结组别在消除谐波与中性点接地中的实战价值。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：“零线断裂，烧毁数十万仪表的深夜告警”</h2>
+      <p>山西某 100MW / 200MWh 集中式共享储能电站的并网试运行现场。午夜 02:15，控制室的中央监控大屏突然爆发出剧烈的红光与刺耳的蜂鸣告警声：“厂用电 A 相电压突降至 130V，C 相电压飙升至 315V！辅助监控柜失电！BMS 采样模块通讯中断！”</p>
+      <p>现场运维值班员火速奔赴站用电配电房。检测发现，由于主变压器低压侧中性线（零线）接线端子在高温下氧化接触不良，在单相厂用负荷（照明、空调、监控仪表）严重不平衡的情况下，中性线彻底断开！结果导致原本标准的 220V 单相相电压严重失衡：负荷重的 A 相电压被压低，而负荷轻的 C 相电压飙升至 315V，瞬间烧毁了数十套高精度的电池管理系统（BMS）采样模块与传感器，经济损失高达几十万元。</p>
+      <p>现场的实习工程师百思不得其解：<strong>“为什么日常家庭用电只用一根火线和一根零线（单相电），而大型储能电站和工业厂区却清一色采用三根相线（三相电）？三相电的三根线明明电压都在随时间正负剧烈波动，为什么它们的瞬时电压加起来永远等于零？为什么零线一旦断开，220V 的电压就会变成损坏设备的‘高压杀手’？储能变流器（PCS）又是如何把直流电池包的电送入这三条相线的？”</strong></p>
+      <p>带着这些源于现代工程实战的困惑与教训，本节将带你跨越电磁学与工程学的交汇点，彻底弄懂作为现代工业脊梁的“三相交流电”。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、为什么是三相电？交流系统的“终极选择”</h2>
+        
+        <p>在前面的章节中，我们学习了单相交流电（Single-Phase AC）。在日常住宅中，只要插上插头，220V 的单相正弦交流电就能驱动台灯、冰箱和电脑。然而，如果你走进一座 100MW 的大型储能电站、一座钢铁厂或一座高铁牵引变电站，你会发现这里的变压器、储能变流器（Power Conversion System，PCS）和高压开关柜全都是由三根（或四根）粗壮的电缆构成的——这就是**三相交流电（Three-Phase AC）**。</p>
+
+        <p>人类电力工业经过上百年的演进，最终毫不犹豫地选择了“三相制”，这并非偶然，而是由严苛的物理规律与经济学效益决定的。</p>
+
+        <h3>1.1 单相交流电的致命缺陷：脉动功率与机械震动</h3>
+        <p><strong>第一层（直觉感受）</strong>：单相交流电就像一个只有单缸的柴油机——活塞往复运动时，只有在做功冲程才有推力，其他时间推力极小甚至为零。这就导致输出的动力一顿一顿的，带有强烈的震动。</p>
+
+        <p>在电气物理上，假设单相纯阻性电路的电压为 $u(t) = \sqrt{2}U \sin(\omega t)$，电流为 $i(t) = \sqrt{2}I \sin(\omega t)$。那么，其瞬时功率 $p(t)$ 为：</p>
+
+        $$p(t) = u(t) \cdot i(t) = 2 UI \sin^2(\omega t) = UI \big(1 - \cos(2\omega t)\big)$$
+
+        <p>请仔细观察这个公式！单相交流电的瞬时功率 $p(t)$ 包含了频率为 $2\omega$（中国电网即 100Hz）的波动项。在每一个周期内，瞬时功率在零与 $2UI$ 之间剧烈脉动！如果用单相电驱动大型工业电动机，这种脉动功率会转化为电机转轴上每秒 100 次的周期性机械扭矩剧烈震动。对于几千千瓦的大型工业电动机或风力发电机来说，这种震动会在几年内将坚硬的钢轴金属疲劳断裂！</p>
+
+        <h3>1.2 三相电的物理神迹：恒定瞬时功率</h3>
+        <p>为了消除这种脉动，爱迪生的宿敌——伟大的电气发明家尼古拉·特斯拉（Nikola Tesla）提出了三相电系统。三相电是由三个频率相同、振幅相等、在时间相位上彼此相差 120°（即 $\frac{2\pi}{3}$ 弧度）的正弦交流电组合而成的电力系统。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：三缸发动机与曲轴平稳旋转</strong>
+            <p>单相电相当于单缸发动机，活塞推一下停一下，转轴剧烈抖动；而三相电相当于一台精密的“三缸四冲程发动机”。三个活塞的曲轴在空间角度上互为 120° 夹角。当一号活塞向下推到终点时，二号活塞刚好接过推力，三号活塞紧随其后。三颗活塞无缝接力，使得输出到总转轴上的合推力在任何瞬间都完全恒定！</p>
+          </div>
+        </div>
+
+        <p>我们用严格的数学来证明这一物理神迹。设对称三相电源的相电压分别为：</p>
+
+        $$u_A(t) = \sqrt{2}U \sin(\omega t)$$
+
+        $$u_B(t) = \sqrt{2}U \sin\left(\omega t - 120^\circ\right)$$
+
+        $$u_C(t) = \sqrt{2}U \sin\left(\omega t + 120^\circ\right)$$
+
+        <p>当三相对称负载接在三相电源上时，产生的相电流为：</p>
+
+        $$i_A(t) = \sqrt{2}I \sin(\omega t - \varphi)$$
+
+        $$i_B(t) = \sqrt{2}I \sin\left(\omega t - 120^\circ - \varphi\right)$$
+
+        $$i_C(t) = \sqrt{2}I \sin\left(\omega t + 120^\circ - \varphi\right)$$
+
+        <p>三相系统的总瞬时功率 $p_{total}(t)$ 等于 A、B、C 三相瞬时功率之和：</p>
+
+        $$p_{total}(t) = u_A i_A + u_B i_B + u_C i_C$$
+
+        <p>利用积化和差三角函数公式推导可知：</p>
+
+        $$u_A i_A = UI \cos\varphi - UI \cos(2\omega t - \varphi)$$
+
+        $$u_B i_B = UI \cos\varphi - UI \cos(2\omega t - 240^\circ - \varphi)$$
+
+        $$u_C i_C = UI \cos\varphi - UI \cos(2\omega t + 240^\circ - \varphi)$$
+
+        <p>将三式相加，由于三个相位互差 120° 的二次谐波余弦项之和恒等于零（即 $\cos\theta + \cos(\theta - 120^\circ) + \cos(\theta + 120^\circ) \equiv 0$），所有的波动项被完全抵消！最终得到：</p>
+
+        $$\bbox[10px,border:2px solid #1A5F96,background-color:#E8F2FF]{p_{total}(t) = 3 UI \cos\varphi = P}$$
+
+        <p><strong>结论：对称三相系统的总瞬时功率是一个完全不随时间变化的常数！</strong> 这意味着工业电动机在三相电驱动下，输出的机械扭矩绝对平稳，没有任何机械脉动震动；大型储能变流器（PCS）在三相交流侧吸收或释放的功率也是绝对平稳的直流功率（不含二倍频纹波），极大降低了电池侧直流母线电容的体积与发热。</p>
+
+        <h3>1.3 铜用量节省：电网传输的经济学奇迹</h3>
+        <p>除了瞬时功率恒定外，三相电在输电金属用量上具有压倒性优势。在输送相同总有功功率 $P$、传输距离相同、线路电压等级与输电线功率损耗完全相同的前提下：</p>
+
+        <ul>
+          <li><strong>单相制</strong>：需要两根输电线（相线与零线），总导线截面积较大。</li>
+          <li><strong>三相三线制</strong>：只需要三根输电线，由于三相对称电流的相量和为零，甚至不需要回流线！总金属（铜或铝）消耗量仅为单相制的 <strong>75%</strong>（节省 25% 的铜材）！</li>
+        </ul>
+
+        <p>在千公里级的高压与超高压输电线路中，节省 25% 的导线铜/铝用量，意味着数以千亿元计的电网基建投资节省。这就是三相电能够支撑起现代工业脊梁的物理与经济根基。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>三相代码与颜色规范</strong>
+            <p>在工程图纸与现场施工中，三相通常用字母或颜色标识：</p>
+            <ul>
+              <li><strong>A相（U相 / L1）</strong>：黄色（Yellow）</li>
+              <li><strong>B相（V相 / L2）</strong>：绿色（Green）</li>
+              <li><strong>C相（W相 / L3）</strong>：红色（Red）</li>
+              <li><strong>中性线（N线 / 零线）</strong>：淡蓝色（Light Blue）</li>
+              <li><strong>保护接地线（PE线 / 地线）</strong>：黄绿双色（Yellow-Green）</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、星形（Y）与三角形（Δ）接法：几何与向量的解密</h2>
+        
+        <p>三相发电机、三相变压器和三相储能变流器（PCS）内部都有三个独立的绕组或桥臂。如何将这三个独立的绕组与三根输电电缆连接起来？电工学给出了两种最基础的拓扑结构：**星形连接（Y形连接）** 与 **三角形连接（Δ形连接）**。</p>
+
+        <h3>2.1 星形连接（Y Connection）：中性点的诞生与 $\sqrt{3}$ 几何秘密</h3>
+        <p><strong>第一层（直觉感受）</strong>：星形连接就像三个人站成一个圈，把各自的左手拉在一起聚在中心（形成中性点），右手分别向外伸出（引出三根相线）。</p>
+
+        <p>在电气结构中，将三相绕组的末端（X、Y、Z）连接在一起，形成一个共同的公共端点，称为**中性点（Neutral Point，常用字母 N 表示）**；从三个首端（A、B、C）分别引出三根输电线，称为**相线（Phase Line，俗称火线）**。这种接法称为星形连接（写为 Y）。</p>
+
+        <div class="key-concept">
+          <strong>📌 概念定义：相电压 vs 线电压</strong>
+          <ul>
+            <li><strong>相电压（Phase Voltage，$U_p$ 或 $U_{phase}$）</strong>：任一相线对中性点（N点/零线）之间的电位差。我国低压标准相电压有效值为 <strong>220V</strong>。</li>
+            <li><strong>线电压（Line Voltage，$U_l$ 或 $U_{line}$）</strong>：任意两根相线（如 A-B、B-C、C-A）之间的电位差。我国低压标准线电压有效值为 <strong>380V</strong>。</li>
+            <li><strong>线电流（Line Current，$I_l$）与相电流（Phase Current，$I_p$）</strong>：在 Y 形连接中，流过相线的电流必须全部流过对应的绕组相，因此 <strong>$I_{line} = I_{phase}$</strong>。</li>
+          </ul>
+        </div>
+
+        <h4>线电压与相电压的数学与相量推导</h4>
+        <p>线电压等于两条相线对零线电压的向量之差。例如，A 相与 B 相之间的线电压相量 $\dot{U}_{AB}$ 定义为：</p>
+
+        $$\dot{U}_{AB} = \dot{U}_A - \dot{U}_B$$
+
+        <p>设定 A 相电压为参考相量：$\dot{U}_A = U_p \angle 0^\circ$，则 B 相电压为：$\dot{U}_B = U_p \angle -120^\circ$。带入相量相减计算：</p>
+
+        $$\dot{U}_{AB} = U_p \big(1 - e^{-j 120^\circ}\big) = U_p \left(1 - \left(-\frac{1}{2} - j \frac{\sqrt{3}}{2}\right)\right) = U_p \left(\frac{3}{2} + j \frac{\sqrt{3}}{2}\right)$$
+
+        <p>将直角坐标转换为极坐标形式：</p>
+
+        $$|\dot{U}_{AB}| = U_p \sqrt{\left(\frac{3}{2}\right)^2 + \left(\frac{\sqrt{3}}{2}\right)^2} = U_p \sqrt{\frac{9}{4} + \frac{3}{4}} = \sqrt{3} U_p \approx 1.732 U_p$$
+
+        $$\text{Arg}(\dot{U}_{AB}) = \arctan\left(\frac{\sqrt{3}/2}{3/2}\right) = \arctan\left(\frac{1}{\sqrt{3}}\right) = 30^\circ$$
+
+        <p>因此，推导得出极为关键的工程结论：</p>
+
+        $$\bbox[10px,border:2px solid #1A5F96,background-color:#E8F2FF]{\dot{U}_{AB} = \sqrt{3} U_p \angle 30^\circ}$$
+
+        <ul>
+          <li><strong>数值关系</strong>：在对称星形连接中，线电压有效值是相电压有效值的 <strong>$\sqrt{3}$ 倍</strong>（即 $380\text{V} = \sqrt{3} \times 220\text{V} \approx 1.732 \times 220\text{V}$）。</li>
+          <li><strong>相位关系</strong>：线电压相量在相位上超前对应的相电压相量 <strong>30°</strong>。</li>
+        </ul>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：等边三角形与 $\sqrt{3}$ 几何推导</strong>
+            <p>想象一个以原点为中心的等边三角形顶点。三根向量从原点出发指向三个顶点，长度代表相电压（220mm）。连接任意两个顶点的线段就是线电压。根据高中几何余弦定理，在边长为 220、顶角为 120° 的等腰三角形中，底边长度恰好为 $220 \times 2 \times \sin(60^\circ) = 220 \times \sqrt{3} \approx 381\text{mm}$。这就是 380V 的几何起源！</p>
+          </div>
+        </div>
+
+        <h3>2.2 三角形连接（Δ Connection）：没有中性点的环路拓扑</h3>
+        <p><strong>第一层（直觉感受）</strong>：三角形连接就像三个人首尾相连——A 的右手抓 B 的左手，B 的右手抓 C 的左手，C 的右手抓 A 的左手，形成一个闭合的大环，三个接头处引出三根相线。</p>
+
+        <p>在三角形连接（写为 Δ 或 D）中：</p>
+        <ul>
+          <li>首尾依次相连：A 末端接 B 首端，B 末端接 C 首端，C 末端接 A 首端。从三个节点引出三根相线。</li>
+          <li><strong>没有中性点（N点）</strong>！因此三角形连接只能输出三相三线，无法直接提供 220V 的单相相电压。</li>
+        </ul>
+
+        <div class="key-concept">
+          <strong>📌 三角形连接的电压电流关系</strong>
+          <ul>
+            <li><strong>线电压与相电压</strong>：因为相线直接接到绕组两端，所以 <strong>$U_{line} = U_{phase}$</strong>（线电压等于相电压，如 380V）。</li>
+            <li><strong>线电流与相电流</strong>：根据基尔霍夫电流定律（KCL），节点处的线电流等于相邻两个绕组相电流之差相量。因此，线电流有效值是相电流有效值的 <strong>$\sqrt{3}$ 倍</strong>：
+            $$\bbox[10px,border:2px solid #1A5F96,background-color:#E8F2FF]{I_{line} = \sqrt{3} I_{phase}}$$
+            线电流在相位上滞后对应的相电流 <strong>30°</strong>。</li>
+          </ul>
+        </div>
+
+        <h3>2.3 Y 接与 Δ 接的工程对比与星三角（Y-Δ）转换</h3>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>对比维度</th>
+              <th>星形连接（Y形）</th>
+              <th>三角形连接（Δ形）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>中性点（N点）</th>
+              <td>有中性点，可引出零线（三相四线/五线）</td>
+              <td>无中性点（三相三线）</td>
+            </tr>
+            <tr>
+              <th>电压关系</th>
+              <td>$U_{line} = \sqrt{3} U_{phase}$（线电压高）</td>
+              <td>$U_{line} = U_{phase}$（相等）</td>
+            </tr>
+            <tr>
+              <th>电流关系</th>
+              <td>$I_{line} = I_{phase}$（相等）</td>
+              <td>$I_{line} = \sqrt{3} I_{phase}$（线电流大）</td>
+            </tr>
+            <tr>
+              <th>绝缘与线圈要求</th>
+              <td>相电压低，线圈承受电压仅 220V，绝缘要求低</td>
+              <td>相电压等于线电压（380V），线圈截面积小（$I_p$小）</td>
+            </tr>
+            <tr>
+              <th>典型应用</th>
+              <td>低压配电网（220/380V）、变压器二次侧、电动机启动</td>
+              <td>高压输电、工业大电机运行、储能升压变变低压侧</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>在工程实战中，交流电动机启动时常采用**星三角降压启动（Y-Δ Starter）**：启动瞬间线圈接成 Y 形，相电压仅为 220V，启动电流降低为原来的 1/3；待电机转速升起后，切换为 Δ 接法正常运行。这完美利用了 Y 接法与 Δ 接法的电压电流转换特性。</p>
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、三相供电制式与中性点漂移：电网安全的生命线</h2>
+        
+        <p>搞懂了 Y 形和 Δ 形接法后，我们来看看电力系统是如何把三相电布设到千家万户和储能电站中的。</p>
+
+        <h3>3.1 三种主流供电制式：TN-C、TN-S 与三相三线</h3>
+
+        <h4>1. 三相三线制（3-Phase 3-Wire）</h4>
+        <p>只有 A、B、C 三根相线，没有零线和地线。常用于 10kV、35kV、110kV 等高压输电网，以及纯三相对称负载（如高压大功率变频器、储能变压器高压侧）。</p>
+
+        <h4>2. 三相四线制（TN-C 制式）</h4>
+        <p>由 A、B、C 三根相线与一根 **PEN 线（保护接地与中性线合一，Protective Earth and Neutral）** 组成。PEN 线既当工作零线传输不平衡电流，又接设备外壳做安全保护。在现代建筑与储能电站中，TN-C 已因安全隐患逐渐被淘汰。</p>
+
+        <h4>3. 三相五线制（TN-S 制式）</h4>
+        <p>现代储能电站与工业厂房的标准供电制式。包含：</p>
+        <ul>
+          <li><strong>三根相线（A、B、C）</strong>：传输三相交流电。</li>
+          <li><strong>一根工作中性线（N 线 / 零线）</strong>：专门用于回流单相不平衡电流，正常运行时有电流通过。</li>
+          <li><strong>一根保护接地线（PE 线 / 地线）</strong>：专门连接电气设备金属外壳，将漏电电流导入大地，正常运行时<strong>绝对没有电流通过</strong>。</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>工程铁律：N 线与 PE 线绝不能在户内混接！</strong>
+            <p>在变压器中性点出口处，N 线与 PE 线由同一接地极引出；但在进入配电箱后，N 线与 PE 线必须严格分开！如果把 PE 线当零线用，或者把 N 线接到设备外壳上，一旦零线发生接触不良，设备的金属外壳就会瞬间带上 220V 的危险高压，引发严重触电事故！</p>
+          </div>
+        </div>
+
+        <h3>3.2 三相平衡与中性点漂移的物理机制</h3>
+        <p>根据基尔霍夫电流定律（KCL），星形连接中性点 N 处流出的中性线电流相量 $\dot{I}_N$ 等于三相电流之相量和：</p>
+
+        $$\dot{I}_N = \dot{I}_A + \dot{I}_B + \dot{I}_C$$
+
+        <p>如果三相对称（阻抗 $Z_A = Z_B = Z_C$），则三相电流振幅相等、相位互差 120°。其向量相加正好构成一个闭合的等边三角形，合向量 $\dot{I}_N \equiv 0$！**在理想三相平衡时，零线中没有任何电流流过！**</p>
+
+        <p>但是，在实际工程中（如场景引入中的储能电站厂用电系统），三相单相负载不可能绝对相等。当 $Z_A \neq Z_B \neq Z_C$ 时，$\dot{I}_N \neq 0$。如果中性线完好且电阻极小，中性点电位依然能被锁定在零电位（0V），各相电压保持 220V 稳定。</p>
+
+        <p><strong>但是，如果中性线（零线）断开（$Z_N = \infty$）会发生什么？</strong></p>
+
+        <div class="key-concept">
+          <strong>📌 中性点漂移（Neutral Point Displacement）物理过程</strong>
+          <p>零线断开后，中性点电位不再被固定在 0V，而是被迫“漂移”到一个新的电位 $V_N'$：</p>
+          $$\dot{V}_N' = \frac{\dot{Y}_A \dot{U}_A + \dot{Y}_B \dot{U}_B + \dot{Y}_C \dot{U}_C}{\dot{Y}_A + \dot{Y}_B + \dot{Y}_C}$$
+          <p>（其中 $\dot{Y}_A, \dot{Y}_B, \dot{Y}_C$ 为各相负载导纳）。这会导致极其灾难性的后果：</p>
+          <ul>
+            <li><strong>负载重（电阻小、功率大）的相</strong>：相电压被严重拉低（如降至 120V），设备因欠压无法工作。</li>
+            <li><strong>负载轻（电阻大、功率小）的相</strong>：相电压被强烈抬高（最高可飙升至接近线电压 <strong>380V</strong>！），导致接入该相的单相设备瞬间因过压爆裂烧毁！</li>
+          </ul>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>红线禁忌：零线上严禁加装开关或熔断器（保险丝）！</strong>
+            <p>国家标准 GB 50054《低压配电设计规范》明确规定：在三相四线/五线制系统中，中性线（N线）上绝对不允许单独装设断路器开关或熔断丝！因为一旦零线开关误动作或熔丝单独熔断，就会立刻触发“零线断线”，引发全站 220V 设备大规模毁坏的惨剧。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、三相旋转磁场：工业电动机运作的“无形之手”</h2>
+        
+        <p>如果说三相电在输电端节省了铜材，那么在用电端，它最大的贡献就是发明了**旋转磁场（Rotating Magnetic Field）**。不需要任何机械摩擦转向器，仅凭静止的定子绕组，三相电就能凭空在空间中制造出一个无形且匀速旋转的磁场，推动交流电动机转子疯狂运转。</p>
+
+        <h3>4.1 旋转磁场是如何凭空产生的？</h3>
+        <p><strong>第一层（直觉感受）</strong>：想象在一个圆形足球场的四周安装了红、绿、蓝三组灯光，按 120° 空间夹角摆放。当三组灯光的亮度按照三相正弦波的时间顺序依次达到最亮时，球场中央的亮斑就会像灯塔的光束一样在圆周上高速旋转！</p>
+
+        <p>在物理机制上，假设一台电机定子上嵌有三个结构完全相同的空间绕组 U、V、W，它们在空间几何角度上互差 120°。当向这三个绕组通入三相对称交流电时，各个绕组产生的脉动磁场为：</p>
+
+        $$B_U(t) = B_m \sin(\omega t) \quad (\text{空间方向 } 0^\circ)$$
+
+        $$B_V(t) = B_m \sin(\omega t - 120^\circ) \quad (\text{空间方向 } 120^\circ)$$
+
+        $$B_W(t) = B_m \sin(\omega t + 120^\circ) \quad (\text{空间方向 } 240^\circ)$$
+
+        <p>我们将这三个空间磁场相量在空间极坐标下合成：</p>
+        <ul>
+          <li>在 $t=0$ 时（对应 $\omega t = 0$）：$B_U = 0$，$B_V = -\frac{\sqrt{3}}{2} B_m$，$B_W = \frac{\sqrt{3}}{2} B_m$。合成矢量磁场指向 90° 方向，幅值为 $\frac{3}{2}B_m$。</li>
+          <li>在 $t = \frac{T}{4}$ 时（对应 $\omega t = 90^\circ$）：$B_U = B_m$，$B_V = -0.5 B_m$，$B_W = -0.5 B_m$。合成矢量磁场旋转到了 0° 方向，幅值依然严格等于 $\frac{3}{2}B_m$！</li>
+        </ul>
+
+        <p><strong>推导结论</strong>：三个空间互差 120° 的定子绕组，通入时间相位互差 120° 的三相对称电流，其在电机气隙中产生的合成磁场是一个**幅值恒定为 $\frac{3}{2}B_m$、以角速度 $\omega$ 在空间做匀速圆周旋转的“旋转磁场”**！</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：体育场看台上的“人浪”</strong>
+            <p>在几万人的体育场里，观众并没有绕着球场跑步。但是，当东看台观众起立、南看台观众接力起立、西看台观众紧随其后时，整个球场看台上就会出现一道以固定速度绕圈滚动的“人浪”。定子绕组里的电子只是在原地位移摆动（脉动），但合成出来的磁场却在空间里疯狂旋转！</p>
+          </div>
+        </div>
+
+        <h3>4.2 同步转速计算公式与电机的转向控制</h3>
+        <p>旋转磁场在空间每秒钟旋转的圈数称为**同步转速（Synchronous Speed，$n_s$）**。同步转速由电网频率 $f$（中国为 50Hz）与电机的**极对数（$p$）** 决定：</p>
+
+        $$\bbox[10px,border:2px solid #1A5F96,background-color:#E8F2FF]{n_s = \frac{60 f}{p} \quad (\text{单位：转/分，RPM})}$$
+
+        <p>在中国 50Hz 标准电网下，不同极对数电机的同步转速为：</p>
+        <ul>
+          <li><strong>2 极电机（$p=1$，1对磁极）</strong>：$n_s = \frac{60 \times 50}{1} = 3000 \text{ RPM}$</li>
+          <li><strong>4 极电机（$p=2$，2对磁极）</strong>：$n_s = \frac{60 \times 50}{2} = 1500 \text{ RPM}$</li>
+          <li><strong>6 极电机（$p=3$，3对磁极）</strong>：$n_s = \frac{60 \times 50}{3} = 1000 \text{ RPM}$</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>如何改变电机的旋转方向？相序对调法！</strong>
+            <p>在工程现场，如果要改变三相电动机的转向，只需要**任意调换接在电机端子上的三根相线中的任意两根**（例如将 B 相与 C 相电缆对调）。这样就会将三相电的时间相序由 A-B-C 改为 A-C-B，空间旋转磁场的旋转方向立刻反转！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块五 -->
+      <section>
+        <h2>五、储能系统在三相电网中的核心工程应用</h2>
+        
+        <p>作为《中国网储系统性学习手册》的核心落脚点，前面所学的全部三相理论，最终都要服务于新型电力系统中的**储能电站**（Energy Storage Power Station）。大型电池储能系统是如何通过三相拓扑与国家电网并网互联的？让我们一探究竟。</p>
+
+        <h3>5.1 储能变流器（PCS）的三相拓扑架构</h3>
+        <p>储能电池堆输出的是高压直流电（DC，如 1000V ~ 1500V）。要将直流电送入三相交流电网，必须依靠**三相储能变流器（PCS）**。</p>
+
+        <p>典型的集中式 3150kW 储能变流器（PCS）内部采用了**三相桥式全控逆变拓扑（Three-Phase Bridge Inverter Topology）**。它由 6 个高频功率半导体开关器件——绝缘栅双极型晶体管（Insulated Gate Bipolar Transistor，IGBT）组成 3 个桥臂（A 桥臂、B 桥臂、C 桥臂）：</p>
+
+        <ul>
+          <li>通过正弦脉宽调制（Sinusoidal Pulse Width Modulation，SPWM）或空间矢量脉宽调制（Space Vector PWM，SVPWM）算法，精确控制 6 个 IGBT 开关管按 120° 相位差交替导通。</li>
+          <li>直流电在 3 个中点输出端被切削成相位互差 120° 的高频阶梯波。</li>
+          <li>经过三相 LCL 滤波器滤除高频开关谐波后，输出完美的高品质 380V 或 690V 对称三相正弦交流电。</li>
+        </ul>
+
+        <h3>5.2 dq 轴解耦控制：三相交流量的“直角坐标化”</h3>
+        <p>三相交流电的电压与电流时刻在随时间正弦波动，直接对 $i_A(t), i_B(t), i_C(t)$ 进行闭环控制极其困难。现代化储能变流器（PCS）采用了工业界享誉盛名的 **dq 旋转坐标变换（Park / Clark Transformation）**：</p>
+
+        $$\begin{bmatrix} i_d \\ i_q \end{bmatrix} = \mathbf{T}_{Park} \begin{bmatrix} i_A(t) \\ i_B(t) \\ i_C(t) \end{bmatrix}$$
+
+        <ul>
+          <li>**有功轴电流（$i_d$）**：将随时间正弦波动的 $abc$ 三相交流电流，投影到与电网电压矢量同步旋转的直轴 $d$ 上，变成了一个像直流电一样平稳的常数！$i_d$ 直接决定了储能系统充放电的**有功功率（P）**。</li>
+          <li>**无功轴电流（$i_q$）**：投影到垂直的交轴 $q$ 上，直接决定了储能系统对电网支撑的**无功功率（Q）**。</li>
+        </ul>
+
+        <p>通过三相 dq 变换，PCS 实现了有功与无功的完全解耦控制！就像有两个独立的旋钮：旋转 $i_d$ 旋钮控制电池充放电 MW 数，旋转 $i_q$ 旋钮控制对三相电网进行无功电压支撑。这正是现代化储能被誉为“电网柔性稳定器”的核心秘密。</p>
+
+        <h3>5.3 储能升压变压器 Dyn11 联结组别实战解密</h3>
+        <p>在百兆瓦级储能电站中，PCS 输出的 690V 三相低压交流电，必须经过**储能升压变压器**升压至 10kV、35kV 或 110kV 才能接入国家电网。你在电站铭牌上经常会看到这样一行代码：**Dyn11**。这行铭牌代码暗藏着三相交流电的顶级工程智慧！</p>
+
+        <div class="key-concept">
+          <strong>📌 铭牌解密：Dyn11 联结组别的含义</strong>
+          <ul>
+            <li><strong>D（高压侧三角形接法）</strong>：高压侧（如 35kV 侧）绕组采用三角形（Δ）连接。</li>
+            <li><strong>y（低压侧星形接法）</strong>：低压侧（如 690V 侧）绕组采用星形（Y）连接。</li>
+            <li><strong>n（引出中性线）</strong>：低压侧中性点引出了 N 线，方便接 N 线或接地。</li>
+            <li><strong>11（钟点表示法，330° / -30° 相位差）</strong>：高压侧线电压相量与低压侧线电压相量之间存在 <strong>330°（即超前 30° 或滞后 30°）</strong> 的相位差，就像钟表指针指向 11 点钟位置。</li>
+          </ul>
+        </div>
+
+        <p><strong>为什么储能变压器一定要选用 Dyn11 联结组别？</strong></p>
+        <ol>
+          <li><strong>阻断 3 次谐波电流（Triplen Harmonics Suppression）</strong>：储能变流器高频开关会产生 3 次、9 次等奇数倍三次谐波。3 次谐波在三相中相位完全相同（零序性质）。高压侧采用 Δ 接法后，3 次谐波电流只能在 Δ 闭合回路内部循环，无法穿过变压器注入高压电网，完美保护了电网电能质量！</li>
+          <li><strong>承载单相不平衡负载</strong>：低压侧为 yn 接法，引出了中性点，允许站用电或单相负载接入；即使低压侧三相严重不平衡，高压侧 Δ 回路也能自动平衡三相电流，不会向高压电网反馈零序电压。</li>
+          <li><strong>提供零序接地通道</strong>：电网侧高压发生单相接地短路时，Dyn11 变压器能够提供清晰的零序电流通路，使继电保护装置（如零序过流保护）能瞬间准确跳闸，切除故障。</li>
+        </ol>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：宁夏 200MW 共享储能电站三相不平衡治理</strong>
+            <p>2025 年，宁夏某 200MW / 400MWh 独立共享储能电站接入 330kV 变电站。在电网出现单相大负荷故障导致 330kV 母线三相电压不平衡度达到 4.2%（超过 GB/T 15543-2008 规定的 2% 限值）时，电站中央控制器指挥 40 台 5MW 三相 PCS 开启“负序与零序电流独立补偿算法”。PCS 产生反相位的负序无功电流注入三相电网，仅用 40 毫秒就把变电站母线的三相电压不平衡度拉回到了 1.1%，避免了一起可能导致区域电网崩溃的重大事故，获得了电网公司数十万元的辅助服务补偿奖励！</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>三相电物理优越性</strong>：三相正弦对称交流电相位相差 120°，其总瞬时功率 $p_{total}(t) = 3 UI \cos\varphi$ 为不随时间变化的恒定值，消除了单相电每秒 100 次的脉动震动，且输电铜材消耗节省 25%。</li>
+        <li><strong>星形（Y）与三角形（Δ）接法</strong>：
+          <ul>
+            <li><strong>Y 形接法</strong>：有中性点 N，线电压为相电压的 <strong>$\sqrt{3}$ 倍</strong>（$380\text{V} = \sqrt{3} \times 220\text{V}$）且超前 30°，线电流等于相电流。</li>
+            <li><strong>Δ 形接法</strong>：无中性点，线电压等于相电压（380V），线电流为相电流的 <strong>$\sqrt{3}$ 倍</strong>且滞后 30°。</li>
+          </ul>
+        </li>
+        <li><strong>三相五线制（TN-S）与中性点漂移</strong>：TN-S 由 A/B/C/N/PE 五线组成。零线断线在三相不平衡时会导致“中性点漂移”，使轻载相电压飙升至接近 380V 毁坏设备。中性线上严禁加装开关或熔丝。</li>
+        <li><strong>三相旋转磁场</strong>：空间互差 120° 的绕组通入时间互差 120° 的三相电，产生幅值为 $\frac{3}{2}B_m$ 的旋转磁场。同步转速 $n_s = 60f/p$（50Hz 下 2 极电机为 3000 RPM），对调任意两相相线即可反转磁场转向。</li>
+        <li><strong>储能三相工程应用</strong>：PCS 采用三相 IGBT 全桥拓扑，利用 dq 变换实现有功 $i_d$ 与无功 $i_q$ 解耦控制；升压变压器选用 Dyn11 联结组别，利用高压侧 Δ 接法阻断 3 次谐波电流注入电网。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 我国低压配电网中，星形（Y）连接的对称三相电源，若相电压有效值为 220V，则其线电压有效值及线电压对对应相电压的相位关系为（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 220V，相位超前 30°</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 380V，相位超前 30°</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 380V，相位滞后 30°</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 440V，相位同相</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：在星形（Y）连接的对称三相交流电路中，线电压为两相电压之差相量 $\dot{U}_{AB} = \dot{U}_A - \dot{U}_B$。根据相量图几何关系，线电压有效值为相电压有效值的 $\sqrt{3}$ 倍，即 $U_l = \sqrt{3} \times 220\text{V} \approx 380\text{V}$；且线电压相量在相位上超前对应的相电压 30°。选项 A 误将线电压算作 220V；选项 C 错误认为相位滞后；选项 D 公式完全错误。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于对称三相交流电路的瞬时功率，下列说法中正确的是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 瞬时功率随时间按 50Hz 频率呈正弦规律剧烈波动</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 瞬时功率随时间按 100Hz 双倍频率呈正弦规律波动</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 瞬时功率是一个完全不随时间变化的常数，等于三倍单相平均功率</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 瞬时功率在每一个周期内有两个瞬间值为零</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：对称三相系统的核心物理特性就是瞬时功率恒定。三相瞬时功率之和 $p_{total}(t) = u_A i_A + u_B i_B + u_C i_C = 3 UI \cos\varphi = P$，其中二次谐波波动项在相加时由于 120° 相位差完全抵消。选项 A 和 B 是单相交流电的特征（单相功率按二倍频 100Hz 波动）；选项 D 也是单相电零点脉动的特征，三相电瞬时功率永远恒定且不为零。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在三相四线制低压供电系统中，当三相负荷严重不平衡时，若工作中性线（零线）突然意外断开，将会引发的后果是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 所有单相设备立刻因电压过低而自动停机，无设备损坏</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 中性点发生电位漂移，重载相电压降低，轻载相电压飙升（最高可接近 380V）毁坏设备</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 三相线电压自动降为零，保护断路器瞬间跳闸</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 零线断开对系统没有任何影响，因为理想情况下零线电流为零</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：三相不平衡时零线中流过不平衡电流。若零线断开，中性点失去接地电位约束发生“中性点漂移”。按分压原理，负载阻抗大（轻载）的相分得的电压剧增，最高可接近线电压 380V，导致该相上的 220V 单相设备烧毁；负载阻抗小（重载）的相电压降低。选项 A 忽视了轻载相过压；选项 C 混淆了线电压与中性点电位；选项 D 错在忽略了“负荷严重不平衡”的前设条件。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在我国 50Hz 工频电网中，一台极对数为 $p=2$（即 4 极）的三相异步电动机，其定子旋转磁场的同步转速 $n_s$ 为（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 3000 RPM</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 1500 RPM</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 1000 RPM</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 750 RPM</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：根据三相旋转磁场同步转速计算公式 $n_s = \frac{60f}{p}$，代入我国电网频率 $f = 50\text{Hz}$ 及极对数 $p=2$：$n_s = \frac{60 \times 50}{2} = 1500 \text{ RPM}$（转/分钟）。选项 A 为 $p=1$（2极电机）的转速；选项 C 为 $p=3$（6极电机）的转速；选项 D 为 $p=4$（8极电机）的转速。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 大型储能电站中，升压变压器常采用 Dyn11 联结组别。高压侧采用三角形（Δ）接法在工程上的最核心作用是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 降低变压器高压侧的线电压等级</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 阻断 3 次谐波电流注入高压电网，提高电能质量</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 为高压电网提供直接的中性点接地保护</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 节省变压器低压侧的绝缘绝缘材料</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：变流器高频开关会产生同相位（零序）的 3 次谐波。变压器高压侧采用 Δ 接法时，3 次谐波电流只能在 Δ 闭合环路内部流通循环，无法穿过变压器引出线注入高压电网，起到了关键的谐波隔离作用。选项 A 错误，Δ 接法线电压等于相电压，相电压反而更高；选项 C 错误，Δ 接法没有中性点，无法直接接地（高压侧接地需依赖 Y 接法或接地变）；选项 D 与高压侧 Δ 接法无关。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_3_3_相位与功率因数.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">相位与功率因数</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_3_5_50Hz中国电网心跳.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">50Hz：中国电网的心跳</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="01_3_2_正弦波数学语言.html">01_3_2 正弦波：交流电的数学语言</a></li>
+        <li><a href="01_3_3_相位与功率因数.html">01_3_3 相位与功率因数</a></li>
+        <li><a href="01_3_5_50Hz中国电网心跳.html">01_3_5 50Hz：中国电网的心跳</a></li>
+        <li><a href="../level_02/02_1_1_储能变流器PCS基础架构.html">02_1_1 储能变流器（PCS）基础架构</a></li>
+        <li><a href="../level_04/04_2_1_储能变压器与升压站设计.html">04_2_1 储能变压器与升压站设计</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_3_4</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
