@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正弦波：交流电的数学语言 — 交流电理论 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析正弦波作为交流电数学语言的物理来源、三要素（振幅、频率、初相位）、有效值（RMS）的热效应本质与推导，以及储能变流器（PCS）SPWM正弦波合成原理与并网预同步工程应用。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_01</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">交流电理论</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">正弦波：交流电的数学语言</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_3_1_交流电的历史之争.html" class="nav-prev" title="上一节：交流还是直流？历史上的电流大战">← 上节</a>
+        <a href="01_3_3_相位与功率因数.html" class="nav-next" title="下一节：相位与功率因数">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_01</span>
+        <span class="sep">›</span>
+        <span>交流电理论</span>
+        <span class="sep">›</span>
+        <span>正弦波：交流电的数学语言</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_3_2</span>
+        <span class="reading-time">⏱ 约 35 分钟</span>
+        <span class="difficulty">🟡 进阶</span>
+      </div>
+      <h1>正弦波：交流电的数学语言</h1>
+      <p class="chapter-lead">解密正弦波背后的几何与物理密码：从圆周运动的旋转投影到 220V/380V 的有效值推导，用最直观大白话掌握振幅、频率、角频率与初相位，领会现代储能变流器（PCS）如何精准拼凑出符合国标的高质量交流波形。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解物理来源</strong>：明确阐述旋转磁场切割线圈产生正弦电动势的物理机制，理解正弦波在微积分运算下“波形不失真”的特权地位。</li>
+        <li><strong>掌握三大要素</strong>：熟练提取与计算正弦波的三大关键属性——振幅（$U_m$/$I_m$）、频率/角频率（$f$/$\omega$）、初相位与相位差（$\varphi$/$\Delta\varphi$）。</li>
+        <li><strong>攻克有效值本质</strong>：深刻理解有效值（RMS）的焦耳热效应物理定义，掌握公式 $U_{\text{rms}} = U_m / \sqrt{2} \approx 0.707 U_m$ 的严密推导，搞懂为何 220V 市电的波峰实际上高达 311V。</li>
+        <li><strong>衔接储能逆变技术</strong>：理解储能变流器（PCS）如何通过正弦脉宽调制（SPWM）技术将电池簇的直流电转换为纯净正弦波，掌握电网接入预同步（同频、同幅、同相）的核心逻辑。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：示波器上的“311V”与炸机的并网瞬间</h2>
+      <p>假设你是一名刚入职电化学储能电站的技术员，站在装有 500kW 储能变流器（PCS）的集装箱舱室内。在进行交流侧并网调试时，你将数字万用表插入测试孔，读数显示为标准的 <strong>220.0 V</strong>；然而，当你将高压差分探头连接到便携式示波器上时，屏幕上赫然显示出一条优雅流畅的波浪线，其最高点对应的峰值读数竟然是 <strong>311.1 V</strong>！为什么两个精密仪器测同一个插座，读数值却相差了整整 91V？</p>
+      <p>更惊险的事情发生在并网合闸的前一刻。主控屏提示：“交流侧预同步中……频差 0.01Hz，压差 1.2V，相位差 45°——禁止合闸！”旁边的资深工程师警告说：“此时如果强行按下合闸按钮，变流器输出的正弦波与电网正弦波由于步调不一致，两者之间的瞬间电压差会高达上百伏，瞬间产生的巨大环流足以在几毫秒内熔断几十安培的高压保险，甚至炸毁 IGBT 功率模块！”</p>
+      <p>为什么插座里时刻变化的交流电需要用一个看似复杂的“正弦波函数”来刻画？正弦波里的振幅、频率、角频率和初相位到底代表什么？从电化电池里的恒定直流电，到送入电网的完美正弦波，现代储能系统又是如何运用数学与电力电子技术掌控这一切的？本节将带你彻底揭开交流电的数学语言——正弦波。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、旋转与正弦：交流波形的物理 birth 逻辑</h2>
+        
+        <p>在自然界中，水波的起伏、琴弦的震动、钟摆的摇晃，无一不展现出一种优美而有规律的往复运动。在电气工程中，无论是运行了上百年的巨型水电站发电机，还是现代新型储能电站里的逆变器，它们在交流侧输出的电压与电流波形，都一致选择了<strong>正弦波（Sine Wave）</strong>。为什么是正弦波？它究竟是从哪里来的？</p>
+
+        <h3>1.1 旋转磁场与感应电动势：圆周运动的时间投影</h3>
+        <p><strong>第一层（直觉感受）</strong>：交流电之所以呈现正弦波，根本原因在于**发电机的转子在做匀速圆周运动**。当一个东西在圆周上匀速转动时，如果你只看它在某一条直线上的“影子”，这个影子的移动轨迹就是最完美的正弦波。</p>
+        
+        <p>在物理机制上，发电机的核心结构包含“定子（不动的线圈）”和“转子（旋转的磁铁）”。当转子以恒定的角速度 $\omega$（单位：弧度/秒）顺时针旋转时，穿过定子线圈的磁通量 $\Phi(t)$ 会随着旋转角度 $\theta = \omega t$ 发生周期性变化：</p>
+        
+        $$\Phi(t) = \Phi_m \cos(\omega t)$$
+
+        <p>根据法拉第电磁感应定律（Faraday's Law of Electromagnetic Induction），线圈两端产生的感应电动势 $e(t)$ 等于磁通量变化率的负值：</p>
+
+        $$e(t) = - \frac{d\Phi(t)}{dt} = - \frac{d}{dt} \big[ \Phi_m \cos(\omega t) \big] = \Phi_m \omega \sin(\omega t)$$
+
+        <p>令 $E_m = \Phi_m \omega$ 表示感应电动势的最大峰值，我们就得到了交流电动势的标准数学表达式：</p>
+
+        $$e(t) = E_m \sin(\omega t)$$
+
+        <p>这说明：**机械的匀速旋转，天然地在电学上转化为了正弦规律变化的电压与电流**。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：摩天轮座舱在墙壁上的影子</strong>
+            <p>想象游乐园里有一座以恒定速度旋转的巨型摩天轮。你在其中一个座舱外侧挂了一盏超亮灯泡。夜幕降临时，一束平行强光从侧面水平照射摩天轮，将灯泡的影子投射到远处一面垂直的高墙上：</p>
+            <ul>
+              <li>当座舱旋转到最高点或最低点时，影子在墙上的移动速度瞬间变为零（到达波峰 $U_m$ 或波谷 $-U_m$）；</li>
+              <li>当座舱旋转到与轴心等高的水平位置时，影子向上或向下穿过中点的速度最快（对应波形的过零点 Zero-Crossing）；</li>
+              <li>把墙上的影子随时间上下起伏的轨迹绘制成曲线，得到的就是一条完美的**正弦波曲线**。</li>
+            </ul>
+            <p>在这个类比中：摩天轮的旋转速度对应交流电的**角频率 $\omega$**；摩天轮的半径对应正弦波的**振幅（峰值）$U_m$**；影子的实时高度对应**瞬时电压 $u(t)$**。</p>
+          </div>
+        </div>
+
+        <h3>1.2 正弦波的微积分“特权”：为何它是电网中唯一不失真的波形？</h3>
+        <p>很多初学者会问：直流电是一条直线，那交流电做成锯齿波或方波不行吗？为什么电力系统一定要追求纯正的正弦波？</p>
+        
+        <p>答案隐藏在高等数学与电路元件的本构关系中。在实际电网中，除了电阻之外，还大量存在着**电感元件**（如变压器、电动机绕组）和**电容元件**（如输电线路对地电容、电力电容器）。这两类元件对电流和电压的变化率极度敏感：</p>
+
+        <ul>
+          <li>电感两端的电压取决于电流的变化率（导数）：$v_L(t) = L \frac{di(t)}{dt}$</li>
+          <li>流过电容的电流取决于电压的变化率（导数）：$i_C(t) = C \frac{dv(t)}{dt}$</li>
+        </ul>
+
+        <p>在数学的所有函数中，**正弦函数（以及余弦函数）是唯一经过求导或积分运算后，波形形状完全保持不变的函数**！正弦函数的导数依然是同频率的正弦/余弦函数（只是相位发生了 90° 的偏移）：</p>
+
+        $$\frac{d}{dt}[\sin(\omega t)] = \omega \cos(\omega t) = \omega \sin\left(\omega t + \frac{\pi}{2}\right)$$
+
+        <p>这意味着：**如果电网中流动的是正弦波电流，那么经过电感、电容、变压器等各类复杂元件后，电压和电流依然是纯正的正弦波，不会产生波形畸变与谐波干扰**。相反，如果你输入一个完美的方波电流，经过电感后会变成极其尖锐的电压脉冲（方波求导产生脉冲），瞬间击穿电路绝缘！因此，正弦波是电力工程得以稳定运行的物理基石。</p>
+
+        <!-- SVG 示意图：摩天轮圆周投影与正弦波生成 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 760 260" width="100%" height="260" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 左侧：匀速圆周运动 -->
+            <g transform="translate(140, 130)">
+              <circle cx="0" cy="0" r="80" stroke="#CBD5E0" stroke-width="1.5" fill="none" stroke-dasharray="4"/>
+              <line x1="-95" y1="0" x2="95" y2="0" stroke="#94A3B8" stroke-width="1"/>
+              <line x1="0" y1="-95" x2="0" y2="95" stroke="#94A3B8" stroke-width="1"/>
+              <!-- 旋转矢量 Radius -->
+              <line x1="0" y1="0" x2="56.57" y2="-56.57" stroke="#1A5F96" stroke-width="3" marker-end="url(#arrowhead)"/>
+              <circle cx="56.57" cy="-56.57" r="6" fill="#F57C00"/>
+              <!-- 角度标记 -->
+              <path d="M 30,0 A 30,30 0 0,0 21.21,-21.21" fill="none" stroke="#F57C00" stroke-width="1.5"/>
+              <text x="35" y="-12" font-family="Inter" font-size="12" fill="#F57C00" font-weight="600">θ = ωt</text>
+              <text x="25" y="-35" font-family="Inter" font-size="12" fill="#1A5F96" font-weight="600">Um</text>
+              <!-- 投影虚线 -->
+              <line x1="56.57" y1="-56.57" x2="220" y2="-56.57" stroke="#F57C00" stroke-width="1.5" stroke-dasharray="3"/>
+              <text x="0" y="115" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#1A5F96" text-anchor="middle">转子匀速圆周旋转</text>
+            </g>
+
+            <!-- 连接过渡线 -->
+            <line x1="235" y1="20" x2="235" y2="240" stroke="#E2E8F0" stroke-width="1.5"/>
+
+            <!-- 右侧：时间轴正弦波轨迹 -->
+            <g transform="translate(240, 130)">
+              <!-- 坐标轴 -->
+              <line x1="0" y1="0" x2="480" y2="0" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <line x1="0" y1="100" x2="0" y2="-110" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <text x="470" y="20" font-family="Inter" font-size="12" fill="#718096">时间 t</text>
+              <text x="-35" y="-98" font-family="Inter" font-size="12" fill="#718096">电压 u(t)</text>
+              
+              <!-- 正弦波曲线 -->
+              <path d="M 0,0 Q 60,-113.1 120,0 T 240,0 T 360,0 T 480,0" fill="none" stroke="#1A5F96" stroke-width="3"/>
+              
+              <!-- 关键点标记与投影连接 -->
+              <circle cx="40" cy="-56.57" r="5" fill="#F57C00"/>
+              <line x1="0" y1="-56.57" x2="40" y2="-56.57" stroke="#F57C00" stroke-width="1" stroke-dasharray="2"/>
+              <text x="45" y="-65" font-family="Inter" font-size="12" fill="#F57C00" font-weight="600">u(t) = Um·sin(ωt)</text>
+
+              <!-- 峰值与零点标注 -->
+              <line x1="60" y1="0" x2="60" y2="-80" stroke="#2E7D32" stroke-width="1" stroke-dasharray="2"/>
+              <text x="60" y="-88" font-family="Inter" font-size="12" fill="#2E7D32" font-weight="600" text-anchor="middle">+Um (正峰值)</text>
+              <line x1="180" y1="0" x2="180" y2="80" stroke="#2E7D32" stroke-width="1" stroke-dasharray="2"/>
+              <text x="180" y="98" font-family="Inter" font-size="12" fill="#2E7D32" font-weight="600" text-anchor="middle">-Um (负峰值)</text>
+              
+              <!-- 周期标注 -->
+              <line x1="0" y1="50" x2="240" y2="50" stroke="#7B1FA2" stroke-width="1.5" marker-start="url(#arrowhead)" marker-end="url(#arrowhead)"/>
+              <text x="120" y="42" font-family="Inter" font-size="12" fill="#7B1FA2" font-weight="600" text-anchor="middle">一个完整周期 T (360° / 2π)</text>
+
+              <text x="240" y="115" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#1A5F96" text-anchor="middle">时间轴展开的正弦波形 u(t)</text>
+            </g>
+
+            <!-- 箭头定义 -->
+            <defs>
+              <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A5568"/>
+              </marker>
+            </defs>
+          </svg>
+          <figcaption>图 01-3-2a：旋转发电机磁场圆周运动在时间轴上的投影与正弦波生成示意图</figcaption>
+        </figure>
+
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、正弦波的三大核心要素：振幅、频率与初相位</h2>
+
+        <p>数学上，描述一个标准正弦交流电随时间变化的完整通用函数表达如下：</p>
+
+        <div class="key-concept">
+          <h4>📌 正弦交流电通用函数表达式</h4>
+          $$u(t) = U_m \sin(\omega t + \varphi)$$
+          <p>式中：</p>
+          <ul>
+            <li>$u(t)$ 为 <strong>瞬时值（Instantaneous Value）</strong>，代表 $t$ 时刻的电压数值（单位：V）；</li>
+            <li>$U_m$ 为 <strong>振幅 / 峰值（Amplitude / Peak Value）</strong>，代表偏离零电位的最大幅值（单位：V）；</li>
+            <li>$\omega$ 为 <strong>角频率（Angular Frequency）</strong>，代表旋转角度的变化快慢（单位：rad/s）；</li>
+            <li>$\varphi$ 为 <strong>初相位 / 初相角（Initial Phase）</strong>，代表 $t=0$ 时刻波形所处的相位状态（单位：rad 或 degree °）。</li>
+          </ul>
+        </div>
+
+        <p>这三个参数被称为正弦波的**三大核心要素**。只要确定了这三个要素，正弦波的形态与位置就完全被确定了。</p>
+
+        <h3>2.1 振幅（$U_m$ / $I_m$）：波浪的高度与绝缘的物理考验</h3>
+        <p><strong>第一层（直觉感受）</strong>：振幅就是正弦波最高点到零线的距离。它决定了交流电“张力”的大小。</p>
+
+        <p>在工程物理层面上，振幅 $U_m$ 决定了电气设备的**绝缘耐压标准**。无论交流电的有效值是多少，瞬时电压在每个周期内都会有两次达到 $\pm U_m$ 的极限高压。如果设备的绝缘材料无法承受这个峰值电压，就会被高压击穿产生电弧短路。</p>
+
+        <h3>2.2 频率（$f$）与角频率（$\omega$）：电网的心跳与旋转节奏</h3>
+        <p><strong>第一层（直觉感受）</strong>：频率就是电流在 1 秒钟内来回摆动的次数；周期就是摆动一次所需的时间；角频率则是发电机转子旋转的角度速度。</p>
+
+        <p>三者之间存在着严密的数学换算关系：</p>
+
+        <ul>
+          <li><strong>周期 $T$（Period）</strong>：交流电完成一次完整正负循环所需的时间，单位为秒（s）。</li>
+          <li><strong>频率 $f$（Frequency）</strong>：每秒钟完成完整循环的次数，单位为赫兹（Hz），换算公式为：$f = \frac{1}{T}$</li>
+          <li><strong>角频率 $\omega$（Angular Frequency）</strong>：每秒钟转过的弧度数，因为一个完整圆周是 $2\pi$ 弧度（约为 360°），所以换算公式为：$$\omega = 2\pi f = \frac{2\pi}{T}$$</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>工程记忆技巧：中国电网的“314 rad/s”</strong>
+            <p>我国电力电网的标准工频为 $f = 50 \text{ Hz}$。将 $f=50$ 代入角频率公式：</p>
+            $$\omega = 2 \times \pi \times 50 = 100\pi \approx 314.159 \text{ rad/s}$$
+            <p>在后续的学习中，只要看到电路公式中出现 $\omega = 314$ 或 $100\pi$，就能立刻反应出这是基于我国 50Hz 工频电网的计算系统！</p>
+          </div>
+        </div>
+
+        <h3>2.3 初相位（$\varphi$）与相位差（$\Delta\varphi$）：步调与时间轴上的平移</h3>
+        <p><strong>第一层（直觉感受）</strong>：如果两个波形频率相同，但一个波形比另一个“早出发”或“晚出发”，它们在时间轴上的错开程度就是相位差。</p>
+
+        <p>在数学表达式 $u(t) = U_m \sin(\omega t + \varphi)$ 中，括号内的全角度 $(\omega t + \varphi)$ 称为正弦波的**相位（Phase）**。而当 $t = 0$ 时，相位的数值正好等于 $\varphi$，被称为**初相位（Initial Phase）**。</p>
+
+        <ul>
+          <li>若 $\varphi > 0$：波形在时间轴上**向左平移**，代表波形比标准正弦波更早到达峰值，称为**相位超前（Leading）**；</li>
+          <li>若 $\varphi < 0$：波形在时间轴上**向右平移**，代表波形比标准正弦波更晚到达峰值，称为**相位滞后（Lagging）**；</li>
+          <li>若 $\varphi = 0$：波形正好在 $t=0$ 时刻从零点向上穿过，称为标准正弦波。</li>
+        </ul>
+
+        <p>在储能与电力系统中，我们更关注两个同频率正弦波之间的相对关系——**相位差（Phase Difference, $\Delta\varphi$）**。假设有两个电压波形 $u_1(t) = U_{m1} \sin(\omega t + \varphi_1)$ 和 $u_2(t) = U_{m2} \sin(\omega t + \varphi_2)$，则它们之间的相位差为：</p>
+
+        $$\Delta\varphi = (\omega t + \varphi_1) - (\omega t + \varphi_2) = \varphi_1 - \varphi_2$$
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：双人划船与步调配合</strong>
+            <p>想象两人在划一艘双人皮划艇：</p>
+            <ul>
+              <li><strong>同相（$\Delta\varphi = 0^\circ$）</strong>：两人同时入水、同时用力划桨。推力叠加到最大，船飞速前进——这对应电路中的**纯电阻状态**，电压与电流同相，做功效率最高（有功功率最大）；</li>
+              <li><strong>反相（$\Delta\varphi = 180^\circ$）</strong>：当一人向前用力划时，另一人刚好向后抵消。两人累得半死，船却停在原地——这对应两个互为反相的电压源并联瞬间，会产生极大的环流；</li>
+              <li><strong>正交 / 错相 90°（$\Delta\varphi = 90^\circ$）</strong>：一人入水抬桨时，另一人刚开始用力。能量在两人之间来回吞吐，船走走停停——这对应**纯电感或纯电容电路**，电压与电流相位差为 90°，只吞吐无功功率，不消耗有功功率。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SVG 示意图：正弦波三要素（振幅、周期、相位差）标注 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 760 250" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 坐标轴 -->
+            <g transform="translate(60, 125)">
+              <line x1="0" y1="0" x2="650" y2="0" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <line x1="0" y1="105" x2="0" y2="-105" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <text x="640" y="20" font-family="Inter" font-size="12" fill="#718096">时间 t</text>
+              <text x="-40" y="-95" font-family="Inter" font-size="12" fill="#718096">电压 u(t)</text>
+
+              <!-- 波形 A：超前波形 (蓝线) u1(t) = Um1 sin(ωt + 45°) -->
+              <path d="M 0,-56.57 Q 30,-80 60,-56.57 T 120,56.57 T 180,-56.57 T 240,56.57 T 300,-56.57 T 360,56.57 T 420,-56.57 T 480,56.57 T 540,-56.57 T 600,56.57" fill="none" stroke="#1A5F96" stroke-width="3"/>
+              
+              <!-- 波形 B：滞后波形 (橙线) u2(t) = Um2 sin(ωt - 15°) -->
+              <path d="M 0,20.7 Q 45,-70 90,0 T 180,0 T 270,0 T 360,0 T 450,0 T 540,0 T 630,0" fill="none" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="6,3"/>
+
+              <!-- 相位差标记 Δφ -->
+              <line x1="0" y1="-80" x2="45" y2="-80" stroke="#7B1FA2" stroke-width="1.5" marker-start="url(#arrowhead)" marker-end="url(#arrowhead)"/>
+              <line x1="0" y1="-56.57" x2="0" y2="-90" stroke="#7B1FA2" stroke-width="1" stroke-dasharray="2"/>
+              <line x1="45" y1="-70" x2="45" y2="-90" stroke="#7B1FA2" stroke-width="1" stroke-dasharray="2"/>
+              <text x="22" y="-88" font-family="Inter" font-size="12" fill="#7B1FA2" font-weight="600" text-anchor="middle">相位差 Δφ</text>
+
+              <!-- 图例与文字说明 -->
+              <rect x="440" y="-100" width="200" height="60" fill="#FFFFFF" stroke="#E2E8F0" rx="6"/>
+              <line x1="450" y1="-80" x2="480" y2="-80" stroke="#1A5F96" stroke-width="3"/>
+              <text x="490" y="-75" font-family="Noto Sans SC" font-size="11" fill="#1A1A2E">u1(t) 超前波形 (φ1 > 0)</text>
+              <line x1="450" y1="-60" x2="480" y2="-60" stroke="#F57C00" stroke-width="2.5" stroke-dasharray="4"/>
+              <text x="490" y="-55" font-family="Noto Sans SC" font-size="11" fill="#1A1A2E">u2(t) 滞后波形 (φ2 < 0)</text>
+            </g>
+          </svg>
+          <figcaption>图 01-3-2b：两个同频正弦波的波形超前、滞后与相位差 $\Delta\varphi$ 示意图</figcaption>
+        </figure>
+
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、解密“有效值”（RMS）：为什么 220V 的波峰实际上是 311V？</h2>
+
+        <p>回到本节开头的现实难题：插座上标注的“220V”既不是最大值，也不是瞬时值，更不是算术平均值（正弦波在一个周期内的算术平均值正好等于零）。那么，这个 220V 究竟代表什么？</p>
+
+        <h3>3.1 物理本质：焦耳热效应等效原理（RMS 的诞生）</h3>
+        <p>为了衡量时刻在变化的交流电到底具备多大的“做功能力”，电力工程学家引入了**热效应等效原理**：</p>
+
+        <div class="key-concept">
+          <h4>📌 交流电有效值（Root Mean Square, RMS）物理定义</h4>
+          <p>让交流电流 $i(t)$ 与一个数值恒定的直流电流 $I_{\text{DC}}$ 分别通过阻值完全相同的纯电阻 $R$。如果在**同一个周期 $T$ 的时间内**，交流电在电阻上产生的焦耳热总量 $Q_{\text{AC}}$ 与直流电产生的焦耳热总量 $Q_{\text{DC}}$ **完全相等**，那么这个直流电流的数值 $I_{\text{DC}}$ 就被称为该交流电流的**有效值（RMS Value）**，记作 $I_{\text{rms}}$ 或直接记作大写字母 $I$。</p>
+        </div>
+
+        <h3>3.2 严密数学推导：从热量积分到“除以 $\sqrt{2}$”</h3>
+        <p>我们用严密的数学积分来推导有效值 $I_{\text{rms}}$ 与峰值 $I_m$ 之间的定量关系：</p>
+
+        <p><strong>第一步：计算直流电在时间 $T$ 内产生的热量 $Q_{\text{DC}}$</strong></p>
+        $$Q_{\text{DC}} = I_{\text{rms}}^2 \cdot R \cdot T$$
+
+        <p><strong>第二步：计算正弦交流电在时间 $T$ 内产生的热量 $Q_{\text{AC}}$</strong></p>
+        $$Q_{\text{AC}} = \int_0^T i(t)^2 R \, dt = \int_0^T \big[ I_m \sin(\omega t) \big]^2 R \, dt = I_m^2 R \int_0^T \sin^2(\omega t) \, dt$$
+
+        <p><strong>第三步：利用三角函数倍角公式求解积分</strong></p>
+        <p>根据三角公式 $\sin^2(\theta) = \frac{1 - \cos(2\theta)}{2}$，将积分展开：</p>
+        $$\int_0^T \sin^2(\omega t) \, dt = \int_0^T \frac{1 - \cos(2\omega t)}{2} \, dt = \frac{1}{2} \int_0^T 1 \, dt - \frac{1}{2} \int_0^T \cos(2\omega t) \, dt$$
+
+        <p>由于余弦函数 $\cos(2\omega t)$ 在一个完整周期内的积分结果精确为零（正负面积互相抵消），所以积分结果化简为：</p>
+        $$\int_0^T \sin^2(\omega t) \, dt = \frac{T}{2}$$
+
+        <p><strong>第四步：令 $Q_{\text{DC}} = Q_{\text{AC}}$ 进行等式求解</strong></p>
+        $$I_{\text{rms}}^2 R T = I_m^2 R \cdot \frac{T}{2}$$
+
+        <p>两边同时约去 $R$ 和 $T$，得到：</p>
+        $$I_{\text{rms}}^2 = \frac{I_m^2}{2} \implies I_{\text{rms}} = \frac{I_m}{\sqrt{2}} \approx 0.707 I_m$$
+
+        <p>同理，对于正弦电压，有效值与峰值的关系为：</p>
+
+        $$\bbox[10px,border:2px solid #1A5F96,background:#E8F2FF]{U_{\text{rms}} = \frac{U_m}{\sqrt{2}} \approx 0.707 U_m \quad \iff \quad U_m = \sqrt{2} U_{\text{rms}} \approx 1.414 U_{\text{rms}}}$$
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>RMS 英文缩写的深刻含义</strong>
+            <p><strong>RMS</strong> 代表 <strong>Root-Mean-Square</strong>，直译为“均方根”。数学步骤正好与推导过程相反：</p>
+            <ol>
+              <li><strong>Square（平方）</strong>：把波形 $u(t)$ 进行平方得到 $u^2(t)$（取消负数，体现热效应 $P=u^2/R$）；</li>
+              <li><strong>Mean（求平均）</strong>：对平方后的波形在周期 $T$ 内求积分平均（得到 $U_m^2 / 2$）；</li>
+              <li><strong>Root（开方）</strong>：对平均值取算术平方根（得到 $U_m / \sqrt{2}$）。</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>3.3 220V/380V 的算例真相：峰值与峰峰值</h3>
+        <p>基于上面的严密推导，我们可以轻松解释开头的示波器测量谜题：</p>
+
+        <ul>
+          <li><strong>我国家庭用电（220V 单相交流电）</strong>：
+            <ul>
+              <li>有效值 $U_{\text{rms}} = 220 \text{ V}$（铭牌与万用表读数）；</li>
+              <li>峰值 $U_m = 220 \times \sqrt{2} \approx 220 \times 1.4142 = \mathbf{311.13 \text{ V}}$（示波器最高点）；</li>
+              <li>峰峰值（Peak-to-Peak Value, $U_{p-p}$）：最高波峰到最低波谷的跨度，$U_{p-p} = 2 U_m \approx \mathbf{622.26 \text{ V}}$！</li>
+            </ul>
+          </li>
+          <li><strong>我国工业用电（380V 三相线电压）</strong>：
+            <ul>
+              <li>线电压有效值 $U_{\text{line, rms}} = 380 \text{ V}$；</li>
+              <li>线电压峰值 $U_{\text{line, m}} = 380 \times \sqrt{2} \approx \mathbf{537.40 \text{ V}}$；</li>
+              <li>线电压峰峰值 $U_{\text{line, p-p}} = 2 U_{\text{line, m}} \approx \mathbf{1074.8 \text{ V}}$！</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>3.4 正弦波五大代表值对比表</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>代表值名称</th>
+                <th>符号表示</th>
+                <th>数学定义公式</th>
+                <th>与有效值 $U_{\text{rms}}$ 换算关系</th>
+                <th>220V 系统数值</th>
+                <th>主要工程用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>瞬时值</strong></td>
+                <td>$u(t)$</td>
+                <td>$U_m \sin(\omega t + \varphi)$</td>
+                <td>时刻在变化</td>
+                <td>-311V ~ +311V</td>
+                <td>用于计算机仿真、采样控制与实时保护</td>
+              </tr>
+              <tr>
+                <td><strong>峰值（振幅）</strong></td>
+                <td>$U_m$</td>
+                <td>最大幅值</td>
+                <td>$U_m = \sqrt{2} U_{\text{rms}}$</td>
+                <td><strong>311.1 V</strong></td>
+                <td>绝缘耐压设计、DC/AC 变流器直流侧电压匹配</td>
+              </tr>
+              <tr>
+                <td><strong>有效值（RMS）</strong></td>
+                <td>$U_{\text{rms}}$</td>
+                <td>$\sqrt{\frac{1}{T}\int_0^T u^2(t)dt}$</td>
+                <td>$U_{\text{rms}} = 1.0 U_{\text{rms}}$</td>
+                <td><strong>220.0 V</strong></td>
+                <td>设备铭牌标称、发热做功计算、电费计量、仪表显示</td>
+              </tr>
+              <tr>
+                <td><strong>峰峰值</strong></td>
+                <td>$U_{p-p}$</td>
+                <td>$2 U_m$</td>
+                <td>$U_{p-p} = 2\sqrt{2} U_{\text{rms}}$</td>
+                <td><strong>622.3 V</strong></td>
+                <td>示波器波形观察、耐压安全裕量评估</td>
+              </tr>
+              <tr>
+                <td><strong>整流平均值</strong></td>
+                <td>$U_{\text{avg}}$</td>
+                <td>$\frac{1}{T}\int_0^T |u(t)|dt$</td>
+                <td>$U_{\text{avg}} = \frac{2\sqrt{2}}{\pi} U_{\text{rms}} \approx 0.90 U_{\text{rms}}$</td>
+                <td><strong>198.1 V</strong></td>
+                <td>全波整流电路直流电压计算、指针式万用表调校</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>工程安全警告：储能变流器（PCS）直流侧电压匹配“失真门”</strong>
+            <p>在电化学储能电站中，磷酸铁锂电池组的直流电压会随着放电深度（SOC）下降。如果系统要求 PCS 输出 380V 三相交流电注入电网，电池簇的直流母线电压最低不能低于多少？</p>
+            <p>由于 380V 交流电的线电压峰值高达 <strong>537.4V</strong>，如果不采用升压变压器或高频 DC/DC 隔离变压器，仅靠三相桥式逆变电路，**直流母线电压必须时刻高于交流线电压的峰值（537.4V）**！一旦电池组电压在放电末期降至 500V 以下，逆变器输出的正弦波顶部就会被“斩头削平”，产生严重的削顶失真与谐波污染，触发电网保护跳闸！</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、现代储能变流器（PCS）如何“拼凑”出完美正弦波？</h2>
+
+        <p>在集中式与组串式储能电站中，磷酸铁锂电池输出的是平坦的直流电（DC）。那么，储能变流器（PCS）内部既没有旋转的发电机转子，也没有机械切割磁感线，它是如何把“平坦”的直流电变成“弯曲”的交流正弦波的？</p>
+
+        <h3>4.1 冲量相等原理：用脉冲面积代替正弦面积</h3>
+        <p>现代电力电子逆变技术建立在**冲量相等原理（面积等效原理）**之上：只要加在惯性环节（如电感、电容）上的窄脉冲电压的“面积（电压对时间的积分）”与正弦波在对应时间段内的面积完全相等，那么电路对这两个电压信号的响应效果是完全等效的。</p>
+
+        <h3>4.2 SPWM 调制机制：正弦脉冲宽度调制</h3>
+        <p><strong>正弦脉冲宽度调制（Sinusoidal PWM，SPWM）</strong> 是储能 PCS 中最经典的正弦波合成技术：</p>
+
+        <ol>
+          <li><strong>调制波（Modulating Wave）</strong>：内部微处理器产生一个渴望输出的低频标准正弦波信号（如 50Hz）；</li>
+          <li><strong>载波（Carrier Wave）</strong>：产生一个高频的三角波或锯齿波信号（如 5kHz - 20kHz）；</li>
+          <li><strong>比较产生 PWM 脉冲</strong>：将正弦调制波与高频载波进行实时比较。当正弦波幅值大于三角波时，开关管（IGBT）导通输出高电平；反之关闭输出零电平。</li>
+        </ol>
+
+        <p>这样输出的就是一串**等幅不等宽的矩形脉冲序列**：正弦波处于波峰附近时，脉冲宽度最宽；正弦波接近零点时，脉冲宽度最窄。脉冲的平均占空比精确遵循正弦函数的起伏规律！</p>
+
+        <h3>4.3 LC 滤波器的“物理磨砂”：去除高频噪声</h3>
+        <p>SPWM 出来的矩形脉冲序列还带有高频开关噪音（毛刺）。这时，让脉冲序列通过由电感 $L$ 和电容 $C$ 组成的**低通滤波器（LC Filter）**：</p>
+
+        <ul>
+          <li>电感 $L$ 阻挡高频开关电流过快变化；</li>
+          <li>电容 $C$ 吸收高频电压尖峰，填补电压间隙。</li>
+        </ul>
+
+        <p>经过 LC 滤波器的“物理磨砂”后，高频开关毛刺被彻底滤除，最终输送到电网的就是纯净、光滑的 50Hz 正弦波交流电！</p>
+
+        <!-- SVG 示意图：SPWM 调制与 LC 滤波合成正弦波 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 760 260" width="100%" height="260" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 阶段 1：SPWM 调制波与载波比较 -->
+            <g transform="translate(40, 20)">
+              <text x="100" y="15" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#1A5F96" text-anchor="middle">1. SPWM 调制比较 (正弦波 vs 高频三角波)</text>
+              <rect x="0" y="25" width="200" height="60" fill="#FFFFFF" stroke="#CBD5E0" rx="4"/>
+              <!-- 三角波载波 (灰) -->
+              <path d="M 0,75 L 20,35 L 40,75 L 60,35 L 80,75 L 100,35 L 120,75 L 140,35 L 160,75 L 180,35 L 200,75" fill="none" stroke="#A0AEC0" stroke-width="1"/>
+              <!-- 正弦波调制波 (蓝) -->
+              <path d="M 0,55 Q 50,25 100,55 T 200,55" fill="none" stroke="#1A5F96" stroke-width="2"/>
+            </g>
+
+            <!-- 阶段 2：输出等幅不等宽 SPWM 脉冲序列 -->
+            <g transform="translate(280, 20)">
+              <text x="100" y="15" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#F57C00" text-anchor="middle">2. IGBT 输出等幅不等宽脉冲序列</text>
+              <rect x="0" y="25" width="200" height="60" fill="#FFFFFF" stroke="#CBD5E0" rx="4"/>
+              <!-- 脉冲序列 -->
+              <path d="M 5,85 L 5,35 L 15,35 L 15,85 M 25,85 L 25,30 L 45,30 L 45,85 M 55,85 L 55,25 L 85,25 L 85,85 M 95,85 L 95,30 L 115,30 L 115,85 M 125,85 L 125,35 L 135,35 L 135,85" fill="none" stroke="#F57C00" stroke-width="1.5"/>
+            </g>
+
+            <!-- 阶段 3：经过 LC 滤波输出纯净正弦波 -->
+            <g transform="translate(520, 20)">
+              <text x="100" y="15" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#2E7D32" text-anchor="middle">3. LC 滤波后输出纯净正弦波</text>
+              <rect x="0" y="25" width="200" height="60" fill="#FFFFFF" stroke="#CBD5E0" rx="4"/>
+              <path d="M 0,55 Q 50,25 100,55 T 200,55" fill="none" stroke="#2E7D32" stroke-width="2.5"/>
+            </g>
+
+            <!-- 下方：连接箭头与整体硬件说明 -->
+            <g transform="translate(40, 110)">
+              <!-- 连接箭头 -->
+              <path d="M 205,55 L 270,55" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <path d="M 485,55 L 510,55" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+              <!-- 硬件框图 -->
+              <rect x="0" y="90" width="680" height="50" fill="#E8F2FF" stroke="#1A5F96" rx="6"/>
+              <text x="340" y="120" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#1A5F96" text-anchor="middle">储能电池 (DC 直流) ➔ IGBT 桥臂高速开关 (SPWM 调制) ➔ LC 低通滤波器 ➔ 电网 (AC 50Hz 正弦波)</text>
+            </g>
+          </svg>
+          <figcaption>图 01-3-2c：储能变流器（PCS）SPWM 调制与 LC 滤波合成正弦波全过程示意图</figcaption>
+        </figure>
+
+      </section>
+
+      <!-- 子模块五 -->
+      <section>
+        <h2>五、工程实战：正弦波参数在储能电站中的计算与预同步</h2>
+
+        <h3>5.1 算例一：根据示波器采样表达式提取电网参数</h3>
+        <p><strong>工程场景</strong>：某 100MW/200MWh 独立储能电站现场，电能质量分析仪对 A 相电压采样后，输出的拟合正弦波表达式为：</p>
+        $$u_A(t) = 311.13 \sin(314.16 t + 30^\circ) \text{ V}$$
+
+        <p><strong>任务分析与计算</strong>：</p>
+        <ol>
+          <li><strong>求电压有效值 $U_{\text{rms}}$</strong>：
+            $$U_{\text{rms}} = \frac{U_m}{\sqrt{2}} = \frac{311.13}{1.4142} \approx \mathbf{220.0 \text{ V}}$$
+          </li>
+          <li><strong>求电网频率 $f$</strong>：
+            由角频率 $\omega = 314.16 \text{ rad/s}$，解得频率：
+            $$f = \frac{\omega}{2\pi} = \frac{314.16}{2 \times 3.14159} = \mathbf{50.0 \text{ Hz}}$$
+          </li>
+          <li><strong>求初相位 $\varphi$ 与周期 $T$</strong>：
+            初相位 $\varphi = +30^\circ$（即 $\frac{\pi}{6}$ 弧度），代表波形比零点相位**超前 30°**。周期 $T = \frac{1}{50} = \mathbf{0.02 \text{ s} \ (20 \text{ ms})}$。
+          </li>
+        </ol>
+
+        <h3>5.2 算例二：储能 PCS 并网预同步（Pre-synchronization）三要素控制</h3>
+        <p>当储能电站要从黑启动（孤网运行）切换到并网运行，或者离网断路器合闸瞬间，PCS 的控制系统必须执行**并网预同步（Pre-synchronization）**。预同步必须保证变流器输出正弦波与电网正弦波达到**“三同”**：</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：国标 GB/T 36547 并网预同步门禁</strong>
+            <p>依据我国国标《电化学储能系统接入电网技术规定》（GB/T 36547），储能系统合闸并网前，必须通过锁相环（PLL）对电网正弦波进行实时跟踪，合闸闭锁保护的严苛指标如下：</p>
+            <ul>
+              <li><strong>同频率（Frequency Matching）</strong>：频率偏差 $|\Delta f| \le 0.05 \text{ Hz}$；</li>
+              <li><strong>同幅值（Voltage Amplitude Matching）</strong>：电压有效值偏差 $|\Delta U| \le 2.0\%$（相差不超过 4.4V）；</li>
+              <li><strong>同相位（Phase Matching）</strong>：相位差 $|\Delta\varphi| \le 2.0^\circ$。</li>
+            </ul>
+            <p>如果在相位差达到 60° 时误合闸，两端电压瞬间差值可达 $\Delta U = U_m \cdot 2\sin(30^\circ) = 311.13\text{V}$，相当于将 311V 交流电直接短路到零电位，产生的上万安培冲击电流将瞬间熔断直流母线熔断器，损坏储能 PCS 变流器！</p>
+          </div>
+        </div>
+
+        <h3>5.3 算例三：非正弦波形的有效值计算与万用表选型陷阱</h3>
+        <p>在现代化电站中，除了纯正正弦波之外，还会遇到含有谐波的非正弦波形（如方波、三角波）。不同波形的有效值与峰值关系完全不同：</p>
+
+        <ul>
+          <li><strong>标准正弦波</strong>：$U_{\text{rms}} = \frac{U_m}{\sqrt{2}} \approx 0.707 U_m$</li>
+          <li><strong>标准占空比 50% 方波</strong>：$U_{\text{rms}} = U_m$（电压要么是 $+U_m$，要么是 $-U_m$，平方后恒为 $U_m^2$，开方后等于 $U_m$）</li>
+          <li><strong>标准对称三角波/锯齿波</strong>：$U_{\text{rms}} = \frac{U_m}{\sqrt{3}} \approx 0.577 U_m$</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>测量误区：普通万用表 vs 真有效值（True RMS）万用表</strong>
+            <p>市面上普通的廉价万用表（整流平均值响应型），其内部原理是先测量交流电的平均值，然后**乘以 1.11（正弦波的波形系数 $1.11 = \frac{\pi}{2\sqrt{2}}$）**来假装显示有效值。</p>
+            <p>如果你用这种普通万用表去测量逆变器未滤波前输出的方波或变频器输出的非正弦波，测量误差将高达 <strong>10% - 40%</strong>！在储能电站运维测试中，必须使用标有 <strong>True RMS（真有效值）</strong> 的数字万用表（如 Fluke 87V），这类仪表内部内置高频采样 DSP 芯片，能严格按照 $\sqrt{\frac{1}{T}\int u^2 dt}$ 进行实时积分计算，确保测量准确。了解此点是避免运维误判的关键。</p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>物理本质与微积分特权</strong>：正弦波源于发电机的匀速圆周旋转，且是微积分求导/积分运算下唯一“波形保持不变”的波形，保证了交流电网在通过电感、电容与变压器时不发生畸变。</li>
+        <li><strong>正弦波三大要素</strong>：由通用表达式 $u(t) = U_m \sin(\omega t + \varphi)$ 确定，包含振幅（决定绝缘耐压）、角频率 $\omega = 2\pi f$（决定旋转快慢，我国 50Hz 对应 $\omega \approx 314 \text{ rad/s}$）以及初相位与相位差（决定波形在时间轴上的步调与能量流向）。</li>
+        <li><strong>有效值（RMS）热效应本质</strong>：根据焦耳热等效原理导出，正弦波有效值与峰值满足 $U_{\text{rms}} = U_m / \sqrt{2} \approx 0.707 U_m$。我国家庭用电标称 220V（有效值）的实际最高峰值高达 <strong>311.1V</strong>，峰峰值达 622.3V。</li>
+        <li><strong>储能 PCS 正弦波合成</strong>：储能变流器运用 SPWM 正弦脉冲宽度调制技术，产生等幅不等宽的矩形脉冲序列，再经由 LC 低通滤波器“磨平”高频开关毛刺，合成出纯净正弦波注入电网。</li>
+        <li><strong>并网预同步与运维测量</strong>：储能系统并网前必须做到同频、同幅、同相（相位差 $< 2^\circ$），防止巨大环流冲击；对于非正弦波或高谐波现场，必须使用 <strong>True RMS（真有效值）</strong> 仪表测量。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 我国家庭插座的标称电压为 220V（50Hz），使用高压差分探头和示波器观测该交流电压时，屏幕上显示的波形最高峰值（$U_m$）和峰峰值（$U_{p-p}$）最接近以下哪组数值？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 峰值 220V，峰峰值 440V</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 峰值 311V，峰峰值 622V</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 峰值 155V，峰峰值 311V</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 峰值 380V，峰峰值 760V</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：标称电压 220V 指的是正弦交流电的有效值（$U_{\text{rms}} = 220\text{V}$）。根据正弦波有效值与峰值的推导公式 $U_m = \sqrt{2} U_{\text{rms}} \approx 1.4142 \times 220 \approx 311.13\text{V}$；峰峰值 $U_{p-p}$ 是正负波峰之间的最高电压差，$U_{p-p} = 2 U_m \approx 622.26\text{V}$。选项 A 误将有效值当成峰值；选项 C 误用有效值除以 $\sqrt{2}$；选项 D 为 380V 三相系统的数值。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 我国电网的标准工频为 50Hz，在计算正弦波电感感抗 $X_L = \omega L$ 时，对应的角频率 $\omega$ 的标准数值最接近以下哪一个？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 50 rad/s</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 100 rad/s</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 314 rad/s</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 377 rad/s</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：角频率 $\omega = 2\pi f$。对于 50Hz 工频电网，$\omega = 2 \times 3.14159 \times 50 = 100\pi \approx 314.16 \text{ rad/s}$。选项 A 错把频率当成角频率；选项 B 漏掉了圆周率 $\pi$；选项 D 377 rad/s 为北美与日本部分地区 60Hz 电网对应的角频率（$2\pi \times 60 \approx 377$）。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 关于正弦交流电有效值（RMS）的物理定义与特征，以下说法中正确的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 有效值是一个周期内瞬时电压求和后的算术平均值</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 正弦波有效值等于峰值乘以 0.5</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 有效值基于焦耳热效应等效，正弦波有效值等于峰值除以 $\sqrt{2}$</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 任何非正弦波（如方波、三角波）的有效值与峰值比值都固定为 $1/\sqrt{2}$</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项 C 正确描述了有效值基于“热效应等效”的物理本质以及正弦波的系数 $1/\sqrt{2} \approx 0.707$。选项 A 错误，因为正弦波在一个完整周期内的算术平均值为零；选项 B 错误，对应系数为 $1/\sqrt{2} \approx 0.707$ 而非 0.5；选项 D 错误，$1/\sqrt{2}$ 仅适用于纯正正弦波，方波的有效值等于峰值，三角波有效值等于峰值除以 $\sqrt{3}$。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在储能变流器（PCS）预同步并网过程中，若电网电压波形为 $u_1(t) = 311 \sin(314t + 10^\circ)\text{V}$，而逆变器输出电压波形为 $u_2(t) = 311 \sin(314t - 35^\circ)\text{V}$，则两者之间的相位差 $\Delta\varphi$ 为多少？合闸是否安全？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 相位差为 25°，满足国标，允许合闸</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 相位差为 45°，严重超出国标 $\le 2^\circ$ 要求，禁止合闸</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 相位差为 0°，完全同相，允许合闸</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 相位差为 10°，满足国标，允许合闸</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：相位差 $\Delta\varphi = \varphi_1 - \varphi_2 = +10^\circ - (-35^\circ) = 45^\circ$。国标 GB/T 36547 规定储能并网预同步相位差不得超过 2°。45° 的巨大相位差在断路器两端会产生高达约 238V 的瞬时偏置压差，强行合闸会产生巨大冲击环流毁坏设备，因此绝对禁止合闸。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 储能变流器（PCS）利用正弦脉宽调制（SPWM）技术将电池直流电合成正弦交流电时，其关键的电路环节与作用描述正确的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. SPWM 直接由变压器机械旋转产生交流电</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 高频 IGBT 开关产生等幅不等宽脉冲序列，再经由 LC 低通滤波器滤除高频毛刺得到纯正正弦波</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. SPWM 出来的波形无需滤波可以直接注入电网</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 只要电池直流电压为 300V，就可以逆变出 380V 的交流电而不会失真</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 准确描述了 SPWM 利用冲量相等原理产生等幅不等宽方波脉冲，并通过 LC 低通滤波器平滑为正弦波的全过程。选项 A 错误，PCS 为静止电力电子设备，无机械旋转；选项 C 错误，未经滤波的 SPWM 脉冲带有极高的开关高频毛刺，THD 严重超标无法并网；选项 D 错误，380V 交流线电压峰值为 537V，直流母线若低于 537V 逆变波形会被削顶失真。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_3_1_交流电的历史之争.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">交流还是直流？历史上的电流大战</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_3_3_相位与功率因数.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">相位与功率因数</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="01_3_1_交流电的历史之争.html">01_3_1 交流还是直流？历史上的电流大战</a> — 了解交流电的历史起源与交直流系统的各自优势</li>
+        <li><a href="01_3_3_相位与功率因数.html">01_3_3 相位与功率因数</a> — 进一步学习相位差对有功、无功功率与功率因数（Cos φ）的深刻影响</li>
+        <li><a href="01_3_4_三相交流电.html">01_3_4 三相交流：工业的脊梁</a> — 学习三个互差 120° 正弦波组成的三相交流电系统</li>
+        <li><a href="../level_06/06_2_1_PCS核心功能.html">06_2_1 PCS 核心功能与双向变换原理</a> — 深入储能变流器硬件拓扑与正弦波并网控制细节</li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_3_2</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
+
