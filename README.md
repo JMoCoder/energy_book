@@ -1,10 +1,10 @@
 # 中国网储系统性学习手册 (energy_book)
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Version](https://img.shields.io/badge/Version-v1.0.0-green.svg)
+![Version](https://img.shields.io/badge/Version-v3.5-green.svg)
 ![Build Status](https://img.shields.io/badge/Deploy-GitHub%20Pages-orange.svg)
 
-> **从零基础到网储专家** —— 涵盖电能基础、电力系统、电力市场、电化学、储能设备、系统工程、商业投资与前沿技术 8 大模块，全书共 280 个独立章节，正文约 140 万字。
+> **从零基础到网储专家** —— 涵盖电能基础、电力系统、电力市场、电化学、储能设备、系统工程、商业投资与前沿技术 8 大模块 + 看懂电费单、网储投建全流程、电力市场化交易 3 大专题，全书共 **308 个独立章节**，正文约 **155 万字**。
 
 ---
 
@@ -13,7 +13,7 @@
 《中国网储系统性学习手册》是一个全景式的电化学与新型储能系统知识库平台。项目采用极简轻量、零依赖的现代化前端技术架构（HTML5 + CSS3 + Standard ESJavaScript），结合高可读性的结构化 JSON 目录索引，支持单页导航、全量模糊搜索以及响应式阅读体验。
 
 ### 🌟 核心特色
-- **系统性课程体系**：从 Level 0 至 Level 8 递进式设计，覆盖物理/化学原理到百兆瓦级电站投资决策全链路。
+- **系统性课程体系**：从 Level 0 至 Level 8 递进式设计，覆盖物理/化学原理到百兆瓦级电站投资决策全链路；另设 SP1（看懂电费单）、SP2（网储投建全流程）、SP3（电力市场化交易）三大专题。
 - **开箱即用与离线友好**：支持双击 `index.html` 直接离线阅读，无前端编译构建负担。
 - **现代化视觉与 UI/UX**：内置响应式布局、高亮卡片导航、搜索筛选与难度标记。
 
@@ -43,7 +43,10 @@ energy_book/
 │   ├── level_05/             # Level 5 储能设备与技术
 │   ├── level_06/             # Level 6 系统工程与运营
 │   ├── level_07/             # Level 7 商业投资与项目评估
-│   └── level_08/             # Level 8 前沿技术与专家视野
+│   ├── level_08/             # Level 8 前沿技术与专家视野
+│   ├── sp_01/                # TOPIC SP1 看懂电费单与负荷曲线
+│   ├── sp_02/                # TOPIC SP2 网储投建全流程
+│   └── sp_03/                # TOPIC SP3 电力市场化交易专题
 ├── assets/                   # 静态资源目录（图片、样式图解等）
 └── documents/                # 原始资料与大纲文档
 ```
@@ -55,10 +58,10 @@ energy_book/
 {
   "meta": {
     "title": "中国网储系统性学习手册",
-    "version": "v1.0.0",
-    "lastUpdated": "2026-07-28",
-    "totalSections": 280,
-    "totalWords": 1400000
+    "version": "v3.5",
+    "lastUpdated": "2026-07-29",
+    "totalSections": 308,
+    "totalWords": 1550000
   },
   "levels": [
     {
