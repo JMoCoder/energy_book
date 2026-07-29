@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>串联与并联 — 第2章 电路基础理论 | 网储学习手册</title>
+  <meta name="description" content="深入剖析串联与并联电路的物理本质、分压与分流定律、混联化简技巧，结合圣诞彩灯故障传导与网储电站万级电池电芯1500V高压串并联拓扑等真实工程案例展开讲解。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 1</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电路基础理论</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">串联与并联</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_2_2_基尔霍夫定律.html" class="nav-prev" title="上一节：基尔霍夫定律">← 上节</a>
+        <a href="01_2_4_功率守恒与保护装置.html" class="nav-next" title="下一节：功率守恒与保护装置">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 1</span>
+        <span class="sep">›</span>
+        <span>电路基础理论</span>
+        <span class="sep">›</span>
+        <span>串联与并联</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_2_3</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>串联与并联：构建大功率储能系统的“积木法则”</h1>
+      <p class="chapter-lead">为什么手机电池只有十几瓦时，而网储电站能存放几百兆瓦时？从圣诞树彩灯的停摆隐患到万级锂电电芯的串并联组合，看懂电流与电压在串并联网络中的分配规律，揭开大容量网储系统高压化与模块化设计的物理秘密。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>深刻理解串联与并联的基本特性</strong>：掌握电流、电压、电阻在串联和并联电路中的分布规律与物理机制，能够熟练推导分压与分流公式。</li>
+        <li><strong>熟练掌握混联电路的化简与等效方法</strong>：学会识别复杂电路中的串并联拓扑，运用“由内向外”的节点缩减法完成复杂网络的定量解算。</li>
+        <li><strong>剖析圣诞彩灯案例与故障传导机制</strong>：理解单点开路与短路故障对串并联系统的不同破坏路径，掌握工程中的容错与旁路保护原理。</li>
+        <li><strong>掌握网储电池阵列的串并联拓扑实战</strong>：深刻理解从电池单体（Cell）到模组（Module）再到电池簇（Cluster）的组合逻辑，掌握“木桶效应”、簇间环流风险及组串式变流器的拓扑优势。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：当一盏彩灯熄灭，与一座网储电站掉线</h2>
+      <p>在节日欢快的氛围中，很多人都遇到过这样一个尴尬的情景：一串挂在圣诞树上的彩灯，只要其中一个小灯泡烧坏，整串几十盏彩灯就会瞬间全部熄灭。为了找出那盏“罪魁祸首”的坏灯，你不得不把每一个小灯泡拆下来逐一测试。这种“一坏坏一串”的现象，正是典型的<strong>串联电路（Series Circuit）</strong>特性。</p>
+      <p>然而，当你回到家中按下客厅大灯的开关时，即便书房的台灯烧坏了，客厅和厨房的灯光依然明亮如初，互不干扰。这种“各自独立、互不影响”的供电体验，依靠的则是<strong>并联电路（Parallel Circuit）</strong>的保护。</p>
+      <p>把目光投向当今能源变革的前沿：在宁夏、新疆等地的国家级新能源基地中，一座大型 200MW/400MWh 的电网级储能电站里整齐堆叠着数万甚至数十万只磷酸铁锂电池单体（Cell）。</p>
+      <p>要知道，单只磷酸铁锂电池的额定电压只有区区 <strong>3.2V</strong>，容量也仅有 280Ah 或 314Ah。如果只靠单只电池，连一台工业抽水机都驱动不了。那么，工程技术人员究竟是如何用这些像“小积木”一样的电池单体，搭建出工作电压高达 <strong>1500V</strong>、电量高达 <strong>数兆瓦时（MWh）</strong> 的庞大“电能储水库”的？</p>
+      <p>答案全在于电路连接的最基础法则——<strong>串联与并联</strong>。串联负责“抬升电压”，并联负责“扩大容量”。但在这个过程中，串联引发的“木桶效应”与并联带来的“簇间环流”也给现代储能工程提出了严峻的技术挑战。本节课，我们将从最基本的电路物理法则出发，彻底理清串并联的内在机制与大功率网储系统的构建之道！</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 模块一：串联电路 -->
+      <section>
+        <h2>一、串联电路（Series Circuit）：电压的“接力棒”与电流的“单行道”</h2>
+
+        <h3>1.1 什么是串联？电流路径的唯一性</h3>
+        <p>所谓<strong>串联（Series Connection）</strong>，是指将多个电路元件（如电阻、电池、灯泡）首尾相连、顺次排列接入电路的连接方式。</p>
+        <p>在拓扑学结构上，串联电路最核心的特征是：**整个电路只有一条连续的电流通道**。电荷从电源正极出发，必须像穿过一条没有分支的峡谷一样，依次流过每一个元件，最后回到电源负极。在这个过程中，没有任何分叉口能让电荷分流。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：单车道山路车队与连续水车</strong>
+            <p>想象一条只有单车道的盘山公路，中间没有任何岔路和超车道。一列车队在路上行驶，通过第一个检查站（电阻 $R_1$）的车流量（每分钟通过的汽车数），必须精确等于通过第二个检查站（电阻 $R_2$）的车流量。因为中间没有车能凭空凭空消失或冒出来，**车流量（电流）在整条路上处处相等**。</p>
+            <p>对应地，公路的总海拔落差（总电压 $U_{total}$），等于第一个陡坡落差（$U_1$）加上第二个陡坡落差（$U_2$）的总和；而整条公路对车队的阻碍程度（总电阻 $R_{eq}$），则是各个关卡卡口阻碍作用的直接叠加。</p>
+          </div>
+        </div>
+
+        <h3>1.2 串联电路的三大基本物理规律</h3>
+        <p>基于电荷守恒与能量守恒定律，任何串联电路都严格遵循以下三大基本物理规律：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：串联电路三大定理</h4>
+          <ol>
+            <li><strong>电流处处相等（电流单一行程）</strong>：流过各个串联元件的电流精确相同。
+              $$I_{total} = I_1 = I_2 = \dots = I_n$$
+            </li>
+            <li><strong>总电压等于各分电压之和（电压能量叠加）</strong>：电源两端的总电位差等于各个元件两端电压降的代数和。
+              $$U_{total} = U_1 + U_2 + \dots + U_n$$
+            </li>
+            <li><strong>总等效电阻等于各电阻之和（电阻累加效应）</strong>：串联后的总电阻比其中任何一个单体电阻都要大。
+              $$R_{eq} = R_1 + R_2 + \dots + R_n$$
+            </li>
+          </ol>
+        </div>
+
+        <p>我们可以使用上一节学习的欧姆定律（$U = I \cdot R$）来轻松证明电阻累加公式：</p>
+        <p>因为 $U_{total} = U_1 + U_2$，将 $U_1 = I \cdot R_1$ 和 $U_2 = I \cdot R_2$ 代入可得：</p>
+        $$I \cdot R_{eq} = I \cdot R_1 + I \cdot R_2$$
+        <p>由于电流 $I$ 在串联电路中处处相等且不为零，等式两边同时约去 $I$，立即得出：</p>
+        $$R_{eq} = R_1 + R_2$$
+
+        <h3>1.3 深入剖析：串联分压原理（Voltage Divider）</h3>
+        <p>既然总电压由各个串联电阻共同分担，那么每一个电阻具体能“分到”多少电压呢？这就是电子工程中极其重要的**串联分压原理**。</p>
+
+        <p>根据欧姆定律，对于任意串联电阻 $R_k$，其两端的电压降为：</p>
+        $$U_k = I \cdot R_k = \frac{U_{total}}{R_{eq}} \cdot R_k = U_{total} \cdot \left( \frac{R_k}{R_1 + R_2 + \dots + R_n} \right)$$
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>Tips：串联分压的核心记忆口诀</strong>
+            <p><strong>“电阻越大，分压越多；电阻越小，分压越少；电压分配与电阻成正比！”</strong></p>
+            <p>对于两个串联电阻 $R_1$ 和 $R_2$，其电压分配比例为：</p>
+            $$\frac{U_1}{U_2} = \frac{R_1}{R_2}$$
+            <p>在采样电路中，工程师经常利用一对精密高阻值电阻进行串联分压，将 1500V 的高压直流信号降至 3.3V 或 5V，以便安全地送入 MCU 或 DSP 芯片的 ADC 采样引脚。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 模块二：并联电路 -->
+      <section>
+        <h2>二、并联电路（Parallel Circuit）：电流的“分流河道”与电压的“等电位线”</h2>
+
+        <h3>2.1 什么是并联？多路径分流与公共节点</h3>
+        <p>与串联不同，<strong>并联（Parallel Connection）</strong>是指将多个电路元件的两端分别连接在同一对公共节点上的连接方式。</p>
+        <p>在拓扑结构上，并联电路为电荷流动提供了**多条相互独立的平行通道**。电荷在流入正极节点后，会根据各支路电阻的大小分流通过不同的元件，最后在负极节点重新汇合回到电源。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：多车道高速公路与分流河道</strong>
+            <p>想象一条宽阔的河流遇到江心岛，被拆分成两条平行的支流 $A$ 和 $B$。两条支流的起点都在上游同一个水面高程（节点 $A$），终点都在下游同一个水面高程（节点 $B$）。因此，**两条支流的水位落差（电压）是绝对相等的**。</p>
+            <p>但是，两条支流中通过的水流量（电流）取决于各自河道的宽窄与阻水程度（电阻）：河道越宽、水阻越小（电阻小）的支流，分流到的水流量就越大；总水流量（总电流 $I_{total}$）精确等于两条支流流量的代数和。</p>
+          </div>
+        </div>
+
+        <h3>2.2 并联电路的三大基本物理规律</h3>
+        <p>基于基尔霍夫电流定律（KCL）与电位唯一性原理，任何并联电路均严格遵守以下三大规律：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：并联电路三大定理</h4>
+          <ol>
+            <li><strong>各支路电压绝对相等（电压等电位）</strong>：所有并联元件跨接在相同的两个节点之间，因此它们两端的电压完全一致。
+              $$U_{total} = U_1 = U_2 = \dots = U_n$$
+            </li>
+            <li><strong>总电流等于各支路电流之和（电流分流守恒）</strong>：干路的总电流等于流入各个并联支路电流的代数和。
+              $$I_{total} = I_1 + I_2 + \dots + I_n$$
+            </li>
+            <li><strong>总等效电阻的倒数等于各电阻倒数之和（电阻减小效应）</strong>：并联电阻越多，相当于导线的横截面积变大，总等效电阻**小于任何一个单体电阻**。
+              $$\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \dots + \frac{1}{R_n}$$
+            </li>
+          </ol>
+        </div>
+
+        <p>同样地，利用欧姆定律可推导并联等效电阻公式：</p>
+        <p>根据 KCL，$I_{total} = I_1 + I_2$，代入 $I = \frac{U}{R}$ 得到：</p>
+        $$\frac{U}{R_{eq}} = \frac{U}{R_1} + \frac{U}{R_2}$$
+        <p>两边约去不为零的公共电压 $U$，即得并联电导叠加公式：</p>
+        $$\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} \implies R_{eq} = \frac{R_1 \cdot R_2}{R_1 + R_2}$$
+
+        <h3>2.3 深入剖析：并联分流原理（Current Divider）</h3>
+        <p>当电流面对两条并联支路时，它是如何按比例“选择”路径的？这就是**并联分流原理**。</p>
+
+        <p>对于两个并联电阻 $R_1$ 和 $R_2$，已知总电流为 $I_{total}$，求流过 $R_1$ 的分流 $I_1$：</p>
+        <p>因为 $U = I_{total} \cdot R_{eq} = I_{total} \cdot \left( \frac{R_1 R_2}{R_1 + R_2} \right)$，所以：</p>
+        $$I_1 = \frac{U}{R_1} = I_{total} \cdot \frac{R_2}{R_1 + R_2}$$
+        $$I_2 = \frac{U}{R_2} = I_{total} \cdot \frac{R_1}{R_1 + R_2}$$
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>工程陷阱：并联分流的“反比法则”与低阻过载</strong>
+            <p>特别注意分流公式的分子！流过 $R_1$ 的电流，分子上乘以的是**对面支路的电阻 $R_2$**。即：</p>
+            $$\frac{I_1}{I_2} = \frac{R_2}{R_1}$$
+            <p><strong>“电阻越小，分流越多；电阻越大，分流越少；电流分配与电阻成反比！”</strong></p>
+            <p>在网储工程中，如果两条并联电池簇的线路接触电阻不一致（例如一条支路端子松动电阻偏大，另一条良好电阻极小），电流就会绝大部分冲向低电阻支路，导致该支路过流发热甚至引发热失控！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 模块三：串并联对比与故障传导 -->
+      <section>
+        <h2>三、圣诞彩灯案例与故障传导：串并联的容错博弈</h2>
+
+        <h3>3.1 串并联电路核心特性综合对比</h3>
+        <p>为了让初学者更直观地掌握两种基本拓扑的差异，我们将串联与并联的关键物理特性汇总于下表：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>物理属性</th>
+                <th>串联电路（Series）</th>
+                <th>并联电路（Parallel）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>电流路径</strong></td>
+                <td>只有 1 条单一行程通道</td>
+                <td>具有 2 条或多条平行分流通道</td>
+              </tr>
+              <tr>
+                <td><strong>电流规律 ($I$)</strong></td>
+                <td>处处相等：$I_1 = I_2 = I_{total}$</td>
+                <td>干路分流：$I_{total} = I_1 + I_2 + \dots$</td>
+              </tr>
+              <tr>
+                <td><strong>电压规律 ($U$)</strong></td>
+                <td>分压叠加：$U_{total} = U_1 + U_2 + \dots$</td>
+                <td>各支路相等：$U_1 = U_2 = U_{total}$</td>
+              </tr>
+              <tr>
+                <td><strong>等效电阻 ($R$)</strong></td>
+                <td>电阻累加：$R_{eq} = R_1 + R_2 + \dots$ ($R_{eq} > R_{max}$)</td>
+                <td>倒数累加：$R_{eq} = \frac{R_1 R_2}{R_1 + R_2}$ ($R_{eq} < R_{min}$)</td>
+              </tr>
+              <tr>
+                <td><strong>元件控制独立性</strong></td>
+                <td>相互关联，开路一个全盘瘫痪</td>
+                <td>相互独立，单支路损坏其余正常运行</td>
+              </tr>
+              <tr>
+                <td><strong>主要工程应用</strong></td>
+                <td>储能电池串联提压、采样分压电阻、熔断器保险丝串联保护</td>
+                <td>家用电器并联供电、网储电池簇母线并联扩容量、并联均压容错</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.2 图解物理机制：串联分压 vs 并联分流</h3>
+        <p>下图清晰展示了串联电路中的电压递减与并联电路中的电流分流物理过程：</p>
+
+        <figure class="svg-figure">
+          <svg width="100%" height="340" viewBox="0 0 760 340" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px; padding: 10px;">
+            <defs>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+              </marker>
+              <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#F57C00"/>
+              </marker>
+            </defs>
+
+            <!-- LEFT: Series Circuit -->
+            <g transform="translate(20, 10)">
+              <rect x="0" y="0" width="340" height="300" rx="8" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+              <text x="170" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#1A5F96" text-anchor="middle">图 (a) 串联电路：单路径与分压</text>
+
+              <!-- Circuit Loop -->
+              <path d="M 60 230 L 60 70 L 280 70 L 280 230 Z" fill="none" stroke="#4A5568" stroke-width="2.5"/>
+
+              <!-- DC Power Source -->
+              <circle cx="60" cy="150" r="18" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="60" y="155" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">12V</text>
+
+              <!-- Resistor R1 -->
+              <rect x="120" y="58" width="40" height="24" fill="#E1F5FE" stroke="#0277BD" stroke-width="2"/>
+              <text x="140" y="50" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0277BD" text-anchor="middle">R1 = 4Ω</text>
+              <text x="140" y="100" font-family="sans-serif" font-size="12" fill="#D32F2F" text-anchor="middle">U1 = 8V</text>
+
+              <!-- Resistor R2 -->
+              <rect x="200" y="58" width="40" height="24" fill="#E1F5FE" stroke="#0277BD" stroke-width="2"/>
+              <text x="220" y="50" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0277BD" text-anchor="middle">R2 = 2Ω</text>
+              <text x="220" y="100" font-family="sans-serif" font-size="12" fill="#D32F2F" text-anchor="middle">U2 = 4V</text>
+
+              <!-- Current Arrow -->
+              <path d="M 60 90 L 60 70 L 90 70" fill="none" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrow-blue)"/>
+              <text x="90" y="130" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1A5F96">I = 2A (唯一)</text>
+
+              <text x="170" y="265" font-family="sans-serif" font-size="13" fill="#4A5568" text-anchor="middle">规律：I 相同；U1:U2 = R1:R2 = 2:1</text>
+            </g>
+
+            <!-- RIGHT: Parallel Circuit -->
+            <g transform="translate(400, 10)">
+              <rect x="0" y="0" width="340" height="300" rx="8" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+              <text x="170" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#1A5F96" text-anchor="middle">图 (b) 并联电路：双节点与分流</text>
+
+              <!-- Main Loop Lines -->
+              <line x1="60" y1="70" x2="260" y2="70" stroke="#4A5568" stroke-width="2.5"/>
+              <line x1="60" y1="230" x2="260" y2="230" stroke="#4A5568" stroke-width="2.5"/>
+              <line x1="60" y1="70" x2="60" y2="230" stroke="#4A5568" stroke-width="2.5"/>
+
+              <!-- Branch 1 Line -->
+              <line x1="160" y1="70" x2="160" y2="230" stroke="#4A5568" stroke-width="2.5"/>
+              <!-- Branch 2 Line -->
+              <line x1="260" y1="70" x2="260" y2="230" stroke="#4A5568" stroke-width="2.5"/>
+
+              <!-- DC Power Source -->
+              <circle cx="60" cy="150" r="18" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <text x="60" y="155" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">12V</text>
+
+              <!-- Resistor R1 (Branch 1) -->
+              <rect x="148" y="130" width="24" height="40" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+              <text x="135" y="155" font-family="sans-serif" font-size="12" font-weight="bold" fill="#F57C00" text-anchor="end">R1=6Ω</text>
+              <text x="160" y="185" font-family="sans-serif" font-size="12" fill="#2E7D32" text-anchor="middle">I1=2A</text>
+
+              <!-- Resistor R2 (Branch 2) -->
+              <rect x="248" y="130" width="24" height="40" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+              <text x="280" y="155" font-family="sans-serif" font-size="12" font-weight="bold" fill="#F57C00" text-anchor="start">R2=3Ω</text>
+              <text x="260" y="185" font-family="sans-serif" font-size="12" fill="#2E7D32" text-anchor="middle">I2=4A</text>
+
+              <!-- Nodes A and B -->
+              <circle cx="160" cy="70" r="6" fill="#D32F2F"/>
+              <circle cx="260" cy="70" r="6" fill="#D32F2F"/>
+              <circle cx="160" cy="230" r="6" fill="#0277BD"/>
+              <circle cx="260" cy="230" r="6" fill="#0277BD"/>
+              <text x="210" y="55" font-family="sans-serif" font-size="12" font-weight="bold" fill="#D32F2F" text-anchor="middle">公共正极节点 (12V)</text>
+              <text x="210" y="250" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0277BD" text-anchor="middle">公共负极节点 (0V)</text>
+
+              <!-- Total Current -->
+              <path d="M 60 70 L 110 70" fill="none" stroke="#1A5F96" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+              <text x="110" y="95" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1A5F96">I总 = 6A</text>
+
+              <text x="170" y="285" font-family="sans-serif" font-size="13" fill="#4A5568" text-anchor="middle">规律：U 相同 (12V)；I1:I2 = R2:R1 = 1:2</text>
+            </g>
+          </svg>
+          <figcaption>图 01_2_3.1：串联分压与并联分流机制电气特性拓扑对比</figcaption>
+        </figure>
+
+        <h3>3.3 经典案例剖析：圣诞彩灯的断路连锁与防爆旁路发明</h3>
+        <p>回到开头引出的圣诞彩灯问题。早期的 Christmas Lights 采用纯串联结构（例如将 50 个额定电压 2.5V 的小灯泡串联在 120V 的家庭交流电源上）。每个灯泡分得约 $120 / 50 = 2.4\text{V}$，恰好正常发光。</p>
+        <p>但纯串联架构存在致命缺陷：当其中第 23 号灯泡的细灯丝因为老化断裂时，电路瞬间产生了一处<strong>断路（Open Circuit）</strong>。根据串联单路径原理，电流 $I_{total}$ 立刻降为 0！这就导致其余完好无损的 49 个灯泡也全部熄灭。</p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：小灯泡内部的“防爆穿击旁路”（Shunt Wire）</strong>
+            <p>现代工程技术如何解决串联彩灯的断路隐患？发明家们在每个小灯泡内部的灯丝下方，并联设置了一根涂有防爆氧化绝缘层的铜质**旁路短路线（Shunt Wire）**。</p>
+            <p>在灯泡正常发光时，灯丝电阻很小，绝缘层承受仅 2.4V 的低压，电流全从灯丝走；一旦灯丝烧断发生开路，电源的全部 120V 高压瞬间集中作用在这一个断点上（串联分压：断开处电阻无限大，分得全部电源电压！）。高压击穿旁路线的氧化绝缘层，使旁路线烧熔短接！**这就相当于自动在损坏灯泡处插入了一根闭合导线**，重新恢复整串电路的导通，其余 49 个灯泡得以继续发光！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 模块四：混联电路与化简解题法 -->
+      <section>
+        <h2>四、混联电路（Series-Parallel Combination）与电路化简解题法</h2>
+
+        <h3>4.1 什么是混联电路？</h3>
+        <p>在实际工业生产和网储系统中，纯粹的串联或纯粹的并联是很少见的，绝大多数电路都是将串联和并联组合在一起构成的**混联电路（Series-Parallel Combination）**。</p>
+
+        <h3>4.2 混联电路化简的“四步黄金法则”</h3>
+        <p>面对看似错综复杂的混联网络，只要掌握正确的化简方法，就能像剥洋葱一样将其一层层化简为单一的等效电阻 $R_{eq}$：</p>
+
+        <ol>
+          <li><strong>第一步：识别公共节点</strong>：在电路图上标出所有电流分支与汇合的节点，区分出哪些元件跨接在相同的节点之间（并联），哪些元件首尾相连且中间无分支（串联）。</li>
+          <li><strong>第二步：由内向外，由远及近</strong>：找到距离电源最远或最底层的局部独立分支，优先合并其中的纯串联或纯并联电阻。</li>
+          <li><strong>第三步：画出等效画法</strong>：每合并一组电阻，重新绘制一张简化的电路图，用等效电阻替代原有的电阻组。</li>
+          <li><strong>第四步：逐步回溯求解</strong>：求出电源总电流后，再利用串联分压和并联分流公式，反向逐步推算出各个局部电阻的电压与电流。</li>
+        </ol>
+
+        <figure class="svg-figure">
+          <svg width="100%" height="280" viewBox="0 0 760 280" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px; padding: 10px;">
+            <defs>
+              <marker id="arr-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+              </marker>
+            </defs>
+
+            <!-- STEP 1: Original Circuit -->
+            <g transform="translate(10, 20)">
+              <rect x="0" y="0" width="220" height="220" fill="#FFFFFF" stroke="#CBD5E0" rx="6"/>
+              <text x="110" y="25" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">步骤1：原始混联电路</text>
+
+              <!-- Lines -->
+              <path d="M 30 180 L 30 60 L 90 60" fill="none" stroke="#4A5568" stroke-width="2"/>
+              <path d="M 130 60 L 180 60 L 180 180 L 30 180" fill="none" stroke="#4A5568" stroke-width="2"/>
+              <line x1="140" y1="60" x2="140" y2="180" stroke="#4A5568" stroke-width="2"/>
+
+              <circle cx="30" cy="120" r="12" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5"/>
+              <text x="30" y="124" font-family="sans-serif" font-size="10" fill="#1A5F96" text-anchor="middle">24V</text>
+
+              <!-- R1 -->
+              <rect x="90" y="52" width="30" height="16" fill="#E1F5FE" stroke="#0277BD"/>
+              <text x="105" y="45" font-family="sans-serif" font-size="11" fill="#0277BD" text-anchor="middle">R1=4Ω</text>
+
+              <!-- R2 -->
+              <rect x="132" y="100" width="16" height="30" fill="#FFF3E0" stroke="#F57C00"/>
+              <text x="125" y="118" font-family="sans-serif" font-size="11" fill="#F57C00" text-anchor="end">R2=6Ω</text>
+
+              <!-- R3 -->
+              <rect x="172" y="100" width="16" height="30" fill="#FFF3E0" stroke="#F57C00"/>
+              <text x="195" y="118" font-family="sans-serif" font-size="11" fill="#F57C00" text-anchor="start">R3=3Ω</text>
+
+              <text x="110" y="205" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">先识别局部并联 R2 // R3</text>
+            </g>
+
+            <!-- Arrow 1 to 2 -->
+            <path d="M 240 130 L 270 130" stroke="#1A5F96" stroke-width="3" marker-end="url(#arr-arrow)"/>
+
+            <!-- STEP 2: Intermediate Reduction -->
+            <g transform="translate(280, 20)">
+              <rect x="0" y="0" width="200" height="220" fill="#FFFFFF" stroke="#CBD5E0" rx="6"/>
+              <text x="100" y="25" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">步骤2：局部并联等效</text>
+
+              <path d="M 30 180 L 30 60 L 70 60" fill="none" stroke="#4A5568" stroke-width="2"/>
+              <path d="M 110 60 L 160 60 L 160 180 L 30 180" fill="none" stroke="#4A5568" stroke-width="2"/>
+
+              <circle cx="30" cy="120" r="12" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5"/>
+
+              <!-- R1 -->
+              <rect x="70" y="52" width="30" height="16" fill="#E1F5FE" stroke="#0277BD"/>
+              <text x="85" y="45" font-family="sans-serif" font-size="11" fill="#0277BD" text-anchor="middle">R1=4Ω</text>
+
+              <!-- R23 -->
+              <rect x="115" y="52" width="35" height="16" fill="#E8F5E9" stroke="#2E7D32"/>
+              <text x="132" y="45" font-family="sans-serif" font-size="11" fill="#2E7D32" text-anchor="middle">R23=2Ω</text>
+
+              <text x="100" y="205" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">R23 = 6//3 = 2Ω</text>
+            </g>
+
+            <!-- Arrow 2 to 3 -->
+            <path d="M 490 130 L 520 130" stroke="#1A5F96" stroke-width="3" marker-end="url(#arr-arrow)"/>
+
+            <!-- STEP 3: Final Equivalent Circuit -->
+            <g transform="translate(530, 20)">
+              <rect x="0" y="0" width="220" height="220" fill="#FFFFFF" stroke="#CBD5E0" rx="6"/>
+              <text x="110" y="25" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">步骤3：总等效电阻</text>
+
+              <path d="M 40 180 L 40 60 L 100 60" fill="none" stroke="#4A5568" stroke-width="2"/>
+              <path d="M 140 60 L 180 60 L 180 180 L 40 180" fill="none" stroke="#4A5568" stroke-width="2"/>
+
+              <circle cx="40" cy="120" r="12" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5"/>
+
+              <!-- Req -->
+              <rect x="100" y="52" width="40" height="16" fill="#F3E5F5" stroke="#7B1FA2"/>
+              <text x="120" y="45" font-family="sans-serif" font-size="11" font-weight="bold" fill="#7B1FA2" text-anchor="middle">Req=6Ω</text>
+
+              <text x="110" y="140" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1A5F96" text-anchor="middle">I总 = 24V / 6Ω = 4A</text>
+              <text x="110" y="205" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">Req = R1 + R23 = 4 + 2 = 6Ω</text>
+            </g>
+          </svg>
+          <figcaption>图 01_2_3.2：混联电路“由内向外”三步递进等效化简过程示意图</figcaption>
+        </figure>
+
+        <h3>4.3 经典计算例题与全流程拆解</h3>
+        <p><strong>【例题】</strong> 在如图 01_2_3.2 所示的混联电路中，直流电源电压 $U = 24\text{V}$，电阻 $R_1 = 4\Omega$，$R_2 = 6\Omega$，$R_3 = 3\Omega$。求：</p>
+        <ul>
+          <li>(1) 电路的等效总电阻 $R_{eq}$；</li>
+          <li>(2) 电源输出的总电流 $I_{total}$；</li>
+          <li>(3) 流过电阻 $R_2$ 和 $R_3$ 的分路电流 $I_2$ 与 $I_3$。</li>
+        </ul>
+
+        <p><strong>【详细解答过程】</strong></p>
+        <p><strong>第一步：求局部并联电阻 $R_{23}$</strong></p>
+        <p>电阻 $R_2$ 与 $R_3$ 并联跨接在节点之间，利用两电阻并联快捷公式：</p>
+        $$R_{23} = \frac{R_2 \cdot R_3}{R_2 + R_3} = \frac{6 \times 3}{6 + 3} = \frac{18}{9} = 2\,\Omega$$
+
+        <p><strong>第二步：求总等效电阻 $R_{eq}$</strong></p>
+        <p>将并联部分化简为 $R_{23}$ 后，$R_1$ 与 $R_{23}$ 形成纯串联关系：</p>
+        $$R_{eq} = R_1 + R_{23} = 4\,\Omega + 2\,\Omega = 6\,\Omega$$
+
+        <p><strong>第三步：求总干路电流 $I_{total}$</strong></p>
+        <p>根据全电路欧姆定律：</p>
+        $$I_{total} = \frac{U}{R_{eq}} = \frac{24\text{V}}{6\,\Omega} = 4\text{A}$$
+
+        <p><strong>第四步：求局部电压降 $U_{23}$ 与分路电流 $I_2, I_3$</strong></p>
+        <p>根据串联分压定理，局部并联两端的电压降为：</p>
+        $$U_{23} = I_{total} \cdot R_{23} = 4\text{A} \times 2\,\Omega = 8\text{V}$$
+        <p>再利用欧姆定律或分流公式求解各自支路电流：</p>
+        $$I_2 = \frac{U_{23}}{R_2} = \frac{8\text{V}}{6\,\Omega} = 1.33\text{A}$$
+        $$I_3 = \frac{U_{23}}{R_3} = \frac{8\text{V}}{3\,\Omega} = 2.67\text{A}$$
+        <p>自查验证：$I_2 + I_3 = 1.33\text{A} + 2.67\text{A} = 4.0\text{A} = I_{total}$，完全符合基尔霍夫电流定律（KCL）！</p>
+      </section>
+
+      <!-- 模块五：网储工程实战 -->
+      <section>
+        <h2>五、网储工程实战：从 3.2V 电池电芯到 1500V 兆瓦级储能舱</h2>
+
+        <h3>5.1 储能电池的“积木塔”架构</h3>
+        <p>理解了串联与并联的理论基础后，我们就能轻松揭开大容量网储电站的内部结构谜底。</p>
+        <p>在大型锂电池储能系统中，为了达到兆瓦（MW）级的输出功率与兆瓦时（MWh）级的储能容量，系统采用了极度严密的四级模块化层次结构：</p>
+
+        <div class="key-concept">
+          <h4>📌 储能系统四级物理与电气拓扑</h4>
+          <ul>
+            <li><strong>1. 电池单体（Cell）</strong>：最小化学储能单元。以大容量磷酸铁锂（LFP）电池为例，单体标称电压为 <strong>3.2V</strong>，容量通常为 280Ah 或 314Ah。</li>
+            <li><strong>2. 电池模组（Module）</strong>：由十几只电芯通过铜排**先串联或先并联**焊接在一起，封装成带有外壳和温度传感器的独立模组（如 1P16S 模组，电压约为 $3.2\text{V} \times 16 = 51.2\text{V}$）。</li>
+            <li><strong>3. 电池簇（Cluster / String）</strong>：将 15-26 个电池模组在电池柜内**高压串联**，形成额定电压高达 <strong>1000V - 1500V</strong> 的高压直流电池簇。</li>
+            <li><strong>4. 储能系统舱（Container System）</strong>：将多条高压电池簇在直流侧**母线并联**，连接到储能变流器（PCS）的直流输入端，形成 3.72MWh 或 5MWh 的储能集装箱系统。</li>
+          </ul>
+        </div>
+
+        <figure class="svg-figure">
+          <svg width="100%" height="320" viewBox="0 0 760 320" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px; padding: 10px;">
+            <defs>
+              <marker id="arrow-green2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E7D32"/>
+              </marker>
+            </defs>
+
+            <!-- CELL -->
+            <g transform="translate(10, 20)">
+              <rect x="0" y="0" width="130" height="260" rx="6" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <text x="65" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">级次 1：单体 Cell</text>
+
+              <rect x="35" y="70" width="60" height="110" rx="4" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+              <rect x="45" y="55" width="12" height="15" fill="#D32F2F"/>
+              <rect x="73" y="55" width="12" height="15" fill="#4A5568"/>
+              <text x="65" y="125" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1A5F96" text-anchor="middle">3.2V</text>
+              <text x="65" y="145" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">280Ah</text>
+
+              <text x="65" y="225" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">基础电化学单元</text>
+            </g>
+
+            <path d="M 145 150 L 165 150" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#arrow-green2)"/>
+
+            <!-- MODULE -->
+            <g transform="translate(170, 20)">
+              <rect x="0" y="0" width="150" height="260" rx="6" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <text x="75" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">级次 2：模组 Module</text>
+
+              <!-- Series cells in module -->
+              <g transform="translate(25, 70)">
+                <rect x="0" y="0" width="100" height="90" rx="4" fill="#E1F5FE" stroke="#0277BD" stroke-width="1.5"/>
+                <text x="50" y="45" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0277BD" text-anchor="middle">1P16S 串联</text>
+                <text x="50" y="65" font-family="sans-serif" font-size="12" fill="#D32F2F" text-anchor="middle">51.2V / 280Ah</text>
+              </g>
+
+              <text x="75" y="210" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">16个单体串联</text>
+              <text x="75" y="230" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">能量约为 14.3kWh</text>
+            </g>
+
+            <path d="M 325 150 L 345 150" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#arrow-green2)"/>
+
+            <!-- CLUSTER -->
+            <g transform="translate(350, 20)">
+              <rect x="0" y="0" width="170" height="260" rx="6" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <text x="85" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">级次 3：电池簇 Cluster</text>
+
+              <g transform="translate(20, 60)">
+                <rect x="0" y="0" width="130" height="120" rx="4" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+                <text x="65" y="40" font-family="sans-serif" font-size="13" font-weight="bold" fill="#F57C00" text-anchor="middle">26个模组高压串联</text>
+                <text x="65" y="70" font-family="sans-serif" font-size="14" font-weight="bold" fill="#D32F2F" text-anchor="middle">1331V - 1500V</text>
+                <text x="65" y="95" font-family="sans-serif" font-size="12" fill="#4A5568" text-anchor="middle">容量: 373kWh</text>
+              </g>
+
+              <text x="85" y="225" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">高压级联大幅降低电流损耗</text>
+            </g>
+
+            <path d="M 525 150 L 545 150" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#arrow-green2)"/>
+
+            <!-- CONTAINER -->
+            <g transform="translate(550, 20)">
+              <rect x="0" y="0" width="200" height="260" rx="6" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <text x="100" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A5F96" text-anchor="middle">级次 4：储能舱 System</text>
+
+              <g transform="translate(20, 60)">
+                <rect x="0" y="0" width="160" height="120" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+                <text x="80" y="40" font-family="sans-serif" font-size="13" font-weight="bold" fill="#2E7D32" text-anchor="middle">10-14簇直流并联</text>
+                <text x="80" y="70" font-family="sans-serif" font-size="15" font-weight="bold" fill="#1A5F96" text-anchor="middle">1500V 直流母线</text>
+                <text x="80" y="95" font-family="sans-serif" font-size="13" font-weight="bold" fill="#D32F2F" text-anchor="middle">总能量: 5.0MWh</text>
+              </g>
+
+              <text x="100" y="225" font-family="sans-serif" font-size="11" fill="#718096" text-anchor="middle">汇入PCS完成交直流转换</text>
+            </g>
+          </svg>
+          <figcaption>图 01_2_3.3：网储电站电池单体到 5MWh 储能集装箱舱的串并联拓扑递进图</figcaption>
+        </figure>
+
+        <h3>5.2 为什么行业全面转向 1500V 高压串联？——电能损耗与成本计算</h3>
+        <p>在 2020 年以前，工业储能系统的主流电压平台是 1000V。而近年来，宁德时代、比亚迪、阳采储能等行业巨头全面推行 <strong>1500V 高压系统</strong>。这背后的核心驱动力，正源自串联电路的物理特性！</p>
+
+        <p>根据焦耳定律，电缆上的热损耗功率为：</p>
+        $$P_{loss} = I^2 \cdot R_{line}$$
+
+        <p>假设要传输 $P = 1.5\text{MW}$ 的恒定功率：</p>
+        <ul>
+          <li>在 <strong>1000V 平台</strong>下，直流母线电流为：
+            $$I_{1000V} = \frac{1,500,000\text{W}}{1000\text{V}} = 1500\text{A}$$
+          </li>
+          <li>在 <strong>1500V 高压串联平台</strong>下，直流母线电流降至：
+            $$I_{1500V} = \frac{1,500,000\text{W}}{1500\text{V}} = 1000\text{A}$$
+          </li>
+        </ul>
+
+        <p>通过提高串联电芯数量将电压提升到 1.5 倍，电流降为原来的 $\frac{2}{3}$（66.7%）。由 $P_{loss} \propto I^2$ 可知，**线路铜损耗骤降至原来的 $(\frac{2}{3})^2 = \frac{4}{9} \approx 44.4\%$，发热量减少了 55.6%！** 不仅大幅提升了充放电循环效率，还能使用更细的铜缆，省下数以百万计的电缆材料成本。</p>
+
+        <h3>5.3 串联与并联的工程致命威胁：“木桶效应”与“簇间环流”</h3>
+        <p>尽管串并联带来了高压和大容量，但也给电池管理系统（BMS）带来了两大工程痛点：</p>
+
+        <h4>痛点一：串联电路的“短板效应”（木桶效应）</h4>
+        <p>在一串由 416 只电芯高压串联构成的电池簇中，由于制造公差，假设其中第 108 号电芯的实际容量只有 270Ah，而其余电芯均有 280Ah。</p>
+        <p>根据串联电流处处相等的铁律，充电时，第 108 号电芯会最先充满（达到 3.65V 截止电压）。此时为了保护该电芯不被过充电充爆，**BMS 必须强行叫停整条电池簇的充电！** 这就导致其余 415 只电芯虽然还没吃饱，也只能陪着停止充电。整簇电池的可用容量被最差的那只电芯“一票否决”。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>工程警示：并联电路的“簇间不平衡环流”（Circulating Current）</strong>
+            <p>在传统的集中式储能系统中，10-14 条电池簇在直流侧直接**并联**接到同一个直流母线上。如果第 1 簇电池的 SOC（剩余电量）为 90%（开路电压 1420V），而第 2 簇电池的 SOC 为 50%（开路电压 1350V），由于并联强制节点电压一致，两簇之间立刻存在高达 $\Delta U = 70\text{V}$ 的压差！</p>
+            <p>由于电池簇内阻极低（通常仅几十毫欧），根据欧姆定律：</p>
+            $$I_{环流} = \frac{\Delta U}{R_{cluster1} + R_{cluster2}} = \frac{70\text{V}}{0.1\,\Omega + 0.1\,\Omega} = 350\text{A}!$$
+            <p>高达 350A 的强剧环流会从高电压簇倒灌流向低电压簇，造成严重的无功发热、熔断器炸裂甚至电池热失控！</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：组串式 PCS 如何打破并联环流魔咒？</strong>
+            <p>在宁夏东山 200MW/400MWh 共享储能示范电站中，工程选型采用了现代先进的**组串式储能变流器（String PCS）**架构，替代了传统的集中式大机方案。</p>
+            <p><strong>技术突破机制</strong>：组串式 PCS 实现了“一簇一反向隔离/一簇一独立 MPPT DC/DC 转换”。把以往在直流侧盲目并联的电池簇，在电气上完全解耦隔离！每个电池簇单独接进一通道独立 DC/DC 变换器，由电力电子开关在软件算法下动态调节升压比。即使簇间存在 100V 的开路压差，各簇也能在各自的最佳状态下独立充放电，**彻底从物理上消除了簇间环流灾难，使储能系统全生命周期放电量提升了 7% 以上！**</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 模块六：本节小结 -->
+      <section class="chapter-summary">
+        <h2>📝 本节小结</h2>
+        <ul>
+          <li><strong>串联本质与规律</strong>：串联是首尾相连的单行程电路，电流处处相等（$I_{total}=I_1=I_2$），总电压分压叠加（$U_{total}=U_1+U_2$），总电阻累加（$R_{eq}=R_1+R_2$）。电压分配与电阻成正比（$U_1/U_2 = R_1/R_2$）。</li>
+          <li><strong>并联本质与规律</strong>：并联是跨接在公共节点上的多路径电路，各支路电压绝对相等（$U_{total}=U_1=U_2$），干路电流分流守恒（$I_{total}=I_1+I_2$），总电阻倒数叠加（$R_{eq} = \frac{R_1 R_2}{R_1 + R_2}$）。电流分配与电阻成反比（$I_1/I_2 = R_2/R_1$）。</li>
+          <li><strong>故障影响</strong>：串联电路单点开路会导致全盘断电（防爆旁路短路线可救急）；并联电路单支路损坏不影响其余支路，但需防止单支路短路拉垮全局节点电压。</li>
+          <li><strong>网储工程应用</strong>：网储电池通过“电芯串联”提升电压至 1500V 以剧烈降低线路铜损；通过“电池簇并联”扩大总容量。工程上必须依靠 BMS 均衡解决串联的“木桶短板效应”，并采用组串式 PCS 解决并联的“簇间倒灌环流”。</li>
+        </ul>
+      </section>
+
+      <!-- 模块七：知识测验 -->
+      <section class="quiz-section">
+        <h2>✅ 知识测验</h2>
+
+        <!-- Q1 -->
+        <div class="quiz-question" id="q1">
+          <p class="question-text"><strong>1.</strong> 两个电阻串联在 12V 的恒压直流电源上，其中 $R_1 = 20\,\Omega$，$R_2 = 40\,\Omega$。请问电阻 $R_2$ 两端的电压降 $U_2$ 以及电路的总电流 $I_{total}$ 分别是多少？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1" value="A"> A. $U_2 = 4\text{V},\, I_{total} = 0.6\text{A}$</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="B"> B. $U_2 = 8\text{V},\, I_{total} = 0.2\text{A}$</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="C"> C. $U_2 = 6\text{V},\, I_{total} = 0.3\text{A}$</label>
+            <label class="quiz-option"><input type="radio" name="q1" value="D"> D. $U_2 = 8\text{V},\, I_{total} = 0.6\text{A}$</label>
+          </div>
+          <div class="quiz-answer" id="q1-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>深度解析</strong>：</p>
+            <ul>
+              <li><strong>正确项 B</strong>：串联总电阻 $R_{eq} = R_1 + R_2 = 20\,\Omega + 40\,\Omega = 60\,\Omega$。根据欧姆定律，总电流 $I_{total} = U / R_{eq} = 12\text{V} / 60\,\Omega = 0.2\text{A}$。根据串联分压公式，$U_2 = I_{total} \times R_2 = 0.2\text{A} \times 40\,\Omega = 8\text{V}$（或用比例法：$12\text{V} \times \frac{40}{20+40} = 8\text{V}$）。因此 B 完全正确。</li>
+              <li><strong>错误项 A</strong>：混淆了分压比例，错误地将较小电阻 $R_1$ 的分压（4V）当成了 $R_2$ 的分压，且电流计算错误。</li>
+              <li><strong>错误项 C</strong>：误以为两个电阻平分电压（各自6V），忽视了串联分压与电阻阻值成正比的规律。</li>
+              <li><strong>错误项 D</strong>：分压计算正确（8V），但计算电流时误用了并联公式导致电流算出 0.6A（算成了 $12/20$）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-question" id="q2">
+          <p class="question-text"><strong>2.</strong> 将两个电阻 $R_1 = 10\,\Omega$ 和 $R_2 = 40\,\Omega$ 并联后接入电路，测得干路总电流为 5A。请问流过电阻 $R_1$ 的分路电流 $I_1$ 是多少？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 1.0A</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 2.5A</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 4.0A</label>
+            <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 5.0A</label>
+          </div>
+          <div class="quiz-answer" id="q2-answer" style="display:none">
+            <p>✅ <strong>正确答案：C</strong></p>
+            <p>📖 <strong>深度解析</strong>：</p>
+            <ul>
+              <li><strong>正确项 C</strong>：根据并联分流反比公式：$I_1 = I_{total} \times \frac{R_2}{R_1 + R_2} = 5\text{A} \times \frac{40}{10 + 40} = 5 \times \frac{40}{50} = 4.0\text{A}$。因为 $R_1$ 的阻值小（10Ω），所以它分走了大头电流（4A），而高阻值支路 $R_2$ 仅分走 1A。答案为 C。</li>
+              <li><strong>错误项 A</strong>：算成了高阻值支路 $R_2$ 的电流（1.0A）。</li>
+              <li><strong>错误项 B</strong>：误以为干路电流被两个电阻等分（各自2.5A），忽视了并联分流与电阻大小成反比的规律。</li>
+              <li><strong>错误项 D</strong>：误以为干路总电流全部流过 $R_1$，忽视了并联支路的分流作用。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-question" id="q3">
+          <p class="question-text"><strong>3.</strong> 在一个由 400 只单体磷酸铁锂电池（每只 3.2V）高压串联构成的 1280V 储能电池簇中，若其中第 50 号电池由于内部故障突然发生“内部短路”（短路后该单体两端电压降变为 0V，但电流仍能通过）。在 BMS 未切断回路前，该电池簇会发生什么现象？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 整个电池簇电流瞬间降为 0A，完全断路瘫痪</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 电池簇总端电压小幅下降约 3.2V，其余 399 只电芯分担的总电压相对升高</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 导致其余 399 只电池也瞬间全部内部短路坏掉</label>
+            <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 电池簇总电阻剧烈增大，造成输出功率大幅上升</label>
+          </div>
+          <div class="quiz-answer" id="q3-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>深度解析</strong>：</p>
+            <ul>
+              <li><strong>正确项 B</strong>：串联电路中，某一个元件短路（相当于变为一根无阻导线）不会断开整条电流路径。该故障电芯分得的电压变为 0V，使簇总电动势减少 3.2V。如果母线维持总高压，其余完好的 399 只电芯两端分担的电压会轻微上升。故 B 项符合物理事实。</li>
+              <li><strong>错误项 A</strong>：混淆了“开路（断路）”与“短路”。开路才会使电流降为 0A；短路时电流通路依然闭合。</li>
+              <li><strong>错误项 C</strong>：单个电芯短路不会引发串联链条上其他独立电芯的瞬间短路，其余电芯化学结构依然完好。</li>
+              <li><strong>错误项 D</strong>：元件短路后其等效电阻变为 0，导致总串联电阻小幅减小，而非“剧烈增大”。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-question" id="q4">
+          <p class="question-text"><strong>4.</strong> 关于网储电站中电池阵列串联时的“木桶效应”（Short-board Effect），下列说法中最为准确的是：</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 串联电池簇的最高充放电电流受限于簇内内阻最大的那只电池</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 串联电池簇的可用总容量受限于簇内实际可用容量最小（或最快达到充放电截止电压）的那只电池</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 只要将电池串联，每个电池的容量就会自动相加翻倍</label>
+            <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 木桶效应可以通过在电池簇外部简单并联一个大电阻来彻底消除</label>
+          </div>
+          <div class="quiz-answer" id="q4-answer" style="display:none">
+            <p>✅ <strong>正确答案：B</strong></p>
+            <p>📖 <strong>深度解析</strong>：</p>
+            <ul>
+              <li><strong>正确项 B</strong>：在串联电路中，电流处处相等。充电或放电时，所有电芯转移相同的电荷量。一旦最差的那一只电芯率先触及上限电压（过充隐患）或下限电压（过放隐患），BMS 必须叫停整簇工作，导致其余容量大、性能好的电池无法发挥全部容量。这就是串联电池“木桶效应”的经典定义。</li>
+              <li><strong>错误项 A</strong>：内阻大主要影响发热和分压，而决定充放电提前截止停止的是电芯的“可用电量容量阈值”。</li>
+              <li><strong>错误项 C</strong>：电池串联叠加的是电压（$U_{total} = U_1 + U_2$），容量（Ah）保持单体水平不变；并联才是容量（Ah）叠加！</li>
+              <li><strong>错误项 D</strong>：外接电阻只会消耗无功电能，无法消除串联内部电芯化学容量的不一致性，必须依赖 BMS 主动/被动均衡电路。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-question" id="q5">
+          <p class="question-text"><strong>5.</strong> 大型储能集装箱将多条高压电池簇在直流侧直接并联接入母线时，要求各电池簇在并联瞬间的开路电压差必须极小（通常低于 10V）。其主要工程原因是什么？</p>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 防止高电压电池簇向低电压电池簇倒灌巨大的“簇间环流”，导致电缆过热或开关炸裂</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 电压相差太大会导致并联电路的总等效电阻变为负数</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 直流电无法在并联电路中流动，只有交流电才能并联</label>
+            <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 电压差过大社会使电池内部的锂离子全部转化为铅酸化学物质</label>
+          </div>
+          <div class="quiz-answer" id="q5-answer" style="display:none">
+            <p>✅ <strong>正确答案：A</strong></p>
+            <p>📖 <strong>深度解析</strong>：</p>
+            <ul>
+              <li><strong>正确项 A</strong>：根据并联电路特点，两端跨接在同一母线上的节点电压强制相同。若簇 1 电压 1400V，簇 2 电压 1350V，两簇并联闭合瞬间存在 50V 压差。由于电池簇内部电阻微乎其微（如 $0.1\,\Omega$），将产生 $I = 50 / 0.2 = 250\text{A}$ 的巨额倒灌环流。这会触发严重的过流保护断开甚至引发烧毁。答案为 A。</li>
+              <li><strong>错误项 B</strong>：电阻是物理元件的固有属性，绝不会因为电压差变为负数。</li>
+              <li><strong>错误项 C</strong>：直流电完全可以并联供电，现代所有储能电池舱直流侧均采用并联拓扑扩展总电量。</li>
+              <li><strong>错误项 D</strong>：属于荒谬选项，电位差不可能改变锂元素的原子核与化学元素种类。</li>
+            </ul>
+          </div>
+        </div>
+
+        <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+        <p class="quiz-score" id="score-display"></p>
+      </section>
+
+      <!-- ⑧ 章节底部导航 -->
+      <nav class="bottom-nav">
+        <a href="01_2_2_基尔霍夫定律.html" class="bottom-nav-prev">
+          <span class="bnav-label">← 上一节</span>
+          <span class="bnav-title">基尔霍夫定律</span>
+        </a>
+        <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+        <a href="01_2_4_功率守恒与保护装置.html" class="bottom-nav-next">
+          <span class="bnav-label">下一节 →</span>
+          <span class="bnav-title">功率守恒与保护装置</span>
+        </a>
+      </nav>
+
+      <!-- ⑨ 相关章节 -->
+      <section class="cross-refs">
+        <h2>🔗 相关章节</h2>
+        <ul class="cross-ref-list">
+          <li><a href="01_1_3_电阻与欧姆定律.html">01_1_3 电阻与欧姆定律</a>（理解电阻本构关系与欧姆定律）</li>
+          <li><a href="01_2_2_基尔霍夫定律.html">01_2_2 基尔霍夫定律</a>（掌握节点 KCL 与回路 KVL 拓扑法则）</li>
+          <li><a href="01_2_4_功率守恒与保护装置.html">01_2_4 功率守恒与保护装置</a>（学习短路保护、熔断器与断路器选型）</li>
+          <li><a href="../../index.html">返回目录主页</a></li>
+        </ul>
+      </section>
+
+      <!-- ⑩ 页脚 -->
+      <footer class="chapter-footer">
+        <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_2_3</span></p>
+      </footer>
+
+    </div>
+
+    <!-- 返回页首悬浮按钮 -->
+    <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+    <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
