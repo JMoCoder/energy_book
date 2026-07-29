@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电路元件与电路图 — 第2章 电路基础理论 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析理想电路元件的集中参数物理模型、V-I本构关系，系统解读国标GB/T 4728与IEC 60617电气符号体系，并结合中国200MW/400MWh共享储能电站一次单线图（SLD）与二次控制图纸开展工程实战解读。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <!-- MathJax 数学公式渲染引擎 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL 1</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电路基础理论</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">电路元件与电路图</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_1_4_功率电能与电费单.html" class="nav-prev" title="上一节：功率·电能·你的电费单">← 上节</a>
+        <a href="01_2_2_基尔霍夫定律.html" class="nav-next" title="下一节：基尔霍夫定律">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL 1</span>
+        <span class="sep">›</span>
+        <span>电路基础理论</span>
+        <span class="sep">›</span>
+        <span>电路元件与电路图</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_2_1</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>电路元件与电路图</h1>
+      <p class="chapter-lead">从理想电路元件的物理建模到百兆瓦级电站高压一次单线图与二次控制原理图精读——掌握电网级储能工程的视觉语言与电路拓扑解构法则。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>掌握理想电路元件的集中参数模型与V-I本构关系</strong>：深入理解无源元件（电阻 $R$、电容 $C$、电感 $L$）与有源元件（独立电源、受控源）的物理特性，明确集中参数电路（Lumped Parameter Circuits）的工程适用边界。</li>
+        <li><strong>熟练识读网储工程电气符号与标准规范</strong>：掌握国家标准 GB/T 4728（IEC 60617）规范下直流断路器、快熔、接触器、PCS逆变桥、BMS采样节点及三绕组变压器等核心设备的符号表示法。</li>
+        <li><strong>建立大型储能系统图纸的分级拓扑解构能力</strong>：清晰区分一次单线图（SLD）、二次控制原理图与接线图的绘制逻辑，掌握从电能主干流到控制信号链的快速追踪技巧。</li>
+        <li><strong>结合中国大型网储电站图纸完成故障排查实操分析</strong>：以宁夏某 200MW/400MWh 共享储能电站 1500V 直流舱与 5MW PCS 升压一体机电路图为例，学会通过图纸准确定位硬件保护联锁与故障脱扣回路。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：零下 30°C 的深夜告警与一张看不懂的二次控制图纸</h2>
+      <p>青海海西州戈壁滩上，夜间气温已降至零下 30°C。在一座额定容量为 200MW/400MWh 的大型共享储能电站中央控制室内，警报声猝然响起——“3号储能单元 1500V 直流主回路绝缘下降，触发高压断路器紧急跳闸！”</p>
+      <p>值班运行工程师迅速打开控制柜面板，几十排密密麻麻的端子排、中间继电器、PLC 扩展模块与交流接触器跃然眼前。在数十万个接点与上百公里长的控制线缆构成的“电网迷宫”中，故障究竟发生在哪个环节？是 BMS（电池管理系统）的主接触器辅助触点误动？还是高压箱内防雷 SPD 击穿导致接地短路？抑或是热失控喷淋联锁的硬件脱扣线圈（Shunt Trip Coil）被误触发？</p>
+      <p>面对紧急状况，工程师迅速调出了该单元的《二次控制原理图》与《高压一次单线图（SLD）》。图纸上没有复杂的电池外观图或真实的逆变器立体模型，取而代之的是由长方形、双圆环、斜杠、带箭头的受控源等几何线条构成的标准电气符号。如果看不懂这些电气符号背后的物理含义，或者混淆了常开（NO）与常闭（NC）触点的逻辑，维保人员就可能拆错柜门、接错线号，甚至引发高压弧光短路等灾难性事故。</p>
+      <p>现实世界中体形庞大的电池预制舱、兆瓦级升压变压器与复杂电子线路，究竟是如何被抽象为几类简单的理想电路元件的？电气工程师又是如何用一套通用的工程符号语言，将复杂的电能量流与控制逻辑精准呈现在一张图纸上的？本节将带你建立理想电路元件的数学物理模型，系统破化网储电路图纸的识读密码。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、理想电路元件与集中参数模型：电能世界的抽象艺术</h2>
+
+        <h3>1.1 集中参数假设（Lumped Parameter Assumption）及其工程边界</h3>
+        <p>在研究储能系统或输电线路时，现实中的电气设备（如一根长 10 米的紫铜母线、一块磷酸铁锂电芯或一台变压器）都具有分布在空间各个位置的质量、电阻、电容和电感。这种电磁特性在空间连续分布的电路称为<strong>分布参数电路（Distributed Parameter Circuit）</strong>。</p>
+        <p>直接求解分布参数电路需要用到复杂的麦克斯韦方程组（Maxwell's Equations），这在工程实践中极其繁琐。为了简化分析，电路理论提出了著名的<strong>集中参数假设（Lumped Parameter Assumption）</strong>：如果电路结构的物理几何尺寸 $D$ 远小于电路工作信号的电磁波波长 $\lambda$，即满足：</p>
+        $$D \ll \lambda = \frac{c}{f}$$
+        <p>其中 $c \approx 3 \times 10^8\text{ m/s}$ 为光速，$f$ 为电路工作频率。此时，电磁场在器件内部的传播时间可以忽略不计，我们可以将器件的电磁特性集中“砸”在某几个具有明确物理特性的点状元件上，称为<strong>集中参数元件（Lumped Element）</strong>。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>网储工程中的集中参数边界判断</strong>
+            <p>在 50Hz 工频交流电网中，电磁波波长 $\lambda = \frac{3 \times 10^8}{50} = 6,000\text{ km}$。一个占地数百米的 200MW 储能电站，其物理尺寸 $D \approx 500\text{ m} \ll 6000\text{ km}$，完全满足集中参数假设。因此，电站内的母线、开关、变压器均可抽象为集中参数元件。然而，在储能变流器（PCS）内部，IGBT 开关频率高达 $10\text{ kHz} \sim 20\text{ kHz}$，甚至高频谐波达数兆赫兹（MHz），此时 PCB 板上长距离走线产生的分布寄生电感（Parasitic Inductance）会导致严重的电压尖峰，必须使用分布参数或传输线理论进行高频抑制设计。</p>
+          </div>
+        </div>
+
+        <h3>1.2 无源理想元件（Passive Elements）及其物理本构关系</h3>
+        <p>在集中参数电路中，无源元件不产生电能，仅消耗电能或将电能与磁场/电场能进行无损转换。理想无源元件包含三大基础元件：</p>
+
+        <h4>1. 理想电阻（Ideal Resistor, $R$）</h4>
+        <p>理想电阻是唯一<strong>只消耗电能并将其单向不可逆地转化为热能（焦耳热）</strong>的元件。其伏安特性（V-I Relation）严格遵循欧姆定律：</p>
+        $$v(t) = R \cdot i(t)$$
+        <p>电阻在任何时刻吸收的瞬时功率为 $p(t) = v(t)i(t) = i^2(t)R \ge 0$，表明其永远为能量的接收者（Sinker）。</p>
+
+        <h4>2. 理想电容（Ideal Capacitor, $C$）</h4>
+        <p>理想电容是<strong>储存电场能量</strong>的无源元件。它在两极板间积累电荷 $q(t) = C \cdot v(t)$，其端电压与流过的电流满足微分本构关系：</p>
+        $$i(t) = C \frac{dv(t)}{dt}$$
+        <p>理想电容在 $t$ 时刻储存的电场能量为：</p>
+        $$E_C(t) = \frac{1}{2} C v^2(t)$$
+        <p>当端电压恒定时（$\frac{dv}{dt} = 0$），$i(t) = 0$，因此理想电容具有“隔直流、通交流”的物理特性。在储能变流器（PCS）直流侧，大容量 DC-Link 支撑电容通过充放电吸收由 IGBT 高频开关引起的纹波电流，稳定直流母线电压。</p>
+
+        <h4>3. 理想电感（Ideal Inductor, $L$）</h4>
+        <p>理想电感是<strong>储存磁场能量</strong>的无源元件。当电流流过线圈时产生磁通 $\psi(t) = L \cdot i(t)$，根据法拉第电磁感应定律，其感应电动势（端电压）满足：</p>
+        $$v(t) = L \frac{di(t)}{dt}$$
+        <p>理想电感在 $t$ 时刻储存的磁场能量为：</p>
+        $$E_L(t) = \frac{1}{2} L i^2(t)$$
+        <p>当直流电流稳定时（$\frac{di}{dt} = 0$），端电压 $v(t) = 0$，电感相当于短路；而当电流发生突变时，电感会产生极高的反电动势阻碍电流变化，因此电感具有“通直流、阻交流”的物理特性。在网储 PCS 的 AC 输出端，LCL 滤波电感被用来滤除 PWM 调制产生的切频高次谐波。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：三大理想无源元件物理特性对比</h4>
+          <p>
+            • <strong>电阻 $R$</strong>：$v = Ri$，消耗能量，$p = i^2R \ge 0$，无记忆特性；<br>
+            • <strong>电容 $C$</strong>：$i = C \frac{dv}{dt}$，储存电场能 $E = \frac{1}{2}Cv^2$，电压不能突变，具有“记忆”电压历史的动态特性；<br>
+            • <strong>电感 $L$</strong>：$v = L \frac{di}{dt}$，储存磁场能 $E = \frac{1}{2}Li^2$，电流不能突变，具有“记忆”电流历史的动态特性。
+          </p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：管道水流系统中的电路无源三要素</strong>
+            <p>如果将电路比作自来水管道系统：<br>
+            • <strong>电阻 $R$</strong> 就像管道中填充的细沙或缩颈阀门，水流通过时会因摩擦损耗水压（电压降），并将水能转化为热能；<br>
+            • <strong>电容 $C$</strong> 就像一个装有弹性橡皮膜的膨胀水箱，当进水压力升高时，橡皮膜被推开储水（储电荷）；当外部水压降低时，橡皮膜弹回补水，从而稳定管网水压；<br>
+            • <strong>电感 $L$</strong> 就像一个装有重型叶轮的阀门，当刚开阀门时，重型叶轮旋转惯性极大阻碍水流迅速建立；而当突然关闭阀门时，旋转的叶轮由于惯性会继续推水，产生巨大的“水锤效应”（高电压反峰）。</p>
+          </div>
+        </div>
+
+        <h3>1.3 有源理想元件：独立源与受控源</h3>
+        <p>有源元件能够向电路提供电能量。在电路分析中，电源被抽象为独立源与受控源两类：</p>
+
+        <h4>1. 独立电源（Independent Sources）</h4>
+        <p>独立电源的输出特性完全由电源自身决定，与电路中其他支路的电压或电流无关。</p>
+        <ul>
+          <li><strong>理想独立电压源（Ideal Voltage Source）</strong>：无论流过它的电流大小和方向如何，其两端电压始终保持设定值 $U_s(t)$。理想电压源内阻为零（$R_{in} = 0$），不允许外电路短路。</li>
+          <li><strong>理想独立电流源（Ideal Current Source）</strong>：无论其两端电压如何变化，输出电流始终保持设定值 $I_s(t)$。理想电流源内阻无限大（$R_{in} = \infty$），不允许外电路开路。</li>
+        </ul>
+        <p>实际中的储能电池电池单体或电池簇，既不是理想电压源，也不是理想电流源。在工程建模中，通常采用<strong>戴维南等效电路模型（Thevenin Equivalent Model）</strong>，将其抽象为一个理想开路电压源 $V_{oc}$ 与一个等效直流内阻 $R_{dc}$ 的串联组合；或者采用<strong>诺顿等效模型（Norton Equivalent Model）</strong>，表示为一个短路电流源 $I_{sc}$ 与内阻 $R_{dc}$ 的并联。</p>
+
+        <!-- SVG 图表 1：理想集中参数元件与实际物理器件的拓扑抽象对比图 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="320" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <defs>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F96"/>
+              </marker>
+              <marker id="arrow-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E7D32"/>
+              </marker>
+            </defs>
+
+            <!-- 左区域：真实物理设备 -->
+            <rect x="20" y="20" width="350" height="280" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5" rx="8"/>
+            <text x="195" y="45" font-family="Noto Sans SC" font-size="16" font-weight="bold" fill="#1A5F96" text-anchor="middle">实际物理设备（空间分布特性）</text>
+            
+            <!-- 电池包外观示意 -->
+            <rect x="50" y="70" width="120" height="180" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" rx="6"/>
+            <text x="110" y="100" font-family="Noto Sans SC" font-size="14" font-weight="bold" fill="#0D3F6F" text-anchor="middle">1500V 电池簇</text>
+            <rect x="75" y="120" width="70" height="40" fill="#2563EB" opacity="0.2" rx="4"/>
+            <text x="110" y="145" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">电芯群 & 极柱</text>
+            <text x="110" y="185" font-family="Noto Sans SC" font-size="11" fill="#4A5F68" text-anchor="middle">内部电阻、自放电</text>
+            <text x="110" y="205" font-family="Noto Sans SC" font-size="11" fill="#4A5F68" text-anchor="middle">双电层电容、极化</text>
+
+            <!-- PCS 变流器外观示意 -->
+            <rect x="210" y="70" width="130" height="180" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" rx="6"/>
+            <text x="275" y="100" font-family="Noto Sans SC" font-size="14" font-weight="bold" fill="#2E7D32" text-anchor="middle">PCS 变流舱</text>
+            <path d="M 235 150 L 265 150 L 285 130 L 315 130" stroke="#2E7D32" stroke-width="2" fill="none"/>
+            <text x="275" y="175" font-family="Noto Sans SC" font-size="11" fill="#4A5F68" text-anchor="middle">IGBT 开关、滤波</text>
+            <text x="275" y="195" font-family="Noto Sans SC" font-size="11" fill="#4A5F68" text-anchor="middle">母线支撑电容</text>
+
+            <!-- 中间转换箭头 -->
+            <path d="M 380 160 L 410 160" stroke="#F57C00" stroke-width="3" marker-end="url(#arrow-green)"/>
+            <text x="395" y="150" font-family="Noto Sans SC" font-size="12" font-weight="bold" fill="#F57C00" text-anchor="middle">集中参数建模</text>
+
+            <!-- 右区域：电路图理想元件抽象 -->
+            <rect x="430" y="20" width="350" height="280" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5" rx="8"/>
+            <text x="605" y="45" font-family="Noto Sans SC" font-size="16" font-weight="bold" fill="#2E7D32" text-anchor="middle">电路图拓扑（理想集中参数模型）</text>
+
+            <!-- 戴维南等效模型绘制 -->
+            <!-- 理想电压源 -->
+            <circle cx="480" cy="120" r="18" fill="none" stroke="#1A5F96" stroke-width="2"/>
+            <text x="480" y="115" font-family="Inter" font-size="12" font-weight="bold" fill="#1A5F96" text-anchor="middle">+</text>
+            <text x="480" y="130" font-family="Inter" font-size="12" font-weight="bold" fill="#1A5F96" text-anchor="middle">-</text>
+            <text x="480" y="155" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Voc</text>
+
+            <!-- 串联内阻 Rdc -->
+            <path d="M 480 102 L 480 80 L 530 80" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <rect x="530" y="72" width="30" height="16" fill="#FFFFFF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="545" y="65" font-family="Inter" font-size="12" fill="#1A5F96" text-anchor="middle">Rdc</text>
+
+            <!-- RC 极化网络 -->
+            <path d="M 560 80 L 590 80" stroke="#1A5F96" stroke-width="2"/>
+            <!-- 并联 R_p 与 C_p -->
+            <path d="M 590 80 L 590 60 L 610 60" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <rect x="610" y="52" width="25" height="16" fill="#FFFFFF" stroke="#1A5F96" stroke-width="2"/>
+            <path d="M 635 60 L 655 60 L 655 80" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            
+            <path d="M 590 80 L 590 100 L 615 100" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <line x1="615" y1="92" x2="615" y2="108" stroke="#1A5F96" stroke-width="2"/>
+            <line x1="621" y1="92" x2="621" y2="108" stroke="#1A5F96" stroke-width="2"/>
+            <path d="M 621 100 L 655 100 L 655 80" stroke="#1A5F96" stroke-width="2" fill="none"/>
+
+            <text x="622" y="45" font-family="Inter" font-size="11" fill="#1A5F96" text-anchor="middle">Rp</text>
+            <text x="622" y="122" font-family="Inter" font-size="11" fill="#1A5F96" text-anchor="middle">Cp</text>
+
+            <!-- 输出端 -->
+            <path d="M 655 80 L 730 80" stroke="#1A5F96" stroke-width="2"/>
+            <path d="M 480 138 L 480 220 L 730 220" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <circle cx="730" cy="80" r="4" fill="#1A5F96"/>
+            <circle cx="730" cy="220" r="4" fill="#1A5F96"/>
+            <text x="750" y="85" font-family="Inter" font-size="12" font-weight="bold" fill="#0D3F6F">P+</text>
+            <text x="750" y="225" font-family="Inter" font-size="12" font-weight="bold" fill="#0D3F6F">P-</text>
+
+            <!-- 图例说明 -->
+            <text x="605" y="260" font-family="Noto Sans SC" font-size="12" fill="#4A5568" text-anchor="middle">电池一阶二阶 PNGV/RC 等效电路模型（ECM）</text>
+          </svg>
+          <figcaption>图 1-2-1：真实物理储能设备向集中参数理想电路拓扑的抽象映射过程</figcaption>
+        </figure>
+
+        <h4>2. 受控源（Controlled/Dependent Sources）</h4>
+        <p>受控源的输出电压或电流受电路中另一支路的电压或电流控制。在电路图中，受控源使用<strong>菱形符号</strong>表示。根据控制变量与受控量的不同组合，受控源分为四种基本类型：</p>
+        <ol>
+          <li><strong>电压控制电压源（VCVS）</strong>：输出电压 $u_2 = \mu \cdot u_1$，控制增益 $\mu$ 无量纲。用于晶体管运算放大器电路建模。</li>
+          <li><strong>电流控制电压源（CCVS）</strong>：输出电压 $u_2 = r \cdot i_1$，转移电阻 $r$ 单位为欧姆 $\Omega$。用于电流传感器信号转换建模。</li>
+          <li><strong>电压控制电流源（VCCS）</strong>：输出电流 $i_2 = g \cdot u_1$，转移电导 $g$ 单位为西门子 $S$。用于 MOSFET 绝缘栅双极型晶体管（IGBT）小信号建模。</li>
+          <li><strong>电流控制电流源（CCCS）</strong>：输出电流 $i_2 = \beta \cdot i_1$，控制增益 $\beta$ 无量纲。用于 BJT 双极型晶体管及互感器等效分析。</li>
+        </ol>
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、网储系统电气符号与规范体系：工程语言的标准代码</h2>
+
+        <h3>2.1 电气图纸国家与国际标准体系（GB/T 4728 & IEC 60617）</h3>
+        <p>电气电路图是工程界的“通用世界语”。为了确保不同厂家（如宁德时代、阳光电源、国家电网）生产的设备在设计、安装、运维过程中不产生歧义，图形符号必须严格遵循统一的标准体系：</p>
+        <ul>
+          <li><strong>国家标准 GB/T 4728</strong>《电气简图用图形符号》：中国电气工程绘制的法定标准，等同采用（IDT）国际电工委员会 <strong>IEC 60617</strong> 标准。</li>
+          <li><strong>项目文字符号规范 GB/T 5094 / IEC 81346</strong>：确定设备在电路图中的字母代号。常见字母分类如下表所示：</li>
+        </ul>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>代号</th>
+              <th>设备类别</th>
+              <th>网储系统中的典型应用举例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>QF</strong></td>
+              <td>断路器（Circuit Breaker）</td>
+              <td>1500V 直流塑壳断路器、35kV 交流框架断路器</td>
+            </tr>
+            <tr>
+              <td><strong>FU</strong></td>
+              <td>熔断器（Fuse）</td>
+              <td>电池簇正负极 aR 熔断器（快速半导体保护熔断器）</td>
+            </tr>
+            <tr>
+              <td><strong>KM</strong></td>
+              <td>交流/直流接触器（Contactor）</td>
+              <td>BMS 高压箱主正/主负继电器、Pre-charge 预充接触器</td>
+            </tr>
+            <tr>
+              <td><strong>QS</strong></td>
+              <td>隔离开关（Disconnector）</td>
+              <td>维修隔离刀闸、手动维持开关（MSD）</td>
+            </tr>
+            <tr>
+              <td><strong>T / TC</strong></td>
+              <td>变压器（Transformer）</td>
+              <td>5000kVA PCS 升压变压器、220V 控制电源变压器</td>
+            </tr>
+            <tr>
+              <td><strong>TA / TV</strong></td>
+              <td>电流互感器 / 电压互感器</td>
+              <td>交流侧关口计量 CT、闭环霍尔电流传感器</td>
+            </tr>
+            <tr>
+              <td><strong>SPD</strong></td>
+              <td>浪涌保护器（Surge Protection Device）</td>
+              <td>直流母线防雷器、控制回路 24V 防雷保护器</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2.2 一次系统（High Voltage Power Path）关键元件符号详解</h3>
+        <p>一次系统指的是电能传输与转换的高压主回路。在网储电站中，一次系统的典型器件及其图形符号特征如下：</p>
+
+        <h4>1. 直流快熔（aR Fuse, FU）与断路器（DC-MCCB, QF）</h4>
+        <p>普通交流熔断器无法在直流无过零点的情况下熄灭电弧。因此网储直流侧必须使用带填料的 <strong>aR 快速半导体熔断器</strong>。图形符号在长方形盒子上贯穿一条纵向实线，并在斜角加标注“aR”。</p>
+        <p>直流断路器带有灭弧磁吹装置，其符号在触点旁标注代表磁吹灭弧的特定弧线或字母“DC”。</p>
+
+        <h4>2. 储能变流器（PCS, Converter）</h4>
+        <p>PCS 具有双向 DC/AC 变换能力。其标准图形符号由一个方框构成，中间被斜线分为两个三角形：一个斜角放代表直流的“$\text{=}$”符号，另一个放代表交流的“$\sim$”波形，并在方框旁加注双向箭头或标记“DC/AC”。</p>
+
+        <h4>3. 三相双绕组与三绕组变压器（Transformer, T）</h4>
+        <p>大型储能电站升压变压器常采用三绕组变压器（两路 690V 输入，一路 35kV 输出）。图形符号由三个互相交叠的圆环组成，交叠处标注结线组别（如 <strong>Ynd11</strong> 或 <strong>Dyn11-Dyn11</strong>）。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>高危误区：交直流开关符号混用与灭弧失效爆炸</strong>
+            <p>在阅读或设计直流舱图纸时，绝对不能将交流断路器（AC Breaker）符号与直流断路器（DC Breaker）符号混淆！交流电流每秒钟有 100 次经过零点（50Hz），电弧在过零时自然熄灭；而直流电流没有过零点，断开 1500V 几千安培电流时会拉出极长的电弧。如果误将交流断路器用于直流侧，断路器无法灭弧将引发相间短路与炸柜事故。电路图中，直流断路器必定带有灭弧磁极性与灭弧符号标记。</p>
+          </div>
+        </div>
+
+        <h3>2.3 二次系统（Control & Signal Path）关键元件符号详解</h3>
+        <p>二次系统负责对一次设备进行监测、控制、调节和保护。其符号核心在于逻辑触点的开闭状态：</p>
+        <ul>
+          <li><strong>常开触点（NO - Normally Open）</strong>：在继电器线圈未通电时处于断开状态。图形符号为一条横线上方斜立的触点线，左断右开。</li>
+          <li><strong>常闭触点（NC - Normally Closed）</strong>：在继电器线圈未通电时处于闭合导通状态。图形符号为触点线斜穿横线并保持接触。</li>
+          <li><strong>延时触点（Time-Delay Contacts）</strong>：带弧形伞状标记，分为通电延时闭合（ON-Delay）与断电延时释放（OFF-Delay）。</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>快速识读技巧：电气图纸的“失电常态原则”</strong>
+            <p>所有电气原理图中的触点（开关、继电器触点、按钮、断路器辅助触点），其绘制状态统一为设备处于<strong>完全没有通电、没有外力作用、没有故障报警的“天然初始状态（De-energized State）”</strong>。阅读图纸时，先分析失电状态下的通断，再推演线圈通电后触点吸合/翻转的动作过程。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、网储电路图纸的类型与解构法则：从单线图到二次控制图</h2>
+
+        <h3>3.1 网储工程三类核心图纸的区别与联系</h3>
+        <p>在大型网储项目全生命周期中，工程师需要接触三类不同层级的电路图纸：</p>
+
+        <ol>
+          <li><strong>一次单线图（Single-Line Diagram, SLD）</strong>：
+            <p>采用单线代替实际的三相四线或直流正负极，概括表示整个电站高压电能传输的骨干拓扑结构。SLD 忽略具体的二次控制接线，重点呈现设备型号、变压器容量、断路器额定电流及母线规格。</p>
+          </li>
+          <li><strong>二次控制原理图（Schematic Diagram）</strong>：
+            <p>详细展现控制逻辑、保护回路与测量信号流。通常采用<strong>展成式绘制法（Unfolded Representation）</strong>，将同一个继电器的线圈与触点分散绘制在不同的控制回路中，利用文字符号（如 KM1）进行关联。</p>
+          </li>
+          <li><strong>端子排与接线图（Terminal & Wiring Diagram）</strong>：
+            <p>直接指导现场施工接线的图纸。明确标出每一根导线的线号（Wire Label）、接线端子编号（Terminal No.）及去向柜体，是现场查线排故的最终依据。</p>
+          </li>
+        </ol>
+
+        <h3>3.2 一次单线图（SLD）解读四步法</h3>
+        <p>面对包含上百个节点的大型储能电站一次单线图，遵循以下“四步法”可以高效厘清电能量流拓扑：</p>
+        <ol>
+          <li><strong>第一步：寻源定位（确定能量起点）</strong>：首先在图纸左侧或顶部找到电能存储单元——磷酸铁锂电池簇（Battery String）。标注为 $N$ 节串联，额定电压 1500V DC。</li>
+          <li><strong>第二步：顺流追踪能量主干（电池到电网）</strong>：
+            <p>电池簇 $\to$ 直流高压箱（含快熔与 DC 接触器） $\to$ 直流汇流柜 $\to$ 双向 PCS 变流器（DC/AC 转换） $\to$ 滤波电抗器 $\to$ 低压断路器 $\to$ 升压变压器（690V/35kV） $\to$ 35kV 高压开关柜 $\to$ 升压站主变 $\to$ 220kV 电网。</p>
+          </li>
+          <li><strong>第三步：识别三级保护节点</strong>：在能量主干线上，查找保护设备的布置位置——极柱级快熔（微短路保护） $\to$ 舱级直流断路器（过载保护） $\to$ 网侧高压真空断路器（反向电网故障切断）。</li>
+          <li><strong>第四步：区分拓扑架构类型</strong>：看图纸是“集中式拓扑”（多簇电池并联入同一大功率 PCS）还是“组串式拓扑”（一簇一 PCS），判断系统的冗余性与失配效率。</li>
+        </ol>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：基于 IEC 61850 的数字孪生与 Goos/SV 数字化电路图演进</strong>
+            <p>传统储能电站二次控制依赖成千上万根铜线传输 4-20mA 或 24V 硬节点信号。而在基于 IEC 61850 标准的现代新型智能化储能电站中，二次线缆被光纤取代。BMS 和 PCS 之间的联锁通过 <strong>GOOSE（面向通用对象的变电站事件）</strong> 报文在以太网上高速传输（<10ms），模拟量采样则通过 <strong>SV（采样值）</strong> 报文实现。这意味着未来电气工程师的“电路图”正在从物理硬接线图纸向 SCD/CID 配置文件与虚拟逻辑节点（LN）演进。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、中国真实工程案例：200MW/400MWh 储能电站一次/二次电路图实战剖析</h2>
+
+        <h3>4.1 案例背景：宁夏某大型独立共享储能电站（200MW/400MWh）</h3>
+        <p>宁夏某 200MW/400MWh 共享储能电站是国家示范性新能源补偿项目，全站共包含 40 个 5MW/10MWh 储能子单元。每个子单元采用 2 舱 5MWh 液冷电池预制舱与 1 舱 5MW 升压一体机（集成了 2 台 2.5MW PCS 与 1 台 5000kVA 双 split 绕组变压器）组合拓扑。</p>
+
+        <!-- SVG 图表 2：200MW 储能电站 5MW 单元高压一次单线图（SLD）拓扑图 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="400" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <defs>
+              <marker id="arrow-dark" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A1A2E"/>
+              </marker>
+            </defs>
+
+            <!-- 标题 -->
+            <text x="400" y="30" font-family="Noto Sans SC" font-size="16" font-weight="bold" fill="#1A5F96" text-anchor="middle">5MW/10MWh 储能单元高压一次单线图（SLD）</text>
+
+            <!-- 电池舱 A 与 电池舱 B -->
+            <rect x="30" y="60" width="160" height="110" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="6"/>
+            <text x="110" y="85" font-family="Noto Sans SC" font-size="13" font-weight="bold" fill="#0D3F6F" text-anchor="middle">电池舱 A (5MWh)</text>
+            <text x="110" y="105" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">1500V DC / 10 簇串联</text>
+            <!-- 符号：aR快熔 + 直流断路器 -->
+            <path d="M 190 115 L 230 115" stroke="#1A5F96" stroke-width="2"/>
+            <rect x="230" y="107" width="24" height="16" fill="#FFFFFF" stroke="#1A5F96" stroke-width="1.5"/>
+            <line x1="230" y1="115" x2="254" y2="115" stroke="#1A5F96" stroke-width="2"/>
+            <text x="242" y="102" font-family="Inter" font-size="10" fill="#1A5F96" text-anchor="middle">FU1 (aR)</text>
+
+            <rect x="30" y="230" width="160" height="110" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="6"/>
+            <text x="110" y="255" font-family="Noto Sans SC" font-size="13" font-weight="bold" fill="#0D3F6F" text-anchor="middle">电池舱 B (5MWh)</text>
+            <text x="110" y="275" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">1500V DC / 10 簇串联</text>
+            <!-- 符号：aR快熔 -->
+            <path d="M 190 285 L 230 285" stroke="#1A5F96" stroke-width="2"/>
+            <rect x="230" y="277" width="24" height="16" fill="#FFFFFF" stroke="#1A5F96" stroke-width="1.5"/>
+            <line x1="230" y1="285" x2="254" y2="285" stroke="#1A5F96" stroke-width="2"/>
+            <text x="242" y="272" font-family="Inter" font-size="10" fill="#1A5F96" text-anchor="middle">FU2 (aR)</text>
+
+            <!-- 直流隔离开关 QS -->
+            <path d="M 254 115 L 290 115 L 290 180" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <path d="M 254 285 L 290 285 L 290 220" stroke="#1A5F96" stroke-width="2" fill="none"/>
+            <!-- 节点汇总到直流母线 -->
+            <circle cx="290" cy="200" r="5" fill="#1A5F96"/>
+            <text x="280" y="195" font-family="Inter" font-size="11" font-weight="bold" fill="#1A5F96" text-anchor="end">DC BUS 1500V</text>
+
+            <!-- 连接到 PCS 变流器 -->
+            <path d="M 295 200 L 360 200" stroke="#1A5F96" stroke-width="3"/>
+
+            <!-- PCS 方框符号 (双向 DC/AC) -->
+            <rect x="360" y="160" width="90" height="80" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" rx="4"/>
+            <line x1="360" y1="240" x2="450" y2="160" stroke="#2E7D32" stroke-width="1.5"/>
+            <text x="385" y="190" font-family="Inter" font-size="14" font-weight="bold" fill="#2E7D32">=</text>
+            <text x="420" y="220" font-family="Inter" font-size="14" font-weight="bold" fill="#2E7D32">～</text>
+            <text x="405" y="255" font-family="Noto Sans SC" font-size="12" font-weight="bold" fill="#2E7D32" text-anchor="middle">5MW PCS</text>
+
+            <!-- 交流断路器 QF -->
+            <path d="M 450 200 L 510 200" stroke="#2E7D32" stroke-width="2"/>
+            <circle cx="520" cy="200" r="10" fill="#FFFFFF" stroke="#1A1A2E" stroke-width="1.5"/>
+            <line x1="513" y1="207" x2="527" y2="193" stroke="#1A1A2E" stroke-width="2"/>
+            <text x="520" y="180" font-family="Inter" font-size="11" fill="#1A1A2E" text-anchor="middle">QF1 (690V ACB)</text>
+
+            <!-- 变压器符号 T (双绕组/三绕组) -->
+            <path d="M 530 200 L 580 200" stroke="#1A1A2E" stroke-width="2"/>
+            <circle cx="600" cy="200" r="22" fill="none" stroke="#1A5F96" stroke-width="2"/>
+            <circle cx="630" cy="200" r="22" fill="none" stroke="#2E7D32" stroke-width="2"/>
+            <text x="615" y="165" font-family="Inter" font-size="11" font-weight="bold" fill="#1A5F96" text-anchor="middle">T1: 5000kVA</text>
+            <text x="615" y="240" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">0.69kV / 35kV (Dyn11)</text>
+
+            <!-- 出线到 35kV 母线 -->
+            <path d="M 652 200 L 730 200" stroke="#1A1A2E" stroke-width="2.5" marker-end="url(#arrow-dark)"/>
+            <line x1="730" y1="100" x2="730" y2="300" stroke="#D97706" stroke-width="4"/>
+            <text x="745" y="200" font-family="Noto Sans SC" font-size="13" font-weight="bold" fill="#D97706" style="writing-mode: vertical-rl;">35kV 汇集母线</text>
+          </svg>
+          <figcaption>图 1-2-1B：宁夏 200MW/400MWh 储能电站 5MW 储能单元高压一次单线图（SLD）拓扑架构</figcaption>
+        </figure>
+
+        <h3>4.2 案例电路图实战解读：BMS 硬件绝缘故障联锁脱扣二次回路</h3>
+        <p>下例展示了该电站高压箱内 BMS 硬件脱扣二次控制原理图的真实逻辑电路。当发生高压绝缘击穿事故时，电路如何通过电磁机械机构在 100 毫秒内彻底关断一次回路：</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：国标 GB/T 36547 下的应急脱扣二次回路解读</strong>
+            <p>在电路二次图中，联锁回路接线如下：<br>
+            • <strong>电源端</strong>：直流 24V 控制辅助电源输入；<br>
+            • <strong>信号检测节点</strong>：绝缘监测仪常开干触点 $K_{iso}$ 与电池急停按钮 $SB_{stop}$（常闭触点串联在主回路）；<br>
+            • <strong>执行机构</strong>：高压直流断路器分励脱扣线圈（Shunt Trip Coil, $MX$）与主接触器线圈 $KM_1$。<br>
+            <strong>动作推演过程</strong>：当绝缘监测仪检测到正极对地绝缘电阻 $R_{iso} < 500\ \Omega/\text{V}$ 时，干触点 $K_{iso}$ 闭合 $\to$ 24V 控制电源接通分励脱扣线圈 $MX$ $\to$ $MX$ 线圈产生强磁场吸合撞针 $\to$ 机械卡扣被顶开，主断路器 $QF_1$ 在 30ms 内跳闸拉弧熄灭 $\to$ 辅助触点 $QF_1\text{-Aux}$ 断开 $KM_1$ 供电回路，完成电气隔离。<br>
+            该硬件电路严格满足了国家标准 GB/T 36547-2019《储能系统接入电网技术规定》中对继电保护响应时间小于 100ms 的强制要求。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>理想电路元件是工程分析的抽象基石</strong>：通过集中参数假设（物理尺寸远小于工作波长），将复杂的真实设备抽象为耗能元件（电阻 $R$）、储能元件（电容 $C$、电感 $L$）与有源元件（独立源、受控源），大大简化了电网级电路的数学物理分析。</li>
+        <li><strong>电气符号是标准化工程设计的“世界语”</strong>：必须严格遵守 GB/T 4728 / IEC 60617 符号规范，牢记“失电常态原则”，深刻理解交直流开关设备（特别是灭弧符号与 aR 快速熔断器）的微观物理差异，严禁符号混用。</li>
+        <li><strong>掌握图纸分级解构与四步阅读法</strong>：从高压一次单线图（SLD）的“寻源-追踪-保护-拓扑”四步法，到二次控制原理图的展成式逻辑推演，建立从主干电能量流到辅助信号控制回路的系统化图纸识读能力。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 集中参数电路假设（Lumped Parameter Assumption）能够成立的关键工程前提条件是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 电路中流过的电流必须是恒定直流电（DC）</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 电路设备的物理几何尺寸 $D$ 远小于工作信号的电磁波波长 $\lambda$</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 电路中不能包含任何非线性受控源与半导体开关</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 电路必须接有大容量接地保护装置（PE）</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：集中参数假设的物理核心在于忽略电磁波在器件空间内部的传播延迟。当电路几何尺寸 $D \ll \lambda = c/f$ 时，器件各处的电磁场状态可视为瞬时同步变化，从而可将分布式电磁特性抽象为集中参数元件。50Hz 工频下 $\lambda=6000\text{km}$，通常电站尺寸完全满足该条件。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于理想电容与理想电感元件的能量与动态物理特性，下列说法正确的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 理想电容消耗电能，电容两端的电压可以发生瞬时突变</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 理想电感储存电场能量，流过电感的电流可以发生瞬时突变</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 理想电容储存电场能且端电压不能突变；理想电感储存磁场能且电流不能突变</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 理想电容与理想电感在直流稳态电路中均相当于开路</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：根据本构关系 $i_C = C \frac{dv}{dt}$ 与 $v_L = L \frac{di}{dt}$，若电容电压突变（$\frac{dv}{dt} \to \infty$）将需要无限大电流；若电感电流突变（$\frac{di}{dt} \to \infty$）将产生无限高电压。因此电容电压与电感电流在有限功率下不能突变。电容储存电场能，电感储存磁场能，两者均为无损储能元件。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在绘制或识读电气二次控制原理图时，关于开关触点、继电器触点所处的初始状态，遵循的通用规范是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 设备处于满载额定运行时的吸合状态</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 设备处于完全未通电、无外力作用的天然常态（De-energized State）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 设备发生短路故障报警时的动作保护状态</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 由设计人员根据个人习惯随机指定的任意状态</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：电气工程图纸统一遵循“失电常态原则”。图中所有常开（NO）、常闭（NC）触点均表示继电器线圈未通电、开关未受外力按下、电路无故障时的天然状态。这一标准化约定是正确推演回路动作逻辑的前提。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在大型网储 1500V 直流高压舱电路中，为什么必须采用带“aR”标记的半导体快速熔断器（FU），而不能使用普通交流熔断器？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 因为交流熔断器的体积太大，无法装入 1500V 电池高压箱内</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 因为直流短路电流没有自然的过零点，普通熔断器无法灭弧将引发持续拉弧爆炸</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 因为 aR 快速熔断器的价格比普通熔断器便宜</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 因为交流熔断器只能传导正弦波，不能传导直流电流</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：交流电电流每半个周期（10ms）经过一次零点，电弧易于熄灭；而 1500V 直流短路电流大且无过零点，熔断时会产生极强的持续电弧。aR 快速熔断器采用石英砂填料强制冷却切断电弧，具备专用的灭弧能力与极其快速的熔断特性（$I^2t$ 值低），能有效保护锂电池与半导体器件。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在解析网储电站一次单线图（SLD）时，项目文字符号“PCS”与“QF”分别代表什么设备？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 电池管理系统、熔断器</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 储能变流器、断路器</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 能量管理系统、隔离开关</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 消防喷淋控制器、接触器</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：在标准电气项目文字符号规范（GB/T 5094 / IEC 81346）中，PCS 代表 Power Conversion System（储能变流器），负责交直流双向电能转换；QF 代表 Circuit Breaker（断路器），具备过载与短路切断保护功能。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_1_4_功率电能与电费单.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">功率·电能·你的电费单</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_2_2_基尔霍夫定律.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">基尔霍夫定律</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="01_1_2_电流与电压.html">01_1_2 电流与电压：流动的力量</a></li>
+        <li><a href="01_1_3_电阻与欧姆定律.html">01_1_3 电阻与欧姆定律</a></li>
+        <li><a href="01_2_2_基尔霍夫定律.html">01_2_2 基尔霍夫定律（KCL/KVL 原理与复杂电路分析）</a></li>
+        <li><a href="01_2_3_串联与并联.html">01_2_3 串联与并联（电池簇混联拓扑与等效阻抗）</a></li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_2_1</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
