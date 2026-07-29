@@ -983,7 +983,7 @@ pre code { background: none; color: inherit; padding: 0; }
 .pwa-toast-info    { border-left: 4px solid #3B82F6; }
 
 /* 独立应用模式下 UI 微调 */
-@media display-mode: standalone {
+@media (display-mode: standalone) {
   .site-header, .top-nav {
     padding-top: env(safe-area-inset-top);
   }

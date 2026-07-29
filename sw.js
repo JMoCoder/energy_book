@@ -24,7 +24,13 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[ServiceWorker] 预缓存静态资源文件');
-      return cache.addAll(STATIC_ASSETS);
+      return Promise.all(
+        STATIC_ASSETS.map((asset) =>
+          cache.add(asset).catch((err) => {
+            console.warn('[ServiceWorker] 资源预缓存跳过:', asset, err);
+          })
+        )
+      );
     }).then(() => {
       return self.skipWaiting();
     })
