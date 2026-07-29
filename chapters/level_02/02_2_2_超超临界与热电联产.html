@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>超超临界与热电联产 — 火力发电 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析超超临界与热电联产的核心物理原理、工程应用与实战案例。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">火力发电</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">超超临界与热电联产</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_2_1_朗肯循环原理.html" class="nav-prev" title="上一节：朗肯循环：热变电的奥秘">← 上节</a>
+        <a href="02_2_3_煤电调峰灵活性.html" class="nav-next" title="下一节：煤电调峰：被逼出来的灵活性">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>火力发电</span>
+        <span class="sep">›</span>
+        <span>超超临界与热电联产</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_2_2</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>超超临界与热电联产 —— 火力发电的极致效率与能量梯级利用</h1>
+      <p class="chapter-lead">在常规朗肯循环中，受限于水的相变特性与冷凝废热损失，纯凝火发电厂的热效率很难超越 40%。为了打破这一“效率魔咒”，现代电力工程开辟了两条极具智慧的技术路线：一条是在极端高温高压下让汽水相变“消失”的<b>超超临界技术（USC）</b>；另一条是把原本废弃的低品位热能用于城市供暖的<b>热电联产技术（CHP）</b>。本节将带你透彻拆解这两大核心重器的热力学机理、工程实践与新型电力系统下的演进。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一</strong>：透彻理解热力学“临界点”的物理本质，厘清亚临界、超临界与超超临界（USC）在水汽相变行为、汽包结构与热效率上的本质差异。</li>
+        <li><strong>核心目标二</strong>：掌握热电联产（CHP）“按质用能、梯级利用”的哲学，深刻理解抽汽供热与背压供热如何彻底化解凝汽器巨大的“冷源损失”。</li>
+        <li><strong>核心目标三</strong>：结合中国“平山二期”等世界级工程案例，分析超超临界机组在新型电力系统中的热惯性挑战、热电解耦机制及与新型储能系统的协同调频逻辑。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：深冬极寒夜里的“两组热力学数据”</h2>
+      <p>2026 年 1 月的一个深冬极寒之夜，北方某大型能源基地的监控大厅里，巨型屏幕上正实时跳动着两座相邻火电厂的运行数据：</p>
+      <p>左侧的<b>一号电厂</b>是一座建造于 1990 年代的 2×300 MW 亚临界纯凝发电厂。大屏幕显示其主蒸汽压力 16.7 MPa、温度 537℃。为了维持发电，给煤机正源源不断地倾倒煤炭，但它的<b>发电供电煤耗高达 338 g/kWh</b>，且巨大的冷却塔上空正喷吐着漫天白雾——意味着超过一半的煤炭热能被冷却水带走，白白散发到了寒冷的空气中。</p>
+      <p>而右侧的<b>二号电厂</b>则是新建的 1350 MW <b>二次再热超超临界热电联产机组</b>。它的主蒸汽压力高达 31 MPa、温度飙升至 600℃/620℃/620℃。令人震惊的是，它的<b>发电供电煤耗仅为 249.3 g/kWh</b>，打破了全球火力发电的效率纪录！更神奇的是，旁边的集中供热管网监测面板上，蒸汽抽汽正以每小时数千吨的流量，向周边 3000 万平方米的城市社区输送着 120℃ 的暖流，整座电厂的<b>综合能源利用率高达 86.5%</b>！</p>
+      <p>同样是烧煤烧水，为什么二号电厂每发一度电消耗的煤炭能比一号电厂少近一万大卡？为什么把水加压到 31 MPa 后，锅炉内部反而“看不到水沸腾起泡”了？当夜间风电突然大发、电网指令火电下调负荷时，热电联产电厂又该如何在“保障居民供暖”和“给新能源让路”之间取得平衡？这一切的奥秘，都隐藏在<b>超超临界</b>与<b>热电联产</b>这两大现代热力工程的顶峰技术之中。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、 突破相变瓶颈：从亚临界到超超临界的物理演进</h2>
+
+        <p>在上一节中我们学到，朗肯循环的热效率取决于高热源吸热温度与低热源放热温度。要想提高效率，最直接的办法就是提高进入汽轮机的主蒸汽<b>压力与温度</b>。然而，当水的压力被一路推向极限时，水的物理性质发生了一场颠覆性的革命。</p>
+
+        <h3>1.1 临界点的物理本质：水与蒸汽边界的“消失术”</h3>
+        <p>在日常生活和普通工业锅炉中，水被加热到沸点后会剧烈沸腾，形成水和蒸汽共存的“汽水混合物”。这种有清晰液面、有气泡产生的过程称为<b>相变（Phase Change）</b>。沸腾过程中，水吸收大量热量但温度保持不变，这部分热量称为<b>汽化潜热（Latent Heat of Vaporization）</b>。</p>
+
+        <p>然而，如果持续对水施加巨压，水的沸点就会不断升高，同时液态水的密度会随温度升高而减小，而饱饱和蒸汽的密度会随压力升高而增大。当压力达到一个特定的极限物理常数——<b>水的热力学临界点（Critical Point，22.064 MPa，373.95℃）</b>时，奇迹发生了：<b>液态水的密度与饱和蒸汽的密度完全相等！</b></p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>热力学临界点（Critical Point）与超临界状态</strong>
+            <p>水的热力学临界点参数为：压力 $P_c = 22.064 \text{ MPa}$，温度 $T_c = 373.95^\circ\text{C}$。当工质压力和温度双双超越此临界值时，水不再有气态和液态的界面区分，沸腾现象完全消失，汽化潜热降为零。水在加热过程中直接从高密度单相流体连续、平滑地过渡为低密度单相过热蒸汽。这一状态称为<b>超临界状态（Supercritical State）</b>。</p>
+          </div>
+        </div>
+
+        <p>我们可以通过下面的<b>水相图与朗肯循环路径图</b>直观对比亚临界与超超临界在物理过程上的巨变：</p>
+
+        <!-- SVG 1: 水相图与亚临界 vs 超临界对比 -->
+        <div class="svg-container" style="text-align: center; margin: 2rem 0;">
+          <svg viewBox="0 0 800 420" width="100%" height="auto" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <title>水相图与亚临界 vs 超临界/超超临界加热路径对比</title>
+            
+            <!-- 背景网格与坐标轴 -->
+            <line x1="80" y1="350" x2="740" y2="350" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="80" y1="350" x2="80" y2="40" stroke="#475569" stroke-width="2"/>
+            <text x="740" y="385" font-size="14" font-weight="bold" fill="#1e293b">比焓 / 熵 (s)</text>
+            <text x="35" y="45" font-size="14" font-weight="bold" fill="#1e293b">温度 (T) / 压力 (P)</text>
+
+            <!-- 饱和水与饱和蒸汽双相区（钟形曲线） -->
+            <path d="M 120,350 Q 300,160 400,140 Q 500,160 700,350" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4"/>
+            <text x="340" y="260" font-size="13" fill="#64748b" font-weight="bold">汽水共存区（沸腾相变）</text>
+
+            <!-- 临界点 C -->
+            <circle cx="400" cy="140" r="6" fill="#ef4444"/>
+            <text x="415" y="135" font-size="14" font-weight="bold" fill="#dc2626">临界点 C (22.064 MPa, 373.95℃)</text>
+
+            <!-- 亚临界循环路径 (Subcritical Path) -->
+            <path d="M 160,340 L 240,240 L 480,240 L 600,180" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="240" cy="240" r="4" fill="#2563eb"/>
+            <circle cx="480" cy="240" r="4" fill="#2563eb"/>
+            <text x="250" y="235" font-size="12" fill="#1e40af">水加热至沸点</text>
+            <text x="330" y="230" font-size="12" fill="#1e40af">等温等压沸腾吸热（潜热）</text>
+            <text x="500" y="210" font-size="12" fill="#1e40af">亚临界过热</text>
+            <text x="100" y="245" font-size="13" font-weight="bold" fill="#2563eb">亚临界 (P &lt; 22.1 MPa)</text>
+
+            <!-- 超超临界循环路径 (USC Path) -->
+            <path d="M 180,340 L 320,110 L 650,80" fill="none" stroke="#dc2626" stroke-width="3.5"/>
+            <circle cx="320" cy="110" r="4" fill="#dc2626"/>
+            <text x="330" y="105" font-size="12" stroke="none" fill="#b91c1c">绕过临界点，无相变平滑过渡</text>
+            <text x="520" y="75" font-size="13" font-weight="bold" fill="#dc2626">超超临界 (P &ge; 25-31 MPa, T &ge; 600℃)</text>
+
+            <!-- 注释箭头 marker -->
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：人群穿过“安检闸机” vs 全员“无感通关”</strong>
+            <p>理解相变消失的最好类比是机场安检：</p>
+            <ul>
+              <li><b>亚临界状态（有相变）</b>：就像数千名乘客（液态水分子）排队通过狭窄的安检闸机（汽化潜热阶段）。在闸机前，人群密度极高，大家必须停下脚步逐一受检，然后再变成分散的散客（蒸汽分子）。这个“排队滞留”过程消耗了巨大时间与能量，且闸机两侧人群状态界限分明。</li>
+              <li><b>超超临界状态（无相变）</b>：就像把安检闸机彻底拆除，并给通道施加了极强的人流推力（巨压）。乘客们无需停留排队，在向前飞奔的过程中，队伍自然而然地从“密集的整齐阵列”平滑疏散为“高速奔跑的自由人群”。没有排队滞留（没有汽化潜热吸收过程），效率提升到了极致！</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>1.2 从亚临界到超超临界：参数跨越与效率“红利”</h3>
+        <p>在火力发电工程中，根据主蒸汽压力和温度的不同，机组被严格划分为四个历史演进阶梯：</p>
+
+        <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0; text-align: left;">
+          <thead>
+            <tr style="background-color: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+              <th style="padding: 10px;">技术等级</th>
+              <th style="padding: 10px;">主蒸汽压力 ($P$)</th>
+              <th style="padding: 10px;">主蒸汽温度 ($T$)</th>
+              <th style="padding: 10px;">热效率上限</th>
+              <th style="padding: 10px;">供电煤耗参考</th>
+              <th style="padding: 10px;">锅炉结构特征</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; font-weight:bold;">亚临界 (Subcritical)</td>
+              <td style="padding: 10px;">16.7 – 17.5 MPa</td>
+              <td style="padding: 10px;">537℃ – 540℃</td>
+              <td style="padding: 10px;">37% – 39%</td>
+              <td style="padding: 10px;">320 – 340 g/kWh</td>
+              <td style="padding: 10px;">带有<b>汽包（Steam Drum）</b>的自然/强制循环锅炉</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; font-weight:bold;">超临界 (Supercritical)</td>
+              <td style="padding: 10px;">24.1 – 25.0 MPa</td>
+              <td style="padding: 10px;">566℃ – 571℃</td>
+              <td style="padding: 10px;">41% – 43%</td>
+              <td style="padding: 10px;">290 – 300 g/kWh</td>
+              <td style="padding: 10px;">无汽包<b>直流锅炉（Once-through Boiler）</b></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0; background-color: #fef2f2;">
+              <td style="padding: 10px; font-weight:bold; color: #dc2626;">超超临界 (USC)</td>
+              <td style="padding: 10px; color: #dc2626;">25.0 – 28.0 MPa</td>
+              <td style="padding: 10px; color: #dc2626;">600℃ / 600℃ (单再热)</td>
+              <td style="padding: 10px; font-weight:bold;">44% – 46%</td>
+              <td style="padding: 10px;">270 – 285 g/kWh</td>
+              <td style="padding: 10px;">高参数直流锅炉，配合一次中间再热</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0; background-color: #fff1f2;">
+              <td style="padding: 10px; font-weight:bold; color: #9f1239;">高参数/二次再热 USC</td>
+              <td style="padding: 10px; color: #9f1239;">31.0 – 35.0 MPa</td>
+              <td style="padding: 10px; color: #9f1239;">600℃/620℃/620℃ 或更高</td>
+              <td style="padding: 10px; font-weight:bold; color: #9f1239;">48% – 50%</td>
+              <td style="padding: 10px; font-weight:bold; color: #9f1239;">&lt; 250 g/kWh</td>
+              <td style="padding: 10px;">二次中间再热超高压直流锅炉</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><b>为什么取消“汽包”是超临界技术的必然选择？</b></p>
+        <p>在亚临界锅炉顶部，都有一个巨大的钢制圆筒状容器——<b>汽包（Steam Drum）</b>。汽包的核心作用是依靠重力或旋风分离器，把沸腾产生的“汽水混合物”分离开：蒸汽送往过热器，未汽化的水重新沉到锅炉底部继续烧。但在超超临界状态下，因为水和蒸汽的密度完全相同，重力分离彻底失效，界限不复存在。因此，超超临界锅炉必须摒弃汽包，采用<b>直流锅炉（Once-Through Boiler）</b>：给水泵把水从一端压入，水在数万米长的炉管中边流动边吸热，在途中平滑跨越临界点，从另一端出来时已经直接变成了高温过热蒸汽！</p>
+
+        <h3>1.3 极限挑战：高温高压下的材料学与控制瓶颈</h3>
+        <p>把主蒸汽参数从 540℃/16.7 MPa 推升到 600℃/31 MPa，绝不仅仅是把火烧旺一点那么简单。它带来了两大极其苛刻的工程挑战：</p>
+
+        <ul>
+          <li><b>材料学的“金属蠕变”危机</b>：在 600℃ 以上的高温与 310 个大气压的剧烈内压下，普通碳钢甚至低合金钢会像软化黏土一样发生<b>蠕变（Creep）</b>——即金属在持续高温高应力下缓慢发生不可逆的永久塑性形变，直至爆管。为了抵抗这种极端环境，超超临界机组大量采用了新型马氏体耐热钢（如 P91、P92）以及奥氏体不锈钢（如 HR3C、SUPER304H）。而下一代 700℃ 超超临界技术则必须使用价格极其昂贵的<b>镍基高温合金（Inconel 740H）</b>。</li>
+          <li><b>热惯性与控制“失性”</b>：汽包不仅是分离器，还是一个巨大的“水蓄热大水箱”。亚临界锅炉负荷波动时，汽包里的水可以起到极强的热力缓冲作用。而直流锅炉没有汽包，给水量、给煤量与蒸发量时刻保持 1:1 的刚性对应。给水泵稍有波动，水汽界面的位置就会在炉管内剧烈移动，导致主蒸汽温度瞬间发生几十度的狂飙或骤降，这对 DCS（分散控制系统）的控制算法提出了极高的考验。</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区：超超临界只是“压力更大”，所以锅炉壁必须做成半米厚的钢板？</strong>
+            <p>许多初学者误以为压力增加两倍，锅炉水冷壁管道就要做成极厚的金属管。实际上，过厚的管壁会导致管道内外壁温差极大，产生巨大的热应力，反而更容易在反复启停中破裂！现代超超临界锅炉的解决之道是<b>缩小管径（采用小管径螺纹管水冷壁）</b>，通过降低单个管道的几何跨度来承受巨压，同时配合极高的水流速度进行强迫冷却，防止管壁过热烧毁。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、 告别“冷源损失”：热电联产（CHP）的能量梯级利用</h2>
+
+        <p>即便我们将火力发电的主蒸汽参数推升到 31 MPa / 600℃ 的物理极限，纯凝发电厂（Condensing Power Plant）的热效率也很难跨越 50% 的天花板。剩下超过 50% 的能量去哪儿了？答案就是凝汽器中被白白排放掉的<b>冷源损失</b>。</p>
+
+        <h3>2.1 朗肯循环的“最大痛点”：巨大的凝汽器冷源损失</h3>
+        <p>在常规纯凝电厂中，水蒸汽在汽轮机里膨胀做完功后，虽然压力已经降到了接近绝对真空（如 4-8 kPa），温度降到了 30-40℃，但它依然保持着气态！为了让工质能够重新被给水泵加压（前面说过，加压液态水消耗的功极小，而压缩气体会消耗巨大的功），必须用大量冷却水把蒸汽冷凝成液体。</p>
+        <p>在这个冷凝过程中，蒸汽把巨大的<b>汽化潜热</b>全盘放给了冷却水，冷却水随后进入冷却塔喷洒，把这些热量直接散发到了大气中。据热力学统计，纯凝电厂因冷凝放热损失的能量占到了燃料总输入热量的 <b>45% – 55%</b>！这是朗肯循环中最惨重的能量流失。</p>
+
+        <h3>2.2 热电联产（CHP）的核心哲学：“按质用能，梯级利用”</h3>
+        <p>为了拯救这部分白白浪费的巨大热能，<b>热电联产（Combined Heat and Power，CHP）</b>应运而生。热电联产的热力学核心哲学只有八个字：<b>按质用能，梯级利用</b>。</p>
+
+        <p>从热力学第二定律（火用 Exergy 理论）来看，不同温度的热能“品质”是完全不同的：</p>
+        <ul>
+          <li><b>高品质热能（600℃ 超过）</b>：做功能力极强，必须优先用来驱动汽轮机高速旋转发电（做功）。</li>
+          <li><b>中低品质热能（100℃ – 200℃）</b>：做功能力已经大幅下降，即便继续在汽轮机末级膨胀，能发的电也十分有限；但对于城市冬季采暖（需要 80-120℃ 热水）或工业加热（需要 0.3-1.0 MPa 蒸汽）来说，却是绝对完美的理想热源！</li>
+        </ul>
+
+        <p>热电联产的做法是：<b>不让蒸汽在汽轮机里一路膨胀到几千帕的冰冷真空，而是在蒸汽做完大部分功、温度降到 130-180℃ 时，将其从汽轮机中抽出来，直接送入供热加热器去加热城市供暖水！</b></p>
+
+        <!-- SVG 2: 纯凝电厂 vs 热电联产能量流向对比 -->
+        <div class="svg-container" style="text-align: center; margin: 2rem 0;">
+          <svg viewBox="0 0 800 380" width="100%" height="auto" style="background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <title>纯凝电厂 vs 热电联产（CHP）能量平衡与利用率对比</title>
+            
+            <!-- 左侧：纯凝电厂 (Condensing Power Plant) -->
+            <g transform="translate(40, 20)">
+              <text x="160" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">常规纯凝电厂 (纯发电)</text>
+              
+              <!-- 燃料输入 -->
+              <rect x="110" y="50" width="100" height="40" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+              <text x="160" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">燃料热能 100%</text>
+              <line x1="160" y1="90" x2="160" y2="130" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+              <!-- 电厂主体 -->
+              <rect x="80" y="130" width="160" height="80" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+              <text x="160" y="175" text-anchor="middle" font-size="14" font-weight="bold" fill="#334155">朗肯循环发电机组</text>
+
+              <!-- 分流输出 1：电能 -->
+              <line x1="240" y1="150" x2="300" y2="150" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow)"/>
+              <text x="310" y="155" font-size="14" font-weight="bold" fill="#2563eb">⚡ 净电能 40%-45%</text>
+
+              <!-- 分流输出 2：冷源损失 -->
+              <line x1="240" y1="190" x2="300" y2="190" stroke="#dc2626" stroke-width="4" marker-end="url(#arrow)"/>
+              <text x="310" y="195" font-size="14" font-weight="bold" fill="#dc2626">💨 凝汽器废热损失 50%-55%</text>
+
+              <!-- 总结 -->
+              <rect x="70" y="240" width="180" height="35" rx="17" fill="#fee2e2" stroke="#ef4444"/>
+              <text x="160" y="263" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">综合能源利用率：40% - 45%</text>
+            </g>
+
+            <!-- 中央分割线 -->
+            <line x1="410" y1="40" x2="410" y2="340" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,4"/>
+
+            <!-- 右侧：热电联产 (CHP Plant) -->
+            <g transform="translate(430, 20)">
+              <text x="160" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">热电联产电厂 (CHP)</text>
+              
+              <!-- 燃料输入 -->
+              <rect x="110" y="50" width="100" height="40" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+              <text x="160" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">燃料热能 100%</text>
+              <line x1="160" y1="90" x2="160" y2="130" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+              <!-- 电厂主体 -->
+              <rect x="80" y="130" width="160" height="80" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+              <text x="160" y="175" text-anchor="middle" font-size="14" font-weight="bold" fill="#14532d">CHP 梯级利用机组</text>
+
+              <!-- 分流输出 1：电能 -->
+              <line x1="240" y1="150" x2="300" y2="150" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow)"/>
+              <text x="310" y="155" font-size="14" font-weight="bold" fill="#2563eb">⚡ 净电能 35%-40%</text>
+
+              <!-- 分流输出 2：供热 -->
+              <line x1="240" y1="190" x2="300" y2="190" stroke="#ea580c" stroke-width="4" marker-end="url(#arrow)"/>
+              <text x="310" y="195" font-size="14" font-weight="bold" fill="#ea580c">♨️ 采暖/工业供热 45%-50%</text>
+
+              <!-- 分流输出 3：微小残热 -->
+              <line x1="160" y1="210" x2="160" y2="240" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+              <text x="160" y="255" text-anchor="middle" font-size="11" fill="#64748b">微小损失 10%-15%</text>
+
+              <!-- 总结 -->
+              <rect x="70" y="280" width="180" height="35" rx="17" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="160" y="303" text-anchor="middle" font-size="13" font-weight="bold" fill="#15803d">综合能源利用率：80% - 88%！</text>
+            </g>
+          </svg>
+        </div>
+
+        <h3>2.3 热电联产的两大主要工程形式</h3>
+        <p>在工程实际中，热电联产主要有两种截然不同的系统架构：</p>
+
+        <ol>
+          <li><b>抽汽凝汽式热电联产（Extraction-Condensing CHP）</b>：
+            <p>机组保留了低压缸和冷凝器。在非供暖季（夏季），它就像普通纯凝电厂一样全力发电；在供暖季（冬季），开启汽轮机中压缸或低压缸上的<b>抽汽阀门</b>，将一部分蒸汽抽出用于供暖，其余蒸汽继续去低压缸做功。<b>优点是调节极其灵活性，可按需在“多发电”和“多供热”之间动态切换。</b></p>
+          </li>
+          <li><b>背压式热电联产（Back-Pressure CHP）</b>：
+            <p>机组彻底取消了低压缸和冷凝器！高压蒸汽在汽轮机里做完功后，排汽压力依然保持在 0.2 – 0.5 MPa（高于常压），排出的<b>全部蒸汽</b>直接通入供热网系统。由于没有凝汽器，<b>背压机组的冷源损失几乎为零，综合热效率可高达 88%-90%！</b>但它的致命缺点是“<b>以热定电</b>”——必须先看城市需要多少热量，才能决定能发多少电，完全失去了独立调节电功率的自由。</p>
+          </li>
+        </ol>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：北方城市“小散乱”锅炉替代与集中供热网</strong>
+            <p>在 2000 年以前，我国北方许多城市的冬季采暖依赖数万台散布在各个小区的小型燃煤采暖锅炉。这些小锅炉不仅热效率极低（仅 50% 左右），而且没有烟气脱硫脱硝设备，是造成冬季严重雾霾的首要元凶。随着国家“大气十条”及国家能源局《热电联产管理办法》的实施，我国全面推进<b>“以大代小”热电联产替代工程</b>。利用周边大型 600MW/1000MW 超临界火电机组实施抽汽供热改造，一头连接高效电网，一头连接数百公里的城市长输供热一级管网。不仅将城市采暖热效率翻倍，更使北方集中供热区域的二氧化硫与粉尘排放量下降了 90% 以上。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、 中国工程实践：超超临界与热电联产的“硬核重器”</h2>
+
+        <p>中国作为全球最大的电力消费国与最大的煤电拥有国，在超超临界技术与热电联产领域不仅实现了从“跟跑”到“领跑”的跨越，更创造了一系列刷新人类工程极限的世界纪录。</p>
+
+        <h3>3.1 煤电效率的巅峰之作：安徽淮北“平山二期”1350 MW 机组</h3>
+        <p>提起全球火力发电效率的最高峰，就不得不提到位于安徽淮北的<b>国家能源集团平山电厂二期工程</b>（1350 MW）。这是全球首台<b>单轴二次再热超超临界机组</b>，被工程界誉为“世界煤电之王”。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>二次再热（Double Reheat）技术</strong>
+            <p>普通热力循环中蒸汽只在锅炉里加热一次（单再热）。而<b>二次再热技术</b>是指：高压蒸汽在汽轮机高压缸做功后返回锅炉进行<b>第一次再热</b>；进入中压缸做功后，再次返回锅炉进行<b>第二次再热</b>，然后才进入低压缸做功。它极大地提高了循环的平均吸热温度，使热效率在超超临界的基础上再提升 2 – 3 个百分点。</p>
+          </div>
+        </div>
+
+        <p>平山二期工程的各项指标堪称震撼：</p>
+        <ul>
+          <li><b>极限蒸汽参数</b>：主蒸汽压力高达 <b>31.0 MPa</b>，主蒸汽/一次再热/二次再热温度达到 <b>600℃ / 620℃ / 620℃</b>。</li>
+          <li><b>创纪录的煤耗</b>：在满负荷设计工况下，其供电煤耗仅为 <b>249.31 g/kWh</b>！对比我国 2000 年时的平均煤耗（约 392 g/kWh），每发一度电少烧煤 142 克。仅这一台机组，每年即可节约标准煤数十万吨，减少二氧化碳排放超百万吨。</li>
+          <li><b>高低位双轴布局创新</b>：为了解决二次再热庞大蒸汽管道长距离折返带来的巨大热损失，平山二期采用了独特的“高低位布置”——将高压汽轮机直接放置在 80 米高的锅炉房顶层附近，实现了工程学上的历史性突破。</li>
+        </ul>
+
+        <h3>3.2 城市级“超级能量枢纽”：北方工业与民用 CHP 集中供热网</h3>
+        <p>在华北、东北及西北地区，大型超超临界热电联产机组早已超越了单纯“发电厂”的定义，成为了城市的超级能量枢纽。例如天津、太原、沈阳等城市，均建立了半径超过 50 公里的<b>超长距离大温差集中供热长输管网</b>。</p>
+
+        <p>在这些系统中，大型 CHP 机组在冬季通过高压抽汽和低压缸“切缸”供热，将几十千米外的电厂废热源源不断注入地下热网。同时，在工业园区中，<b>热电冷三联供（Combined Cooling, Heating and Power，CCHP）</b>更加展现了梯级利用的魅力：冬季供暖、夏季利用蒸汽驱动<b>溴化锂吸收式制冷机</b>制冷供空调用，实现了全年 365 天无间断的高效能量梯级循环。</p>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、 新型电力系统下的超超临界与热电联产：灵活性与协同挑战</h2>
+
+        <p>随着高比例风电、光伏等新能源大规模并网，电网呈现出极强的随机性与波动性。过去作为“主力基荷”稳定运行的超超临界与热电联产机组，被历史性地推上了<b>深调调峰（Deep Peak Shaving）</b>与<b>灵活性改造</b>的第一线。</p>
+
+        <h3>4.1 “热电捆绑”的困局与热电解耦技术</h3>
+        <p>北方冬季的新能源消纳面临着一个极其尖锐的热力学矛盾——<b>“热电捆绑”矛盾</b>：</p>
+
+        <p>深冬夜间，往往是陆上风电大爆发的高峰期，电网调度急需火电机组大幅压低发电负荷（甚至降到 20%-30% 负荷），腾出空间消纳绿电。然而，在极寒夜间，城市千家万户的采暖用热负荷处于绝对的高位！对于抽汽凝汽式 CHP 机组而言，要想保证足够的供热蒸汽量，锅炉就必须维持高蒸发量燃烧，导致发电机组的发电功率“压不下去”。这种<b>“以热定电”与“电网调峰”之间的剧烈冲突</b>，曾导致北方地区冬季出现严重的“弃风”现象。</p>
+
+        <p>为了打破这一枷锁，现代火电厂全面实施了<b>热电解耦（Heat-Power Decoupling）</b>三大核心工程改造：</p>
+
+        <ol>
+          <li><b>汽轮机低压缸“切缸”技术（Zero-flux Operation）</b>：
+            <p>在冬季供暖期，通过特殊控制阀门将进入低压缸的蒸汽量压缩到极其微小的安全冷却流量（仅占 1%-2%），而将其余 98% 的中压缸排汽全部抽去供热。这使得机组在维持 100% 满额供热的同时，发电功率可以猛降 50% 以上，极大地释放了电网调峰空间。</p>
+          </li>
+          <li><b>电锅炉（Electric Boiler）与熔盐蓄热系统</b>：
+            <p>在电厂内部装备大功率电极式热水锅炉或熔盐储热罐。当夜间风电过剩出现低谷电价时，电厂直接吸收电网过剩的绿电（甚至弃风电）来烧水蓄热供暖；而在电网高峰时，停止电加热，依靠储热罐放热供暖。这使得火电厂在“发电极低”甚至“反向购电”时，依然能完美保障城市供热！</p>
+          </li>
+          <li><b>热水蓄热罐（Thermal Energy Storage, TES）</b>：
+            <p>在热网首站建设数万立方米的巨型常压/加压热水储罐，充当热力缓冲垫，实现“热能的跨时空转移”。</p>
+          </li>
+        </ol>
+
+        <h3>4.2 超超临界机组与新型储能（BESS）的“黄金协同”</h3>
+        <p>前文提到，超超临界直流锅炉由于没有汽包，<b>水汽系统的热惯性缓冲能力远弱于亚临界汽包锅炉</b>。当电网频繁下发毫秒级的 AGC（自动发电控制）调频指令时，如果频繁剧烈调节超超临界锅炉的给煤和给水，会导致主蒸汽温度和压力剧烈波动，造成金属管道的热应力疲劳损坏。</p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：火电 + 电池储能（BESS）联合调频模式</strong>
+            <p>为了解决超超临界机组动态响应滞后与热应力损伤的痛点，现代火电厂广泛引入了<b>电池储能系统（Battery Energy Storage System，BESS）</b>。通常在电厂发电机出口配置 10–30 MW / 10–30 MWh 的电化学锂电池储能：</p>
+            <ul>
+              <li><b>毫秒级响应</b>：当电网频率瞬间发生微小跌落或狂飙时，BESS 在 100 毫秒内瞬间充放电，完美接管电网快速 AGC 指令；</li>
+              <li><b>保护火电主机</b>：超超临界锅炉无需频繁剧烈变动给煤量，只需以平缓的速率调整大负荷，彻底消除了主汽温剧烈波动的隐患，使整厂调频收益提升数倍，同时延长了机组寿命。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>超超临界（USC）的物理本质</strong>：当压力超越水的热力学临界点（22.064 MPa）时，液态水与蒸汽密度相等，沸腾相变现象彻底消失，汽化潜热降为零。水在直流锅炉中平滑过渡为超热蒸汽，消除了相变传热不可逆损失，热效率提升至 45%–50%。</li>
+        <li><strong>热电联产（CHP）的热力学哲学</strong>：贯彻“按质用能、梯级利用”。高品质高温蒸汽用于发电机做功，中低品质 130–180℃ 蒸汽抽出用于城市采暖或工业供热，彻底化解了纯凝电厂高达 50% 的凝汽器“冷源损失”，使综合能源利用率跃升至 80%–88%。</li>
+        <li><strong>工程重器与中国突破</strong>：以淮北“平山二期”1350 MW 单轴二次再热机组为代表，中国将主蒸汽参数推升至 31 MPa / 600℃ / 620℃ / 620℃，创造了 249.31 g/kWh 的全球最低煤耗纪录。</li>
+        <li><strong>新型电力系统协同</strong>：面对新能源爆发下的“热电捆绑”矛盾，通过切缸改造、熔盐蓄热及配置电化学储能（BESS），实现了火电机组“热电解耦”与高频灵活性调峰。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 关于水的热力学临界点（22.064 MPa, 373.95℃）以及超超临界锅炉的物理特性，以下哪种说法是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 超过临界点后，水沸腾时吸收的汽化潜热会达到历史最大值</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 超过临界点后，饱和水与饱和蒸汽的密度完全相同，相变界面消失，因此无需汽包进行汽水分离</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 超超临界锅炉因为压力极高，必须制造体积更大的汽包来承受巨大的水汽分离内压</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 超超临界状态下，液态水可以直接在常温下不吸热瞬间转变为蒸汽</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：在水的热力学临界点及以上（超临界/超超临界状态），液态水与饱和蒸汽的密度降为完全一致，相变界面完全消失，沸腾现象不复存在，汽化潜热降为零。因此超超临界锅炉无法也不需要依靠重力分离的汽包，必须采用直流锅炉（选项 B 正确，选项 A、C 错误）。工质从水变为蒸汽依然需要在炉管中持续吸收大量显热与过热热量，不可能不吸热（选项 D 错误）。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 热电联产（CHP）技术之所以能将电厂的综合能源利用率从纯凝电厂的约 45% 大幅提升至 80% 以上，最根本的热力学原因是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 抽汽供热消除了发电机组内部所有的机械摩擦损失</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 通过回收原本会在凝汽器中被冷却水白白排放到大气的蒸气汽化潜热（冷源损失），实现了能量梯级利用</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 热电联产完全不需要消耗煤炭或燃料即可自发产生热能</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 供暖热水在管网中循环时可以反向给发电机组输送额外的电能</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：常规纯凝发电厂最大的能量流失在于凝汽器中被冷却水带走散发到大气的冷源损失（占燃料热量的 50% 左右）。热电联产将做完大部分功的中低压蒸汽抽出来用于城市供暖或工业加热，把这部分巨大的潜热留在了供热管网中，遵循“按质用能、梯级利用”原则，从而将综合能源利用率提升至 80% 以上（选项 B 正确）。选项 A、C、D 均违背基本物理常识。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 关于“背压式热电联产”与“抽汽凝汽式热电联产”机组的对比，以下叙述正确的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 背压式机组由于保留了巨大的低压缸和冷凝器，所以调节灵活性极高</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 抽汽凝汽式机组没有冷源损失，热效率达到 100%</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 背压式机组排汽全部用于供热，没有冷源损失，但运行上“以热定电”，缺乏独立调节发电功率的自由度</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 抽汽凝汽式机组只能用于供暖，完全无法向外输送电能</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：背压式机组彻底取消了冷凝器和低压缸，排汽 100% 送去供热，因此没有冷源损失，热效率极高；但其发电功率完全取决于热负荷需求，即“以热定电”，缺乏灵活性（选项 C 正确，选项 A 错误）。抽汽凝汽式机组保留了低压缸和冷凝器，在非供热季可纯发电，在供热季可兼顾供热与发电，但仍存在少量的冷源损失（选项 B、D 错误）。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在北方冬季新能源（如风电）大爆发时，热电联产机组面临的“热电捆绑”矛盾主要表现为什么？如何通过技术手段解耦？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 风电大发需要火电大幅下调发电功率调峰，但火电为保障民生供暖又必须维持较高的蒸汽蒸发量，可以通过低压缸“切缸”或配置蓄热电锅炉来实现热电解耦</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 风电大发会导致热电联产机组的水冷壁瞬间结冰，必须停止供暖</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 热电联产机组在冬季只能发电不能供热，与风电产生了功能重叠</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 只要提高主蒸汽压力，就能在不消耗蒸汽的情况下源源不断向城市供热</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：冬季夜间风电大发时电网需要火电压低负荷，但 CHP 机组受制于居民供暖刚性需求必须维持高燃烧蒸发量，产生“以热定电”与电网调峰的剧烈冲突。通过低压缸切缸（大部分蒸汽去供热，极少去发电）、电锅炉利用低谷/弃风电加热蓄热等“热电解耦”技术，可以实现供热不减的同时大幅压低发电输出（选项 A 正确）。选项 B、C、D 描述均不符合工程实际。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 超超临界直流锅炉在参与电网频繁高频调频（AGC）时，为什么常与电化学储能系统（BESS）进行“火储联合调频”？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 因为超超临界机组无法产生电能，必须依赖储能电池发电</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 因为直流锅炉缺少汽包的大容量蓄热缓冲，频繁剧烈调节煤水比会导致主汽温剧烈波动与管道热应力疲劳；BESS 毫秒级响应可承担高频微调，保护主机稳定</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 储能电池可以代替锅炉直接燃烧煤炭</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 火储联合调频是为了将发电机发出的交流电全部转化为直流电储存起来不向电网输送</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：超超临界直流锅炉没有汽包，水汽系统蓄热小，变负荷时主汽温易剧烈波动，造成热应力损伤。配置 10–30 MW 电化学储能（BESS）后，BESS 负责快速响应毫秒级的 AGC 频繁波动，而超超临界主机只需平缓调整大负荷，既提高了调频收益与响应速度，又有效保护了主机寿命（选项 B 正确）。选项 A、C、D 均属于荒谬说法。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_2_1_朗肯循环原理.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">朗肯循环：热变电的奥秘</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_2_3_煤电调峰灵活性.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">煤电调峰：被逼出来的灵活性</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_2_1_朗肯循环原理.html">02_2_1 朗肯循环原理</a> — 热力学循环基础与四大部件</li>
+        <li><a href="02_2_3_煤电调峰灵活性.html">02_2_3 煤电调峰灵活性</a> — 新型电力系统下煤电的灵活性改造</li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_2_2</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
