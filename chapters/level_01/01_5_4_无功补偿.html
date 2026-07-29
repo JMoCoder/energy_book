@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>无功功率与补偿 — 电能质量 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析无功功率与补偿的核心物理原理、工程应用与实战案例。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_01</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电能质量</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">无功功率与补偿</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_5_3_谐波污染.html" class="nav-prev" title="上一节：谐波：电网里的噪音">← 上节</a>
+        <a href="../level_02/02_1_1_中国发电版图.html" class="nav-next" title="下一节：中国发电版图：谁点亮了万家灯火">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_01</span>
+        <span class="sep">›</span>
+        <span>电能质量</span>
+        <span class="sep">›</span>
+        <span>无功功率与补偿</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_5_4</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>无功功率与补偿：电网中的“无名英雄”与能量呼吸</h1>
+      <p class="chapter-lead">在电力系统中，除了真正做功发光发热的“有功功率”，还存在一种不直接做功却维持着交变磁场与电场建立的“无功功率”。如果把有功功率比作啤酒杯里解渴的金黄液体，无功功率就是支撑起整杯视觉质感却不解渴的“啤酒泡沫”。本节将带你深入剖析无功功率的物理本质、功率因数的经济与技术内涵、无功失衡引发的电压危局，以及从传统电容器（SVC）到现代化电力电子静止无功发生器（SVG）及储能变流器（PCS）四象限支撑的无功治理实战。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一：透彻理解无功功率的物理本质与“能量呼吸”</strong> — 能运用“啤酒与泡沫”以及“弹簧往复震动”的生活类比，清晰阐述有功功率（P）、无功功率（Q）与视在功率（S）的本质区别及功率三角形关系。</li>
+        <li><strong>核心目标二：掌握功率因数（$\cos\phi$）的技术经济内涵与惩罚机制</strong> — 理解功率因数的物理含义，掌握低功率因数导致线路电流剧增、变压器有效容量被“吞噬”的物理过程，以及国家《功率因数调整电费办法》的考核原理。</li>
+        <li><strong>核心目标三：理清无功流动与电网电压的紧密耦合关系</strong> — 牢记“无功不足导致电压下降，无功过剩导致电压飙升”的工程铁律，理解费兰梯效应（Ferranti Effect）与无功就地平衡的重要性。</li>
+        <li><strong>核心目标四：掌握现代无功补偿设备（FC、SVC、SVG）及储能变流器（PCS）四象限无功支撑技术</strong> — 熟练对比电容器、SVC 与 SVG 的响应速度与性能差异，掌握储能变流器（PCS）四象限运行与 SVG 协同控制在新型电力系统中的应用。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：西北某 100MW 新能源光伏+50MWh 储能电站的“无功罚款”与电压越限危局</h2>
+      <p>2024 年春，位于西北戈壁滩上的某 100MW 新能源光伏+25MW/50MWh 储能联合电站迎来了全年日照最充沛的发电高峰。然而月底财务结算时，电站负责人却收到了一张令人震惊的电费账单：因月度平均功率因数降至 0.82（远低于电力公司规定的 0.90 考核门槛），电站被电力调度部门根据国家《功率因数调整电费办法》执行了高达 45 万元的“力率电费罚款”！</p>
+      <p>不仅如此，调度中心还发来紧急切机通知：由于电站并网点电压在午后光伏满发时段异常飙升至 38.5kV（超过 35kV 额定电压的 +10% 运行上限），电站被强制切机限电 15%！电站运维团队百思不得其解：明明光伏板和储能电池都在全力向电网输送绿色电能，为什么电网还要罚款甚至限电？</p>
+      <p>“无功功率”既不消耗煤炭发热，也不转变为电机的机械能，为什么电网调度部门如此看重它？电站配电房里庞大的无功补偿柜（SVG）究竟是如何工作的？储能系统又是如何化身为电网电压的“守护神”的？答案就在本节的深入剖析之中。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 第一部分：无功功率本质 -->
+      <section>
+        <h2>一、 什么是无功功率？——电网里的“能量呼吸”与磁场吐纳</h2>
+
+        <p>在交流电路中，当我们把电源接入负载时，电网里传输的电功率并不是单一形态的。对于电阻性负载（如电热水器、白炽灯），电能被完全转化为热能或光能，这种<strong>单位时间内实际消耗、不可逆转地转化为其他形式能量的功率</strong>，被称为<strong>有功功率（Active Power，符号 P，单位：瓦特 W 或兆瓦 MW）</strong>。</p>
+
+        <p>但是，在现代电力系统中，绝大多数电气设备——如电力变压器、交流电动机、感应电炉等，都包含大量的线圈缠绕在铁芯上。这些设备在正常工作时，必须依靠磁场来传递能量或产生旋转力矩。建立和维持这个交变磁场所需的电能，在半个周期内从电源吸收，在另半个周期内又完好无损地释放还给电源。</p>
+
+        <p>这种在电源与电感/电容负载之间<strong>只进行周期性能量交换、并不实际消耗电能的功率</strong>，被称为<strong>无功功率（Reactive Power，符号 Q，单位：乏 var 或兆乏 Mvar）</strong>。</p>
+
+        <p><strong>第一层：大白话直觉</strong><br>
+        无功功率并不是“无用”的功率！“无功”二字容易让人误以为它是毫无价值的浪费，但事实上它的英文是“Reactive Power”（反应/响应功率）。它是设备建立磁场和电场的“租金”。如果没有无功功率建立磁场，变压器就无法升压降压，电动机的转子就无法旋转。它就像电网里的“无名英雄”，虽然不直接做功，但没有它，有功功率就根本无法传输和转化。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比一：啤酒与啤酒泡沫</strong>
+            <p>想象你在夏日里点了一杯扎啤：</p>
+            <ul>
+              <li><strong>金黄色的啤酒液体</strong>：代表<strong>有功功率（P）</strong>。这是你真正喝下肚、能解渴的实物（做功发光发热）。</li>
+              <li><strong>顶部洁白的啤酒泡沫</strong>：代表<strong>无功功率（Q）</strong>。你虽然不吃泡沫，但如果没有这层泡沫支撑，啤酒就会迅速氧化变质失去口感，而且整杯啤酒看起来干瘪不正宗。泡沫占据了啤酒杯的容积（占用设备容量），但它赋予了啤酒品质。</li>
+              <li><strong>整个啤酒杯的容量</strong>：代表<strong>视在功率（S）</strong>。杯子必须足够大，才能同时装下液体和泡沫。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比二：往复弹射的橡皮筋（能量呼吸）</strong>
+            <p>把电源和感性负载的关系比作两个人玩拉橡皮筋的游戏：</p>
+            <p>一个人（电源）用力把橡皮筋拉长，将手臂的动能转化为橡皮筋的弹性势能（建立磁场，吸收无功）；随后松开手，橡皮筋弹回，把弹性势能重新转化为动能还给手臂（磁场崩溃，释放无功）。在这个过程中，能量在橡皮筋和手臂之间来回往复流动，橡皮筋本身并没有把能量“吃掉”或烧掉，但手臂的肌肉却在持续做往复运动（线路中产生了无功电流）。</p>
+          </div>
+        </div>
+
+        <h3>1. 功率三角形：有功（P）、无功（Q）与视在功率（S）</h3>
+
+        <p>在正弦交流电路中，有功功率 $P$、无功功率 $Q$ 与电气设备所能承受的总极限容量——<strong>视在功率（Apparent Power，符号 S，单位：伏安 VA 或兆伏安 MVA）</strong>，构成了一个直角三角形，即著名的<strong>“功率三角形”</strong>。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 关键公式：功率三角形与视在功率关系</span>
+          <p>在交流电路中，视在功率 $S$、有功功率 $P$ 与无功功率 $Q$ 满足勾股定理几何关系：</p>
+          <p>$$S = \sqrt{P^2 + Q^2}$$</p>
+          <ul>
+            <li><strong>$S$（视在功率，MVA）</strong>：变压器、发电机或输电线路能承受的最大总电流与电压的乘积（设备制造上限）。</li>
+            <li><strong>$P$（有功功率，MW）</strong>：用户实际获得并消耗的功（做有用功）。</li>
+            <li><strong>$Q$（无功功率，Mvar）</strong>：电磁场往复交换能量的峰值速率。</li>
+          </ul>
+        </div>
+
+        <p><strong>为什么发电机和变压器的容量单位是 MVA 而不是 MW？</strong><br>
+        因为制造厂在生产变压器或发电机时，绝缘材料能承受的电压 $V$ 和导线能承受的电流 $I$ 是固定的，因此设备的最大发热限额由总电流决定（$S = V \times I$）。如果用户电路里无功功率 $Q$ 很大，那么留给有功功率 $P$ 的传输空间就会被大幅挤占！</p>
+
+        <h3>2. 容性无功与感性无功：互补的“能量吐纳”</h3>
+
+        <p>在电路物理学中，感性元件（如电感线圈）与容性元件（如平行板电容器）对无功功率的“吐纳时机”刚好相位相反 180°：</p>
+
+        <ul>
+          <li><strong>感性无功（Inductive Reactive Power）</strong>：电感中的电流滞后电压 90°。当电压达到峰值时，电感开始吸收能量建立磁场；当电压过零时，磁场崩溃释放能量。工程上规定<strong>感性负载为无功的“吸收者”</strong>。</li>
+          <li><strong>容性无功（Capacitive Reactive Power）</strong>：电容中的电流超前电压 90°。当电压升高的过程中，电容充电建立电场；当电压下降时，电容放电释放能量。工程上规定<strong>容性负载为无功的“提供者”</strong>。</li>
+        </ul>
+
+        <p>这一物理特性是所有无功补偿技术的基石：<strong>电感需要的无功，正好可以由电容在同一时刻就近提供！</strong>只要在感性负载旁边并联一个电容器，无功能量就可以直接在电容与电感之间互相传递，而不再需要从远方的发电厂经由数百公里的输电线路来回往返流动。</p>
+      </section>
+
+      <!-- 第二部分：无功过大的危害与功率因数 -->
+      <section>
+        <h2>二、 为什么无功过大是电网的噩梦？——功率因数的物理与经济账</h2>
+
+        <p>在了解了无功功率的物理本质后，我们来看一个衡量电网利用效率的关键指标——<strong>功率因数（Power Factor，缩写 PF，常用 $\cos\phi$ 表示）</strong>。</p>
+
+        <p>功率因数是有功功率 $P$ 与视在功率 $S$ 的比值：</p>
+        <p>$$\cos\phi = \frac{P}{S} = \frac{P}{\sqrt{P^2 + Q^2}}$$</p>
+
+        <p>当电路为纯电阻时，$\phi = 0^\circ$，$\cos\phi = 1.0$，此时视在功率全部转化为有功功率，电网传输效率最高；当电路中含有感性或容性负载时，$Q > 0$，$\cos\phi < 1.0$。</p>
+
+        <h3>1. 噩梦一：线路电流剧增，$I^2 R$ 线路发热损耗飙升</h3>
+
+        <p>假设某工业园区需要 1000 kW（1 MW）的有功功率来维持工厂机器运转。供电电压为 10 kV。我们对比两种不同功率因数下的线路传输电流：</p>
+
+        <ul>
+          <li><strong>情况 A（理想状态，$\cos\phi = 1.0$）</strong>：<br>
+          视在功率 $S = 1000 \text{ kVA}$，传输电流 $I = \frac{1000 \text{ kW}}{10 \text{ kV}} = 100 \text{ A}$。</li>
+          <li><strong>情况 B（低功率因数，$\cos\phi = 0.5$）</strong>：<br>
+          视在功率 $S = \frac{1000}{0.5} = 2000 \text{ kVA}$，传输电流 $I = \frac{2000 \text{ kVA}}{10 \text{ kV}} = 200 \text{ A}$！</li>
+        </ul>
+
+        <p><strong>物理后果</strong>：在情况 B 中，为了传输同样多的 1000 kW 有功功率，线路电流整整翻了一倍（200A）！根据焦耳定律（$P_{\text{loss}} = I^2 R$），输电线路上的热损耗与电流的平方成正比。电流翻倍意味着<strong>输电线路上的发热损耗剧增至原来的 4 倍（$2^2 = 4$）</strong>！大量的电能在电线杆上的导线上白白变成了散发到大气中的废热。</p>
+
+        <h3>2. 噩梦二：“吞噬”变压器与发电机的有效容量</h3>
+
+        <p>一座新建的 35kV/10kV 变压器，额定容量为 10 MVA（即视在功率上限 $S = 10 \text{ MVA}$）。这台变压器的造价可能高达数百万人民币。</p>
+
+        <ul>
+          <li>如果用户侧的功率因数维护在 <strong>0.95</strong>，该变压器可以安全输出 $10 \times 0.95 = 9.5 \text{ MW}$ 的有功功率，能供 10 个大型工厂满负荷生产。</li>
+          <li>如果用户侧功率因数降至 <strong>0.60</strong>，该变压器只能输出 $10 \times 0.60 = 6.0 \text{ MW}$ 的有功功率！剩下的 4.0 MVA 容量全部被无功电流挤占。变压器线圈已经发烫达到额定电流上限，却还有 3.5 MW 的工厂无法接入电网。</li>
+        </ul>
+
+        <p>这就相当于电力公司花了 100% 的资金建设电网基础设施，却因为低功率因数导致 40% 的设备容量被无意义的无功能量“死死卡住”，极大地浪费了社会工程投资。</p>
+
+        <h3>3. 中国的“考核警棍”：《功率因数调整电费办法》</h3>
+
+        <p>为了强力遏制用户低功率因数对公共电网的破坏，中国国家发改委与国家电网/南方电网联合出台了严格的《功率因数调整电费办法》（俗称“力率电费”标准）：</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>国家电网力率考核三条铁律</strong>
+            <ul>
+              <li><strong>0.90 考核标准</strong>：适用于 100kVA 及以上的农业用户和一般工业用户、新能源电站（光伏、风电、储能）。低于 0.90 时，每低 0.01，总电费加收 0.5%~2%；高于 0.90 时，每高 0.01，总电费奖励减收 0.15%~0.75%。</li>
+              <li><strong>0.95 考核标准</strong>：适用于 160kVA 以上的高压供电大工业用户。考核更为严苛！</li>
+              <li><strong>0.85 考核标准</strong>：适用于其他特定中小电力用户。</li>
+            </ul>
+            <p>这也是场景引入中西北光伏储能电站因功率因数 0.82 被罚款 45 万元的直接政策依据！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第三部分：无功与电压的紧密耦合 -->
+      <section>
+        <h2>三、 无功功率与电网电压的“生死纽带”</h2>
+
+        <p>在电网运行工程中，有一条被所有电力调度员奉为圭臬的<strong>终极控制铁律</strong>：</p>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 电网控制双圣律：有功决定频率，无功决定电压</span>
+          <ul>
+            <li><strong>有功功率平衡（P - f）</strong>：全网有功发用平衡决定了电网频率（50Hz）。有功不足，频率下降；有功过剩，频率上升。</li>
+            <li><strong>无功功率平衡（Q - V）</strong>：局部节点无功发用平衡决定了该节点电压（V）。无功不足，电压下降；无功过剩，电压飙升！</li>
+          </ul>
+        </div>
+
+        <h3>1. 为什么无功流动会直接改变节点电压？</h3>
+
+        <p>我们在高压输电线路中分析一段电阻为 $R$、感抗为 $X$ 的线路。当能量从节点 A 传输到节点 B 时，线路上的电压降落 $\Delta V$ 近似表示为：</p>
+
+        <p>$$\Delta V \approx \frac{P \cdot R + Q \cdot X}{V_n}$$</p>
+
+        <p>在中高压电网（如 35kV、110kV、500kV 线路）中，导线的感抗 $X$ 远远大于电阻 $R$（通常 $X \approx (5 \sim 10) \times R$）。因此，电阻项 $P \cdot R$ 可以忽略不计，电压降落公式可以简化为：</p>
+
+        <p>$$\Delta V \approx \frac{Q \cdot X}{V_n}$$</p>
+
+        <p><strong>工程含义</strong>：输电线路上的电压降 $\Delta V$ 几乎完全取决于线路上传输的无功功率 $Q$！</p>
+
+        <ul>
+          <li>当感性负载过大、无功供给不足时，$Q$ 沿线路大量流动，导致线路产生巨大的电压降 $\Delta V$，受电端电压 $V_B$ 迅速崩溃下降。</li>
+          <li>反之，如果在受电端注入过多的容性无功功率，$Q$ 的流向反转，线路电压降 $\Delta V$ 变成负值，受电端电压 $V_B$ 会反而高于送电端电压！</li>
+        </ul>
+
+        <h3>2. 恶性循环：无功不足引发的“电压崩溃”（Voltage Collapse）</h3>
+
+        <p>在电力史上，多次世界级大停电（如 1996 年北美西部大停电、2003 年美加“8·14”大停电）的元凶并不是频率崩溃，而是<strong>无功不足引发的电压雪崩</strong>。</p>
+
+        <p>其物理过程具有极强的恶性正反馈特性：</p>
+
+        <ol>
+          <li>电网某区域突发故障，多台发电机切机，无功供给减少。</li>
+          <li>该区域节点电压 $V$ 开始下降。</li>
+          <li>电网中并联的电容器无功输出量与电压平方成正比（$Q_c = \omega C V^2$）。当电压 $V$ 下降 10% 时，电容器输出的无功降低整整 19%（$0.9^2 = 0.81$）！</li>
+          <li>电容器无功输出剧减导致无功缺口进一步扩大，引发电压更加剧烈地坍塌。</li>
+          <li>最终导致整片区域电压归零，电网大面积黑港瘫痪。</li>
+        </ol>
+
+        <h3>3. 费兰梯效应（Ferranti Effect）：轻载长线路的电压异常飙升</h3>
+
+        <p>与无功不足相反，当高压长距离输电线路在深夜或轻载（如风电光伏夜间停发）运行时，线路本身的对地分布电容会持续向电网“充电”，产生大量的容性无功能量。</p>
+
+        <p>此时由于线路上没有足够的感性负载来消耗这些容性无功，过剩的无功功率逆向灌入电网，导致线路末端电压异常飙升，严重超出设备的绝缘耐压上限。这种<strong>超空载或轻载长线路末端电压高于始端电压的现象，被称为费兰梯效应（Ferranti Effect）</strong>。</p>
+      </section>
+
+      <!-- 第四部分：无功补偿技术演进 -->
+      <section>
+        <h2>四、 无功补偿技术演进：从“粗放开关”到“毫秒级动态静止无功发生器”</h2>
+
+        <p>为了消除无功过大带来的电费惩罚与电压安全隐患，电力工程界经历了长达百年的无功补偿技术演进。其核心思想始终是：<strong>“无功就地平衡，随缺随补，不过补，不欠补”</strong>。</p>
+
+        <h3>1. 第一代：无源并联电容器组（FC，Filter Capacitor）</h3>
+
+        <p>最传统的无功补偿设备是在配电母线上直接并联一组组通过交流接触器或断路器控制的电容器组。</p>
+
+        <ul>
+          <li><strong>优点</strong>：结构极其简单、造价廉价、无电子损耗。</li>
+          <li><strong>致命缺陷</strong>：
+            <ol>
+              <li><strong>阶梯式粗放调节</strong>：电容量只能按组投切（如 50kvar、100kvar），无法实现无级连续调节，容易造成“切一组欠补，投一组过补”。</li>
+              <li><strong>投切涌流与弧光</strong>：电容器合闸瞬间会产生高达额定电流 20~100 倍的剧烈冲击涌流，烧蚀触头并干扰电网。</li>
+              <li><strong>响应时间极慢</strong>：机械开关动作需要数百毫秒甚至数秒，根本无法跟上冲击性负载（如电弧炉、轧钢机或光伏云遮变幻）的无功波动。</li>
+            </ol>
+          </li>
+        </ul>
+
+        <h3>2. 第二代：静止无功补偿器（SVC，Static Var Compensator）</h3>
+
+        <p>20 世纪 70 年代，随着电力电子晶闸管（Thyristor）的发展，出现了第二代静止无功补偿器（SVC）。其主流架构为<strong>晶闸管控制电抗器（TCR）+ 无源滤波器（FC）</strong>。</p>
+
+        <p><strong>工作原理</strong>：FC 电容器组固定提供最大容性无功，而 TCR 利用晶闸管的触发延迟角，连续无级地改变电抗器的感性无功大小。两者相抵后，对外呈现出连续可调的无功输出。</p>
+
+        <ul>
+          <li><strong>优点</strong>：实现了无级连续调节，响应速度提升至 20~40 毫秒。</li>
+          <li><strong>缺点</strong>：晶闸管相控触发会产生大量的 5 次、7 次低频谐波；设备占地面积巨大；在电网电压降低时，输出无功能力按 $V^2$ 急剧衰减。</li>
+        </ul>
+
+        <h3>3. 第三代：静止无功发生器（SVG / STATCOM）</h3>
+
+        <p>21 世纪以来，基于全控型电力电子器件（IGBT）的<strong>静止无功发生器（SVG，Static Var Generator，在输电网被称为 STATCOM）</strong>成为了现代网储系统的标准配置。</p>
+
+        <p><strong>物理本质</strong>：SVG 的本质是一台<strong>自换相的电压源型逆变器（VSI）</strong>。它不再依靠大容量电容电感来储能，而是通过 IGBT 高频开关调制，主动产生一个振幅和相位完全可控的交流电压波形 $V_{svg}$。</p>
+
+        <ul>
+          <li>当 $V_{svg} > V_{grid}$（电网电压）时：SVG 输出<strong>容性无功电流</strong>（向电网发无功）。</li>
+          <li>当 $V_{svg} < V_{grid}$ 时：SVG 输出<strong>感性无功电流</strong>（从电网吸无功）。</li>
+          <li>当 $V_{svg} = V_{grid}$ 时：SVG 输出无功为零。</li>
+        </ul>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>SVG 的三大革命性工程突破</strong>
+            <ol>
+              <li><strong>超快响应速度（< 5 ms）</strong>：IGBT 开关频率高达数千赫兹，能在 5 毫秒内完成从全容性到全感性无功的跨越转换，完美平抑光伏/风电剧烈波动。</li>
+              <li><strong>恒流电流源特性</strong>：当系统电压下降到 20% 甚至更低时，SVG 依然能够输出额定的无功电流！这使其成为支撑电网“高低电压穿越（HVRT/LVRT）”的核心设备。</li>
+              <li><strong>占地面积小与谐波极低</strong>：无需大体积电抗器，采用多重化或 PWM 调制后输出波形接近完美正弦波。</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>4. 三代无功补偿设备技术参数对比表</h3>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem;">
+          <thead>
+            <tr style="background-color: var(--bg-tertiary); border-bottom: 2px solid var(--border-color);">
+              <th style="padding: 10px; text-align: left;">性能指标</th>
+              <th style="padding: 10px; text-align: left;">第一代 FC (电容器组)</th>
+              <th style="padding: 10px; text-align: left;">第二代 SVC (TCR+FC)</th>
+              <th style="padding: 10px; text-align: left;">第三代 SVG (STATCOM)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>核心器件</strong></td>
+              <td style="padding: 10px;">机械接触器 / 断路器</td>
+              <td style="padding: 10px;">晶闸管 (SCR) + 电抗器</td>
+              <td style="padding: 10px;">绝缘栅双极型晶体管 (IGBT)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>调节方式</strong></td>
+              <td style="padding: 10px;">离散阶梯式投切</td>
+              <td style="padding: 10px;">连续无级调节</td>
+              <td style="padding: 10px;">四象限连续无级调节</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>响应时间</strong></td>
+              <td style="padding: 10px;">1 秒 ~ 数秒</td>
+              <td style="padding: 10px;">20 ms ~ 40 ms</td>
+              <td style="padding: 10px;"><strong>&lt; 5 ms（毫秒级）</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>低电压输出特性</strong></td>
+              <td style="padding: 10px;">按 $V^2$ 急剧衰减</td>
+              <td style="padding: 10px;">按 $V^2$ 急剧衰减</td>
+              <td style="padding: 10px;"><strong>恒流特性（电压低依然额定输出）</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>谐波注入</strong></td>
+              <td style="padding: 10px;">无（但可能引发谐振）</td>
+              <td style="padding: 10px;">产生较大低次谐波（需加滤除）</td>
+              <td style="padding: 10px;">极低（可同时兼具 APF 滤波功能）</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>占地面积</strong></td>
+              <td style="padding: 10px;">较大</td>
+              <td style="padding: 10px;">很大（含大电抗器场）</td>
+              <td style="padding: 10px;"><strong>极小（紧凑柜式结构）</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 第五部分：储能系统的四象限无功支撑 -->
+      <section>
+        <h2>五、 储能系统（PCS）的四象限无功支撑与“储能+SVG”协同</h2>
+
+        <p>在传统的概念中，电池储能系统（BESS）的作用是“有功存储”——充电存电，放电供电。然而在新型电力系统中，现代储能变流器（Power Conversion System，PCS）绝不仅仅是一个有功转换器，它本身就是一台<strong>具备极高性能的四象限无功发生器！</strong></p>
+
+        <h3>1. 什么是 PCS 的四象限运行能力？</h3>
+
+        <p>在平面直角坐标系中，以有功功率 $P$ 为横轴（右正左负），无功功率 $Q$ 为纵轴（上正下负），分为四个象限：</p>
+
+        <ul>
+          <li><strong>第一象限（+P, +Q）</strong>：电池放电（输出有功），同时向电网输出容性无功（发无功支撑电压）。</li>
+          <li><strong>第二象限（-P, +Q）</strong>：电池充电（吸收有功），同时向电网输出容性无功。</li>
+          <li><strong>第三象限（-P, -Q）</strong>：电池充电（吸收有功），同时从电网吸收感性无功（降电压）。</li>
+          <li><strong>第四象限（+P, -Q）</strong>：电池放电（输出有功），同时从电网吸收感性无功。</li>
+        </ul>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：利用 PCS 的“虚容量”提供免费无功支撑</strong>
+            <p>假设一台 1 MVA 的储能 PCS，在某时刻电池处于待机状态（不充也不放，有功 $P = 0$）。此时，PCS 的整整 1 MVA 变流器容量完全空闲！</p>
+            <p>通过调度软件给 PCS 发送无功指令，PCS 可以在不需要消耗电池任何电量的情况下，向电网输出高达 <strong>1 Mvar 的无功功率</strong>！在午后光伏满发但电池已充满待机的时段，利用 PCS 的“剩余视在容量”提供动态无功支撑，不仅不需要额外购买独立的 SVG 硬件，还能参与电网无功辅助服务交易获利。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：青海某 100MW/200MWh 储能电站的“AVR 动态电压支撑与零罚款实践”</strong>
+            <p><strong>项目背景</strong>：青海共和集中式光伏基地内的一座 100MW/200MWh 共享储能电站，接入 330kV 变电站。该地区弱电网特征明显，午后光伏集中并网时段，330kV 母线电压经常因无功过剩冲高至 350kV；而傍晚光伏停发、用电负荷飙升时，母线电压又跌至 315kV，电压波动剧烈。</p>
+            <p><strong>解决方案</strong>：电站配置了 1 组 20Mvar 独立集中式 SVG，并与电站内 40 台 2.5MW 储能 PCS 建立了基于 IEC 61850 GOOSE 通信的“SVG + PCS 无功协同控制系统（AVR）”：</p>
+            <ol>
+              <li><strong>稳态响应</strong>：优先调用集中式 SVG 进行稳态功率因数补偿，使并网点 $\cos\phi$ 稳定保持在 0.99 以上。</li>
+              <li><strong>暂态突变</strong>：当 330kV 母线发生跌落或飙升事故时，利用 40 台 PCS 的毫秒级响应能力，在 20ms 内瞬间注入最大 50Mvar 的无功电流进行“死磕强撑”，帮助电网成功度过高低电压穿越。</li>
+            </ol>
+            <p><strong>实施效果</strong>：该电站运行第一年，力率考核电费收益（奖励）达 38 万元，因成功参与西北电网无功辅助服务市场，额外获取无功补偿收益 65 万元，实现了技术效益与经济收益的双丰收！</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>无功功率本质与能量呼吸</strong>：无功功率（Q，单位 var/Mvar）是建立与维持交变电磁场所需的“能量租金”。它在电源与负载间周期性往复流动而不消耗实际能量（如同啤酒泡沫），但它决定了视在功率（S）的大小与传输效率。</li>
+        <li><strong>功率因数与惩罚机制</strong>：功率因数 $\cos\phi = P / S$。低功率因数会导致线路电流剧增、发热损耗按 $I^2 R$ 呈指数飙升，并严重挤占变压器容量。中国国家电网对新能源及大工业用户实施严格的力率考核（$\cos\phi \ge 0.90/0.95$），低于门槛将面临高额罚款。</li>
+        <li><strong>无功与电压紧密耦合</strong>：在输电网中，无功流动直接决定节点电压（$\Delta V \approx Q X / V$）。无功不足会引发雪崩式“电压崩溃”，无功过剩（如轻载长线路）会引发“费兰梯效应”导致电压越限飙升。</li>
+        <li><strong>补偿技术演进与网储协同</strong>：从粗放离散的电容器组（FC），演进到晶闸管控制的 SVC，再发展到基于 IGBT 的毫秒级 SVG。现代储能变流器（PCS）具备四象限运行能力，可利用剩余视在容量协同 SVG 提供极速动态电压支撑。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 关于交流电路中的无功功率，下列说法中正确的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 无功功率完全是电路里的无用浪费，应该通过技术手段降低到绝对零</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 无功功率是在电源与感性/容性负载之间周期性交换能量的速率，用于建立电磁场</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 容性负载与感性负载都吸收无功功率，两者无法相互抵消</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 只要功率因数等于 1.0，变压器就完全不需要承受任何电流</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：<br>
+          选项 B 准确表述了无功功率的物理本质：它是建立交变电磁场所需的能量往复流动速率，并不实际消耗电能。<br>
+          选项 A 错误：变压器和电动机必须依赖无功功率建立磁场才能运转，不能降低到零；<br>
+          选项 C 错误：感性负载吸收无功（电流滞后），容性负载释放无功（电流超前），两者相位相反 180°，正好可以互补抵消；<br>
+          选项 D 错误：即使 $\cos\phi = 1.0$，传输有功功率依然需要有功电流，变压器仍需承受有功电流。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 某工厂的有功功率为 800 kW，无功功率为 600 kvar。请问该工厂此时的视在功率 $S$ 和功率因数 $\cos\phi$ 分别是多少？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. S = 1400 kVA, cosφ = 0.57</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. S = 1000 kVA, cosφ = 0.80</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. S = 1000 kVA, cosφ = 0.75</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. S = 1400 kVA, cosφ = 0.80</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：<br>
+          根据功率三角形直角几何关系：$S = \sqrt{P^2 + Q^2} = \sqrt{800^2 + 600^2} = \sqrt{640000 + 360000} = \sqrt{1000000} = 1000 \text{ kVA}$。<br>
+          功率因数 $\cos\phi = P / S = 800 / 1000 = 0.80$。<br>
+          选项 B 正确。选项 A 和 D 误将有功和无功直接代数相加；选项 C 误用 $Q/P$ 计算。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在高压远距离输电线路中，如果某节点无功功率严重不足，将会直接导致该节点发生什么工程现象？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 电网频率剧烈飙升超出 50Hz</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 节点电压急剧下降，严重时引发恶性循环式的“电压崩溃”</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 输电线路的电阻阻值瞬间变为零</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 发电机转速加速飞车</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：<br>
+          根据电网运行铁律“无功决定电压，有功决定频率”。线路电压降落 $\Delta V \approx Q X / V$。无功不足会导致线路产生巨大的电压降，使节点电压暴跌。由于电容器补偿量与 $V^2$ 成正比，电压跌落进一步减少无功供给，极易诱发恶性正反馈的“电压崩溃”（Voltage Collapse）。选项 A 和 D 是有功失衡（P-f）导致的结果。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 与传统 SVC（静止无功补偿器）相比，现代基于 IGBT 的 SVG（静止无功发生器）具有哪个显著的性能优势？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 响应速度慢，只能按分钟级进行调节</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 当电网电压大幅降低时，SVG 依然具备恒流输出额定无功电流的能力</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. SVG 必须依靠庞大的电抗器场地才能工作，占地面积比 SVC 大 3 倍</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. SVG 会向电网注入大量低次脉动谐波</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：<br>
+          SVG 是基于 IGBT 的电压源型逆变器，其输出无功电流受电力电子高频调制控制，呈现电流源特性。当电网电压严重跌落时，传统 SVC/FC 的无功输出随 $V^2$ 急剧衰减，而 SVG 依然能恒流输出额定无功电流，对高低电压穿越具有强大的支撑作用。<br>
+          选项 A 错在 SVG 响应速度在 5ms 以内；选项 C 错在 SVG 无需大电抗器，占地极小；选项 D 错在 SVG 高频 PWM 开关后几乎不注入谐波。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 储能变流器（PCS）在不进行电池充放电（有功 P = 0）时，是否可以向电网输出无功功率？其主要依据是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 不可以，没有电池电池提供化学能就绝对无法产生任何交流信号</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 可以，利用 PCS 的四象限运行能力与剩余视在容量（S），高频调制电容电感间能量吐纳</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 可以，但会导致电池内部锂离子迅速剧烈消耗崩溃</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 不可以，国家电网明文禁止储能设备参与无功调节</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：<br>
+          无功功率只涉及交变电磁场在变流器交流侧与电网之间的能量交换，不消耗实际化学能量。PCS 作为四象限电力电子逆变器，在有功 $P = 0$ 时，可以完全动用其额定视在容量 $S$ 作为无功发生器（SVG），向电网提供容性或感性无功支撑，且不消耗电池电量与寿命。因此选项 B 正确。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_5_3_谐波污染.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">谐波：电网里的噪音</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="../level_02/02_1_1_中国发电版图.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">中国发电版图：谁点亮了万家灯火</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="01_4_2_电感与电容.html">01_4_2 电感与电容：储能电路中的“蓄水池”与“飞轮”</a></li>
+        <li><a href="01_5_1_电能质量概述.html">01_5_1 电能质量概述：电网的“健康体检报告”</a></li>
+        <li><a href="01_5_2_电压偏差与频率偏差.html">01_5_2 电压偏差与频率偏差：电网的“血压”与“心率”</a></li>
+        <li><a href="01_5_3_谐波污染.html">01_5_3 谐波：电网里的“杂音”与“噪音污染”</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_5_4</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
