@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>交流还是直流？历史上的电流大战 — 交流电理论 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析交流电（AC）与直流电（DC）的物理本质、爱迪生与特斯拉的电流大战历史背景、变压器与升压输电原理、过零灭弧物理机制，以及特高压直流（HVDC）与新型储能变流器（PCS）在现代电网中的复兴与应用。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_01</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">交流电理论</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">交流还是直流？历史上的电流大战</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="01_2_4_功率守恒与保护装置.html" class="nav-prev" title="上一节：功率守恒与保护装置">← 上节</a>
+        <a href="01_3_2_正弦波数学语言.html" class="nav-next" title="下一节：正弦波：交流电的数学语言">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_01</span>
+        <span class="sep">›</span>
+        <span>交流电理论</span>
+        <span class="sep">›</span>
+        <span>交流还是直流？历史上的电流大战</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">01_3_1</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>交流还是直流？历史上的电流大战</h1>
+      <p class="chapter-lead">从19世纪末爱迪生与特斯拉的商业撕咬，到21世纪特高压直流与新型储能系统的崛起：理解交流与直流的物理本质、升降压决定命运的历史逻辑，以及电化学储能如何在交流电网中架起双向桥梁。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解物理本质</strong>：明确区分直流电（DC）与交流电（AC）的电流流动特征、极性变化与波形表示。</li>
+        <li><strong>掌握核心矛盾</strong>：深刻理解导线电阻热损耗公式 $P_{\text{loss}} = I^2 R$ 与电压升高对减小远距离输电损耗的决定性物理作用。</li>
+        <li><strong>复盘历史大战</strong>：理清 19 世纪末“电流大战”中爱迪生与特斯拉交锋的技术核心，掌握交流电统治电力系统百年的三大物理支柱（变压器简易变压、旋转磁场电机、天然过零点灭弧）。</li>
+        <li><strong>领悟现代复兴</strong>：理解电力电子器件（IGBT/PCS）如何赋予直流电“升降压”超能力，以及我国昌吉-古泉 ±1100kV 特高压直流工程与新型储能系统在交直流融合电网中的重磅地位。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：从珍珠街的暗淡灯光到 3300 公里的特高压龙脉</h2>
+      <p>1882 年 9 月 4 日下午 3 点，发明大王托马斯·爱迪生（Thomas Edison）合上开关，纽约珍珠街（Pearl Street）电站的直流发电机轰鸣作响，400 盏白炽灯随之点亮。然而，这项伟大的发明很快撞上了物理学的高墙——因为使用 110V 低压直流电输电，铜导线上的发热损耗惊人，电站的有效供电半径竟然不超过 1.5 公里！为了给整座纽约城供电，爱迪生不得不计划在每隔几条街区就砸重金建造一座发电厂。</p>
+      <p>110 年后的中国新疆，昌吉-古泉 ±1100 千伏特高压工程正源源不断地将新疆的风电、光伏与煤电送往 3293 公里之外的安徽省，一举刷新了人类输电距离与容量的极限。令人惊奇的是，这条横跨半个中国的输电“大动脉”采用的竟然也是直流电！而连接在这条电网骨干上的现代储能电站里，磷酸铁锂电池组输出的依然是直流电，却需要通过储能变流器（PCS）以每秒 50 次的频率将其变换为交流电注入电网。</p>
+      <p>为什么当年爱迪生的直流电惨败给特斯拉的交流电？为什么经历了一百年的交流电独霸之后，直流电又在特高压输电与新型储能领域强势复兴？要弄懂现代电力系统与新型储能电站的架构，我们必须回到这场改变人类文明走向的“电流大战”，拆解交流与直流背后的物理定律。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、电流的两种表情：直流电（DC）与交流电（AC）的物理本质</h2>
+        
+        <p>在讨论输电与储能之前，我们首先需要搞清楚：当我们在谈论“直流电”和“交流电”时，电荷在导线内部到底是如何运动的？</p>
+
+        <h3>1.1 直流电（DC）：单向奔跑的恒定水流</h3>
+        <p><strong>直觉感受</strong>：直流电（Direct Current，缩写为 <strong>DC</strong>）就像一条朝固定方向缓缓流动的河流。在这条河流中，水流的方向始终保持不变。</p>
+        <p>从微观物理机制来看，直流电是指自由电子在电场力的作用下，始终沿着导线的同一个方向做定向漂移。如果在直角坐标系中画出直流电的电压或电流随时间变化的波形图，会发现它是一条平直的横线（稳态直流），或者始终位于横轴上方（脉动直流）。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：循环水泵与单向水车</strong>
+            <p>想象一个封闭的环形水管系统，中间装有一个旋转水泵。只要水泵持续往顺时针方向推水，水管里的水就会源源不断地沿顺时针方向流动，推动管道途中的水车旋转。在这个类比中：水泵就是电池或直流电源，水流就是电流，水车就是用电设备（如灯泡或电动机）。水流方向自始至终没有发生改变。</p>
+          </div>
+        </div>
+
+        <p>在日常生活中与现代工业中，许多常见的设备都工作在直流状态下：</p>
+        <ul>
+          <li><strong>化学电池</strong>：干电池、手机锂电池、新能源汽车动力电池、储能电站电池簇（输出均为直流电）。</li>
+          <li><strong>光伏发电</strong>：太阳能电池板在光照下通过光生伏特效能直接产生直流电。</li>
+          <li><strong>电子设备内部芯片</strong>：电脑 CPU、手机芯片、LED 照明灯珠，都需要稳定的低压直流电（如 5V、12V、3.3V）供电。</li>
+        </ul>
+
+        <h3>1.2 交流电（AC）：来回摆动的潮汐水流</h3>
+        <p><strong>直觉感受</strong>：交流电（Alternating Current，缩写为 <strong>AC</strong>）就像大海的潮汐，一会儿向东涌去，一会儿向西退回。水流的方向在不断进行周期性交替变化。</p>
+        <p>在微观层面，交流电作用下，导线中的自由电子并不是沿着导线一路跑到底，而是在原地附近做来回往复的摆动。电荷往复运动的频率决定了交流电的周期。在我国，电力电网的标准频率是 <strong>50Hz</strong>（赫兹），这意味着导线中的电流方向每秒钟要改变 <strong>100 次</strong>（一个周期包含正向和反向各一次）。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：推拉活塞与手摇锯子</strong>
+            <p>想象你在用一把手摇锯子锯木头：锯条先向前推，再向后拉，如此反复。虽然锯条本身没有沿着木头一路“跑远”，但这种来回往复的运动却源源不断地把你的手臂力量（机械能）传递到了木头上，完成了切削工作。交流电也是如此——自由电子虽然只是在原地摆动，却把能量源源不断地从发电厂传输到了千家万户。</p>
+          </div>
+        </div>
+
+        <p>在波形表现上，电力工程中最标准的交流电是<strong>正弦波交流电</strong>（Sinusoidal AC），其电压和电流随时间的变化遵循正弦函数规律 $u(t) = U_m \sin(\omega t + \varphi)$。关于正弦波的振幅、频率、相位等数学细节，我们将在下一节进行深度展开。</p>
+
+        <!-- SVG 示意图：交流 vs 直流波形对比 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 700 240" width="100%" height="240" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 直流坐标系 -->
+            <g transform="translate(40, 20)">
+              <text x="130" y="20" font-family="Noto Sans SC" font-size="14" font-weight="600" fill="#1A5F96" text-anchor="middle">直流电 (DC) 波形</text>
+              <!-- 坐标轴 -->
+              <line x1="30" y1="160" x2="260" y2="160" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <line x1="30" y1="170" x2="30" y2="30" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <text x="260" y="180" font-family="Inter" font-size="12" fill="#718096">时间 t</text>
+              <text x="10" y="30" font-family="Inter" font-size="12" fill="#718096">电压 V</text>
+              <!-- DC 稳态直线 -->
+              <line x1="30" y1="70" x2="250" y2="70" stroke="#2E7D32" stroke-width="3"/>
+              <text x="140" y="60" font-family="Noto Sans SC" font-size="12" fill="#2E7D32" font-weight="600">恒定直流电 (如电池 12V)</text>
+            </g>
+
+            <!-- 分隔虚线 -->
+            <line x1="350" y1="20" x2="350" y2="210" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="4"/>
+
+            <!-- 交流坐标系 -->
+            <g transform="translate(370, 20)">
+              <text x="130" y="20" font-family="Noto Sans SC" font-size="14" font-weight="600" fill="#1A5F96" text-anchor="middle">交流电 (AC) 正弦波形</text>
+              <!-- 坐标轴 -->
+              <line x1="30" y1="110" x2="270" y2="110" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <line x1="30" y1="180" x2="30" y2="30" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <text x="270" y="130" font-family="Inter" font-size="12" fill="#718096">时间 t</text>
+              <text x="10" y="30" font-family="Inter" font-size="12" fill="#718096">电压 V</text>
+              <!-- 正弦波曲线 -->
+              <path d="M 30 110 Q 75 30, 120 110 T 210 110 T 260 110" fill="none" stroke="#F57C00" stroke-width="3"/>
+              <text x="80" y="50" font-family="Noto Sans SC" font-size="11" fill="#F57C00">正半周 (电流正向)</text>
+              <text x="170" y="170" font-family="Noto Sans SC" font-size="11" fill="#F57C00">负半周 (电流反向)</text>
+            </g>
+
+            <!-- 箭头定义 -->
+            <defs>
+              <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <polygon points="0 0, 6 3, 0 6" fill="#4A5568"/>
+              </marker>
+            </defs>
+          </svg>
+          <figcaption>图 1-3-1：直流电（恒定方向）与正弦交流电（方向周期性反转）的波形特征对比</figcaption>
+        </figure>
+
+        <h3>1.3 直流电与交流电核心特性对比</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>对比维度</th>
+                <th>直流电（Direct Current，DC）</th>
+                <th>交流电（Alternating Current，AC）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>电流与极性</strong></td>
+                <td>方向固定不变，正负极明确固定</td>
+                <td>方向与大小随时间做周期性交替变化，无固定正负极</td>
+              </tr>
+              <tr>
+                <td><strong>传统升降压难度</strong></td>
+                <td>极难（19世纪无法通过静止变压器变压）</td>
+                <td>极易（利用铁芯与线圈的电磁感应即可高效升降压）</td>
+              </tr>
+              <tr>
+                <td><strong>能量储存能力</strong></td>
+                <td>可直接储存于化学电池、电容器中</td>
+                <td>无法直接储存，必须先整流转换为直流电才能储存在电池中</td>
+              </tr>
+              <tr>
+                <td><strong>高压断路开断</strong></td>
+                <td>无电流过零点，高压断路时拉弧严重，熄灭困难</td>
+                <td>天然存在每秒100次（50Hz）电流过零点，易于灭弧开断</td>
+              </tr>
+              <tr>
+                <td><strong>发电机与电机结构</strong></td>
+                <td>传统直流发电机需要复杂的换向器与电刷，易磨损</td>
+                <td>交流感应电动机结构极其坚固简单（无电刷）、成本低廉</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>记忆技巧：正负极的识别</strong>
+            <p>观察你家里的电池：干电池标有明显的“+”和“-”号，这是因为电池输出的是<strong>直流电</strong>，正负极绝对不能接反；而墙上的两孔插座，虽然一孔是火线（L）一孔是零线（N），但你插电风扇插头时正插反插都能工作，这是因为插座里流动的是<strong>交流电</strong>，极性每秒钟在颠倒 50 次！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、19世纪末的“电流大战”：升压者得天下</h2>
+
+        <p>了解了交流与直流的区别后，我们再来看电气工程史上最精彩的一幕：19 世纪 80 年代至 90 年代发生在美洲大陆的“电流大战”（War of the Currents）。这不仅是发明大王托马斯·爱迪生与工业巨头乔治·威斯汀豪斯（George Westinghouse）、天才发明家尼古拉·特斯拉（Nikola Tesla）之间的商业决斗，更是一场严酷的物理定律大检验。</p>
+
+        <h3>2.1 爱迪生的珍珠街电站与直流输电的“致命致命伤”</h3>
+        <p>1882 年，爱迪生组建了爱迪生电灯公司，在纽约建造了世界上第一个商业化直流供电系统——珍珠街电站。他采用的是 <strong>110V 低压直流电</strong>。</p>
+        <p>然而，当发电机送电距离稍微延长几百米时，沿途用户家里的电灯就突然变得异常暗淡。爱迪生的工程师们遭遇了来自焦耳定律（Joule's Law）的无情痛击！</p>
+
+        <div class="key-concept">
+          <h4>📌 核心定理：输电线路热损耗公式</h4>
+          <p>设输电线路上传输的电功率为 $P$，输电电压为 $U$，输电线路的总电阻为 $R$。根据功率公式 $P = U \times I$，输电电流为：</p>
+          $$I = \frac{P}{U}$$
+          <p>导线发热消耗的废热功率（线损功率）为：</p>
+          $$P_{\text{loss}} = I^2 \times R = \left(\frac{P}{U}\right)^2 \times R = \frac{P^2 \cdot R}{U^2}$$
+          <p><strong>物理含义</strong>：输电线上的热损耗，与输电电流的平方 $I^2$ 成正比；在传输相同总功率 $P$ 的前提下，<strong>线损与输电电压的平方 $U^2$ 成反比！</strong></p>
+        </div>
+
+        <p>我们用真实的数据来算一笔账：</p>
+        <p>假设要给距离电站 2 公里之外的一座工厂输送 <strong>100 千瓦（100,000 W）</strong> 的电功率，输电导线电阻 $R = 1 \ \Omega$：</p>
+        <ul>
+          <li><strong>方案 A（爱迪生 110V 低压直流输电）</strong>：
+            <ul>
+              <li>输电电流 $I = \frac{100,000\text{ W}}{110\text{ V}} \approx 909\text{ A}$；</li>
+              <li>线损功率 $P_{\text{loss}} = I^2 R = (909)^2 \times 1 \approx 826,000\text{ W} = \mathbf{826\text{ kW}}$！</li>
+              <li><strong>结果</strong>：线损竟然是传输功率的 8.26 倍！电还没送到工厂，所有的电能就已经全部化为废热把输电线烧熔了。要想不烧线，就必须铺设像橡木桶一样粗的纯铜导线，这在商业上是完全不可能承受的昂贵。</li>
+            </ul>
+          </li>
+          <li><strong>方案 B（升压至 11,000V 高压输电）</strong>：
+            <ul>
+              <li>输电电压提高了 100 倍（$U = 11,000\text{ V}$）；</li>
+              <li>输电电流缩小为原来的 $\frac{1}{100}$，即 $I = \frac{100,000}{11,000} \approx 9.09\text{ A}$；</li>
+              <li>线损功率 $P_{\text{loss}} = (9.09)^2 \times 1 \approx 82.6\text{ W}$！线损直降为原来的 $\frac{1}{10000}$！</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p>结论显而易见：<strong>要进行远距离输电，就必须大幅度提高输电电压！</strong></p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>19世纪直流电的死穴：缺乏简易变压手段</strong>
+            <p>在 19 世纪末，电力电子半导体（如 IGBT）尚未发明。人们完全无法在静止的设备中将 110V 直流电提升到 10,000V。爱迪生面对高额线损无计可施，唯一的办法就是在城市里密密麻麻地建造小型直流电站，使得供电半径限制在 1 公里以内。这就是为什么当时的直流电被称为“富人的奢侈品”，根本无法推广到广大农村和郊区。</p>
+          </div>
+        </div>
+
+        <h3>2.2 特斯拉与威斯汀豪斯的反击：变压器的“魔法”</h3>
+        <p>就在爱迪生深陷“一公里电站困境”时，塞尔维亚籍天才发明天才尼古拉·特斯拉（Nikola Tesla）带着他的交流电专利走上了历史舞台。实业家乔治·威斯汀豪斯敏锐地意识到了交流电的降维打击能力，买下了特斯拉的交流电专利，正式向爱迪生发起挑战。</p>
+
+        <p>交流电的核心“杀手锏”，就是基于法拉第电磁感应原理制成的<strong>变压器（Transformer）</strong>：</p>
+        <ol>
+          <li>在发电厂，发电机发出交流电后，通过升压变压器，极其轻松地将电压从几百伏提高到几万伏甚至几十万伏（电流随之大幅缩小）；</li>
+          <li>高压交流电沿着细细的输电线轻松跨越数十、数百公里；</li>
+          <li>在靠近用户的降压变电站，再通过降压变压器，将高压电安全地降低到 220V/110V 输入千家万户。</li>
+        </ol>
+
+        <p>变压器内部没有任何机械旋转部件，结构极其简单，能量转换效率高达 98% 以上！这一“升压输电、降压用电”的完美闭环，彻底摧毁了爱迪生直流电网的成本壁垒。</p>
+
+        <!-- SVG 示意图：交流高压输电闭环链条 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 700 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 发电厂 -->
+            <rect x="20" y="45" width="100" height="70" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="70" y="75" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#1A5F96" text-anchor="middle">发电厂</text>
+            <text x="70" y="95" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">AC 10kV</text>
+
+            <!-- 箭头 1 -->
+            <path d="M 120 80 L 160 80" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+            <!-- 升压变压器 -->
+            <rect x="165" y="45" width="100" height="70" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="215" y="75" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#F57C00" text-anchor="middle">升压变压器</text>
+            <text x="215" y="95" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">10kV → 220kV</text>
+
+            <!-- 箭头 2 (高压输电线路) -->
+            <path d="M 265 80 L 420 80" stroke="#D32F2F" stroke-width="3" stroke-dasharray="6,3" marker-end="url(#arrowhead)"/>
+            <text x="342" y="70" font-family="Noto Sans SC" font-size="11" font-weight="600" fill="#D32F2F" text-anchor="middle">远距离高压输电 (电流极小、损耗极低)</text>
+
+            <!-- 降压变压器 -->
+            <rect x="425" y="45" width="100" height="70" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="475" y="75" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#F57C00" text-anchor="middle">降压变压器</text>
+            <text x="475" y="95" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">220kV → 220V</text>
+
+            <!-- 箭头 3 -->
+            <path d="M 525 80 L 565 80" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+            <!-- 终端用户 -->
+            <rect x="570" y="45" width="100" height="70" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+            <text x="620" y="75" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#2E7D32" text-anchor="middle">千家万户</text>
+            <text x="620" y="95" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">安全用电 220V</text>
+          </svg>
+          <figcaption>图 1-3-1b：交流输电系统的升压输电与降压用电闭环模型</figcaption>
+        </figure>
+
+        <h3>2.3 决胜尼亚加拉：交流电锁死胜局</h3>
+        <p>为了挽救直流电的颓势，爱迪生发起了一场残酷的抹黑公关战。他向公众演示用交流电电死流浪猫狗甚至大象，宣称交流电“极其危险”，并协助政府设计了世界上第一座用于死刑的“交流电椅”。</p>
+        <p>然而，商业与物理规律不容扭曲：</p>
+        <ul>
+          <li><strong>1893 年芝加哥世博会</strong>：威斯汀豪斯凭极其低廉的交流电方案竞标成功。特斯拉在展会上用近十万盏彩灯将世博会夜空照得如同白昼，并向观众演示交流电安全穿过人体点亮灯泡，彻底粉碎了“交流电致命”的谣言。</li>
+          <li><strong>1895 年尼亚加拉大瀑布水电站项目</strong>：水力发电厂距离工业重镇水牛城有 35 公里之遥。爱迪生的直流方案经计算成本天价，而特斯拉的三相交流发电机组一举成功送电，标志着“电流大战”以交流电的辉煌全胜而终结。</li>
+        </ul>
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、为什么现代电网依然是交流电统治？三大物理支柱</h2>
+
+        <p>在电流大战结束后的整个 20 世纪，交流电建立起了坚不可摧的垄断帝国。哪怕今天直流电在许多领域重现辉煌，全球 99% 的输电骨干网络依然是交流电网。这背后是由三大深层次物理支柱决定的：</p>
+
+        <h3>3.1 物理支柱一：变压器无法直接作用于直流电</h3>
+        <p>根据法拉第电磁感应定律（Faraday's Law of Induction），线圈中感应电动势 $e$ 的大小与穿过线圈的<strong>磁通量变化率</strong> $\frac{d\Phi}{dt}$ 成正比：</p>
+        $$e = -N \frac{d\Phi}{dt}$$
+        <p>在交流电路中，因为电流方向和大小在不断交变，铁芯内部产生的磁场也在不断强弱变化和颠倒方向（$\frac{d\Phi}{dt} \neq 0$），因此次级线圈能持续感应出电动势。</p>
+        <p>然而，如果把稳定的直流电通入变压器初级线圈，虽然也会建立磁场，但这个磁场是静态恒定的（磁通量变化率 $\frac{d\Phi}{dt} = 0$）。因此，次级线圈根本感应不出任何电压！不仅如此，由于变压器线圈电阻极小，通入直流电会导致初级线圈直接过流烧毁。</p>
+
+        <h3>3.2 物理支柱二：交流电天然的“过零点”熄弧优势</h3>
+        <p>高压电力系统中最危险的操作之一就是切断电流。当成百上千安培的电流流动在几万伏高压线路中时，如果你用高压断路器（Breaker）拉开闸刀，空气会被瞬间击穿形成数千度高温的高压电弧（Arcing）。电弧像一条熊熊燃烧的火龙，不仅无法断开电路，还会瞬间熔化开关设备。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：吹灭蜡烛的时机</strong>
+            <p>要想吹灭一根蜡烛，在火苗最旺的时候吹非常费劲；但如果蜡烛火苗正好受到一阵微风吹拂、火光衰弱到几乎熄灭的那一瞬间，你轻轻一吹就能把它彻底吹灭。交流电天然就具备这种“火光衰弱瞬间”！</p>
+          </div>
+        </div>
+
+        <p>交流电由于每秒钟都有 100 次（50Hz）电流降为 0 的瞬间——被称为<strong>电流过零点（Zero-Crossing Point）</strong>。高压断路器会在电流过零的这一微秒内，利用高压 SF6 气体或真空迅速将绝缘介质吹入电弧间隙。电弧在过零点自然熄灭后，就再也无法重新复燃。</p>
+        <p>反观直流电，其电流始终保持高位，<strong>没有任何天然过零点</strong>。开断高压直流电时拉出的电弧极其强烈且难以熄灭，需要耗费极其昂贵和复杂的强迫灭弧装置。</p>
+
+        <h3>3.3 物理支柱三：三相交流感应电动机的工业统治力</h3>
+        <p>特斯拉发明的<strong>三相交流异步电动机</strong>（Three-Phase Induction Motor），是工业革命史上最伟大的机械之一。它利用三相正弦交流电在定子线圈中自然产生一个无缝旋转的合成磁场，从而直接带动鼠笼式转子旋转。</p>
+        <p>这种电机没有任何易磨损的换向器（Commutator）和碳刷（Carbon Brush），结构极其坚固耐用，可以在矿山、水泥厂、水泵房等极度恶劣的环境下连续无故障运行数十年。直到今天，全球工业界 80% 以上的电动机依然是三相交流异步电机。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实工程：工厂里的“无刷铁牛”</strong>
+            <p>在我国宝武钢铁或海螺水泥的生产线上，大型风机和水泵驱动电机几乎清一色采用 10kV 级三相交流高压异步电机。这种电机外壳呈粗犷的铸铁散热片状，结构简单到“内部只有一圈铜线圈和一个铁转子”，免维护性极强，这也是交流电能够在工业领域牢牢统治百年的重要原因。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、直流的王者复兴：从特高压直流（HVDC）到电化学储能（BESS）</h2>
+
+        <p>进入 21 世纪后，电力科学的发展发生了令人意想不到的戏剧性转折：当年败在爱迪生手下的直流电，在两个最前沿的领域实现了震撼性的王者复兴！</p>
+
+        <h3>4.1 半导体革命：电力电子器件打破直流升降压禁咒</h3>
+        <p>为什么直流电能卷土重来？核心原因在于 20 世纪下半叶**半导体电力电子器件**（Power Electronics）的突飞猛进。大功率晶闸管（Thyristor）以及**绝缘栅双极型晶体管（Insulated Gate Bipolar Transistor，IGBT）**的出现，使得人类可以用微秒级的高频开关控制几千伏、上千安培的电能。</p>
+        <p>通过大功率电力电子变流器，人们可以随意将直流电切碎并通过高频转换实现高效升降压（DC/DC 转换），也可以轻松将交流电与直流电相互转换（AC/DC 整流与逆变）。爱迪生当年无法解决的“直流升降压”难题，被现代芯片与电力电子技术彻底攻克！</p>
+
+        <h3>4.2 特高压直流输电（HVDC）：超越交流电输电极限</h3>
+        <p>当输电距离突破 1000 公里、传输容量达到千万千瓦级别时，交流输电暴露出了极其严重的物理物理缺陷：</p>
+        <ol>
+          <li><strong>趋肤效应（Skin Effect）</strong>：交流电在导线中流动时，电流会集中在导线的表面，导致导线有效利用截面积减小，等效电阻变大；直流电则均匀流过整个导线截面。</li>
+          <li><strong>电容效应与无功损耗</strong>：长距离架空线路和海底电缆就像一个巨大的电容器。交流电充放电会产生庞大的“无功电流”，占据导线容量并带来额外热损耗。在海底电缆输电中，超过 50 公里的交流电缆几乎全部充斥着无功电流，根本送不出有功功率；而直流电完全不存在电容充放电无功问题！</li>
+          <li><strong>两网同步难题</strong>：两个大区域交流电网互联时，必须保证相位和频率绝对同步，否则会引发大面积崩溃；而直流输电线路（HVDC）可以作为“异步宝匣”，轻松将两个不同频率或不同相位的电网隔离并安全联网。</li>
+        </ol>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国大国重器：昌吉-古泉 ±1100kV 特高压直流工程</strong>
+            <p>我国建设的<strong>昌吉-古泉 ±1100 千伏特高压直流工程</strong>（HVDC）是世界上电压等级最高、输送距离最远、输送容量最大的电力工程：</p>
+            <ul>
+              <li><strong>起点与终点</strong>：新疆昌吉变换站 → 安徽古泉换流站；</li>
+              <li><strong>输电距离</strong>：全长 <strong>3,293 公里</strong>（横跨新疆、甘肃、宁夏、陕西、河南、安徽六省区）；</li>
+              <li><strong>输送容量</strong>：<strong>1200 万千瓦（12 GW）</strong>，相当于能同时点亮 4 亿盏 30W 的电灯！</li>
+            </ul>
+            <p>如果该工程采用交流输电，光是沿途电容无功损耗和稳定性控制就能让电网瘫痪。正是凭借特高压直流技术，我国才实现了“西电东送”的大国能源战略转型。</p>
+          </div>
+        </div>
+
+        <h3>4.3 新型电化学储能（BESS）：交直流交汇处的双向桥梁</h3>
+        <p>不仅在国家骨干电网中，在千家万户与工厂园区侧，**电化学储能系统（Battery Energy Storage System，BESS）**的爆炸式增长再次将交流与直流的融合推向了前所未有的高度：</p>
+
+        <ul>
+          <li><strong>电池端的纯粹直流</strong>：无论是磷酸铁锂（LFP）电池、三元锂电池，还是钠离子电池、全固态电池，其电化学反应的本质决定了它们**只能储存和输出直流电**。</li>
+          <li><strong>电网端的广阔交流</strong>：工厂里的变压器、配电网、民用用电设备依然是交流系统。</li>
+        </ul>
+
+        <p>为了让“直流电池”与“交流电网”和谐共处，**储能变流器（Power Conversion System，PCS）**应运而生。PCS 就扮演了交直流交汇处的“超级同声传译员”：</p>
+        <ul>
+          <li><strong>充电状态（整流器模式 AC → DC）</strong>：电网的交流电通过 PCS 内部的 IGBT 开关管高频调制，整流为平滑的直流电，输入锂电池堆进行电能储存；</li>
+          <li><strong>放电状态（逆变器模式 DC → AC）</strong>：电池堆释放的直流电通过 PCS 逆变为与电网频率、相位、电压完美同步的正弦交流电，注入交流电网给负载供电。</li>
+        </ul>
+
+        <!-- SVG 示意图：储能电站在电网中的交直流转换架构 -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 700 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg" style="background:#FAFAFA; border:1px solid #E2E8F0; border-radius:8px;">
+            <!-- 交流电网 -->
+            <rect x="30" y="60" width="110" height="80" rx="8" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="85" y="95" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#1A5F96" text-anchor="middle">交流电网</text>
+            <text x="85" y="115" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">380V / 10kV AC</text>
+
+            <!-- 双向箭头 1 -->
+            <g>
+              <line x1="140" y1="90" x2="200" y2="90" stroke="#1A5F96" stroke-width="3"/>
+              <polygon points="145,85 135,90 145,95" fill="#1A5F96"/>
+              <polygon points="195,85 205,90 195,95" fill="#1A5F96"/>
+              <text x="170" y="80" font-family="Inter" font-size="10" fill="#718096" text-anchor="middle">AC ⚡</text>
+            </g>
+
+            <!-- 储能变流器 PCS -->
+            <rect x="205" y="50" width="150" height="100" rx="8" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="280" y="80" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#F57C00" text-anchor="middle">储能变流器 (PCS)</text>
+            <text x="280" y="100" font-family="Noto Sans SC" font-size="11" fill="#4A5568" text-anchor="middle">双向 AC/DC 转换</text>
+            <text x="280" y="120" font-family="Inter" font-size="10" fill="#718096" text-anchor="middle">(含核心部件 IGBT)</text>
+
+            <!-- 双向箭头 2 -->
+            <g>
+              <line x1="355" y1="90" x2="415" y2="90" stroke="#2E7D32" stroke-width="3"/>
+              <polygon points="360,85 350,90 360,95" fill="#2E7D32"/>
+              <polygon points="410,85 420,90 410,95" fill="#2E7D32"/>
+              <text x="385" y="80" font-family="Inter" font-size="10" fill="#718096" text-anchor="middle">DC 🔋</text>
+            </g>
+
+            <!-- 电池管理系统与电池簇 -->
+            <rect x="420" y="60" width="120" height="80" rx="8" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+            <text x="480" y="95" font-family="Noto Sans SC" font-size="13" font-weight="600" fill="#2E7D32" text-anchor="middle">锂电池簇 (Pack)</text>
+            <text x="480" y="115" font-family="Inter" font-size="11" fill="#4A5568" text-anchor="middle">直流储能 DC Bus</text>
+
+            <!-- 直流负载 (如 EV 快充) -->
+            <rect x="570" y="60" width="100" height="80" rx="8" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="2"/>
+            <text x="620" y="90" font-family="Noto Sans SC" font-size="12" font-weight="600" fill="#7B1FA2" text-anchor="middle">直流微网/快充</text>
+            <text x="620" y="110" font-family="Inter" font-size="10" fill="#4A5568" text-anchor="middle">DC 800V 专线</text>
+
+            <path d="M 540 100 L 570 100" stroke="#7B1FA2" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+          </svg>
+          <figcaption>图 1-3-1c：新型储能电站中 PCS 作为 AC/DC 双向能量转换枢纽的系统拓扑</figcaption>
+        </figure>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：直流微电网（DC Microgrid）趋势</strong>
+            <p>现代数据中心、光储充一体化超级充电站以及新能源汽车正推动一种全新的架构——<strong>直流微电网</strong>。光伏板发出的直流电，不经过多次 AC/DC 转换，直接输入储能电池，再直接供给电动汽车 800V 高压直流快充桩。这种全直流链路避免了反复逆变整流带来的 3%~5% 效率损失，成为新型电力系统建设中的重磅探索方向。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>物理本质区别</strong>：直流电（DC）电流方向恒定；交流电（AC）电流方向随时间做周期性正弦交变（我国电网标准频率为 50Hz）。</li>
+        <li><strong>远距离输电铁律</strong>：输电线发热损耗 $P_{\text{loss}} = I^2 R = \frac{P^2 R}{U^2}$。提高输电电压可按电压平方倍数大幅降低线损。</li>
+        <li><strong>历史胜负逻辑</strong>：19 世纪末交流电战胜直流电，关键在于变压器（基于法拉第电磁感应 $\frac{d\Phi}{dt}$）能极其廉价高效地完成升降压，实现了“高压远距离输电、低压安全用电”的闭环。</li>
+        <li><strong>交流电的三大优势</strong>：变压器易升降压、三相感应电动机结构坚固免维护、交流电流存在天然过零点容易灭弧。</li>
+        <li><strong>现代直流复兴</strong>：受电力电子半导体（IGBT/晶闸管）推动，特高压直流（HVDC，如昌吉-古泉 ±1100kV）解决了超远距离点对点大容量输电问题；新型储能电站通过储能变流器（PCS）在 DC 电池与 AC 电网之间搭建起了双向能量桥梁。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在 19 世纪末的“电流大战”中，爱迪生推行的低压直流供电系统无法实现远距离输电，其最根本的物理原因是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 直流电的发电机效率远低于交流发电机</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 低压输电导致线路电流极大，导线电阻产生的热损耗 $P_{\text{loss}} = I^2 R$ 极其严重</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 直流电在导线中流动时会产生巨大的电容无功损耗</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 直流电无法驱动任何工业电动机</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：输电线热损耗公式为 $P_{\text{loss}} = I^2 R$。在传输功率一定时，电流 $I = P/U$。爱迪生采用 110V 低压输电，导致线路电流 $I$ 极其庞大，导线发热损耗剧烈，输电距离被迫限制在 1.5 公里以内。<br>
+          ❌ 选项 A 错误：爱迪生的直流发电机效率并不低，问题出在输路上而非发电机本身；<br>
+          ❌ 选项 C 错误：电容无功损耗是交流电在长距离线路中的缺点，直流电完全没有电容无功问题；<br>
+          ❌ 选项 D 错误：直流电完全可以驱动直流电动机（如早期电车），但缺乏高压传输能力。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于传统电磁感应变压器（Transformer）的工作条件，以下说法正确的是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 只要将稳态直流电通入变压器初级线圈，次级线圈就能持续输出高压直流电</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 变压器依赖铁芯中变化的磁通量（$\frac{d\Phi}{dt} \neq 0$）来感应电动势，因此必须工作在交流电下</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 变压器升压时，既增大了电压，也等比例增大了输出的总功率</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 变压器内部含有高速旋转的磁极，用于切磁感线</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：根据法拉第电磁感应定律 $e = -N \frac{d\Phi}{dt}$，变压器次级线圈感应电动势依赖于磁通量的变化率。交流电大小方向不断变化，能产生动态磁场；而稳态直流电产生的磁场固定不变（$\frac{d\Phi}{dt}=0$），无法产生感应电动势。<br>
+          ❌ 选项 A 错误：通入稳态直流电不仅次级没有电压，还会烧毁初级线圈；<br>
+          ❌ 选项 C 错误：变压器遵循能量守恒，$P_{\text{in}} \approx P_{\text{out}}$，电压升高时电流必定按比例缩小，总功率不会凭空增大；<br>
+          ❌ 选项 D 错误：变压器是完全静止的电磁设备，没有任何旋转机械部件。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在高压断路器开断大电流电路时，交流电相比于直流电在“灭弧”（熄灭电弧）方面具有的天然物理优势是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 交流电的电压峰值低于直流电</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 交流电每秒存在多次电流为零的“过零点”，此时电弧能量极弱易于吹熄</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 交流电不会产生电火花，只有直流电会拉弧</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 交流电开关内部充有天然防爆气体，而直流开关没有</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：我国 50Hz 交流电每秒钟有 100 次电流数值精准经过零安培（过零点）。在电流过零瞬间，电弧热能量降至最低，断路器利用灭弧介质（如 SF6 气体）能极其轻松地切断电弧；而直流电流没有天然过零点，开断时电弧持续燃烧拉长，灭弧难度极大。<br>
+          ❌ 选项 A 错误：同等有效值下，交流电的峰值（$\sqrt{2} U_{\text{rms}}$）反而高于直流电；<br>
+          ❌ 选项 C 错误：只要电压电流足够大，交流和直流切断时都会产生剧烈电弧；<br>
+          ❌ 选项 D 错误：灭弧介质是开关设备的设计选择，非交流电本身的物理属性。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 我国“昌吉-古泉 ±1100kV”跨省大容量输电工程选用特高压直流（HVDC）而非特高压交流输电，其核心技术考量不包括（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 直流输电不存在长距离交流线路巨大的电容充放电无功损耗</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 直流电均匀流过导线截面，无趋肤效应，导线利用率更高</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 直流输电可以实现新疆电网与华东电网的非同步隔离互联</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 直流输电可以直接接入民用 220V 墙壁插座，省去了所有变电站</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：题目要求选出“不包括”的项。±1100kV 特高压直流电高达百万伏，绝对不能直接接入民用插座！在终点古泉换流站，必须通过巨型逆变变流器将其降压并逆变为交流电，再送入华东交流配电网。<br>
+          ❌ 选项 A 正确：超长距离交流线路线电容巨大，无功损耗严重，而直流无电容无功损耗；<br>
+          ❌ 选项 B 正确：直流电在导体内部截面均匀分布，无趋肤效应；<br>
+          ❌ 选项 C 正确：HVDC 可以连接两个不同频率/相位的电网，起到了异步隔离防护作用。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在新型电化学储能电站中，磷酸铁锂电池组与交流电网之间实现双向电能转换（充电时 AC→DC，放电时 DC→AC）的核心设备是（ ）。</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 储能变流器（Power Conversion System，PCS）</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 电池管理系统（Battery Management System，BMS）</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 空气断路器（Air Circuit Breaker，ACB）</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 电力变压器（Transformer）</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：储能变流器（PCS）是连接电池系统与电网的关键交直流转换设备，利用大功率半导体（IGBT）实现双向 AC/DC 整流与 DC/AC 逆变功能。<br>
+          ❌ 选项 B 错误：BMS 主要负责监测电池的电压、温度、SOC 状态和安全防护，不承担主功率电能变换；<br>
+          ❌ 选项 C 错误：空气断路器是安全开断和过载保护开关；<br>
+          ❌ 选项 D 错误：普通变压器只能改变交流电压的高低，无法实现 AC 与 DC 之间的跨类别转换。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="01_2_4_功率守恒与保护装置.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">功率守恒与保护装置</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="01_3_2_正弦波数学语言.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">正弦波：交流电的数学语言</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="01_2_4_功率守恒与保护装置.html">← 01_2_4 功率守恒与保护装置</a>（了解焦耳发热损耗与过流熔断机制）</li>
+        <li><a href="01_3_2_正弦波数学语言.html">→ 01_3_2 正弦波：交流电的数学语言</a>（学习正弦交流电的振幅、频率与相位定量分析）</li>
+        <li><a href="01_4_3_变压器原理.html">→ 01_4_3 变压器原理：升压的魔法</a>（深入剖析法拉第电磁感应与变压器变比计算）</li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">01_3_1</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
