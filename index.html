@@ -8,6 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css?v=v1.0.0">
+  
+  <!-- PWA Manifest & Mobile Adaptation -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1A5F96">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="网储手册">
+  <link rel="apple-touch-icon" href="assets/images/pwa-icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="assets/images/pwa-icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/pwa-icon-192.png">
   <style>
     /* ── CSS Variables ─────────────────────────────────────────── */
     :root {
@@ -345,6 +355,10 @@
         placeholder="搜索章节标题、知识点…" autocomplete="off">
     </div>
     <div class="header-stats">
+      <button id="header-pwa-install" class="pwa-install-btn" title="安装中国网储系统性学习手册应用" style="display:none;">
+        <span class="pwa-btn-icon">⚡</span>
+        <span>安装应用</span>
+      </button>
       <div class="stat-pill" id="completedPill">0 / 308</div>
       <div class="progress-global">
         <div class="progress-ring-wrap">
@@ -824,5 +838,6 @@
   document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
+<script src="assets/js/pwa-install.js" defer></script>
 </body>
 </html>

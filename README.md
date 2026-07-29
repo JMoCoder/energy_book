@@ -14,7 +14,8 @@
 
 ### 🌟 核心特色
 - **系统性课程体系**：从 Level 0 至 Level 8 递进式设计，覆盖物理/化学原理到百兆瓦级电站投资决策全链路；另设 SP1（看懂电费单）、SP2（网储投建全流程）、SP3（电力市场化交易）三大专题。
-- **开箱即用与离线友好**：支持双击 `index.html` 直接离线阅读，无前端编译构建负担。
+- **PWA 全平台原生体验**：全面支持 Windows/Linux/macOS 桌面端及 Android/iOS Safari 手机端 PWA 渐进式应用安装，提供原生独立窗口交互与一键添加到主屏幕。
+- **开箱即用与离线缓存**：内置 Service Worker 动态缓存机制，支持无网络（Offline）环境下的流畅章节阅读与双击 `index.html` 零依赖离线使用。
 - **现代化视觉与 UI/UX**：内置响应式布局、高亮卡片导航、搜索筛选与难度标记。
 
 ---
@@ -26,6 +27,9 @@
 ```text
 energy_book/
 ├── index.html                # 主导览与阅读器 portal（渲染与交互逻辑）
+├── manifest.json             # PWA Web App Manifest 配置文件（支持桌面 Window Controls）
+├── sw.js                     # Service Worker 离线缓存与网络响应策略
+├── server.js                 # 轻量零依赖 Node.js 静态服务与跨端进度同步 API
 ├── LICENSE                   # MIT 开源许可协议
 ├── README.md                 # 项目使用与部署文档
 ├── .gitignore                # Git 忽略文件配置
@@ -47,7 +51,11 @@ energy_book/
 │   ├── sp_01/                # TOPIC SP1 看懂电费单与负荷曲线
 │   ├── sp_02/                # TOPIC SP2 网储投建全流程
 │   └── sp_03/                # TOPIC SP3 电力市场化交易专题
-├── assets/                   # 静态资源目录（图片、样式图解等）
+├── assets/                   # 静态资源目录（图片、样式、PWA 图标与安装引擎）
+│   ├── css/main.css          # 全局主样式表（包含 PWA 安装按钮与 Modal 样式）
+│   ├── js/pwa-install.js     # 跨平台 PWA 安装唤起与网络状态监测引擎
+│   └── images/               # PWA 多尺寸图标 (SVG / PNG) 与章节图解
+├── scripts/                  # 章节校验与图标生成辅助脚本
 └── documents/                # 原始资料与大纲文档
 ```
 

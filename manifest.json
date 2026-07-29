@@ -1,0 +1,50 @@
+{
+  "name": "中国网储系统性学习手册",
+  "short_name": "网储手册",
+  "description": "从零基础到网储专家——280个独立章节，正文约140万字，覆盖电能基础、电力系统、电力市场、电化学、储能设备、系统运营、商业投资等全领域。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#F8FAFF",
+  "theme_color": "#1A5F96",
+  "orientation": "any",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["education", "books", "utilities"],
+  "icons": [
+    {
+      "src": "assets/images/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/pwa-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/images/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "浏览所有章节",
+      "short_name": "目录",
+      "description": "直接打开网储手册全集目录",
+      "url": "./index.html#toc-section",
+      "icons": [{ "src": "assets/images/pwa-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
