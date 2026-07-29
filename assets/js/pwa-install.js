@@ -47,11 +47,24 @@
     initServiceWorker() {
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // 智能推断 SW 路径
+          // 智能推导 SW 路径
           const swPath = this.getSwPath();
           navigator.serviceWorker.register(swPath)
             .then((registration) => {
               console.log('[PWA] ServiceWorker 注册成功:', registration.scope);
+
+              // 监听 SW 更新
+              registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                if (installingWorker) {
+                  installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      console.log('[PWA] 检测到应用版本更新');
+                      this.showToast('🚀 手册有新版本更新，刷新页面即可获取最新内容', 'info', 6000);
+                    }
+                  };
+                }
+              };
             })
             .catch((err) => {
               console.warn('[PWA] ServiceWorker 注册失败:', err);
@@ -61,12 +74,22 @@
     }
 
     getSwPath() {
-      const pathParts = window.location.pathname.split('/');
-      // 若在 chapters 子目录下，需向上计算层级
-      if (window.location.pathname.includes('/chapters/')) {
-        const depth = pathParts.filter(p => p === 'chapters' || p.startsWith('level_')).length + 1;
-        return '../'.repeat(depth) + 'sw.js';
+      // 1. 优先通过 link[rel="manifest"] 相对/绝对 href 解析站点根路径下的 sw.js
+      const manifestLink = document.querySelector('link[rel="manifest"]');
+      if (manifestLink && manifestLink.href) {
+        try {
+          return new URL('sw.js', manifestLink.href).href;
+        } catch (e) {}
       }
+
+      // 2. 通过 pwa-install.js 标签位置推算根目录 (assets/js/pwa-install.js -> ../../sw.js)
+      const scripts = Array.from(document.querySelectorAll('script[src*="pwa-install.js"]'));
+      if (scripts.length > 0) {
+        try {
+          return new URL('../../sw.js', scripts[scripts.length - 1].src).href;
+        } catch (e) {}
+      }
+
       return './sw.js';
     }
 
@@ -175,29 +198,32 @@
         btn.addEventListener('click', () => this.showInstallPrompt());
       });
 
-      // 初始化显示状态
+      // 初始化显示状态：非 Standalone 模式下默认总是展示安装按钮
       if (this.isStandalone) {
         this.updateInstallButtonVisibility(false);
-      } else if (this.deferredPrompt || this.isIOS) {
-        this.updateInstallButtonVisibility(true);
+      } else {
+        // 如果具有 deferredPrompt 或为 iOS，开启脉冲高亮效果；否则维持常规可见状态
+        const isReady = !!(this.deferredPrompt || this.isIOS);
+        this.updateInstallButtonVisibility(isReady);
       }
     }
 
     /**
-     * 控制安装按钮的显隐
+     * 控制安装按钮的显隐与样式
      */
-    updateInstallButtonVisibility(show) {
+    updateInstallButtonVisibility(highlight) {
       const installBtns = document.querySelectorAll('.pwa-install-btn, #header-pwa-install');
       installBtns.forEach(btn => {
         if (this.isStandalone) {
           btn.style.display = 'none';
-        } else if (show) {
-          btn.style.display = 'inline-flex';
-          btn.classList.add('pwa-btn-pulse');
         } else {
-          // 如果桌面端暂未捕获 event，保持显示，点击时提示手动安装说明
+          // 非 standalone 状态始终显示按钮
           btn.style.display = 'inline-flex';
-          btn.classList.remove('pwa-btn-pulse');
+          if (highlight) {
+            btn.classList.add('pwa-btn-pulse');
+          } else {
+            btn.classList.remove('pwa-btn-pulse');
+          }
         }
       });
     }
@@ -235,7 +261,14 @@
         return;
       }
 
-      // 4. 其他桌面/移动浏览器 fallback (如 Firefox / 桌面 Safari)
+      // 4. 检测非 HTTPS 部署环境并提示
+      const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      if (!isSecureContext) {
+        this.showToast('⚠️ PWA 安装需要 HTTPS 安全连接。如为远端部署，请为站点配置 SSL 证书 (HTTPS)。', 'warning', 6000);
+        return;
+      }
+
+      // 5. 其他桌面/移动浏览器 fallback (如 Firefox / 桌面 Safari / 未触发 beforeinstallprompt 的 Chrome)
       const platformName = this.isDesktop ? '桌面端' : '移动端';
       this.showToast(`提示：您可以点击${platformName}浏览器地址栏右侧的“安装/➕”图标，或在菜单中选择“添加至桌面/应用列表”。`, 'info', 6000);
     }

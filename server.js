@@ -125,23 +125,35 @@ const server = http.createServer((req, res) => {
     }
 
     const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    let contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    if (path.basename(filePath) === 'manifest.json') {
+      contentType = 'application/manifest+json; charset=utf-8';
+    }
+
     const acceptEncoding = req.headers['accept-encoding'] || '';
 
+    // 通用与 PWA 特定响应头设置
+    const responseHeaders = {
+      'Content-Type': contentType,
+      'Cache-Control': 'no-cache'
+    };
+
+    // 为 SW 和 Manifest 文件设置零缓存与 Service-Worker-Allowed
+    if (path.basename(filePath) === 'sw.js') {
+      responseHeaders['Service-Worker-Allowed'] = '/';
+      responseHeaders['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    } else if (path.basename(filePath) === 'manifest.json') {
+      responseHeaders['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    }
+
     // Gzip 压缩文本与代码文件
-    if (/\bgzip\b/.test(acceptEncoding) && (ext === '.html' || ext === '.css' || ext === '.js' || ext === '.json' || ext === '.svg')) {
-      res.writeHead(200, {
-        'Content-Type': contentType,
-        'Content-Encoding': 'gzip',
-        'Cache-Control': 'no-cache'
-      });
+    if (/\bgzip\b/.test(acceptEncoding) && (ext === '.html' || ext === '.css' || ext === '.js' || ext === '.json' || ext === '.svg' || ext === '.webmanifest')) {
+      responseHeaders['Content-Encoding'] = 'gzip';
+      res.writeHead(200, responseHeaders);
       const raw = fs.createReadStream(filePath);
       raw.pipe(zlib.createGzip()).pipe(res);
     } else {
-      res.writeHead(200, {
-        'Content-Type': contentType,
-        'Cache-Control': 'no-cache'
-      });
+      res.writeHead(200, responseHeaders);
       fs.createReadStream(filePath).pipe(res);
     }
   });
