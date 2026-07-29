@@ -53,9 +53,20 @@ document.addEventListener('DOMContentLoaded', function () {
   // 监听返回顶端按钮
   const btnTop = document.getElementById('btnBackTop');
   if (btnTop) {
-    window.addEventListener('scroll', function () {
-      btnTop.classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
+    const handleScroll = function () {
+      const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      btnTop.classList.toggle('visible', scrollTop > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    btnTop.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (document.documentElement) {
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   }
 
   // 阅读进度条（可选）

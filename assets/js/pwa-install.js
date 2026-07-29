@@ -181,12 +181,51 @@
       // 如果页面 header 含有 pwa-install-trigger 节点，绑定点击事件
       this.bindHeaderInstallButton();
 
+      // 全局初始化并保障返回顶端按钮
+      this.initBackToTopButton();
+
       // 如果是 iOS Safari 且非 Standalone 且未关闭提示，适当延时显示引导
       if (this.isIOS && !this.isStandalone && !this.hasDismissedIOSPrompt) {
         setTimeout(() => {
           this.showInstallPrompt();
         }, 3000);
       }
+    }
+
+    /**
+     * 全局初始化与保障返回顶端按钮
+     */
+    initBackToTopButton() {
+      let btnTop = document.getElementById('btnBackTop');
+      if (!btnTop) {
+        btnTop = document.createElement('button');
+        btnTop.id = 'btnBackTop';
+        btnTop.className = 'btn-back-top';
+        btnTop.setAttribute('aria-label', '返回顶端');
+        btnTop.setAttribute('title', '返回顶端');
+        btnTop.innerHTML = '↑';
+        document.body.appendChild(btnTop);
+      }
+
+      const handleScroll = () => {
+        const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        if (scrollTop > 300) {
+          btnTop.classList.add('visible');
+        } else {
+          btnTop.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+
+      btnTop.onclick = (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (document.documentElement) {
+          document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      };
     }
 
     /**
