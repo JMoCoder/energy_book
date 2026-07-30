@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N-1安全准则与事故处置 — 电网调度与运行 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析N-1安全准则的核心物理概念、电网三道防线体系、事故链演化机制以及调度员在突发故障下的紧急处置策略，并探讨新型储能系统在电网安全防御中的关键作用。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电网调度与运行</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">N-1安全准则与事故处置</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_7_5_负荷与新能源预测.html" class="nav-prev" title="上一节：负荷预测与新能源预测">← 上节</a>
+        <a href="02_8_1_三类稳定问题.html" class="nav-next" title="下一节：三类稳定问题">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>电网调度与运行</span>
+        <span class="sep">›</span>
+        <span>N-1安全准则与事故处置</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_7_6</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 中等</span>
+      </div>
+      <h1>N-1安全准则与事故处置</h1>
+      <p class="chapter-lead">电网是人类建造的最庞大、最复杂的实时动态系统之一。在每时每刻的运行中，设备雷击、大风倒塔、保护误动等突发故障无法彻底避免。电网是如何做到“单台设备突然坏掉而全网安然无恙”的？本节将带你深入电力系统的底线思维——N-1安全准则、电网三道防线防御体系、事故链演进逻辑以及新型储能在事故紧急救援中的定海神针作用。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一</strong>：深刻理解 N-1 安全准则的物理本质、工程意义及电网“三道防线”防御体系的递进逻辑。</li>
+        <li><strong>核心目标二</strong>：掌握 N-1 故障下基尔霍夫定律驱动的潮流重分配机制与 LODF（支路开断分布因子）概念。</li>
+        <li><strong>核心目标三</strong>：能够分析大停电事故链的演化四阶段，并掌握预防控制、紧急控制与恢复控制的调度策略。</li>
+        <li><strong>核心目标四</strong>：理解新型储能系统（BESS）在提供秒级备用、抑制 RoCoF 频率急降及缓解动态过载中的突破性价值。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：500千伏主干线雷击跳闸的惊魂30秒</h2>
+      <p>2022年7月一个酷热的夏季午后，华东某省电网正处于迎峰度夏的用电最高峰。全省负荷高达 8,500 万千瓦，输电网如同一张张紧的弓弦。下午14时15分08秒，雷暴天气突袭主干传输走廊，一声巨雷过后，一条联接北方大型煤电基地与南方负荷中心的核心 500 千伏双回路输电线路中的一条突然发生单相接地故障，继电保护装置在 40 毫秒内迅速切除故障，导致该线路瞬间跳闸！</p>
+      <p>这意味着什么？原本通过该线路输送的 180 万千瓦巨大电能，在不到万分之一秒的时间内“失去通道”。如果电网没有经过精心设计，这股巨大的能量瞬间挤向相邻的平行线路，就会引发相邻线路严重过载跳闸，进而触发多米诺骨牌式的连锁反应，整个华东电网面临全面崩溃和全省大停电的巨大威胁！</p>
+      <p>然而，省电力调度控制中心的监控大屏上，自动化系统（EMS）仅发出了一声清晰的告警，调度员神色镇定。电网频率仅微跌 0.08 Hz 后便迅速回升，相邻线路虽然电流激增，但均处于安全承载极限之内，工厂的流水线没有停顿，千家万户的空调依然轰鸣。这惊心动魄的30秒背后，正是<strong>“N-1 安全准则”</strong>与电网防线在默默守护。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、底线思维：什么是 N-1 安全准则？</h2>
+
+        <h3>1. 第一层：直觉感受 —— 允许坏掉一个，系统绝不能垮</h3>
+        <p>在日常生活中，如果一辆四轮汽车在高速公路上突然爆了一个轮胎，而车身稳定系统能瞬间调整其余三个车轮的受力，让汽车依然平稳前行——这就是 N-1 安全思想的直观体现。</p>
+        <p>所谓 <strong>N-1 安全准则</strong>（N-1 Security Criterion），简而言之就是：<strong>在包含 N 个独立元件（发电机、输电线路、变压器等）的电力系统中，当其中任意 1 个元件因故障突然退出运行（即发生单重故障）时，电网必须保持正常稳定运行，绝不允许引发连锁跳闸、设备过载或用户大面积停电。</strong></p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：双活服务器与汽车备胎的工程哲学</strong>
+            <p>想象一家大型银行的数据库系统。如果只有一台服务器，一旦机器蓝屏，全国的 ATM 提款机就会瞬间瘫痪（N-0 没有任何冗余）；为了防止这种情况，银行会配置两台一模一样的服务器进行热备用，一台宕机，另一台毫秒级接管（N-1 冗余设计）。</p>
+            <p>电力系统也是同样的道理：如果一条输电走廊需要输送 100 万千瓦电能，电网绝不会只架设一条最大容量正好为 100 万千瓦的线路，而是至少架设两条容量各为 100 万千瓦的线路（或者三条容量各为 50 万千瓦的线路）。这样在平时，两条线路各自只承担 50% 的负荷（轻载运行）；一旦其中一条被雷击断开（N-1），另一条线路能够立刻接管剩下的全部 100 万千瓦电能，而不会发生烧毁。</p>
+          </div>
+        </div>
+
+        <h3>2. 第二层：物理本质 —— 基尔霍夫定律与潮流重分配</h3>
+        <p>为什么一条线路跳闸会影响整个电网的设备受力？这背后的物理根源在于电力系统无法储存电能（在无储能介入时），且电能的流动严格遵循<strong>基尔霍夫电流定律（KCL）与电压定律（KVL）</strong>。</p>
+        <p>在交流电网中，发电机注入的功率会按照全网各条线路的阻抗分布自行选择路径（即“潮流”分布）。当线路 $k$ 突然断开时，相当于该支路的电阻/感抗变为无穷大。根据基尔霍夫定律，原本从线路 $k$ 流过的电流不会凭空消失，而是瞬间重分配到全网所有与它存在电气联系的平行通道上。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>重要概念：支路开断分布因子（Line Outage Distribution Factor, LODF）</strong>
+            <p>LODF 是电力工程中用于快速评估 N-1 故障后潮流转移强度的核心定量指标。它表示当线路 $k$ 开断时，线路 $k$ 原本输送的潮流中有多大比例会转移到相邻线路 $m$ 上：</p>
+            $$\text{LODF}_{m,k} = \frac{\Delta P_m}{P_{k,0}}$$
+            <p><strong>工程含义</strong>：若 $\text{LODF}_{m,k} = 0.6$，意味着一旦线路 $k$ 断开，它原本承载的输送功率将有 60% 瞬间“挤”到线路 $m$ 上。调度员和规划人员必须确保：线路 $m$ 的初始负荷加上这 60% 的转移潮流后，依然低于线路 $m$ 的热稳定极限电流！</p>
+          </div>
+        </div>
+
+        <h3>3. 第三层：工程意义 —— 中国《电网安全稳定导则》与三道防线体系</h3>
+        <p>在国家标准 <strong>GB 38755-2019《电力系统安全稳定导则》</strong> 中，N-1 准则是保障中国特高压及主网架安全运行的最基本门槛。导则根据故障的严重程度和发生概率，将电网的安全防御划分为严密严谨的<strong>“三道防线”</strong>：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>记忆技巧：电网防御的“三道防线”金字塔</strong>
+            <ul>
+              <li><strong>第一道防线（防患于未然，保持稳定）</strong>：针对<strong>常规 N-1 故障</strong>（如单相永久接地、单条线路跳闸、单台发电机停运）。要求：依靠继电保护与自动重合闸快速切除故障，电网保持稳定运行，不损失负荷，用户完全无感知。</li>
+              <li><strong>第二道防线（壮士断腕，防止扩大）</strong>：针对<strong>概率较低但严重的 N-2 故障</strong>（如同塔双回线路同时跳闸、变电站母线故障）。要求：允许通过切除部分发电机（切机）或切除部分不重要负荷（切负荷），阻止电网失去稳定。</li>
+              <li><strong>第三道防线（底线保全，防止崩溃）</strong>：针对<strong>极罕见的极端灾害或 N-k 严重故障</strong>（如超强台风破坏多条走廊、全站停电）。要求：采取低频低压减载（UFLS/UVLS）、系统主动解列等最后手段，防止发生全网性大停电，保全核心电网的安全。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、从 N-1 到 N-2：电网安全防御的阶梯与极限</h2>
+
+        <h3>1. 故障等级的物理分类</h3>
+        <p>在电网运行中，“N” 代表系统中独立运行的元器件总数。故障的复杂性随开断元件数量的增加呈指数级上升：</p>
+        
+        <table class="grid-table" style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+          <thead>
+            <tr style="background-color: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
+              <th style="padding: 10px; text-align: left;">故障类型</th>
+              <th style="padding: 10px; text-align: left;">典型场景示例</th>
+              <th style="padding: 10px; text-align: left;">发生概率</th>
+              <th style="padding: 10px; text-align: left;">标准控制目标（GB 38755）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>N-1（单重故障）</strong></td>
+              <td style="padding: 10px;">单条输电线路跳闸、单台变压器故障、单台 100万kW 煤电机组非计划停运</td>
+              <td style="padding: 10px;">高（常态化防范）</td>
+              <td style="padding: 10px; color: var(--color-success);">保持热稳定与暂态稳定，不拉闸限电</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>N-2（双重故障）</strong></td>
+              <td style="padding: 10px;">同塔双回输电线路因雷击同时跳闸、双母线变电站单母线故障</td>
+              <td style="padding: 10px;">中等（恶劣天气）</td>
+              <td style="padding: 10px; color: var(--color-warning);">充许适度切机/切负荷，限制故障范围</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 10px;"><strong>N-k（多重极端故障）</strong></td>
+              <td style="padding: 10px;">冰灾导致多条特高压走廊倒塔、地震导致整个枢纽开关站毁灭</td>
+              <td style="padding: 10px;">极低（罕见天灾）</td>
+              <td style="padding: 10px; color: var(--color-danger);">系统解列分片运行，防止全网坍塌</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. 静态安全分析（SSA）与在线 N-1 校验</h3>
+        <p>调度中心如何知道当前电网能否承受下一个 N-1 故障？答案是靠能量管理系统（EMS）中的<strong>在线静态安全分析（Static Security Analysis, SSA）</strong>。</p>
+        <p>EMS 系统每隔 1–5 分钟，就会利用实时采集的 SCADA 数据，在后台计算机中轮询仿真全网数千种潜在的 N-1 故障组合。假想如果线路 A 断开，线路 B 是否会超载？如果变压器 C 损坏，节点 D 的电压会不会崩溃？一旦在线 SSA 发现某种 N-1 故障会导致设备过载（超越越限门限），系统就会向调度员发出红警，调度员必须立即采取**预防性控制**（例如降低发电机出力或调整潮流分布），重新恢复电网的 N-1 安全裕度。</p>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、电网事故链：大停电是如何一步步发生的？</h2>
+
+        <h3>1. 事故链演进的四阶段</h3>
+        <p>历史上所有震惊世界的大停电事故（如2003年北美8·14大停电、2006年欧洲大停电、2019年英国8·9大停电），都不是由单一故障直接造成的，而是因为首发 N-1 故障处理不当，演化成了恶性的**连锁反应事故链**。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>深度剖析：事故链演进的四个物理阶段</strong>
+            <ol>
+              <li><strong>第一阶段：引发阶段（始发故障 N-1）</strong>—— 某条线路因树枝触线或雷击跳闸。此时系统尚处于第一道防线控制下。</li>
+              <li><strong>第二阶段：级联阶段（潮流转移与过载跳闸）</strong>—— 始发线路断开后，电流大量转移至相邻平行线路。如果相邻线路本来就处于高负荷状态，重分配的潮流将使其严重过载。过载导致导线受热下垂触树，或者触发线路热过载保护，导致第二条线路相继跳闸（发生 N-2）。</li>
+              <li><strong>第三阶段：崩溃阶段（电压/频率失去控制）</strong>—— 随着多条关键通道连续跳闸，局部电网出现巨大的“功率缺口”。发电机因过载或频率急剧下降相继跳闸，电压大幅跌落，系统进入不可逆的功率失衡状态。</li>
+              <li><strong>第四阶段：解列与瓦解阶段（全网大停电）</strong>—— 安全自动装置强制切断联络线以保全局部，但若失衡严重，多个子电网相继发生频率崩溃，最终形成大面积全网停电。</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例与警示：2003 年美加“8·14”大停电复盘</strong>
+            <p><strong>事故经过</strong>：2003年8月14日下午，美国俄亥俄州的一条 345 kV 输电线路因夏季高温导线下垂接触树枝跳闸（N-1）。然而，当时 FirstEnergy 公司的 EMS 告警软件发生瘫痪，调度员未能察觉潮流已急剧转移。随后，两条平行线路接连因过载下垂触树跳闸（N-2、N-3）。在不到 1 小时内，连锁反应席卷美国东北部及加拿大安大略省，导致 100 多座发电厂（包括 22 座核电站）跳闸，5,000 万人陷入黑暗，经济损失数十亿美元。</p>
+            <p><strong>工程启示</strong>：美加“8·14”大停电是典型的“N-1 未能遏制引发级联崩塌”案例。这促使中国国家电网和南方电网全面强化了在线安全分析系统、全网统一调度指挥权以及严格的“三道防线”硬隔离机制。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、调度员的战术库：事故处置与紧急控制手段</h2>
+
+        <h3>1. 三类控制时序：预防、纠偏与恢复</h3>
+        <p>面对电网运行中的安全风险，调度员和自动化控制系统拥有完整的“防守战术库”：</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>控制策略的三重境界</strong>
+            <ul>
+              <li><strong>预防性控制（Preventive Control）</strong>：发生在故障之前。通过 SSA 预判威胁，预先调整发电机出力（PQ 控制）、改变变压器分接头或投入无功补偿，确保系统在物理上随时满足 N-1 条件。</li>
+              <li><strong>紧急控制（Emergency Control）</strong>：发生在故障发生后的毫秒至秒级。当故障超越 N-1 范畴时，安全自动装置自动采取<strong>快速切机（Generator Tripping）</strong>、<strong>切除负荷（Load Shedding）</strong>、高频切机或低频低压减载（UFLS/UVLS），强行恢复系统的功率平衡。</li>
+              <li><strong>恢复控制（Restoration Control）</strong>：发生在事故平息后。调度员组织电网从解列状态恢复统一运行，利用拥有独立启动能力的发电机组（黑启动机组）逐步带起主网架，恢复对用户的供电。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区澄清：切负荷不是事故，大停电才是事故！</strong>
+            <p>许多初学者认为“给用户拉闸限电（切负荷）是电网运行的严重失败”。但在电网安全工程中，<strong>切负荷是第二/三道防线中最核心的“壮士断腕”自保机制</strong>。</p>
+            <p>当系统瞬间失去 200 万千瓦发电机组时，如果强行维持所有用户的用电需求，电网频率会在几秒钟内跌破 47.0 Hz，导致所有发电机组因保护动作全部跳闸，引发全省大停电（需要数天时间黑启动恢复）；相反，如果低频减载装置在 0.5 秒内自动切除 220 万千瓦的非紧要负荷（如工业用电），频率就能稳定在 49.5 Hz 以上，电网主体安然无恙，居民生活与医院等核心负荷不受影响。用 5% 的局部切负荷换取 95% 全网的安全，是极其明智且必需的工程取舍。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第五部分 -->
+      <section>
+        <h2>五、新型电力系统下 N-1 的演化与储能的“定海神针”作用</h2>
+
+        <h3>1. 新型电力系统对传统 N-1 准则的挑战</h3>
+        <p>随着风电、光伏等新能源大规模替代传统煤电机组，电网的运行特性发生了根本性改变，对传统 N-1 安全防御提出了极其严峻的挑战：</p>
+        <ul>
+          <li><strong>惯量跌落导致 RoCoF 剧增</strong>：传统煤电机组的巨大转子提供了天然的“旋转惯量”。当发生发电机跳闸时，频率下降较慢；而在高比例新能源电网中，缺乏旋转惯量，频率变化率（Rate of Change of Frequency, RoCoF）极高，系统可能在半秒内跨过频率安全底线。</li>
+          <li><strong>故障穿越失败引发复合 N-k</strong>：当电网发生简单的输电线路单相接地故障（常规 N-1）时，故障瞬间的电压跌落可能引发周围数百万千瓦的风电、光伏集中发生低电压穿越失败而出线大规模脱网，使原本的单重故障（N-1）瞬间演变为极其危险的多重连锁故障（N-k）！</li>
+        </ul>
+
+        <h3>2. 新型储能（BESS）在 N-1 应急响应中的三大核心价值</h3>
+        <p>电池储能系统（BESS）凭借毫秒级的电容式响应速度与双向功率调节能力，正在成为新型电力系统防范 N-1 风险的“定海神针”。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>公式解读：频率变化率（RoCoF）与储能支撑物理机制</strong>
+            <p>电网发生功率缺口 $\Delta P$ 瞬间的频率变化率公式为：</p>
+            $$\frac{df}{dt} = \frac{f_0 \cdot \Delta P}{2H \cdot S_n}$$
+            <p>式中 $f_0$ 为额定频率（50Hz），$H$ 为系统等效惯量常数，$S_n$ 为系统额定容量。当高比例新能源导致系统惯量 $H$ 急剧下降时，同样的功率缺口 $\Delta P$ 会导致 $\frac{df}{dt}$ 呈倍数猛增！</p>
+            <p><strong>储能的解决路径</strong>：构网型储能（Grid-Forming BESS）能够在 10–20 毫秒内感知频率变化并注入冲击功率，相当于在物理层面瞬间增大了 $H$，大幅降低 $\frac{df}{dt}$，为后续动作的传统调频资源争取宝贵的黄金救生时间！</p>
+          </div>
+        </div>
+
+        <p>在工程实践中，储能主要通过以下三种方式参与 N-1 安全防御：</p>
+        <ol>
+          <li><strong>替代沉没成本高昂的旋转备用（Spinning Reserve）</strong>：传统电网为了满足 N-1 准则，必须让大量煤电机组长期处于“烧煤但不满载”的热备用状态。利用大容量电网侧储能电池，可以提供“零空载损耗”的秒级备用容量，平时充电/放电参与现货套利，在 N-1 发生瞬间秒级顶上。</li>
+          <li><strong>动态过载缓解（Dynamic Congestion Relief）</strong>：当线路 $A$ 发生 N-1 跳闸导致相邻线路 $B$ 严重过载时，部署在线路 $B$ 下游的储能系统可立即以最大功率放电，瞬间抵消下游负荷，将线路 $B$ 的输送电流拉回安全限额以内，避免线路 $B$ 过载跳闸。</li>
+          <li><strong>极端 N-k 场景下的黑启动（Black Start）</strong>：储能系统（尤其是搭配构网型 PCS 逆变器的储能）具备自主建立电压和频率的能力（自立频压），能够在全网停电的极端情况下作为“第一把火种”，迅速带活变电站站用电并黑启动大型发电机组。</li>
+        </ol>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：构网型储能（Grid-Forming Energy Storage）与虚拟同步机技术</strong>
+            <p>传统的跟网型储能（Grid-Following）依赖电网的电压相位（需要锁相环 PLL 跟踪电网），在极端故障导致电网无电压信号时会瘫痪；而<strong>构网型储能</strong>通过控制算法将逆变器模拟为一个理想的交流电压源，具备内生惯量和阻尼特性。</p>
+            <p>在发生 N-1 甚至全网失压故障时，构网型储能无需等待调度指令，仅凭自身的物理控制特性就能在数毫秒内向电网提供强大的电压支撑与短路电流，被称为新型电力系统的“超级电磁缓冲器”。目前中国正在新疆、青海、甘肃等新能源大基地全面推广 300MW/1200MWh 级的构网型储能示范电站建设。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>核心定义</strong>：N-1 安全准则要求电力系统在任意单一元件（线路、发电机、变压器）突然故障退出时，系统必须保持稳定运行且不拉闸限电。</li>
+        <li><strong>三道防线</strong>：第一道防线靠继电保护快速切除 N-1 故障保稳定；第二道防线靠切机切负荷控制 N-2 故障保大网；第三道防线靠低频减载与解列应对 N-k 极端故障保底线。</li>
+        <li><strong>物理本质</strong>：故障后的潮流遵循基尔霍夫定律发生动态重分配（可以通过 LODF 因子估算），若重分配潮流超越相邻设备热极限，将触发级联跳闸事故链。</li>
+        <li><strong>储能价值</strong>：新型储能凭借毫秒级响应和双向调节能力，可提供高性价比的“零损耗旋转备用”、抑制低惯量电网的 RoCoF 频率急降，并在极端故障下充当黑启动火种。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 关于电力系统“N-1 安全准则”的核心要求，下列哪种说法是准确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 系统在发生任意 1 个元件故障时，必须允许切除 10% 的不重要负荷</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 系统在任意 1 个独立元件突然故障退出运行后，必须保持稳定运行，且绝不允许发生设备过载与拉闸限电</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 系统中必须有至少 1 台发电机组时刻处于停止状态作为备用</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 当发生 N-1 故障时，调度员必须在 5 分钟内人工完成负荷转移</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：N-1 安全准则的严格定义是：在全网任意单重故障（1个元件退出）发生后，依靠自动保护和系统本身的冗余设计保持稳定运行，不损失负荷，用户完全无感知（选项B正确）。选项A错误，N-1 故障下严禁拉闸限电；选项C混淆了冷备用与 N-1 的概念；选项D错误，N-1 后的稳定恢复是毫秒至秒级由自动装置完成的，无需也不可能等待 5 分钟人工干预。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在中国电力系统“三道防线”防御体系中，当系统发生严重故障导致频率急剧下降时，自动触发的“低频减载（UFLS）”装置属于哪一道防线？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 第一道防线</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 第二道防线</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 第三道防线</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 零级防线（预防控制）</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：第三道防线的作用是当系统面临极端严重故障、频率或电压即将崩溃时，采取最后的切负荷（如低频低压减载 UFLS/UVLS）或系统解列手段，保全大电网不发生彻底坍塌（选项C正确）。第一道防线仅依靠继电保护切除故障且不损失负荷；第二道防线针对 N-2 故障采取切机或局部切负荷；不存在“零级防线”这一术语。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 当一条高负荷运行的 500kV 输电线路突然因雷击跳闸（N-1）后，引发相邻平行线路相继过载跳闸的物理机制是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 基尔霍夫定律驱动的潮流重分配导致转移潮流挤占相邻线路，使其超越热稳定限额</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 断开线路的电能转化为静电荷打穿了相邻线路的绝缘子</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 发电机转子转速瞬间降为零导致电压崩溃</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 继电保护装置发生软件逻辑死锁而误动</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：线路跳闸后阻抗发生突变，全网电能遵循基尔霍夫定律瞬间重新分布。原本由跳闸线路承载的功率会按 LODF 分布转移到平行通道上，若转移后的总电流超过相邻线路的线路热稳定极限，就会引发相邻线路热过载或保护跳闸（选项A正确）。选项B、C、D均违背基本物理常识或事故物理逻辑。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在高比例新能源接入的新型电力系统中，发生 N-1 故障时系统频率变化率（RoCoF）显著增大的根本原因是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 新能源发电机的额定电压普遍高于传统煤电机组</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 新能源通过电力电子逆变器并网，缺乏传统同步发电机的物理转子惯量（H）</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 风电场和光伏电站的占地面积太大导致输电线路过长</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 双向变流器（PCS）在故障时会自动吸收电网的无功功率</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：由频率变化率公式 $df/dt = (f_0 \cdot \Delta P) / (2H \cdot S_n)$ 可知，RoCoF 与系统等效惯量 $H$ 成反比。新能源替代传统煤电后，缺乏巨型旋转转子提供的物理惯量，导致 $H$ 大幅下降，因此故障缺口发生时 $df/dt$ 急剧增大（选项B正确）。选项A、C与 RoCoF 机理无关，选项D描述不符合 PCS 保护控制逻辑。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 相比于传统火电机组提供的旋转备用，电池储能系统（BESS）在应对电网 N-1 紧急故障时最显著的工程优势是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 储能系统的造价远低于火电机组，且不需要消耗任何能量</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 储能系统具备毫秒级的功率响应速度，且常态备用时无空载燃煤损耗</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 储能系统只能单向输出功率，不会对电网产生反向冲击</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 储能系统可以完全替代电网中的所有继电保护装置</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：传统火电旋转备用需要长期保持热备用状态，空载烧煤损耗大且爬坡响应需要数秒至数分钟；而 BESS 响应时间小于 100 毫秒（构网型更可达几十毫秒），且备用时无静置能耗，极大降低了系统备用成本与响应延迟（选项B正确）。选项A错误，储能有充放电损耗且初投资高；选项C错误，储能是双向调节；选项D错误，储能是辅助调节设备，无法替代继电保护。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_7_5_负荷与新能源预测.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">负荷预测与新能源预测</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_8_1_三类稳定问题.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">三类稳定问题</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_7_2_频率与功率平衡.html">02_7_2 频率与功率平衡</a></li>
+        <li><a href="02_7_3_一次调频与AGC.html">02_7_3 一次调频与AGC</a></li>
+        <li><a href="02_8_1_三类稳定问题.html">02_8_1 三类稳定问题</a></li>
+        <li><a href="02_8_4_大停电事故复盘.html">02_8_4 大停电事故复盘</a></li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_7_6</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
