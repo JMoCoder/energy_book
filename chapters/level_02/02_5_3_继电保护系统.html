@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>继电保护：电网的免疫系统 — 变电系统 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析继电保护系统的核心物理原理、四性原则（选择性、速动性、敏感性、可靠性）、过流保护、电流差动保护、距离保护原理，以及在百兆瓦级储能电站中的双向保护与防孤岛工程实战。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">变电系统</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">继电保护：电网的免疫系统</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_5_2_主接线方式.html" class="nav-prev" title="上一节：主接线方式">← 上节</a>
+        <a href="02_5_4_变电站自动化.html" class="nav-next" title="下一节：变电站自动化">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>变电系统</span>
+        <span class="sep">›</span>
+        <span>继电保护：电网的免疫系统</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_5_3</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>继电保护：电网的免疫系统</h1>
+      <p class="chapter-lead">剖析电网与储能站的“自我防御机制”——从继电保护的“四性”金科玉律、过流与电流差动保护物理机制，到微机数字保护基因与百兆瓦级网储升压站的双向功率防护阵地。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>理解继电保护本质与“四性”法则</strong>：掌握继电保护系统（Relay Protection System）在电力系统中的核心角色，深刻领会选择性、速动性、敏感性与可靠性之间的辩证关系。</li>
+        <li><strong>拆解三大核心保护原理</strong>：掌握过电流保护（Overcurrent Protection）、电流差动保护（Current Differential Protection）与距离保护（Distance Protection）的电路拓扑、测量物理量与判据逻辑。</li>
+        <li><strong>理解微机保护与数字变电站传输机制</strong>：理解数字微机保护装置如何通过采样定理与傅里叶算法提取基波相量，以及基于 IEC 61850 标准的 GOOSE/SV 报文在光纤网上的毫秒级跳闸逻辑。</li>
+        <li><strong>掌握网储升压站继电保护工程实战</strong>：能够分析储能变流器（PCS）弱受控源特性对短路电流的影响，理解双向功率流下方向性保护、防孤岛保护（Anti-Islanding Protection）与低电压穿越（LVRT）的协调配置。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：青海某 100MW/200MWh 储能站 35kV 母线闪络突发的“20 毫秒生死时速”</h2>
+      <p>2025 年 8 月的一个雷雨交加的下午，位于青海海南州共和盆地的一座 100MW/200MWh 集中式共享储能电站正以全功率向电网放电。突然，一道剧烈的闪电击中了 35kV 户外开关室的穿墙套管，导致 35kV Ⅱ段母线发生致命的“A-B 两相金属性短路故障”！</p>
+      <p>在故障发生的一瞬间，短路点瞬间爆发出高达 25,000 安培（A）的巨额短路电流。这一电流值是电站正常运行电流的近 20 倍！如果任由这股庞大的热能与电磁机械力持续挥泻，仅需 0.5 秒，巨大的电弧高温就能熔毁整个开关柜，甚至顺着电缆沟蔓延烧毁价值上亿元的主变压器与数十台电池预制舱。</p>
+      <p>然而，灾难并没有发生。在短路突发后的第 <strong>8 毫秒</strong>，安装在 35kV 母线柜内的微机保护装置敏锐地检测到相间电流的异常畸变与矢量相位突变，芯片瞬时完成上百次相量计算，斩钉截铁地向真空断路器发出“跳闸指令”；第 <strong>28 毫秒</strong>，真空断路器的灭弧室强行熄灭电弧，将故障段彻底从电网切除隔离！此时，全站主变压器完好无损，其余正常运行的 12 条储能集电线路甚至没有受到丝毫波及。</p>
+      <p>在没有任何人工干预的情况下，是什么装置能够在千分之几秒的极短时间内，自动识别故障位置、精准斩断风险、保全整体电力系统？这套被称为“电网免疫系统”的神奇装备，就是**继电保护系统（Relay Protection System）**。本节将带你揭开这套电力哨兵的技术神秘面纱。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、电网的免疫系统——继电保护的本质与“四性”金科玉律</h2>
+
+        <p>在现代高压电网与大容量储能升压站中，电力设备（如变压器、输电线路、电池簇、变流器）时刻承受着高电压、大电流与复杂的户外环境考验。由于雷击、设备绝缘老化、小动物误入或施工误操作，电气故障（如短路、接地）在所难免。一旦发生短路，系统中会瞬间产生数倍至几十倍于正常值的短路电流，伴随剧烈的电压骤降与电弧高温。</p>
+
+        <p>如果把电网比作人体，变压器与输电线路就是人体的器官与血管，那么**继电保护系统（Relay Protection System）**就是电网中昼夜不停运转的“免疫系统”。它的核心使命是：**在电力系统发生故障或异常运行状态时，以最快速度、最小范围自动将故障设备从系统中切除，或者发出告警信号提醒运维人员处理，从而防止故障扩大化与设备毁灭性损坏。**</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：人体免疫系统 vs 电力继电保护</strong>
+            <p>为了直观理解继电保护的工作机制，我们可以将其与人体免疫系统进行完整闭环的对比：</p>
+            <ul>
+              <li><strong>痛觉与免疫受体 ↔ 测量变换器（CT/PT）</strong>：人体皮肤和器官上的感受器能瞬时感知物理伤害与细菌侵入；继电保护通过电流互感器（CT）和电压互感器（PT）时刻监视电网的电流与电压波动。</li>
+              <li><strong>免疫中枢与白细胞决策 ↔ 微机保护装置（Relay Logic Unit）</strong>：淋巴结与白细胞识别出病毒入侵后快速识别类型；微机保护芯片对采集到的电流电压数据进行数学相量分析，判断是区内短路还是正常波动。</li>
+              <li><strong>吞噬细胞精准杀灭 ↔ 断路器（Circuit Breaker）跳闸</strong>：白细胞包围并消灭病原体，同时避免损伤周围正常组织；继电保护向跳闸回路输出电信号，断路器瞬间拉开触头切除故障线路，保全其余健康电网。</li>
+              <li><strong>免疫风暴/过敏反应 ↔ 保护误动与拒动</strong>：免疫系统过度反应伤害健康细胞相当于 protection“误动”；免疫缺陷无法清除病毒导致全身感染相当于 protection“拒动”。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>1.1 继电保护系统的基本构成与工作流程</h3>
+        <p>一个完整的继电保护系统并不是单一设备，而是由**传感器、逻辑决策单元与执行机构**共同构成的闭环防线：</p>
+        <ol>
+          <li><strong>测量信号采集单元</strong>：通过**电流互感器（Current Transformer，CT）**与**电压互感器（Potential Transformer，PT）**，将高压一次侧的千安级大电流与百千伏高电压，按比例转换为低压二次侧的标准信号（如 5A/1A 电流信号、100V 电压信号），安全地提供给保护装置。</li>
+          <li><strong>逻辑判断与决策单元</strong>：即**微机保护装置（Microprocessor Protection Device）**。它将模拟信号转化为数字信号，利用内置的逻辑算法对比实时测量值与预先设定的“整定值（Setting Value）”。一旦满足故障判据，立即输出跳闸脉冲。</li>
+          <li><strong>执行机构单元</strong>：包括**跳闸出口继电器与高压断路器（Circuit Breaker，CB）**。断路器根据跳闸指令，在数十毫秒内利用强力弹簧或液压机构拉开触头，熄灭电弧，断开故障电路。</li>
+        </ol>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 关键概念：继电保护系统（Relay Protection System）</span>
+          <p>继电保护系统是指当电力系统元件发生故障或出现不正常运行状态时，能自动、迅速、有选择性地动作于断路器跳闸，将故障元件从系统中切除，或发出告警信号的一整套自动装置与二次控制回路的总称。</p>
+        </div>
+
+        <h3>1.2 继电保护的“四性”黄金法则</h3>
+        <p>在电力工程界，判定一套继电保护系统是否合格，必须严格考量四大核心指标——**选择性、速动性、敏感性、可靠性**（简称保护“四性”）。这四大特性构成了继电保护设计的黄金法则：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>关键要点：继电保护“四性”极简口诀</strong>
+            <ul>
+              <li><strong>选择性（Selectivity）——“切患处，保健康”</strong>：只切除故障点最近的设备，绝不扩大停电范围。就像外科手术只切除肿瘤，不能伤害健康器官。</li>
+              <li><strong>速动性（Speed）——“毫秒争锋，快如闪电”</strong>：以最快的速度（几十毫秒）切除故障，防止设备烧毁与系统失步崩溃。</li>
+              <li><strong>敏感性（Sensitivity）——“明察秋毫，微故障即觉”</strong>：对保护范围内最轻微的故障（如高阻接地或过载微小超出）也能敏锐感知并可靠动作。</li>
+              <li><strong>可靠性（Reliability）——“指哪打哪，绝不乱动”</strong>：要求**不拒动**（该动时必须动）且**不误动**（不该动时绝对不动）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>在实际工程中，“四性”之间既相互配合又存在辩证矛盾。例如，追求极致的**速动性**（如 5 毫秒内跳闸）可能会因为电网暂态干扰而降低**可靠性**（引发误动）；而为了保证**选择性**采用阶梯延时，又会牺牲一部分**速动性**。继电保护工程师的核心工作，就是在这些指标之间找到完美的工程平衡点。</p>
+
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、三大核心保护原理拆解——从电流突变到矢量相干</h2>
+
+        <p>继电保护装置是如何判断线路“生病”了呢？答案是通过捕捉故障发生时电网物理量的突变特征。在各种电气故障中，最显著的物理特征包括：**电流剧烈增大、电压剧烈下降、电流与电压之间的相位角改变、以及线路两端电流不相等**。基于这些物理特征，工程界演化出了三大最为经典的保护机制。</p>
+
+        <h3>2.1 过电流保护（Overcurrent Protection）：从定性感知到阶梯延时</h3>
+        <p>过电流保护是历史最悠久、原理最直观的保护形式。其核心物理机制非常朴素：**当流过线路的电流超过预先设定的安全门限值（整定电流 $I_{set}$）时，保护装置判定线路发生过载或短路故障。**</p>
+
+        <p>然而，如果多级线路串联在一起（如输电线路 A → 变电站 B → 配电线路 C），当最末端的 C 段发生短路时，故障短路电流会同时流过 A、B、C 三段线路。如果所有保护装置都瞬间跳闸，就会导致全线大面积停电，严重违背“选择性”原则。为了解决这一问题，工程师发明了**定时限过电流保护（Definite-Time Overcurrent Protection）**与**反时限过电流保护（Inverse-Time Overcurrent Protection）**。</p>
+
+        <p>定时限过电流保护采用“越靠近电源，动作延时越长”的阶梯时限配合策略（如 C 段延时 0.1s，B 段延时 0.6s，A 段延时 1.1s）。当末端 C 段短路时，C 段保护率先在 0.1 秒内跳闸切除故障，上游 A、B 处的保护延时未到，因而保持合闸，成功保全了非故障段的供电。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 关键公式：定时限与反时限过电流保护判据</span>
+          <p><strong>动作电流判据：</strong></p>
+          \[ I_{m} > I_{set} \]
+          <p>其中 $I_{m}$ 为测量到的二次侧电流实测值，$I_{set}$ 为考虑最大负荷电流与可靠系数后计算出的整定电流门限。</p>
+          <p><strong>反时限特性关系式（IEEE/IEC 标准曲线）：</strong></p>
+          \[ t = \frac{k}{\left(\frac{I_{m}}{I_{set}}\right)^\alpha - 1} \]
+          <p><strong>工程含义说明：</strong> $t$ 为保护动作跳闸延时（秒），$k$ 为时间乘数整定值，$\alpha$ 为曲线形状系数。公式直观表达了**“短路电流越大，跳闸速度越快”**的物理规律。当故障极其严重（电流极大）时，跳闸延时趋近于极短时间；而轻微过载时则给予较长的安全缓冲等待时间。</p>
+        </div>
+
+        <h3>2.2 电流差动保护（Current Differential Protection）：基尔霍夫电流定律的工程结晶</h3>
+        <p>过电流保护虽然简单，但在高压主干网和重要设备（如大容量主变压器、储能电池汇总母线）中，其依靠延时实现选择性的做法无法满足**速动性**的要求。为了实现“零延时瞬时跳闸”且“百分之百精准选择”，**电流差动保护（Current Differential Protection）**应运而生。</p>
+
+        <p>差动保护的物理基石是经典的**基尔霍夫电流定律（Kirchhoff's Current Law，KCL）**：在任何一个闭合区域（或节点）内，流入的电流矢量之和必然等于流出的电流矢量之和。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：自来水管防爆监测器</strong>
+            <p>假设有一段长 10 公里的封闭自来水管道：</p>
+            <ul>
+              <li><strong>正常运行与区外泄漏</strong>：我们在管道入口安装流量计 A，出口安装流量计 B。只要管道本身没有破裂，入水口流进去 100 吨水，出水口必然流出来 100 吨水。差值 $100 - 100 = 0$。即使管道下游 20 公里外的用户突然大开水龙头（相当于区外短路），入口和出口的流量会同时暴涨到 500 吨，但差值依然是 $500 - 500 = 0$！</li>
+              <li><strong>区内爆管故障</strong>：如果在这 10 公里的管道内部中途炸开了一个大口子（相当于区内短路），入口流量计 A 测到流进 500 吨水，但由于大量水从破口喷出，出口流量计 B 只能测到 50 吨水。此时差值高达 $500 - 50 = 450$ 吨！监测器瞬间判定“管道内部爆裂”，立即关闭管段两端的闸阀。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>在电气工程中，我们把被保护的设备（如一台 220kV 主变压器）划定为“保护区（Protection Zone）”。在变压器高压侧和低压侧分别安装一组电流互感器（CT1 与 CT2）。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 关键公式：纵联电流差动保护动作判据</span>
+          <p><strong>差动电流（Differential Current）：</strong></p>
+          \[ I_{diff} = |\dot{I}_1 + \dot{I}_2| \]
+          <p><strong>制动电流（Restraint Current）：</strong></p>
+          \[ I_{res} = \frac{|\dot{I}_1| + |\dot{I}_2|}{2} \]
+          <p><strong>比率制动动作方程：</strong></p>
+          \[ I_{diff} > K_{res} \cdot I_{res} + I_{cd0} \]
+          <p><strong>工程含义说明：</strong> $\dot{I}_1, \dot{I}_2$ 为被保护区域两侧二次电流相量（规定流入区域为正方向）。$I_{diff}$ 是衡量区域内是否有电流“泄漏/爆裂”的动作量；$I_{res}$ 是衡量穿过区域的总电流规模的制动量；$K_{res}$ 为制动系数（通常取 0.3~0.5），$I_{cd0}$ 为门限起点。**比率制动机制能够有效防止大电流区外故障时由于互感器饱和或测量误差导致的保护误动！**</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区与工程陷阱：变压器“励磁涌流”导致差动保护误动</strong>
+            <p>当变压器空载合闸（突然通电）的瞬间，铁芯内部会产生极高的磁通饱和，从而激发出高达额定电流 6~8 倍的**励磁涌流（Inrush Current）**。由于励磁涌流只流过变压器的电源侧，另一侧电流为 0，这会导致 $I_{diff}$ 极其庞大！</p>
+            <p>如果差动保护傻乎乎地直接动作，变压器一开机就会被误切除。工程上的破局之道是**二次谐波制动技术（Second Harmonic Restraint）**：由于励磁涌流波形极度畸变，含有大量的二次谐波分量（20% 以上），而真正的短路电流主要是 50Hz 基波。微机保护算法通过傅里叶变换提取二次谐波比例，一旦检测到二次谐波占比超过设定的门限，便会自动“锁死”差动保护，完美避开开机误动！</p>
+          </div>
+        </div>
+
+        <h3>2.3 距离保护（Distance Protection）：用欧姆定律测量故障点远近</h3>
+        <p>电流差动保护虽然完美，但它需要在线路两端建立高质量的通信通道来实时传输电流相量数据。对于数百公里长的超高压输电线路，或者没有光纤敷设的配电线路，**距离保护（Distance Protection，又称阻抗保护）**成为了绝对的主力防线。</p>
+
+        <p>距离保护的核心物理原理是**欧姆定律（$R=U/I$ 或 $Z=U/I$）**。均匀金属导线的电阻/阻抗与导线的长度 $L$ 成严格的正比关系。当线路某处发生相间短路时，安装在输电线路首端的 protection 装置测量到的电压与电流比值，本质上就是从线路首端到短路故障点之间的**过渡阻抗与线路测量阻抗（Measurement Impedance $Z_m$）**。</p>
+
+        <div class="key-concept">
+          <span class="key-concept-title">📌 关键公式：距离保护测量阻抗与动作判据</span>
+          \[ Z_m = \frac{\dot{U}_m}{\dot{I}_m} = z_0 \cdot L_f \]
+          <p><strong>工程含义说明：</strong> $\dot{U}_m, \dot{I}_m$ 为 protection 装置安装处测得的故障相电压与相电流；$z_0$ 为输电线路单位长度的阻抗参数（欧姆/公里）；$L_f$ 为安装处距离故障点的物理距离（公里）。保护装置将计算出的 $Z_m$ 与设定的保护范围阻抗门限 $Z_{set}$ 进行比较：**如果 $Z_m < Z_{set}$，说明测量阻抗变小，故障点位于保护区段之内，立即跳闸！**</p>
+        </div>
+
+        <p>距离保护通常划分为三个保护区段（段别配合）：</p>
+        <ul>
+          <li><strong>距离 Ⅰ 段</strong>：保护本线路全长的 80%~85%，**瞬时（0 秒）跳闸**。不保护 100% 是为了防止由于测量误差将本线路末端区外故障误判为区内故障。</li>
+          <li><strong>距离 Ⅱ 段</strong>：保护本线路全长并延伸至下一条线路的前半段，作为 Ⅰ 段的后备，配合 0.3~0.5 秒延时跳闸。</li>
+          <li><strong>距离 Ⅲ 段</strong>：作为本线路和相邻线路的远后备 protection，延时 1.5~2.5 秒跳闸。</li>
+        </ul>
+
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、从电磁继电器到微机数字保护——电网“免疫基因”的演进</h2>
+
+        <p>继电保护技术的发展史，本质上是一部测量精度与计算能力不断飞跃的科技进化史。从 19 世纪末的机械物理开关，到如今的工业级数字芯片，继电保护经历了三次伟大的技术范式跨越。</p>
+
+        <h3>3.1 电磁式与晶体管继电器时代：机械物理力矩的博弈</h3>
+        <p>早期的继电保护装置完全由**电磁式继电器（Electromagnetic Relay）**构成。它的结构像是一个精密的机械钟表：流过线圈的短路电流产生电磁吸力，克服弹簧的拉力，吸引衔铁旋转，闭合金属触点从而通电跳闸。</p>
+        <p>这种纯物理机械装置虽然直观，但缺点极其致命：体积庞大（一座变电站需要整整几间房屋来摆放继电器屏柜）、触点容易氧化卡涩、测量精度低、难以实现复杂的数学逻辑运算。随后在 20 世纪 60~70 年代演化出的晶体管与集成电路保护，虽然缩小了体积，但仍未脱离模拟电路容易受到温度漂移和电磁干扰影响的局限。</p>
+
+        <h3>3.2 微机保护时代：采样定理与数字傅里叶算法</h3>
+        <p>20 世纪 80 年代至今，以高性能微处理器（DSP/FPGA）为核心的**微机保护装置（Microprocessor Protection Device）**全面取代了传统的模拟保护，掀起了一场电力系统的数字革命。</p>
+
+        <p>微机保护的工作过程是一个高度精密的数字信号处理管道：</p>
+        <ol>
+          <li><strong>信号调理与抗混叠滤波</strong>：模拟量（CT/PT 信号）经过低通滤波器（Low-pass Filter），滤除高频电磁噪声。</li>
+          <li><strong>模数转换（A/D Conversion）</strong>：根据**香农采样定理（Nyquist Sampling Theorem）**，以每周波 24 点或 48 点（即每秒 1200Hz~2400Hz 的频率）对连续的电流电压波形进行极高精度的离散采样，将其转化为二进制数字序列。</li>
+          <li><strong>数字相量计算（FFT 傅里叶变换）</strong>：微机芯片运行**全周波半周波傅里叶算法**，从被污染畸变的电流数字信号中，毫秒级实时剥离出 50Hz 基波的有效值与相位角，精准计算出阻抗、差动电流与功率方向。</li>
+          <li><strong>软件逻辑整定与跳闸出口</strong>：CPU 将计算出的相量代入软件固化的保护判据中，一旦满足跳闸条件，通过光电隔离继电器输出高达 220V 的直流跳闸脉冲。</li>
+        </ol>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：微机保护算法 vs 智能相机的 AI 滤镜与人眼识别</strong>
+            <p>传统的电磁继电器就像早期的胶片相机，只要光线（电流）过强，胶片就会直接感光烧毁；而微机保护就像带有 AI 算力的智能单反：</p>
+            <ul>
+              <li>当发生闪电或大电机启动时，波形中混杂着大量的毛刺与高频杂波（相当于照片中的噪点与反光）。</li>
+              <li>微机保护内置的数字傅里叶算法就像“降噪滤镜”，能够在 5 毫秒内将杂波一扫而空，只还原出最纯净的 50Hz 人脸（基波矢量相量）。</li>
+              <li>识别完人脸后，微机芯片再用毫秒级速度比对人脸特征（阻抗与差动相量），判定到底是“熟人过路（区外故障）”还是“危险入侵（区内短路）”。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>3.3 数字变电站与 IEC 61850 标准：光纤以太网上的毫秒跳闸</h3>
+        <p>进入 21 世纪，随着**IEC 61850 标准**的推广，变电站进入了**全数字智能变电站（Smart Substation）**时代。传统变电站中连接互感器与 protection 装置的数千根粗重铜芯控制电缆，被全数淘汰，取而代之的是高速光纤网络！</p>
+
+        <ul>
+          <li><strong>SV（Sampled Values，采样值）报文</strong>：安装在户外开关场的电子式互感器（合并单元 MU）将电流电压直接数字化，通过光纤以每秒 4000 帧的速度向 Protection 装置广播 SV 数字报文。</li>
+          <li><strong>GOOSE（Generic Object Oriented Substation Event，通用面向对象变电站事件）报文</strong>：当 Protection 装置做出跳闸决策后，不再通过铜线闭合触点，而是向光纤以太网组播一条最高优先级的 GOOSE 跳闸报文。智能断路器终端（智能终端刀闸）在 **2 毫秒内**接收并解析报文，完成物理跳闸！</li>
+        </ul>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：光纤纵联差动保护中的“北斗/GPS 卫星时钟同步”</strong>
+            <p>对于跨越几十公里的高压输电线路，线路两端的微机保护装置相距遥远。要准确对比线路 A 端和 B 端的电流相量（$\dot{I}_A$ 与 $\dot{I}_B$），必须保证两端 A/D 采样的时刻**绝对同步**！因为即使产生 1 毫秒（ms）的时间偏差，在 50Hz 电网中就会引入高达 18 度的相位测量误差，从而导致差动保护在正常运行或区外故障时产生巨大的伪差流，引发严重误动。</p>
+            <p>现代微机纵联差动保护装置普遍引入了**IEEE 1588 实时精密时钟同步协议**或**北斗/GPS 卫星授时脉冲（PPS）**，将跨越数百公里的线路两端采样时间差控制在 **1 微秒（μs）以内**，确保了纵联差动保护在超长线路上依旧万无一失。</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、网储电站继电保护的特殊挑战——双向电流与逆变控制下的保护革新</h2>
+
+        <p>随着“双碳”目标的推进，百兆瓦级集中式电化学储能电站（BESS）大量接入电网。然而，储能电站的引入给传统的继电保护系统带来了前所未有的工程挑战。传统电网保护是建立在“单向电源（大同步发电机）+ 单向辐射状供电”的假设基础上的，而储能电站的加入彻底打破了这些传统假设。</p>
+
+        <h3>4.1 挑战一：双向功率流导致传统过流保护“方向性失效”</h3>
+        <p>传统配电网中，电能总是单向地从高压变电站流向低压用户。因此，传统的过流保护只需要监测电流的大小即可。</p>
+        <p>但是，网储升压站具有极强的**双向运行特性**：</p>
+        <ul>
+          <li><strong>充电模式（谷电吸电）</strong>：功率从电网 220kV 侧流向 35kV 储能汇集母线，再流向电池预制舱。</li>
+          <li><strong>放电模式（峰电发电）</strong>：功率从电池预制舱经 PCS 逆变后，反向从 35kV 母线升压流向电网。</li>
+        </ul>
+        <p>在放电模式下，储能电站本身就成了一个强大的“电源”。如果汇集线路发生区外故障，储能电站提供的反向短路电流可能会触发上游本不该动作的过流 protection 跳闸，造成保护误动。<strong>解决方案：必须全面加装方向元件（Directional Element），升级为方向过电流保护（Directional Overcurrent Protection），只有当短路电流的大小超过门限且功率方向指向被保护线路内部时，才允许跳闸！</strong></p>
+
+        <h3>4.2 挑战二：PCS 弱受控源特性导致传统过流保护“拒动”</h3>
+        <p>这是储能变流器（PCS）接入后最核心、最棘手的保护难题！</p>
+        <p>传统的同步发电机（如火电、水电）是一个“强电压源”。当发生金属性短路时，由于发电机内部只有物理阻抗，短路瞬间发电机能够输出高达额定电流 **6~10 倍**的庞大短路电流。这种巨额电流很容易触发传统的过流 protection。</p>
+        <p>相反，储能系统是通过**半导体电力电子器件（IGBT）**进行逆变集成的。IGBT 对过电流极其敏感，为了防止热击穿损坏极其昂贵的 IGBT 模块，PCS 内部的控制算法配备了严苛的毫秒级软件限流机制：**无论外部 35kV 母线发生多么严重的短路，PCS 输出的故障短路电流会被死死限制在额定电流的 1.1~1.5 倍以内！**</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区：把储能逆变器当成传统发电机导致的保护“拒动”隐患</strong>
+            <p>如果工程师仍然按照传统电网经验，将 35kV 储能集电线路的过电流保护整定值定为 2.0 倍额定电流：</p>
+            <p>当该集电线路发生短路时，由于 PCS 的软件限流作用，流过线路的实际短路电流最高只有 1.2 倍额定电流。<strong>1.2 倍电流远小于 2.0 倍整定门限，导致过流保护装置完全无法识别出短路故障，保护彻底拒动！</strong>巨大的短路电弧会在 35kV 开关柜内持续燃烧，最终引发严重的电气火灾事故。</p>
+            <p><strong>工程应对之道：</strong>在储能集电线路与升压站中，逐步淘汰单一依靠电流幅值的过电流保护，全面引入**光纤纵联差动保护、低电压闭锁过流保护（Low Voltage Blocked Overcurrent Protection）与负序/零序阻抗保护**。</p>
+          </div>
+        </div>
+
+        <h3>4.3 挑战三：孤岛效应与防孤岛保护（Anti-Islanding Protection）</h3>
+        <p>当大电网因故障突然断开（如 220kV 出线断路器跳闸）时，如果百兆瓦级储能电站仍在继续向局部区域的负荷供电，就会形成一个脱离主电网控制、独立运行的“电力孤岛”。这种现象被称为**孤岛效应（Islanding Effect）**。</p>
+
+        <p>未经允许的非计划孤岛存在极其巨大的安全隐患：</p>
+        <ol>
+          <li><strong>人身安全风险</strong>：电网抢修人员以为大电网已停电，上前检修输电线路，结果被储能电站反送的高压电击伤。</li>
+          <li><strong>电能质量失控</strong>：没有大电网支撑，孤岛内的电压与频率会瞬间剧烈漂移，烧毁用户家用电器或工厂敏感设备。</li>
+          <li><strong>非同期重合闸毁灭性打击</strong>：当大电网尝试自动重合闸合闸瞬间，大电网与孤岛之间存在巨大的电压相位差（非同期），会产生极大的冲击电流，直接撕裂储能变压器与 PCS 逆变器！</li>
+        </ol>
+
+        <p>因此，国家标准要求储能电站必须配置双重化的**防孤岛保护（Anti-Islanding Protection）**：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>关键要点：防孤岛保护的双重机制</strong>
+            <ul>
+              <li><strong>被动式防孤岛（Passive Anti-Islanding）</strong>：通过微机保护装置时刻监测 PCC 点（公共连接点）的电压与频率。一旦检测到**过压/欠压（OVP/UVP）、过频/欠频（OFP/UFP）或频率变化率（ROCOF $df/dt$）**超出安全范围，在 2 秒内强制拉闸断开与电网的连接。</li>
+              <li><strong>主动式防孤岛（Active Anti-Islanding）</strong>：由 PCS 逆变器软件算法执行。PCS 在输出电流时，主动注入极其微小的频率扰动信号。当电网并网运行时，庞大的主电网会把这个微小扰动完全钳制住；一旦大电网断开（形成孤岛），这个微小扰动就会迅速正反馈放大，瞬间引发电压或频率崩溃，从而主动触发被动保护跳闸！</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>4.4 挑战四：低电压穿越（LVRT）与保护动作时间的精准协调</h3>
+        <p>防孤岛保护要求“电网故障时快速切除储能”，但电网调度中心又要求“电网发生暂态故障时储能电站必须支撑电网，不能轻易掉线”。这就是著名的**低电压穿越（Low Voltage Ride-Through，LVRT）**要求。</p>
+
+        <p>根据中国 GB/T 36547《电化学储能系统接入电网技术规定》，当电网发生短路导致并网点电压跌落至标称电压的 20% 甚至 0% 时，储能电站必须能够在 **0.15 秒至 2 秒** 内保持不脱网连接，并向电网动态注入无功电流帮助电网恢复电压。</p>
+
+        <p>这给继电保护整定提出了极高要求：**继电保护的动作时间必须与储能系统的 LVRT 曲线进行严格的毫秒级时间窗口配合！** 如果保护动作太快（如电压跌落至 50% 时 0.05 秒就跳闸），就会破坏储能站的 LVRT 支撑功能，导致电网因失去无功支撑而大面积崩溃；如果保护动作太慢，又无法切除储能站内部的真实金属性故障。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：新疆某 300MW/1200MWh 储能汇集站 35kV 保护整定改造实战</strong>
+            <p><strong>项目背景：</strong>2024 年，位于新疆吐鲁番的高压直流配套 300MW/1200MWh 集中式储能电站投运试运行期间，发生了一起严重的保护误动事故。当远处 750kV 高压主网发生雷击暂态短路引发全网电压跌落至 65% 时，该储能站 35kV 汇集母线上的过电流保护装置因为检测到 1.3 倍的短路电流，在 0.2 秒内误将 40 台电池预制舱全部切除，导致电网瞬间失去数百兆瓦的支撑功率，引发区域电网二级告警。</p>
+            <p><strong>事故根因分析：</strong>项目原设计单位直接套用了传统水电站的过流保护整定公式，没有考虑到 PCS 在 LVRT 期间会主动输出 1.3 倍额定无功电流来支撑电网。protection 装置误把 PCS 正常的无功支撑电流识别为了外部故障短路电流。</p>
+            <p><strong>整改优化方案：</strong>国家电网西北分调专家组指导完成了现场继电保护整定逻辑改造：</p>
+            <ol>
+              <li>将 35kV 集电线路传统的“无时限过流保护”全数升级为“全线光纤纵联差动保护”，实现区内与区外故障的零误动剥离。</li>
+              <li>在集电线路后备保护中引入**低电压闭锁与负序电压判据**，并将其动作延时从 0.2 秒延长至 2.5 秒，完美避开储能电站 1.8 秒的 LVRT 低电压穿越时间窗口。</li>
+            </ol>
+            <p>改造完成后，该储能站顺利通过了国家电网最高强度的 LVRT 现场实测抽检，至今零误动稳定运行。</p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>继电保护的本质与“四性”</strong>：继电保护是电网的自动免疫系统。其核心使命是在数十毫秒内切除故障。设计与运行必须严格平衡<strong>选择性（切患处保健康）、速动性（毫秒争锋）、敏感性（明察秋毫）与可靠性（不拒动、不误动）</strong>四大黄金指标。</li>
+        <li><strong>三大经典保护原理</strong>：
+          <ul>
+            <li><em>过电流保护</em>：基于电流幅值突变，依靠阶梯时限配合实现选择性，适用于末端配电网。</li>
+            <li><em>电流差动保护</em>：基于基尔霍夫电流定律（KCL），通过比较被保护区域两侧的电流矢量差（$I_{diff}$），实现全线零延时绝对选择性跳闸。必须配备二次谐波制动以防变压器励磁涌流误动。</li>
+            <li><em>距离保护</em>：基于欧姆定律测量线路阻抗（$Z_m=U/I$），通过测量阻抗的大小判定故障点距离首端的物理距离。</li>
+          </ul>
+        </li>
+        <li><strong>数字微机保护与 IEC 61850</strong>：微机保护通过香农采样定理与数字傅里叶算法（FFT）秒级提取 50Hz 基波矢量；智能变电站利用光纤传输 SV 采样报文与 GOOSE 毫秒级跳闸指令，彻底告别了传统铜线二次回路。</li>
+        <li><strong>网储升压站保护特异性实战</strong>：
+          <ul>
+            <li>储能站具有<strong>双向功率流</strong>特性，过流保护必须加装方向元件。</li>
+            <li>PCS 具有<strong>弱受控源与软件限流（1.1~1.5倍）</strong>特性，极易导致传统过流保护拒动，必须引入光纤纵联差动保护与低电压闭锁机制。</li>
+            <li>必须配备<strong>被动式+主动式双重防孤岛保护</strong>，且继电保护动作延时必须与储能系统的<strong>低电压穿越（LVRT）</strong>时间窗口严格配合。</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 继电保护系统的“选择性”要求是指以下哪一种工程物理行为？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 保护装置必须在 5 毫秒内以极快速度切除所有可能受影响的线路</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 当系统发生故障时，仅由距离故障点最近的保护装置切除故障，最大程度保全非故障设备的正常供电</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 保护装置能够自动选择是以电流还是以电压作为唯一的跳闸依据</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 保护装置在正常运行时能够根据负荷大小自动选择合闸或拉闸</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选择性（Selectivity）的本质是“精准切除患处，保全健康电网”。当末端线路短路时，上游和本级保护都会感受到短路电流，但必须由距离故障点最近的断路器跳闸切除故障，上游保护保持合闸，从而避免停电范围扩大。选项 A 描述的是“速动性”；选项 C 和 D 均脱离了继电保护“四性”的学术定义，属于混淆概念。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在大容量主变压器纵联电流差动保护中，当变压器空载合闸时，会产生高达 6~8 倍额定电流的励磁涌流。保护装置采用以下哪种物理机制来防止差动保护发生误动作？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 强制增加 5 秒钟的固定跳闸延时，等待涌流自然衰减</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 利用傅里叶算法提取二次谐波分量，当二次谐波占比超过门限时锁死差动跳闸</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 直接拉开变压器低压侧断路器，强行阻断励磁涌流</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 降低整定电流门限，使保护对励磁涌流不再敏感</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：励磁涌流含有极高的波形畸变率，其二次谐波（100Hz）分量占比远高于真实短路电流（真实短路电流以 50Hz 基波为主）。微机保护通过二次谐波制动技术，检测到二次谐波占比大于 15%~20% 时闭锁差动保护，既能防止合闸误动，又无需牺牲保护的速动性。选项 A 严重违背速动性原则；选项 C 无法阻断高压侧的励磁涌流；选项 D 降低门限反而会更容易导致误动。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 距离保护（阻抗保护）在检测高压输电线路故障时，其测量阻抗 $Z_m = U/I$ 随着故障点距离保护安装处物理距离的缩短，会发生怎样的物理变化？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 测量阻抗 $Z_m$ 线性增大，当超过整定阻抗时触发跳闸</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 测量阻抗 $Z_m$ 线性减小，当小于整定阻抗时触发跳闸</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 测量阻抗保持常数不变，仅相位发生 180 度翻转</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 测量阻抗衰减为零，且与故障距离毫无物理关联</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：输电线路的阻抗与线路物理长度成正比。故障点越靠近线路首端（保护安装处），故障回路包含的导线长度 $L_f$ 越短，测量到的电压越低、电流越大，因此阻抗比值 $Z_m = U/I$ 越小。当计算出的 $Z_m$ 小于设定的保护动作区阻抗 $Z_{set}$ 时，判定故障位于保护区内并跳闸。因此选项 B 正确，选项 A 逻辑颠倒，选项 C、D 不符合欧姆定律。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在百兆瓦级电化学储能电站（BESS）中，为什么传统的过电流保护在 35kV 集电线路发生短路时可能会发生致命的“保护拒动”？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 储能电池无法提供任何短路电流，线路电流瞬间降为零</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 储能变流器（PCS）的半导体器件具有软件限流控制（通常限制在 1.1~1.5 倍额定电流），无法产生触发传统过流门限的高额短路电流</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 储能电站的变压器会自动吸收短路电流，导致 Protection 装置损坏</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 微机保护装置无法读取直流电池包的数字信号</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：传统过流 protection 依赖发电机输出的 6~10 倍大短路电流来触发。但储能变流器（PCS）属于电力电子受控源，为了保护脆弱的 IGBT 芯片不被烧毁，PCS 控制算法会将短路电流强行限制在 1.1~1.5 倍额定电流以内。这一限流值远低于传统过流 protection 的整定门限（通常为 2.0 倍以上），导致保护装置误以为没有故障发生而“拒动”。因此选项 B 正确；选项 A、C、D 均不符合储能系统的实际电气运行物理机制。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 关于储能电站接入电网时的“防孤岛保护（Anti-Islanding Protection）”，以下哪项表述是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 防孤岛 protection 的目的是为了让储能电站在大电网停电后，永久给周边所有居民继续供电</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 防孤岛保护仅依靠在输电线上安装物理隔离开关实现，不需要任何算法参与</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 当主电网断开导致非计划孤岛时，防孤岛保护必须在规定时间内（通常小于 2 秒）切断储能电站与并网点的连接，防止人身触电与非同期重合闸冲击</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 防孤岛保护会强制禁止储能电站执行任何低电压穿越（LVRT）功能</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：非计划孤岛会带来极大的安全隐患（检修人员触电、电能质量失控、大电网非同期重合闸冲击破坏设备）。因此防孤岛保护必须在 2 秒内检测到孤岛形成并迅速拉闸隔离。选项 A 混淆了“非计划孤岛”与微电网计划离网运行的区别；选项 B 忽视了主动式/被动式数字检测算法；选项 D 错误，防孤岛保护与 LVRT 必须在时间窗口上严格配合，而不是简单地强制禁止 LVRT。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_5_2_主接线方式.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">主接线方式</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_5_4_变电站自动化.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">变电站自动化</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_5_1_变电站概述.html">02_5_1 变电站概述：电网心脏全景解构</a></li>
+        <li><a href="02_5_2_主接线方式.html">02_5_2 主接线方式：电气拓扑与倒闸逻辑</a></li>
+        <li><a href="02_5_4_变电站自动化.html">02_5_4 变电站自动化：二次系统与 IEC 61850</a></li>
+        <li><a href="../../index.html">返回手册目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.5 &nbsp;|&nbsp; <span class="file-id">02_5_3</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
