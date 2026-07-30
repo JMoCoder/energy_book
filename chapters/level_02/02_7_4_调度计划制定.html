@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>调度计划如何制定 — 电网调度与运行 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电网调度计划制定的核心机制，涵盖日前机组组合（UC）、实时经济调度（ED）、安全约束 SCED，以及新型储能与高比例新能源如何融入电网24小时精细化调度计划。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电网调度与运行</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">调度计划如何制定</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_7_3_一次调频与AGC.html" class="nav-prev" title="上一节：一次调频与AGC">← 上节</a>
+        <a href="02_7_5_负荷与新能源预测.html" class="nav-next" title="下一节：负荷预测与新能源预测">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>电网调度与运行</span>
+        <span class="sep">›</span>
+        <span>调度计划如何制定</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_7_4</span>
+        <span class="reading-time">⏱ 约30分钟</span>
+        <span class="difficulty">🟡 进阶</span>
+      </div>
+      <h1>调度计划如何制定：电网的“24小时精细剧本”</h1>
+      <p class="chapter-lead">电能无法大规模廉价直接储存的物理属性，决定了电网必须在每一分、每一秒做到“即发即用”。电网调度中心如何提前一天乃至提前几小时，精准安排成百上千座电厂和储能电站的开停机与出力曲线？本节将带你深入电力系统的“中枢大脑”，剖析日前机组组合（UC）、实时经济调度（ED）以及新型储能如何打破传统计划、重塑电网动态平衡的精妙机制。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>掌握调度计划的时间跨度与三级时间尺度</strong>：理清年/月中长期规划、日前调度（Day-Ahead）与日内/实时调度（Intraday/Real-Time）的递进衔接关系，理解 96 个时段（15 分钟粒度）计划表的作用。</li>
+        <li><strong>理解机组组合（UC）与经济调度（ED）的核心数学思想与工程约束</strong>：清晰辨析开停机 0-1 决策（UC）与连续功率分配（ED）的区别，掌握最小化全网发电成本与满足安全约束（如爬坡速率、最小上下限、旋转备用）的权衡。</li>
+        <li><strong>理解安全约束经济调度（SCED）的网络流限制</strong>：掌握节点电价与输电线路断面阻塞对发电计划的硬性限制，理解电网“不仅要算得省，更要跑得安全”的底层逻辑。</li>
+        <li><strong>剖析新型储能与高比例新能源加入后的调度计划演变</strong>：深刻理解高不确定性下“源网荷储”多元协同的调度新范式，掌握独立储能电站在日前-实时两级调度中的充放电计划优化策略。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：迎峰度夏前夜的“百亿级决策”</h2>
+      <p>盛夏 7 月的一个夜晚，22:30，某省级电网电力调度控制中心的大屏上，数据与曲线正在高速跳动。调度员们神情严肃——气象预报显示，明日该省将迎来今年最强烈的酷暑高温，预计全网最大电力负荷将首次冲破 <strong>6,500 万千瓦（65 GW）</strong> 历史大关！</p>
+      <p>更令人吃惊的是，气象卫星同时预警：明日午后 14:00 左右，该省北部沿海地区将出现突发强对流雷暴天气。这意味着，原本在正午提供近 <strong>1,200 万千瓦</strong> 强劲动力的集中式光伏电站，可能会在短短 20 分钟内因乌云密布而暴跌 70% 的输出功率！</p>
+      <p>电网调度员绝对不能等到明天下午乌云遮日、频率急跌时才手忙脚乱地打电话命令电厂“赶紧烧煤加功率”——因为一座 660 MW 的大型超超临界煤电机组，从冷态启动到并网发电需要 <strong>6 到 8 个小时</strong> 的预热与升温升压过程！如果今晚不提前下达开机指令，明天下午电网就会面临灾难性的电能缺口。</p>
+      <p>那么，省级调度中心如何在今晚 24:00 前，精准安排全省 200 多座火电厂、水电站、风电场、光伏电站以及数十座大型独立储能电站明天 24 小时（分成 96 个 15 分钟时段）的开停机状态与出力曲线？既要保证绝对不发生停电，又要让全省上亿元的烧煤成本降到最低。这就是电力系统每天都在无声上演的“百亿级数学优化大戏”——<strong>调度计划制定</strong>。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+
+      <!-- 一、调度计划的时间分级：从年季到毫秒的“多重快门” -->
+      <section>
+        <h2>一、调度计划的时间分级：从年季到毫秒的“多重快门”</h2>
+
+        <h3>1. 为什么电网需要建立“分级时间尺度”计划？</h3>
+        <p>在工程现实中，电力系统面临着一个核心矛盾：<strong>用电需求在秒级和分钟级剧烈波动，而大型发电设备的物理状态改变（如蒸汽锅炉升温、汽轮机膨胀）却具有极大的时间滞后性</strong>。</p>
+        <p>如果只有实时调度，电厂根本来不及响应；如果只有长期计划，又无法应对天气变化和突发故障。因此，中国电力系统建立了涵盖“中长期-日前-日内-实时”的四级调度计划体系。就像摄影师拍摄高速运动的物体需要结合长曝光与高速快门一样，电网调度也需要多重时间尺度的“接力配合”。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：大型连锁餐厅的采购与备菜计划</strong>
+            <p>想象你经营一家大型自助餐厅：</p>
+            <ul>
+              <li><strong>月度计划（中长期）</strong>：提前一个月与供应商签订牛肉、蔬菜采购合同，锁定大致价格与总量。（对应电网中长期电力交易与水电蓄水计划）</li>
+              <li><strong>日前计划（Day-Ahead）</strong>：结合明天天气与节假日预报，在今晚决定明天派哪 10 位厨师上班、几点开启大型烤箱升温。（对应电网日前机组组合 UC 计划）</li>
+              <li><strong>日内计划（Intraday）</strong>：明天中午 11:30，发现客流量比预期多了 30%，紧急通知备用厨师提早半小时进厨房洗菜切肉。（对应电网日内 1-4 小时滚动修正）</li>
+              <li><strong>实时调度（Real-Time）</strong>：顾客在餐台取走最后盘炒菜时，厨师立刻翻炒补盘。（对应电网实时自动发电控制 AGC 与储能秒级响应）</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>2. 电网四级调度计划体系对比</h3>
+        <p>在中国电网的实际运行中，不同时间尺度的调度计划有着明确的职责划分与数据精度要求，如下表所示：</p>
+
+        <table class="grid-table">
+          <thead>
+            <tr>
+              <th>时间尺度</th>
+              <th>计划名称</th>
+              <th>时间分辨率</th>
+              <th>核心决策目标</th>
+              <th>主要约束条件</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>年 / 月度</strong></td>
+              <td>中长期运行规划</td>
+              <td>月 / 周</td>
+              <td>水库蓄水管理、电厂大修计划安排、跨省跨区送电大纲</td>
+              <td>水库容量、燃料供应储备、电厂检修周期</td>
+            </tr>
+            <tr>
+              <td><strong>日前（Day-Ahead）</strong></td>
+              <td>日前发电计划</td>
+              <td>15 分钟（96 时段）</td>
+              <td><strong>确定机组开停机状态（UC）</strong>、基础出力曲线安排</td>
+              <td>机组最小启停时间、启停成本、旋转备用容量要求</td>
+            </tr>
+            <tr>
+              <td><strong>日内（Intraday）</strong></td>
+              <td>日内滚动调度</td>
+              <td>15 分钟（滚动 1-4 小时）</td>
+              <td>根据最新超短期风光预测修正日前计划，调整慢速机组</td>
+              <td>机组爬坡速率、新能源实时预测偏差</td>
+            </tr>
+            <tr>
+              <td><strong>实时（Real-Time）</strong></td>
+              <td>实时经济调度（ED）/ AGC</td>
+              <td>5 分钟 / 秒级</td>
+              <td><strong>精细分配实时功率（ED）</strong>，保持电网 50 Hz 频率稳定</td>
+              <td>电网动态安全断面、超短期极速爬坡能力</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>关键要点：96 个时段的数学意义</strong>
+            <p>在日前调度计划中，一天 24 小时被等分为 96 个时段（每 15 分钟一个时段，即 00:00-00:15 为第 1 时段，00:15-00:30 为第 2 时段……直到 23:45-24:00 为第 96 时段）。调度控制系统需要为全网数百台机组和储能电站，计算出涵盖这 96 个时间点的完整功率轨迹矢量！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 二、日前调度计划的核心：机组组合优化（UC） -->
+      <section>
+        <h2>二、日前调度计划的核心：机组组合优化（UC）</h2>
+
+        <h3>1. 什么是机组组合（Unit Commitment, UC）？</h3>
+        <p>在日前调度阶段（通常在每日 09:00 至 17:00 之间进行），调度算法面临的首要难题是：全网有上百台发电机组，明天到底该<strong>开启哪些机组、关停哪些机组</strong>？</p>
+        <p>这在数学上是一个典型的<strong>混合整数非线性规划（MINLP）</strong>问题。所谓 0-1 变量，即代表机组在第 $t$ 个时段是开机（$u_{i,t} = 1$）还是停机（$u_{i,t} = 0$）。</p>
+
+        <div class="key-concept">
+          <span class="concept-icon">📌</span>
+          <div class="concept-content">
+            <strong>核心定义：机组组合（Unit Commitment, UC）</strong>
+            <p>机组组合是指在满足预期的电网负荷需求、安全备用要求以及各类发电机组复杂的物理与运行约束前提下，以<strong>全网总运行成本（包括燃料消耗成本与机组启停成本）最小化</strong>为目标，确定规划期内（通常为未来 24-48 小时）各发电机组在各个时段的开停机状态与出力初始分配的优化过程。</p>
+          </div>
+        </div>
+
+        <h3>2. 机组组合面临的五大硬性物理约束</h3>
+        <p>如果电厂可以像家里的电灯开关一样瞬间开闭，机组组合将变得非常简单。然而在现实工程中，大型发电机组（尤其是火电机组与核电机组）受限于热力学和机械结构，存在极其严格的“物理缰绳”：</p>
+
+        <ul>
+          <li><strong>① 机组出力上下限约束（Power Limits）</strong>：
+            <p>发电机组不能无限制发电，也不能无限低出力。例如一台 600 MW 的火电机组，其额定最大出力 $P_{\max} = 600\text{ MW}$；而由于锅炉稳燃和最小技术出力限制，其最小出力 $P_{\min}$ 通常为 30%–50%（即 180 MW–300 MW）。低于此数值，锅炉灭火风险剧增。</p>
+          </li>
+          <li><strong>② 最小连续运行与停机时间约束（Minimum Up/Down Time）</strong>：
+            <p>火电机组一旦开机，由于高温高压蒸汽引发的热应力分布，必须连续运行至少 $T_{\text{on}}$ 小时（如 4–8 小时），绝不能刚开机半小时就关停；同理，一旦关停，也必须冷却一段时间 $T_{\text{off}}$ 小时后才能再次启动。</p>
+          </li>
+          <li><strong>③ 机组爬坡速率约束（Ramp Rate Limits）</strong>：
+            <p>汽轮机的金属部件不能承受急剧的温度变化。机组从当前功率增加到更高功率，每分钟增加的兆瓦数受到额定爬坡速率 $R_{u}$ 限制（如每分钟最多上升 1% 额定容量）。下降速率同理受 $R_{d}$ 限制。这决定了机组出力曲线不能出现垂直断崖。</p>
+          </li>
+          <li><strong>④ 启停成本与热状态（Start-up Costs）</strong>：
+            <p>火电机组启动极其昂贵！停机时间越长，锅炉越冷（冷态启动），重新点火加热需要消耗大量的昂贵轻柴油和煤炭，单次启动成本可达数万至数十万元人民币；若刚停机不久（热态启动），成本相对较低。数学算法必须把这个“启停门槛”算得清清楚楚。</p>
+          </li>
+          <li><strong>⑤ 系统旋转备用约束（Spinning Reserve Requirements）</strong>：
+            <p>调度计划不能把所有在线机组都拉满到 100% 功率！全网在线机组的可用最大功率之和，必须比预测的总负荷多出一定比例（通常为最大负荷的 5%–10% 或最大单机容量），这部分随时准备响应突发故障的“余量”，称为<strong>旋转备用（Spinning Reserve）</strong>。</p>
+          </li>
+        </ul>
+
+        <h3>3. 机组组合的目标函数与数学模型</h3>
+        <p>在日前调度中，优化算法追求的目标是全网在 96 个时段内的<strong>总经济成本最小化</strong>。其核心目标函数可以抽象表示为：</p>
+
+        $$\min \sum_{t=1}^{T} \sum_{i=1}^{N} \left[ C_i(P_{i,t}) \cdot u_{i,t} + S_{i,t}(u_{i,t}, u_{i,t-1}) \right]$$
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>公式含义深度剖析与工程解读</strong>
+            <ul>
+              <li>$\min$：代表追求目标最小化。</li>
+              <li>$T = 96$：代表日前调度的 96 个 15 分钟时段；$N$ 代表参与出清的机组总数。</li>
+              <li>$u_{i,t} \in \{0, 1\}$：决策变量。$1$ 表示第 $i$ 台机组在第 $t$ 时段开机，$0$ 表示停机。</li>
+              <li>$C_i(P_{i,t})$：机组 $i$ 在发功率为 $P_{i,t}$ 时的燃料成本函数，通常为二次抛物线：$C_i(P) = a_i P^2 + b_i P + c_i$。由于含二次项，使得优化计算非常复杂。</li>
+              <li>$S_{i,t}(u_{i,t}, u_{i,t-1})$：启停成本。只有当 $u_{i,t}=1$ 且 $u_{i,t-1}=0$（即从停机变开机）时，才会触发昂贵的启动费用。</li>
+            </ul>
+            <p><strong>工程意义</strong>：该公式直观地说明了调度大脑的决策难题——有时宁可让一台效率稍低的机组继续低出力运行（承受稍高的 $C_i$），也不愿关掉它再重新开机（因为 $S_{i,t}$ 启动费用极其昂贵）。调度算法必须在“燃料费”与“启停费”之间找到最优平衡点。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 三、实时调度与安全约束经济调度（SCED） -->
+      <section>
+        <h2>三、实时调度与安全约束经济调度（SCED）</h2>
+
+        <h3>1. 经济调度（ED）与机组组合（UC）的分工</h3>
+        <p>到了日内与实时运行阶段，所有机组的开停机状态（即 0-1 变量 $u_{i,t}$）已经在日前调度中确定下来并付诸实施了。此时，0-1 整数变量被“冻结”，数学模型简化为一个纯粹的<strong>连续变量凸优化问题</strong>——这就是<strong>经济调度（Economic Dispatch, ED）</strong>。</p>
+        <p>经济调度要回答的问题是：在开机机组名单已定的情况下，面对此时此刻具体的负荷数值，<strong>每台在线机组具体应该分配多少兆瓦（MW）的输出功率</strong>？</p>
+
+        <h3>2. 等微增率准则：经济调度的直觉金科玉律</h3>
+        <p>在不考虑电网线路损耗与阻塞的理想情况下，如何分配功率才能让总燃料成本最省？电力工程中有一个著名的高峰准则——<strong>等微增率准则（Equal Incremental Cost Principle）</strong>。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：多家不同效率工场的接单分配策略</strong>
+            <p>假设你有三家工厂 A、B、C 共同生产一批产品。A 厂设备最先进，多生产一件产品的边际成本（微增率）是 10 元；B 厂设备较旧，边际成本是 15 元；C 厂边际成本是 20 元。</p>
+            <p>当接到新订单时，最省钱的做法显然是<strong>优先把订单交给边际成本最低的 A 厂</strong>，直到 A 厂产能达到上限；如果还需要增加产量，再逐步增加 B 厂的产量。最终的最优状态是：<strong>所有正在接单的工厂，多生产一件产品的边际成本完全相等！</strong></p>
+          </div>
+        </div>
+
+        <p>用数学语言表示，设各机组的耗量微增率为 $\lambda_i = \frac{dC_i(P_i)}{dP_i}$（即每增加 1 MW 功率所增加的燃料费用成本率），经济调度的最优条件是：所有未达到功率上下限的在线机组，其微增率全部相等：</p>
+
+        $$\lambda_1 = \lambda_2 = \cdots = \lambda_N = \lambda^*$$
+
+        <p>这个共同的 $\lambda^*$，在现代电力市场中，就演变成了全网统一的<strong>系统边际电价（System Marginal Price, SMP）</strong>！</p>
+
+        <h3>3. 安全约束经济调度（SCED）：电网不能只是“算得省”，更要“跑得安全”</h3>
+        <p>然而，现实世界的电力网并不是一个无电阻、无瓶颈的“理想单节点”。高压输电线路有最大载流量限制，变压器有容量上限，电网断面有静态与暂态稳定极限！</p>
+        <p>如果按等微增率算出某座成本极低的大型坑口电厂应该满发 3,000 MW，但连接该电厂的输电线路最大只能承受 2,000 MW 的传输功率，强行送电就会导致输电线路过热下垂甚至烧断，引发大停电。</p>
+        <p>因此，现代调度控制中心普遍采用<strong>安全约束经济调度（Security-Constrained Economic Dispatch, SCED）</strong>。SCED 在经济调度（ED）的基础上，加入了极其复杂的电网潮流方程与安全断面约束：</p>
+
+        <div class="key-concept">
+          <span class="concept-icon">📌</span>
+          <div class="concept-content">
+            <strong>核心概念：安全约束经济调度（SCED）</strong>
+            <p>SCED 是一种在考虑电网基态传输极限以及预想事故下（如 $N-1$ 故障）安全约束的前提下，优化分配在线发电机组出力，使系统发电总成本最低的实时调度算法。SCED 的引入，直接催生了现代电力市场中最核心的价格机制——<strong>节点边际电价（Locational Marginal Price, LMP）</strong>。</p>
+          </div>
+        </div>
+
+        <p>当某条输电线路发生堵塞（Congestion）时，为了不超出线路极限，调度系统不得不强行限制优质低价电厂的输出，转而拉起线路另一端成本较高但位于负荷中心的电厂。这种因输电瓶颈导致不同地理节点电价产生差异的现象，正是 SCED 优化计算的直接体现。</p>
+      </section>
+
+      <!-- 四、储能系统（BESS）如何嵌入调度计划 -->
+      <section>
+        <h2>四、储能系统（BESS）如何嵌入调度计划</h2>
+
+        <h3>1. 储能对传统调度计划的“革命性冲击”</h3>
+        <p>在传统电力系统中，调度计划的哲学是“发跟着荷动”（Generators follow Load）。因为电能无法保存，发电机组完全是被动的响应者。</p>
+        <p>而电池储能系统（BESS）与抽水蓄能的加入，引入了**能量的时间迁移（Energy Time Shifting）**能力！储能系统既可以是“负荷”（充电），也可以是“电源”（放电）。这种双重身份彻底打破了传统调度在时间维度上的即时刚性约束。</p>
+
+        <h3>2. 储能在调度计划中的数学建模与独特约束</h3>
+        <p>在日前机组组合（UC）和实时经济调度（SCED）算法中加入储能电站时，算法工程师必须为储能系统引入一套全新的状态变量与物理约束：</p>
+
+        <ul>
+          <li><strong>① 荷电状态（SOC）连续连续演化约束</strong>：
+            <p>储能在 $t$ 时段的能量储备 $E_t$，等于上一时段能量 $E_{t-1}$ 加上本时段充电量（考虑充电效率 $\eta_c$），减去放电量（考虑放电效率 $\eta_d$）：</p>
+            $$E_t = E_{t-1} + \left( P_{c,t} \cdot \eta_c - \frac{P_{d,t}}{\eta_d} \right) \cdot \Delta t$$
+            <p><strong>工程含义</strong>：储能系统是一个“带记忆”的设备。第 50 时段能不能放电，完全取决于第 1 到 49 时段调度计划给它充了多少电。算法必须保证 SOC 时刻处于安全的区间 $[SOC_{\min}, SOC_{\max}]$ 之间（如 10%–90%），绝不能过充过放。</p>
+          </li>
+          <li><strong>② 充放电状态互斥约束（State Mutual Exclusion）</strong>：
+            <p>在同一个时间点 $t$，储能系统不能既充电又放电。数学上通过引入二进制变量 $z_t \in \{0, 1\}$ 强制约束：$P_{c,t} \le P_{c,\max} \cdot z_t$ 且 $P_{d,t} \le P_{d,\max} \cdot (1 - z_t)$。</p>
+          </li>
+          <li><strong>③ 始末 SOC 保持平衡约束（Cycle SOC Balance）</strong>：
+            <p>为了保证储能电站可持续运行，日前计划通常要求储能在每天第 96 时段末（24:00）的 SOC，必须恢复到与第 1 时段初（00:00）完全一致的水平（例如统一保持在 50% SOC），为下一天的调度准备好基准初始状态。</p>
+          </li>
+        </ul>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：山西电力现货市场中独立储能的“日前-实时”两级调度出清</strong>
+            <p>作为全国首个电力现货市场长周期结算试运行省份，山西电网将大型独立电化学储能电站（如 100 MW / 200 MWh 磷酸铁锂储能）完全纳入省调的 SCED 自动化出清系统。</p>
+            <ul>
+              <li><strong>日前计划阶段</strong>：调度系统结合次日风光预测与负荷曲线，自动算出次日节点电价（LMP）。在凌晨 02:00–05:00 风电过剩、电价低谷期，调度计划下达 100 MW 满功率充电指令；在午后 18:00–21:00 用电高峰期，下达 100 MW 满功率放电指令。</li>
+              <li><strong>实时调度阶段</strong>：当午后出现光伏突发跌落偏差时，调度 SCED 系统以 5 分钟为周期滚动出清，优先调用电池响应速度快（毫秒级）的优势，下达临时增加放电功率指令，赚取高额的实时现货偏差结算收益。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 五、新型电力系统下调度计划的演进 -->
+      <section>
+        <h2>五、新型电力系统下调度计划的演进与智能化</h2>
+
+        <h3>1. 从“确定性调度”走向“随机与鲁棒优化”</h3>
+        <p>过去，负荷预测的准确率高达 98% 以上，调度计划是典型的“确定性优化”。然而，随着风电、光伏装机突破 10 亿千瓦，天气的随机性导致发侧变成了最大的不确定性来源。</p>
+        <p>现代调度系统正在全面升级为<strong>随机优化（Stochastic Optimization）</strong>与<strong>鲁棒优化（Robust Optimization）</strong>。调度算法不再基于单一的预测曲线，而是同时模拟成千上万种天气演化的“场景树”（Scenario Tree），确保下达的日前机组组合计划，即使面对极端恶劣天气发生，电网也有足够的旋转备用与储能容量撑住不崩盘。</p>
+
+        <h3>2. 虚拟电厂（VPP）与源网荷储协同调度</h3>
+        <p>未来的调度计划表里，不再只有庞大的火力发电厂和水电站，海量分散在用户侧的微型资源正被重新聚合：</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：从“交响乐大剧院”到“百万闪光灯汇聚”</strong>
+            <p>传统的调度就像指挥几台巨型管风琴（火电机组），指令清晰但笨重；而新型电力系统下的调度，就像调度系统用 5G 网络指挥分布在全城的 100 万部手机闪光灯（分布式光伏、电动汽车 V2G、商场空调、用户侧储能）。通过**虚拟电厂（Virtual Power Plant, VPP）**聚合商，这些散兵游勇被打包成一个“兆瓦级”的虚拟电厂，统一向调度中心接收 96 时段调度计划指令！</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区：调度计划与电场自由运行的混淆</strong>
+            <p>有人认为“新能源电站和储能电站想什么时候发就什么时候发”。这是完全错误的！在我国，所有 10 kV 及以上电压等级并网的储能电站与风光电站，必须严格执行调度中心下达的日前曲线与实时 AGC 指令（即“无指令不操作”）。未经调度授权擅自改变出力或充放电状态，将面临严格的考核扣罚，甚至按违规网纪处理。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>四级时间尺度接力</strong>：电网调度计划涵盖中长期、日前（96 时段/15 分钟粒度）、日内滚动（1-4 小时）与实时调度（5 分钟/AGC），解决了慢速发电设备物理迟滞与用电需求实时剧烈变化的矛盾。</li>
+        <li><strong>UC 与 ED 的本质分工</strong>：日前机组组合（UC）解决“开哪台机、关哪台机”的 0-1 离散决策，核心是权衡燃料费用与昂贵的启停成本；经济调度（ED）在开机名单确定后，解决连续功率的最优分配。</li>
+        <li><strong>安全约束（SCED）是底线</strong>：在求解全网经济最小化的同时，SCED 必须时刻校验输电线路载流量、电网断面稳定极限与 $N-1$ 故障备用。网络阻塞直接催生了节点边际电价（LMP）。</li>
+        <li><strong>储能重塑调度范式</strong>：储能系统凭借“能量时间迁移”能力与毫秒级响应特性，通过 SOC 连续演化建模嵌入日前-实时调度计划，成为吸收新能源预测偏差、削峰填谷的核心支撑力量。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在电网调度计划体系中，日前机组组合优化（Unit Commitment, UC）与实时经济调度（Economic Dispatch, ED）的核心区别是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. UC 负责安排各电厂的维护大修计划，而 ED 负责日前 96 时段出力计算</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. UC 解决的是机组开停机状态（0-1 变量）决策，ED 解决的是在已开机机组间分配连续功率变量</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. UC 只考虑电网安全约束，而 ED 只考虑全网发电经济成本</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. UC 在秒级时间内自动执行，而 ED 需要提前一周由人工手动计算</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 正确表达了 UC 与 ED 的数学与工程本质区别。UC 面对的是 0-1 离散整数变量（决定哪台机组开机或关机），需要提前一天计算；而 ED 发生在机组状态已确定的实时或日前阶段，面对的是连续功率分配变量。选项 A 混淆了中长期检修计划；选项 C 错误，UC 和 ED 均需兼顾安全与经济；选项 D 将 UC 与 ED 的执行时间跨度完全说反。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 调度中心在为大型火电机组制定日前开停机计划时，为什么不能根据负荷高低随意进行频次极高的“随开随关”？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 因为火电机组受到最小连续运行/停机时间、热应力及昂贵启停成本的硬性物理约束</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 因为国家法律禁止火电机组在夜间低谷时段降功率或关机</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 因为发电机转速改变会导致电网电压从 220V 降至 0V</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 因为开关火电机组会破坏电网中水库的蓄水水位平衡</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：火电机组（如煤电）包含复杂的锅炉、汽轮机与热力系统，频繁启停会导致巨大的金属热应力损坏设备，且单次冷态/热态启动需消耗巨量燃料（启停成本昂贵），同时受限于最小运行时间 $T_{\text{on}}$ 和最小停机时间 $T_{\text{off}}$。选项 B、C、D 的说法完全脱离电气工程实际，属于荒谬或无关选项。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在安全约束经济调度（SCED）中，如果某条核心输电线路发生严重的传输通道阻塞（Congestion），调度系统最可能的调整动作是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 强制关闭全省所有高耗能工业用户的用电负荷</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 压低送端低成本机组的输出功率，同时拉高受端成本较高但位于阻塞下游的机组功率</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 提高阻塞线路的运行频率从 50 Hz 到 60 Hz 以增加输电能力</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 忽略线路极限，允许电流超越安全极限继续输送</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：当线路发生阻塞时，SCED 为了保证线路潮流不超过安全热极限，必须减少过塞线路“送端”电厂的发电出力（即使它是低成本电厂），并相应增加“受端”（阻塞下游）较贵机组的发电出力。这种重新代换导致了两端节点价格的差异（即节点电价 LMP 的阻塞分量）。选项 A 属于极端事故处置，非常规 SCED 出清；选项 C 错误，同一交流电网内频率必须统一为 50 Hz；选项 D 违反了电网安全第一的刚性准则。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 将电池储能系统（BESS）纳入日前 96 时段调度计划优化模型时，必须引入的独特物理约束是以下哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 汽轮机膨胀阀门开度约束</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 荷电状态（SOC）时间演化与充放电效率损耗约束</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 锅炉最低燃烧稳定蒸气压力约束</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 水轮机水头高度变化约束</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：电池储能系统（BESS）是能量型电化学设备，其当前时刻的能量状态（SOC）高度依赖于过往时段的充放电历史，且充放电过程存在转换效率损耗（$\eta_c, \eta_d$）。因此，SOC 时间演化方程和上下限限制是储能独有的数学约束。选项 A、C、D 分别属于火电汽轮机、火电锅炉和水电站的特有约束。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 随着风电、光伏等高比例波动性新能源并网，日内与实时调度计划（Intraday & Real-Time Dispatch）的核心作用是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 完全替代日前计划，在日前取消所有电厂的开停机安排</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 基于最新的超短期风光预测进行动态滚动修正，平抑新能源预测偏差</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 专门用于计算全省各市县的月度供电财政补贴金额</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 强制要求光伏电站夜间满功率发电</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：新能源预测具有“越临近实时、预测越精准”的特点。日内与实时调度的核心意义，在于利用临近实时的最新高精度风光预测数据，动态滚动修正日前计划中的误差与偏差，调用快速响应资源（如储能、气电、水电）填补功率缺口。选项 A 错误，日前 UC 确定慢速机组开机是不可取消的基础；选项 C 与 D 完全背离工程常识。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_7_3_一次调频与AGC.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">一次调频与AGC</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_7_5_负荷与新能源预测.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">负荷预测与新能源预测</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_7_1_五级调度体系.html">02_7_1 五级调度体系</a> — 了解中国五级电网调度的指挥权责与运行机制</li>
+        <li><a href="02_7_2_频率与功率平衡.html">02_7_2 频率：电网的速度表</a> — 理解转动惯量与频率偏差的物理根源</li>
+        <li><a href="02_7_3_一次调频与AGC.html">02_7_3 一次调频与AGC</a> — 深入探索发电机组与储能系统的一次调频和自动发电控制</li>
+        <li><a href="02_7_5_负荷与新能源预测.html">02_7_5 负荷预测与新能源预测</a> — 掌握支撑调度计划制定的核心预测技术</li>
+        <li><a href="../level_03/03_3_2_日前市场出清.html">03_3_2 日前市场出清</a> — 了解电力现货市场环境下基于日前出清的调度计划生成</li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.5 &nbsp;|&nbsp; <span class="file-id">02_7_4</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
