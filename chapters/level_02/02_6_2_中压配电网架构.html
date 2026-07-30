@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中压配电网架构 — 配电系统 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析10kV中压配电网架构的核心物理原理、架空与电缆介质对比、手拉手环网拓扑以及新型储能系统在中压网中的接入与工程实战。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\(', '\)']],
+        displayMath: [['$$', '$$'], ['\[', '\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">配电系统</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">中压配电网架构</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_6_1_配电网概述.html" class="nav-prev" title="上一节：配电网：最后一公里">← 上节</a>
+        <a href="02_6_3_低压台区与用户接入.html" class="nav-next" title="下一节：低压台区与用户接入">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>配电系统</span>
+        <span class="sep">›</span>
+        <span>中压配电网架构</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_6_2</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟡 中等</span>
+      </div>
+      <h1>中压配电网架构：架空、电缆与手拉手环网</h1>
+      <p class="chapter-lead">如果把高压输电网比作连接城市的高速公路，中压配电网就是穿梭于大街小巷的城市主干道。本节将带你深入10kV中压配电网的内部，解构架空线路与地下电缆的物理本质，拆解“手拉手”环网的可靠性奥秘，并探讨储能系统如何在这张电力大网中实现安全接入与无缝协作。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一：深刻理解10kV中压配电网在电力系统中的定位</strong> — 掌握中压网承上启下的枢纽作用，理解其主流电压等级（10kV/20kV）在中国的工程实践。</li>
+        <li><strong>核心目标二：对比剖析架空线路与电力电缆的物理特性与工程取舍</strong> — 掌握导线结构、绝缘介质、造价差异、容性电流及环境适应性等关键维度。</li>
+        <li><strong>核心目标三：彻底搞懂“闭环设计、开环运行”的手拉手环网拓扑</strong> — 弄清联络开关、环网柜（RMU）与馈线自动化（FA）在故障自愈中的工作机制。</li>
+        <li><strong>核心目标四：掌握新型储能在中压配电网中的并网拓扑与承载力评估</strong> — 理解10kV专线并网与升压接入方案，掌握分布式储能对配网潮流双向化带来的挑战与应对策略。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：暴风雨夜的“无感停电”与储能告警</h2>
+      <p>夏夜22点15分，沿海某高新技术产业园区突遭强对流天气，雷暴击中了园区外围一根10kV架空线路的避雷针，瞬间引发了相间短路故障，断路器跳闸！然而，园区内的半导体晶圆厂和大型储能电站里，灯火依然通明，流水线上的机械臂甚至没有发生半点停顿。</p>
+      <p>与此同时，驻厂储能电站运维工程师的监控大屏上忽然跳出一条黄色告警：“<strong>10kV母线电压瞬时波动（跌落12%），配网馈线自动化（FA）已触发，手拉手联络开关完成合闸重构，储能系统继续保持并网运行</strong>”。</p>
+      <p>现场实习生感到不可思议：线路明明被雷击断了，为什么厂区完全没有停电？两条看似独立的10kV电缆是怎么在几秒钟内完成“接力”的？储能电站又是通过什么架构连接到这套庞大的中压网络中，才没有在事故瞬间被反向电流击穿？要解答这些问题，我们需要拆解10kV中压配电网的骨骼与血脉。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、10kV中压配电网：电力系统的“腰部枢纽”</h2>
+        <p>在我国的电网层级中，高压与超高压输电网（110kV、220kV、500kV乃至±800kV特高压）负责将远方的能源大基地（如西北风光、西南水电）跨越数千公里输送到负荷中心。然而，高达数十万伏特的高电压无法直接送入工厂和居民楼。必须经过多次降压变电站，进入**中压配电网（Medium Voltage Distribution Network）**。</p>
+        <p>在中配网范畴内，我国最核心、覆盖面最广的电压等级是<strong>10kV（10千伏）</strong>（部分发达城市如苏州工业园区采用20kV）。它向下通过配电变压器降压至380V/220V低压网送入千家万户，向上则连接110kV或35kV区域变电站。它既是电能分配的枢纽，也是绝大多数大中型工商业储能电站、分布式光伏电站直接并网的“第一接口”。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：城市快递物流分拨体系</strong>
+            <p>如果把电力传输比作快递物流：</p>
+            <ul>
+              <li><strong>超高压/特高压输电网</strong> 相当于“跨省航空货运大干线”，负责将成千上万吨货物从新疆、内蒙古快速运抵沿海省份；</li>
+              <li><strong>110kV/35kV主网变电站</strong> 相当于“省级大型物流转运中心”，负责将大批货物分拆装车；</li>
+              <li><strong>10kV中压配电网</strong> 相当于“城市各区的箱式货车配送网络”，将货物分流送到各个街道和工业园区；</li>
+              <li><strong>380V/220V低压台区</strong> 相当于“快递小哥的电动三轮车”，把包裹送达每个单元门和家庭门口。</li>
+            </ul>
+            <p>如果箱式货车网络（中压网）瘫痪，即便航空大干线再发达，货物也无法送到终端；反之，若在箱式货车转运站（10kV开闭所）旁边建一个“前置仓”（10kV储能电站），就能在货运高峰期灵活调配资源，防止街道拥堵。</p>
+          </div>
+        </div>
+
+        <p>从物理特性来看，10kV中压配电网既不像高压主网那样结构清晰、干线少且高度冗余，也不像低压网那样分支繁杂、范围狭小。中压配网具有<strong>分布范围极广、接线方式多样、运行环境复杂、负荷密度差异巨大</strong>的特点。设计并运维好一张中压配网，不仅需要保证平时供电的经济性，更需要在故障发生时具备极强韧性的“自愈能力”。</p>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、传输介质对决：架空线路 vs 地下电缆</h2>
+        <p>10kV电能要从变电站输送到各个用电节点，必须依托物理导体。在工程实践中，主要有两种截然不同的传输介质：<strong>架空线路（Overhead Line）</strong>与<strong>电力电缆（Power Cable）</strong>。理解两者的物理差异与适用场景，是配网规划与储能选址的第一步。</p>
+
+        <h3>1. 架空线路：露天运行的“空中大动脉”</h3>
+        <p>架空线路是历史最悠久、应用最广泛的配网传输方式。它通过电杆（水泥杆或铁塔）、横担和绝缘子，将裸导线或绝缘导线悬挂在半空中。</p>
+        <ul>
+          <li><strong>物理结构</strong>：现代10kV架空线路多采用<strong>钢芯铝绞线（Aluminum Conductor Steel Reinforced，ACSR）</strong>或<strong>架空绝缘导线（Overhead Insulated Cable）</strong>。内层的钢芯提供机械拉力，外层的铝线负责导电，既减轻了重量又保障了抗风拉强度。</li>
+          <li><strong>优点</strong>：建设成本极低（约为地下电缆的1/10到1/5）、施工周期短、散热条件好、故障点直观易查（运维人员巡线用肉眼或无人机即可发现断线或树障）。</li>
+          <li><strong>缺点</strong>：易受恶劣天气（雷击、台风、冰雹、积雪）破坏；占用地面走廊空间；存在“树线矛盾”（树木生长触碰导线引发接地故障）；视觉效果较差，影响城市美观。</li>
+        </ul>
+
+        <h3>2. 电力电缆：地下穿行的“隐形血脉”</h3>
+        <p>随着城市化进程加快和对供电可靠性要求的提高，地下电力电缆在城镇中心区、高新技术产业园和大型大型企业内已全面取代架空线路。</p>
+        <ul>
+          <li><strong>物理结构</strong>：10kV电力电缆绝非普通铜线，而是一个结构严密的“多层复合管件”。从内到外依次为：<strong>铜/铝导体芯线 → 导体屏蔽层 → 交联聚乙烯（Cross-linked Polyethylene，XLPE）绝缘层 → 绝缘屏蔽层 → 铜带金属屏蔽层 → 铠装保护层（防机械挤压） → 外护套</strong>。</li>
+          <li><strong>优点</strong>：全埋于地下电缆沟或管道中，完全不受风霜雨雪、雷击与树木影响，事故率极低；不占用地面空间，提升城市美化度；无电磁辐射暴露风险。</li>
+          <li><strong>缺点</strong>：造价高昂（每公里造价可达几十万至上百万元）；敷设施工复杂；散热较差导致载流量受限；一旦发生地下隐蔽性故障，定位与修复极其困难（需要专用故障定位车和数小时乃至数天的挖掘开断时间）。</li>
+        </ul>
+
+        <div class="key-concept">
+          <span class="concept-title">📌 关键物理差异：电缆的“容性电流”效应</span>
+          <p>电力电缆的铜芯导体与外层金属屏蔽层之间，夹着一层高介电常数的XLPE绝缘材料，这在物理上构成了一个天然的“长条形电容器”。当10kV交流电通过电缆时，会产生显著的<strong>容性无功充电电流</strong>。全电缆化线路在轻载时会导致末端电压抬高（电容效应导致电压升高），且在发生单相接地故障时，接地电容电流极大（可达几十安培），极易引发弧光接地过电压。因此，高度电缆化的10kV中压配网必须配套安装<strong>消弧线圈（Arc Suppression Coil）</strong>或小电阻接地装置。</p>
+        </div>
+
+        <h3>3. 架空 vs 电缆 全方位工程对比表</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>对比维度</th>
+              <th>10kV 架空线路 (Overhead)</th>
+              <th>10kV 地下电缆 (Cable)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>建设投资成本</strong></td>
+              <td>🟢 低（约为电缆的 10%–20%）</td>
+              <td>🔴 极高（需开挖电缆沟/穿管）</td>
+            </tr>
+            <tr>
+              <td><strong>故障发生概率</strong></td>
+              <td>🔴 较高（易受雷击、风灾、树障）</td>
+              <td>🟢 极低（不受气候干扰）</td>
+            </tr>
+            <tr>
+              <td><strong>故障修复难度</strong></td>
+              <td>🟢 容易（故障点直观，几小时内修复）</td>
+              <td>🔴 困难（需要定位仪、挖掘、接头焊接）</td>
+            </tr>
+            <tr>
+              <td><strong>对地分布电容</strong></td>
+              <td>🟢 极小（绝缘介质为空气）</td>
+              <td>🔴 很大（产生显著容性充电电流）</td>
+            </tr>
+            <tr>
+              <td><strong>主要应用场景</strong></td>
+              <td>农村、山区、郊区、过渡性供电线路</td>
+              <td>城市中心区、高新区、高端工商业园区</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、网络拓扑形态：从单辐射到“手拉手”环网</h2>
+        <p>了解了传输介质后，更核心的问题是：这些线路是如何把变电站和千家万户连接起来的？在配电网发展史中，网络拓扑结构经历了从简单到复杂、从脆弱到坚韧的演进过程。</p>
+
+        <h3>1. 放射式拓扑（Radial Topology）：简单但脆弱的“单行道”</h3>
+        <p>放射式结构是最原始的配网拓扑。从变电站10kV母线引出一条干线，像树枝一样向外延伸，沿途分支连接各个配电变压器和用户。</p>
+        <p>它的特点是<strong>单向供电、结构简单、投资最省、保护配置容易</strong>。然而，它的致命弱点是<strong>缺乏冗余</strong>。干线上任何一点发生故障（如树木倒伏压断导线），故障点后面的所有用户都将立刻停电。由于没有第二条供电通道，必须等待维修人员赶赴现场修好线路后才能恢复供电。这种拓扑目前仅用于供电可靠性要求不高的农村偏远地区或临时用电场合。</p>
+
+        <h3>2. 环网手拉手拓扑（Hand-in-Hand Ring Topology）：现代配网的可靠性基石</h3>
+        <p>为了解决放射式拓扑“一断全停”的痛点，现代10kV中压配电网全面引入了<strong>“手拉手”环网架构（Hand-in-Hand Ring Network Architecture）</strong>。这是我国城市配电网最标准、最核心的拓扑形态。</p>
+        <p>所谓“手拉手”，是指两条分别来自不同变电站（或同一变电站的不同段母线）的10kV干线，在各自延伸到负荷末端时，通过一个被称为<strong>“联络开关（Tie Switch）”</strong>的设备相互连接，形成一个闭合的环形路径。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：两条互通马路与中间的紧急闸门</strong>
+            <p>想象两条并行连接两个不同火车站的繁忙马路（线路A和线路B）。在两条马路中间有一道互通闸门（联络开关）：</p>
+            <ul>
+              <li><strong>平时（正常运行）</strong>：闸门是锁死关闭的（开环运行）。马路A上的车只走马路A，马路B上的车只走马路B，互不干扰；</li>
+              <li><strong>突发状况（线路A塌方故障）</strong>：马路A的前端立刻封路，同时把中间的紧急闸门打开（联络开关合闸）。这样，马路A后半段的车流就可以通过闸门借道马路B开往车站，后半段的居民完全不会因为前面的塌方而被困！</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>常见误区：环网平时是闭合运行的吗？</strong>
+            <p>很多初学者听到“环网”二字，以为平时电流是在闭合环路里循环流动。<strong>这是完全错误的！</strong></p>
+            <p>我国10kV中压配电网的铁律是：<strong>“闭环设计，开环运行（Normal Open）”</strong>。即物理结构上连成环形，但平时联络开关必须保持断开状态（常开点 NO）。如果平时将联络开关合上闭环运行，两条来自不同母线的线路由于电压幅值和相位微小差异，会产生巨大的<strong>环流（Circulating Current）</strong>，不仅增加线路损耗，还会导致继电保护错乱，短路时两端短路电流叠加甚至可能引发大面积跳闸事故。</p>
+          </div>
+        </div>
+
+        <h3>3. 核心节点设备：环网柜（RMU）与断路器/负荷开关</h3>
+        <p>手拉手环网拓扑的实现，依赖于沿线分布的一系列关键开关设备。其中最核心的装备就是<strong>环网柜（Ring Main Unit，RMU）</strong>。</p>
+        <p>环网柜是一个金属封闭箱体，内部通常包含 3–5 个开关间隔。典型配置为：两个“进出线间隔”（连接上游和下游的10kV干线）和一个“变压器保护间隔”（连接本地用户变压器）。</p>
+        <ul>
+          <li><strong>断路器（Circuit Breaker，CB）</strong>：具有强大的灭弧能力，能够切除巨大的<strong>短路电流</strong>。是配电网安全的“终极防线”。</li>
+          <li><strong>负荷开关（Load Break Switch，LBS）</strong>：只能开断正常的<strong>额定负荷电流</strong>，不能切除短路电流。通常配合熔断器（Fuse）使用，成本比断路器低得多，常用于环网柜的分支回路。</li>
+          <li><strong>隔离开关（Disconnector）</strong>：没有灭弧能力，仅在无电流时操作，用于形成物理上可见的安全绝缘断口，保障检修人员安全。</li>
+        </ul>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：上海陆家嘴与深圳前海的“双花环”高可靠性网架</strong>
+            <p>在上海陆家嘴金融区和深圳前海蛇口自贸区，对供电可靠性的要求达到了近乎苛刻的“99.9999%（6个9）”（年均停电时间少于30秒）。传统的单手拉手环网仍需要数秒甚至数分钟的自动化切换过程。</p>
+            <p>为此，国家电网与南方电网在此类核心区升级建成了<strong>“双花环”（Double-Flower Ring）及“N供1备”高度冗余网架</strong>。两条10kV电缆互为100%热备用，结合高速光伏差动保护与无缝自愈终端，实现了当一条地下电缆被外部施工挖断时，微秒级（&lt;10ms）无感切换，保密机房和金融交易服务器甚至感觉不到电压抖动。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、配网枢纽节点与自动化（FA）</h2>
+        <p>一张高效的中压配网，不仅需要合理的导线和拓扑，还需要精密的“神经中枢”和“自治肌肉”——这就是配电网节点设施与馈线自动化技术。</p>
+
+        <h3>1. 级联节点：开闭所、配电室与箱变</h3>
+        <p>10kV电能从变电站引出后，在到达用户终端前，需要经过不同层级的转换与分流节点：</p>
+        <ol>
+          <li><strong>变电站 10kV 母线</strong>：配网的源头。一般配备两段母线（如Ⅰ段母线和Ⅱ段母线），由两台主变压器分别供电，中间设母联开关。</li>
+          <li><strong>开闭所（Switching Station）</strong>：设在负荷密集区的“中转站”。它不具备变压降压功能（10kV进，10kV出），作用是将变电站引出的一两路大截面10kV主干电缆，分流扩展为8–16路分支线路送往周边各个小区或工厂，解决变电站出线走廊狭窄的问题。</li>
+          <li><strong>配电室 / 配电所（Distribution Room）</strong>：用户端的“降压站”。内设10kV开关柜和10kV/0.4kV配电变压器，将中压降至380V/220V三相四线制交流电。</li>
+          <li><strong>箱式变电站（Box-type Transformer Substation）</strong>：将环网柜、变压器、低压配电板预装在一体化户外防雨箱体内，占地面积小，广泛用于路边、公园及临时建筑。</li>
+        </ol>
+
+        <h3>2. 馈线自动化（Feeder Automation，FA）：秒级故障自愈机制</h3>
+        <p>过去，线路跳闸后，需要调度员接到报修电话，派遣巡线员骑车沿着几十公里的线路逐杆检查，找到故障点后再手动拉闸开断，恢复非故障段供电，全过程耗时几小时。而现代配网依靠<strong>馈线自动化（FA）</strong>系统，实现了<strong>故障定位、隔离与非故障区恢复（FLISR）</strong>的秒级自动化操作。</p>
+
+        <div class="key-concept">
+          <span class="concept-title">📌 馈线自动化 FLISR 三步曲</span>
+          <ol>
+            <li><strong>Fault Location（故障定位）</strong>：安装在环网柜和柱上开关处的智能终端（FTU/DTU）检测到短路过电流，立即将带有时标的故障信息上传给配网自动化主站；主站算法根据各节点电流变化，精准锁定故障发生在哪个区间（例如：节点B与节点C之间的电缆）。</li>
+            <li><strong>Fault Isolation（故障隔离）</strong>：主站下发指令，自动拉开故障区间两侧的负荷开关（开关B与开关C），将坏掉的这段线路从网络中“切除解脱”。</li>
+            <li><strong>Service Restoration（非故障区恢复）</strong>：主站指令合上末端的“联络开关（Tie Switch）”，由另一条线路反向给节点C后面的健康区域恢复供电。全过程在 3 到 30 秒内完成！</li>
+          </ol>
+        </div>
+
+        <p>随着通信技术的发展，基于5G切片网与光纤通信的<strong>分布式FA（Distributed FA）</strong>技术脱颖而出。开关终端之间无需经过上层主站计算机，而是像小鸟互相对话一样直接点对点通信，将故障隔离与重构时间进一步缩短到了 <strong>100毫秒以内</strong>。</p>
+      </section>
+
+      <!-- 第五部分 -->
+      <section>
+        <h2>五、新型储能在中压配电网中的并网拓扑与工程实践</h2>
+        <p>在“双碳”目标下，大批工商业储能（如2MW/4MWh、10MW/20MWh项目）和分布式光伏大量涌入10kV中压配电网。这一变化打破了传统配电网“单向潮流（变电站 → 用户）”的百年格局，将配网推向了“双向潮流、源网荷储互动”的新时代。</p>
+
+        <h3>1. 储能系统的10kV并网接入拓扑</h3>
+        <p>绝大多数兆瓦级（MW级）电池储能系统（BESS）的电池簇输出电压为直流（如1000V–1500V DC），经储能变流器（PCS）逆变为交流低压（如690V或400V AC）。要接入10kV中压配网，必须经过<strong>升压变压器（Step-up Transformer）</strong>。</p>
+        <p>典型10kV并网拓扑链路如下：</p>
+        <p><code>磷酸铁锂电池簇 (DC) ➔ 储能变流器 PCS (0.69kV AC) ➔ 升压变压器 (0.69kV / 10kV) ➔ 10kV 高压开关柜 / 环网柜 ➔ 10kV 配电网干线</code></p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：专线接入 vs 0.4kV低压升压接入</strong>
+            <p>在工程选型中，储能接入10kV配网有两种常见模式：</p>
+            <ul>
+              <li><strong>专线接入模式（Dedicated Line）</strong>：储能电站容量较大（如＞5MW），在10kV开闭所或变电站单独申请一路10kV专线间隔接入。优点是潮流独立、不影响其他用户，调度控制直接；缺点是征地和专线敷设成本高。</li>
+              <li><strong>用户内部高压母线接入模式（On-site High-voltage Bus）</strong>：工商业储能（如1MW–5MW）安装在大型工厂内部，经升压变接在工厂自有的10kV配电室母线上。储能主要用于厂区“削峰填谷”和自发自用，余电在政策允许时向10kV外网反送。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>2. 储能并网对10kV配网带来的挑战与应对</h3>
+        <p>当大容量储能接入10kV手拉手环网时，会带来一系列复杂的工程技术考量：</p>
+
+        <h4>(1) 反向潮流与电压抬高问题</h4>
+        <p>在午间光伏大发或储能大功率放电时，10kV线路末端的功率可能发生反向流动（从用户向变电站反送）。由于10kV线路存在阻抗 $R + jX$，反向电流流过阻抗会导致末端节点电压大幅升高，甚至超出法定的 $\pm 7\%$ 偏差允许范围。
+        <strong>应对方案</strong>：储能PCS具备无功调节能力，可在放电同时吸收无功功率（运行于容性/感性功率因数），抑制电压抬高；同时结合电网的承载力评估划分“红黄绿区”进行动态功率限制。</p>
+
+        <h4>(2) 继电保护误动与防孤岛保护（Anti-Islanding）</h4>
+        <p>当10kV主干线路发生故障跳闸、上级变电站断开连接时，如果分布式储能电站与局部负荷恰好功率平衡，储能系统可能会继续维持这一局部区域的电压和频率，形成<strong>非计划孤岛（Unintended Islanding）</strong>。</p>
+        <p>这会带来极大危险：一是抢修人员以为线路已断电，触电伤亡；二是配网自动化 FA 进行手拉手联络开关自动合闸时，由于孤岛内电压与电网相位不一致，引发严重的<strong>非同期合闸（Out-of-Phase Reclosing）</strong>，巨大的冲击电流会瞬间炸毁开关设备或储能PCS！</p>
+
+        <div class="key-concept">
+          <span class="concept-title">📌 关键安全规范：主动与被动防孤岛保护</span>
+          <p>国家标准《分布式电源接入配电网技术规定》（GB/T 33593）严格规定：并网储能系统必须具备极高可靠性的<strong>防孤岛保护功能</strong>。当电网失压时，必须在 <strong>2秒以内</strong> 自动检测出孤岛并切断与电网的连接！</p>
+          <ul>
+            <li><strong>被动检测（Passive Detection）</strong>：实时监测并网点电压幅值、频率（过压/欠压、过频/欠频）及电压相位突变（Frequency Jump）。一旦超限立刻跳闸。</li>
+            <li><strong>主动检测（Active Detection）</strong>：PCS主动向并网点注入微小的扰动信号（如主动频率偏移 AFP、主动功率扰动）。当主电网存在时，强强大的电网会吸收扰动，频率保持稳定；一旦主电网断开（孤岛形成），该扰动信号会迅速正反馈放大，瞬间触发频率保护跳闸。</li>
+          </ul>
+        </div>
+
+        <h3>3. 新趋势：储能赋能“微电网”与配网黑启动</h3>
+        <p>尽管非计划孤岛危险重重，但通过配备**网构型变流器（Grid-Forming PCS，GFM）**，储能系统可以在配网大面积停电时，接受调度指令切换为“有计划孤岛模式”，作为独立电压源为医院、数据中心等特级负荷构建局部**微电网（Microgrid）**。</p>
+        <p>当主电网故障恢复后，储能PCS通过**无缝并网控制器（Seamless Grid-Tied Controller）**，自动捕捉电网电压的相位与频率，在两者精准重合的瞬间闭合开关，实现从“离网独立运行”到“手拉手并网运行”的零扰动无缝过渡。这使得10kV中压配网从过去的“被动承载网”，升级为了具备高度自愈能力与弹性韧性的“智能主动配电网（Active Distribution Network，ADN）”。</p>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>枢纽定位</strong>：10kV中压配电网是连接上级110kV/35kV主网与低压380V用户的关键枢纽，也是大中型工商业储能电站最核心的并网界面。</li>
+        <li><strong>介质取舍</strong>：架空线路造价低、检修易，但易受天气干扰；地下电力电缆安全美观、故障率低，但造价高且存在显著的容性充电电流效应。</li>
+        <li><strong>手拉手拓扑</strong>：现代10kV配网奉行“闭环设计，开环运行”铁律。通过环网柜（RMU）与联络开关，结合馈线自动化（FA），实现故障秒级隔离与非故障区自动恢复。</li>
+        <li><strong>储能协同</strong>：兆瓦级储能通过升压变接入10kV配网时，必须严格配置防孤岛保护（主动+被动检测），防止非同期合闸；同时可通过网构型控制（GFM）在停电时为中压微电网提供黑启动支撑。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1. 关于我国10kV中压“手拉手”环网配电网的运行方式，以下哪种说法是完全正确的？</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 物理上连接成环形，平时联络开关保持闭合，实现闭环环流供电以降低损耗</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 物理上连接成环形，平时联络开关保持断开，实行“闭环设计、开环运行”</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 物理上为单辐射树状结构，故障时由人工拉线临时搭建临时环路</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 平时两条干线各不相干，只有在夏季用电高峰时才合上联络开关双向并联供电</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：我国10kV中压配电网严格遵循“闭环设计、开环运行（Normal Open）”原则。物理上连成环形是为了在干线故障时具备迂回供电能力；但平时联络开关必须断开。选项A错误，若常态闭环运行，两条线路间的电压差和相位差会产生巨大环流并使短路电流叠加；选项C错误，手拉手环网是预先建设好的物理结构，非临时搭建；选项D错误，用电高峰期同样不能闭环运行，否则极易引发继电保护误动作。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2. 与10kV架空线路相比，10kV地下电力电缆线路在电气物理特性上的一个显著不同点是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 电缆线路没有电阻，因此运行时完全不产生热量损耗</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 电缆线路对地分布电容极小，单相接地时几乎没有电容电流</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 电缆线路金属芯与屏蔽层间构成天然电容，长距离轻载时会产生显著的容性充电电流</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 电缆线路由于埋在地下，即使短路也不会触发上级断路器跳闸</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：电缆结构中导体与金属屏蔽层中间隔着XLPE绝缘介质，形成了显著的分布电容，长电缆在交流电作用下会产生不可忽略的容性无功充电电流，导致轻载电压升高。选项A错误，电缆铜/铝导体仍有电阻，同样存在焦耳热；选项B错误，架空线的对地电容极小，而电缆的分布电容比架空线大几十倍；选项D错误，地下电缆发生相间短路同样会产生巨大短路电流，保护装置必须迅速切断跳闸。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3. 在10kV环网柜（RMU）中，用于切除巨大的短路故障电流的核心安全保护设备是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 隔离开关（Disconnector）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 断路器（Circuit Breaker）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 普通负荷开关（Load Break Switch）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 手动双投转换开关</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：断路器拥有专门设计的灭弧室和快速操动机构，能够切断高达数万安培的短路故障电流。选项A错误，隔离开关没有任何灭弧能力，带负荷拉隔离开关会引发严重的弧光短路事故；选项C错误，负荷开关只能开断额定负荷电流（如几百安培），无法独立切断几万安培的短路电流（需配合熔断器）；选项D错误，双投转换开关用于机械切换电路，无短路切断能力。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4. 配电网馈线自动化（FA）中的 FLISR 机制，其正确的故障处理逻辑顺序是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 故障隔离 ➔ 故障定位 ➔ 非故障区恢复供电</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 非故障区恢复供电 ➔ 故障定位 ➔ 故障隔离</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 故障定位（Location） ➔ 故障隔离（Isolation） ➔ 非故障区恢复供电（Service Restoration）</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 人工现场巡线 ➔ 自动合闸联络开关 ➔ 切断变电站出线</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：FLISR是配网自动化的核心功能，其英文缩写即代表了严格的执行逻辑：首先通过智能终端分析过流信号进行故障定位（Location）；然后指令故障点两侧开关拉开完成故障隔离（Isolation）；最后合上手拉手联络开关为非故障的健康区域恢复供电（Service Restoration）。选项A、B逻辑颠倒，在未精确定位故障前盲目隔离或恢复供电极易造成二次故障扩大；选项D属于传统的低效人工巡线模式，非自动化逻辑。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5. 储能系统在接入10kV中压配电网时，为什么国家标准（GB/T 33593）强制要求储能系统必须在2秒内切断连接（防孤岛保护）？</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 防止储能电池中的电荷全部反向倒灌进主电网造成电池损坏</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 防止电网主线路故障跳闸后储能形成非计划孤岛，避免检修人员触电及手拉手联络开关重合闸时的非同期冲击</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 为了降低储能电站的并网计量电费，防止逆功率被电力公司罚款</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 因为10kV变压器无法承受储能系统的直流电流输入</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：防孤岛保护（Anti-Islanding Protection）是分布式电源并网的核心安全要求。当10kV主线路断开时，若储能继续支撑局部线路（非计划孤岛），会导致检修人员误判线路无电而发生触电伤亡；更严重的是，当配网自动化 FA 合上手拉手联络开关时，由于孤岛电压与新接入电网相位不一致，会发生非同期合闸，产生巨大的冲击电流毁坏设备。选项A错误，储能PCS有充放电功率控制，不会无控倒灌；选项C错误，防孤岛是电网安全规范，非电费计量考量；选项D错误，储能通过PCS交流输出，且升压变本身隔绝直流。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_6_1_配电网概述.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">配电网：最后一公里</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_6_3_低压台区与用户接入.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">低压台区与用户接入</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_6_1_配电网概述.html">02_6_1 配电网：最后一公里</a> — 了解配电网的基本定义与全局拓扑定位</li>
+        <li><a href="02_6_3_低压台区与用户接入.html">02_6_3 低压台区与用户接入</a> — 探索10kV经台区变压器降压至380V/220V的末端细节</li>
+        <li><a href="../level_02/02_5_1_变电站分类与层级.html">02_5_1 变电站分类与层级</a> — 掌握给10kV配电网供电的上级变电站结构</li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_6_2</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
