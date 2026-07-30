@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>低压台区与用户接入 — 配电系统 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析低压台区概念、10kV/0.4kV配电变压器原理与接线组别、0.4kV低压网络拓扑与接地系统（TN/TT/IT）、三相不平衡治理及台区储能接入工程规范。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">配电系统</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">低压台区与用户接入</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_6_2_中压配电网架构.html" class="nav-prev" title="上一节：中压配电网架构">← 上节</a>
+        <a href="02_6_4_分布式能源接入挑战.html" class="nav-next" title="下一节：分布式能源接入挑战">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>配电系统</span>
+        <span class="sep">›</span>
+        <span>低压台区与用户接入</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_6_3</span>
+        <span class="reading-time">⏱ 约30分钟</span>
+        <span class="difficulty">🟡 中等</span>
+      </div>
+      <h1>低压台区与用户接入：配变、0.4kV网络与三相平衡</h1>
+      <p class="chapter-lead">如果说中压配电网是城市电力输送的主干街道，那么低压台区就是深入千家万户、工厂小微企业的“最后一百米”微细血管。本节将带你彻底拆解从10kV降压变压器到380V/220V终端用户的物理全貌，揭秘配变接线组别的抗干扰奥秘，剖析三相不平衡导致的零点漂移机制，并探讨台区储能如何在新型电力系统中扮演“末端守护神”。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一：深刻理解“低压台区”的物理定义与供电边界</strong> — 掌握台区（Substation Zone）的构成要素、供电半径约束以及在配电网层级中的“末端细胞”定位。</li>
+        <li><strong>核心目标二：拆解配电变压器原理与 Dyn11/Yyn0 接线组别差异</strong> — 掌握电磁感应降压机制，理解 Dyn11 联结为何能有效闭环零序电流并抑制零点漂移。</li>
+        <li><strong>核心目标三：掌握 0.4kV 低压接地系统（TN/TT/IT）的工程特性</strong> — 区分相电压与线电压的几何关系，厘清 TN-S、TN-C-S 与 TT 系统的保护接零/接地物理机制。</li>
+        <li><strong>核心目标四：剖析三相不平衡的物理危害与台区储能治理方案</strong> — 掌握中性线电流合成规律，理解台区储能（BES）与静止无功发生器（SPC）对末端电压超限和倒送过载的柔性调控机制。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：午后265V的高压告警与深夜烧毁的电视机</h2>
+      <p>在华东某“整县推进”示范村，天气晴朗的盛夏正午13点，村民老王家屋顶的10kW分布式光伏逆变器忽然发出一阵急促的报警声，随后自动脱网停机。运维监控后台跳出异常代码：“<strong>低压交流侧过压保护触发（母线电压高达265.4V，超过额定电压220V的+20%）</strong>”。然而，此时全村空调开足，电网负载并不轻，光伏发电明明是清洁能源，怎么会把自家和邻居的电压“撑爆”？</p>
+      <p>更为诡异的是，到了深夜23点，光伏早已停止发电，村头配电房的变压器却发出沉闷刺耳的嗡嗡声。A相供电的几户人家发现灯光昏暗、电压降至180V；而C相供电的邻居家却因为零线接头烧断，电压瞬间飙升至340V，导致几台处于待机状态的液晶电视和冰箱电源板当场烧毁！</p>
+      <p>现场抢修工程师赶到后，检测发现村里的<strong>10kV/0.4kV配电变压器中性线电流高达140A</strong>，远远超过了相线允许的范围。为什么高密度户用光伏接入会导致午间电压超限？为什么夜间单相负荷分配不均会引发“烧电器”的致命故障？要回答这些现实工程痛点，我们需要深入低压台区这一电力系统的“微细血管”。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、什么是“低压台区”？配电网的末端细胞与物理边界</h2>
+        <p>在我国配电网管理体系中，**低压台区（Substation Zone / Transformer Zone，简称“台区”）**是一个至关重要的物理与管理单元。简单来说，<strong>以一台（或一组同母线运行的）10kV/0.4kV降压配电变压器为中心，其二次侧所涵盖的所有0.4kV低压线路及所连接的全部终端电力用户，构成的封闭供电区域，就称为一个台区。</strong></p>
+        <p>如果把特高压输电比作“跨国航班”，把10kV中压线路比作“城市主干道”，那么低压台区就是“送货到户的快递驿站与巷弄网格”。全国目前拥有数千万个低压台区，它们直接承载着14亿人口的居民生活用电、小微企业商业用电以及大规模屋顶户用光伏和电动汽车充电桩的接入。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：小区高位水塔与楼栋水管网</strong>
+            <p>将电能传输比作自来水供应系统：</p>
+            <ul>
+              <li><strong>10kV中压水管</strong>：相当于城市地下高压自来水主干管，水压极高（高电压），不能直接接进居民家的水龙头。</li>
+              <li><strong>配电变压器（配变）</strong>：相当于小区楼顶的“减压阀与水塔”，将高压水流降压转换为安全平缓的低压水流（降至220V/380V）。</li>
+              <li><strong>低压台区</strong>：相当于该水塔下属覆盖的所有楼栋管网。只要水塔容量有限或输水管太细（线阻），远端用户开大水龙头（大负荷）就会导致水压骤降（压降）；而如果大量用户同时向管网反向注水（户用光伏倒送），水塔周围的水压就会被剧烈抬高（压升）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>1. 低压台区的核心物理参数</h3>
+        <p>评估一个低压台区的运行状态与承载能力，主要依赖以下四大物理指标：</p>
+        <ol>
+          <li><strong>额定变压器容量（kVA）</strong>：常见的户外柱上式配变或箱式变电站容量在 $100\text{kVA} \sim 1250\text{kVA}$ 之间。城市居民区多采用 $630\text{kVA} \sim 800\text{kVA}$ 干式变，农村台区多采用 $100\text{kVA} \sim 400\text{kVA}$ 油浸变。</li>
+          <li><strong>供电半径（Line Radius）</strong>：指从配电变压器低压出线端到最远终端用户的线路物理长度。根据《配电网规划设计技术导则》（DL/T 5729），城镇低压供电半径一般应控制在 **150米** 以内，农村台区不宜超过 **500米**。供电半径过大是导致末端低电压（低于198V）的根本原因。</li>
+          <li><strong>额定电压等级</strong>：三相交流 **380V**（线电压，Line Voltage）与单相交流 **220V**（相电压，Phase Voltage）。标准允许的电压偏差范围为额定值的 $+7\% \sim -10\%$（即 198V ~ 235.4V）。</li>
+          <li><strong>台区负载率（Load Ratio）</strong>：台区最大实时有功功率与变压器额定容量的比值。负载率长期高于 $80\%$ 属于“过载台区”，长期低于 $20\%$ 则属于“重空载/轻载台区”。</li>
+        </ol>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、配电变压器（配变）：降压原理与接线组别深度拆解</h2>
+        <p>配电变压器（Distribution Transformer）是低压台区的心脏。它利用法拉第电磁感应定律，将10kV中压交流电降压转换为适合用户设备使用的 $380\text{V}/220\text{V}$ 低压电。</p>
+
+        <div class="key-concept">
+          <strong>📌 变压器基本电磁感应方程</strong>
+          <p>理想变压器的一侧与二次侧电压比等于线圈匝数比（Turn Ratio）：</p>
+          $$\frac{V_1}{V_2} = \frac{N_1}{N_2} = \frac{I_2}{I_1}$$
+          <p><strong>工程说明</strong>：对于 $10\text{kV} / 0.4\text{kV}$ 配变，一次侧（高压侧）匝数约为二次侧（低压侧）的 25 倍。根据能量守恒，高压侧电流较小，低压侧电流放大 25 倍。因此低压侧母线铜排需要承受数百甚至数千安培的大电流。</p>
+        </div>
+
+        <h3>1. 油浸式变压器 vs 干式变压器</h3>
+        <p>在配电工程中，配变主要分为两大流派：</p>
+        <ul>
+          <li><strong>油浸式配变（Oil-Immersed Transformer）</strong>：铁芯和线圈浸泡在绝缘变压器油中。变压器油既是绝缘介质也是散热介质。成本低、过载能力强、耐候性好，广泛应用于农村户外杆架式台区（柱上变）。但存在易燃风险，需定期化验油质。</li>
+          <li><strong>干式配变（Dry-Type Transformer，如SCB系列）</strong>：线圈采用环氧树脂浇注封堵，靠空气自然冷却（AN）或风冷（AF）。防火防爆、无污染、免维护，广泛应用于城市高层建筑地下室、商业综合体及地下箱式变电站。</li>
+        </ul>
+
+        <h3>2. 接线组别深度拆解：Dyn11 vs Yyn0</h3>
+        <p>在低压台区设计中，变压器的**接线组别（Connection Group）**直接决定了系统抵抗三相不平衡与零序谐波的能力。历史上我国大量使用 **Yyn0** 联结，而现代国家电网与南方电网标准已全面强制推行 **Dyn11** 联结。二者有何本质物理区别？</p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>对比维度</th>
+              <th>Yyn0 接线组别</th>
+              <th>Dyn11 接线组别（现行国标主推）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>高压侧联结</strong>：一次侧</td>
+              <td>星形（Y，Star），无中性线导出</td>
+              <td>三角形（D，Delta），无中性线</td>
+            </tr>
+            <tr>
+              <td><strong>低压侧联结</strong>：二次侧</td>
+              <td>星形（y，Star），带中性线（n）</td>
+              <td>星形（y，Star），带中性线（n）</td>
+            </tr>
+            <tr>
+              <td><strong>高低压相位差</strong></td>
+              <td>0 点钟方向（$0^\circ$ 相位差）</td>
+              <td>11 点钟方向（低压滞后高压 $330^\circ$，即超前 $30^\circ$）</td>
+            </tr>
+            <tr>
+              <td><strong>零序电流（$I_0$）流通路径</strong></td>
+              <td>一次侧为星形且无零线，零序电流无法在一次侧流通，形成极高零序阻抗。</td>
+              <td>低压侧零序电流在一次侧三角形绕组内诱导产生闭环环流（Circulating Current），零序阻抗极小。</td>
+            </tr>
+            <tr>
+              <td><strong>抗三相不平衡能力</strong></td>
+              <td>极差。单相负荷过大时，零序磁通穿过油箱壁产生附加涡流损耗，导致严重<strong>中性点位移（零点漂移）</strong>。</td>
+              <td>极强。三角形绕组可完美平衡零序磁通，低压中性点极其稳定，电压波动小。</td>
+            </tr>
+            <tr>
+              <td><strong>三次谐波（150Hz）抑制</strong></td>
+              <td>三次谐波电流无法流通，会在相电压波形上叠加严重正弦畸变。</td>
+              <td>三次谐波电流在一次侧 Delta 绕组内自行闭环消耗，输出纯净正弦波电压。</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>记忆技巧：Dyn11 命名如何拆解？</strong>
+            <ul>
+              <li>第一个大写字母 <strong>D</strong>：代表高压侧（一次侧）为<strong>三角形联结（Delta）</strong>。</li>
+              <li>第二个小写字母 <strong>y</strong>：代表低压侧（二次侧）为<strong>星形联结（Wye/Star）</strong>。</li>
+              <li>第三个字母 <strong>n</strong>：代表低压侧中性点（Neutral）引出了零线（N线）。</li>
+              <li>数字 <strong>11</strong>：代表时钟相位，低压相电压向量比高压相电压向量顺时针落后 11 个字格（即落后 $330^\circ$ / 超前 $30^\circ$）。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、0.4kV 低压配电网架构与接地系统（TN/TT/IT）</h2>
+        <p>降压变压器输出的低压电经过低压配电柜（JP柜或综合配电箱）后，以 **0.4kV 三相四线制或三相五线制** 的形式敷设至各楼栋与用户端。</p>
+
+        <h3>1. 相电压与线电压的几何向量关系</h3>
+        <p>低压电网中常说的“220V”与“380V”并非任意两个数值，而是基于三相对称向量几何计算得出的物理结果：</p>
+
+        <div class="key-concept">
+          <strong>📌 三相对称系统线电压与相电压关系</strong>
+          <p>设 A、B、C 三相相电压幅值为 $V_{ph} = 220\text{V}$，相位互差 $120^\circ$。线电压 $V_{line}$ 定义为两相之间的电位差（例如 $U_{AB} = U_A - U_B$）：</p>
+          $$V_{line} = \sqrt{3} \times V_{ph} \approx 1.732 \times 220\text{V} \approx 381.05\text{V} \approx 380\text{V}$$
+          <p><strong>物理含义</strong>：居民用电接一根相线（火线L）和一根中性线（零线N），获得 **220V 单相相电压**；工业大用户或动力设备（如三相电机、工商业储能PCS）接 A、B、C 三根相线，获得 **380V 三相线电压**。</p>
+        </div>
+
+        <h3>2. 低压系统三大接地模式（TN / TT / IT）物理机制</h3>
+        <p>根据国际电工委员会（IEC 60364）标准，低压配电网按电源中性点与用电设备外露导电部分的接地方式，分为三大类。第一个字母表示<strong>电源中性点接地状态</strong>（T=直接接地，I=不接地或高阻接地）；第二个字母表示<strong>设备外壳接地状态</strong>（T=独立接地，N=接零线/PE线）。</p>
+
+        <h4>① TN 系统（电源中性点接地，设备外壳接零/保护线）</h4>
+        <p>TN 系统是城市居民区和工商业建筑的主流。当设备发生绝缘击穿外壳带电时，金属外壳通过 PE 线与中性点构成**单相金相短路**，产生巨大的短路电流使前级断路器瞬时跳闸，从而切断电源保护人体。</p>
+        <ul>
+          <li><strong>TN-C 系统（三相四线制）</strong>：中性线 N 与保护线 PE 合二为一，称为 **PEN 线**。省线材但极不安全。一旦 PEN 线断裂或设备三相不平衡，设备外壳会直接带电！目前仅用于无人无手持设备的干线传输。</li>
+          <li><strong>TN-S 系统（三相五线制）</strong>：N 线与 PE 线从变压器中性点起**全程严格分开**。PE 线平时没有任何工作电流，是安全性最高的系统，广泛用于高层住宅、医院与数据中心。</li>
+          <li><strong>TN-C-S 系统</strong>：前段（变压器至建筑进线柜）采用 TN-C 混合，进入建筑总配电箱后重做**重复接地**并强制分为 N 线和 PE 线。兼顾经济性与末端安全性，是目前绝大多数城镇小区的标准做法。</li>
+        </ul>
+
+        <h4>② TT 系统（电源中性点接地，设备外壳独立接地）</h4>
+        <p>电源中性点直接接地，而用电设备的金属外壳接在各自独立的接地体（Grounding Electrode）上，与电网的零线没有电气连接。</p>
+        <p><strong>物理本质</strong>：当设备碰壳故障时，电流必须流经设备独立接地电阻和变压器中性点接地电阻。由于土壤电阻较大，故障短路电流通常只有数安培，**不足以使普通熔断器或空气开关跳闸**！因此，**TT 系统必须全线强制安装剩余电流动作保护器（RCD / 漏电保护器）**。TT 系统广泛应用于农村低压台区、农田灌溉等线路分散、难以统一敷设 PE 线的场景。</p>
+
+        <h4>③ IT 系统（电源中性点不接地，设备外壳独立接地）</h4>
+        <p>电源中性点不接地或经高阻抗（$1000\Omega \sim 2000\Omega$）接地，设备外壳独立接地。</p>
+        <p><strong>物理本质</strong>：当发生单相碰壳故障时，故障电流仅为全网对地电容电流，数值极小（毫安级），外壳对地电压极低，不会引发触电或火花。因此 **IT 系统在发生首次单相接地故障时允许带故障连续运行**。它专门用于对供电连续性要求极高的特殊场所，如医院手术室、地下矿井、连续化工生产线及某些储能电池舱内部 DC 侧。系统必须配备**绝缘监测装置（IMD）**，在首次接地时发出告警提醒维修。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：高空作业的“安全绳锚固策略”</strong>
+            <p>如果把电气绝缘故障比作工人不小心从高空滑落：</p>
+            <ul>
+              <li><strong>TN-S 系统（主绳与副绳分离）</strong>：工人身上的安全绳（PE线）直接挂在楼顶的主钢缆上。一旦滑落，主钢缆瞬间触发拉断机构（断路器跳闸），彻底消除危险。</li>
+              <li><strong>TT 系统（自备防坠器）</strong>：楼顶没有主钢缆，工人在自己脚下打一个独立的膨胀螺栓挂安全绳（独立接地）。因为螺栓承受力有限，必须在身上装一个极其灵敏的防坠卡扣（RCD漏电保护器），一有拉力就瞬间锁死。</li>
+              <li><strong>IT 系统（全缓冲气垫）</strong>：下方铺设了特厚气垫（高对地阻抗）。即便工人掉下来撞到气垫（首次接地故障），也不会受重伤，甚至能站起来继续工作，但警报器会响起提醒尽快补修绳索。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、低压台区“隐性杀手”：三相不平衡与零线电流过载</h2>
+        <p>在传统的低压台区中，居民单相负荷（如单相空调、电热水器、单相充电桩）是被随机分配在 A、B、C 三相上的。由于用户用电行为的异步性，极易造成**三相不平衡（Three-Phase Unbalance）**。</p>
+
+        <h3>1. 三相不平衡与零线合成电流物理本质</h3>
+        <p>在对称三相系统中，三相电流幅值相等、相位互差 $120^\circ$，合成的中性线电流为零：</p>
+        $$I_N = \vec{I}_A + \vec{I}_B + \vec{I}_C = 0$$
+        <p>然而，当 A 相负载极重（如 $I_A = 100\text{A}$），B 相中等（$I_B = 50\text{A}$），C 相极轻（$I_C = 10\text{A}$）时，利用向量加法在复平面合成：</p>
+
+        <div class="key-concept">
+          <strong>📌 不平衡时零线电流代数合成公式（假定功率因数为1）</strong>
+          $$I_N = \sqrt{I_A^2 + I_B^2 + I_C^2 - (I_A I_B + I_B I_C + I_C I_A)}$$
+          <p>将数值代入：$I_N = \sqrt{100^2 + 50^2 + 10^2 - (5000 + 500 + 1000)} = \sqrt{12600 - 6500} = \sqrt{6100} \approx 78.1\text{A}$。</p>
+          <p><strong>物理含义</strong>：大量残余电流无处可去，只能通过零线（N线）流回变压器中性点。如果零线截面积较细（历史工程中零线截面往往只有相线的一半），零线就会因严重过载而发热发烫！</p>
+        </div>
+
+        <h3>2. 零点漂移（中性点位移）与“断零烧毁”物理过程</h3>
+        <p>零线电流流经零线电阻 $R_N$，会在变压器中性点与用户零线末端之间产生压降 $\Delta V_N = I_N \times R_N$。这会导致原本处于 0V 电位的中性点发生偏离，即**零点漂移（Neutral Drift）**。</p>
+        <ul>
+          <li><strong>重负荷相（如A相）</strong>：由于电压降巨大，用户端实际相电压被压缩至 $180\text{V} \sim 190\text{V}$，导致空调压缩机无法启动或频繁低压保护。</li>
+          <li><strong>轻负荷相（如C相）</strong>：中性点反向抬高，导致用户端实际相电压被拉高至 $250\text{V} \sim 270\text{V}$，导致待家电绝缘击穿。</li>
+          <li><strong>断零致命事故（Broken Neutral）</strong>：若零线在主干路因发热烧断或螺栓松动脱落，低压电网瞬间失去了零线电位约束！此时，重负荷相与轻负荷相的用户设备相当于<strong>串联接在 380V 的相间线电压上</strong>。阻抗小的重负荷相分压极低，而阻抗大的轻负荷相分到的电压可高达 **320V~350V**，导致全楼待电器的电源模块在几秒内集体炸裂！</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>安全红线：零线绝对严禁安装熔断器或单极开关！</strong>
+            <p>在 0.4kV 低压配电系统中，零线（N线）绝对不能单独串联保险丝（熔断器）或单极断路器。一旦保险丝熔断，就会人为制造“断零”灾难。所有低压开关必须采用全极切断（如 4P 断路器，四极同时开断）或仅在相线上装设过流保护。</p>
+          </div>
+        </div>
+
+        <h3>3. 三相不平衡治理：从智能换相到“台区储能（BES）”</h3>
+        <p>传统的三相不平衡治理靠电工拿着钳形电流表去现场“手工改接户线”，效率极低且无法应对动态变化的负荷。现代台区治理已演进出两大智能化利器：</p>
+        <ol>
+          <li><strong>智能三相自动换相开关（Automatic Phase Switching Switch）</strong>：安装在用户进线前端，内部集成固态继电器或快速机械开关。通过毫秒级通信监测三相电流，在过零点自动将单相负荷从重载相无缝切换至轻载相。</li>
+          <li><strong>台区储能系统（Cabinet Energy Storage / BES）与三相独立控制技术</strong>：在配变低压侧（或线路末端）部署一套 $50\text{kW}/100\text{kWh} \sim 100\text{kW}/200\text{kWh}$ 的模块化储能系统。储能系统的变流器（PCS）采用<strong>三相四桥臂（Four-Leg Topology）独立控制架构</strong>。当 A 相重载、C 相轻载时，PCS 自动从 C 相吸收电能给电池充电（或注入有功），同时控制电池放电向 A 相注入有功电流。储能系统化身“电流搬运工”，在毫秒级内将三相不平衡度控制在 $5\%$ 以内！</li>
+        </ol>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：国网浙江电力“光储协同台区自愈”工程</strong>
+            <p>在浙江金华某农村台区，2023年全村屋顶分布式光伏装机突破 $350\text{kW}$，而配变容量仅为 $250\text{kVA}$。夏季午间光伏大发时，大量单相光伏集中在 B 相和 C 相倒送，导致台区变压器倒送功率达 $120\%$，相电压抬升至 $262\text{V}$，触发大量逆变器过压保护停机。</p>
+            <p>国家电网在此试点部署了一套 <strong>$100\text{kW}/215\text{kWh}$ 分布式台区储能柜</strong>，配合 12 组智能换相开关。台区储能系统在午间光伏高峰期以 $80\text{kW}$ 功率全力充电，解决变压器倒送过载；同时通过三相四桥臂独立调节，将零线电流从原来的 $110\text{A}$ 降至 $8\text{A}$ 以下，彻底解决了低压电网电压超限与三相不平衡难题，实现了台区自治闭环。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第五部分 -->
+      <section>
+        <h2>五、用户接入与低压分布式储能/光伏工程接入规范</h2>
+        <p>随着“双碳”目标的推进，低压台区已从传统的“单向单耗电”网络，演变为集“发电、储电、用电”于一体的**双向有源微型电网**。</p>
+
+        <h3>1. 用户接入电压等级与容量门槛</h3>
+        <p>根据国家电网《分布式电源接入配电网技术规定》（Q/GDW 1480），分布式能源与用户接入遵循以下容量划分准则：</p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>接入方式</th>
+              <th>标称电压</th>
+              <th>单点接入容量上限</th>
+              <th>典型接入对象与设备类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>低压单相接入</strong></td>
+              <td>220V</td>
+              <td>$\le 8\text{kW}$（或部分地区 $10\text{kW}$）</td>
+              <td>居民户用屋顶光伏、家用壁挂式储能、7kW交流充电桩</td>
+            </tr>
+            <tr>
+              <td><strong>低压三相接入</strong></td>
+              <td>380V</td>
+              <td>$8\text{kW} \sim 400\text{kW}$（不超过配变容量80%）</td>
+              <td>小微企业、小型工商业屋顶光伏、台区储能柜、快充站</td>
+            </tr>
+            <tr>
+              <td><strong>中压专线/环网接入</strong></td>
+              <td>10kV</td>
+              <td>$400\text{kW} \sim 6\text{MW}$</td>
+              <td>大型工商业储能电站、地面集中式光伏、大中型工厂用户</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. 低压接入四大关键技术规范与保护门槛</h3>
+        <p>低压分布式储能与光伏接入台区时，必须严格满足以下四大工程门槛：</p>
+        <ol>
+          <li><strong>防孤岛保护（Anti-Islanding Protection）</strong>：当 10kV 中压线路因故障跳闸停电时，低压侧的储能/光伏逆变器必须在 **2秒（通常可在 100ms 内）** 自动检测出电网失电（防孤岛被动/主动检测算法）并切断并网点，严防向无电电网反向送电，避免导致检修电工触电伤亡。</li>
+          <li><strong>防逆流控制（Anti-Backflow Control）</strong>：在某些“自发自用、余电不上网”的工商业储能或光伏项目中，并网点必须安装**双向智能电表与防逆流控制器**。一旦检测到向电网倒送功率超过设定阈值（如设为0kW），变流器必须在毫秒级内自动降低输出功率或拉载储能充电。</li>
+          <li><strong>电能质量（THD）控制</strong>：储能 PCS 与光伏逆变器注入 0.4kV 网的总谐波电流畸变率（THD）在额定功率下必须 **小于 5%**，且直流分量不得超过其交流额定值的 **0.5%**，防止磁饱和损坏台区配变。</li>
+          <li><strong>台区承载力“80% 红线”规程</strong>：单个台区内所有分布式电源（光伏+储能放电）的总装机容量，原则上不得超过配电变压器额定容量的 **80%**。例如一台 $400\text{kVA}$ 配变，其低压分布式光伏总容量不宜超过 $320\text{kW}$，超出部分必须配置台区储能进行配额缓冲。</li>
+        </ol>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：基于 V2G（车网互动）与台区储能的虚拟电厂（VPP）响应</strong>
+            <p>未来低压台区将迎来大规模电动汽车（EV）的双向充放电（V2G, Vehicle-to-Grid）。台区储能系统（BES）将作为“台区本地能量路由器”，通过边缘计算网关聚合台区内的户用光伏、V2G充电桩与可控负荷（空调/热泵）。在夏季用电高峰期，台区边缘网关接收上级调度指令，调度台区储能与停泊的电动汽车向 0.4kV 低压网反向放电，削减中压 10kV 线路顶峰压力，实现低压台区从“被动接收者”向“虚拟电厂（VPP）微型细胞”的跨越。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>低压台区定义</strong>：以一台 10kV/0.4kV 配变供电范围划分的末端电网单元。城镇供电半径应 $\le 150\text{m}$，农村应 $\le 500\text{m}$，是电力系统连接终端用户的最后环节。</li>
+        <li><strong>Dyn11 变压器优势</strong>：相比传统 Yyn0 组别，Dyn11 一次侧三角形绕组为零序电流提供了闭环路径，零序阻抗极小，能显著抑制中性点位移（零点漂移）与三次谐波。</li>
+        <li><strong>低压接地系统</strong>：TN-S（三相五线制，N/PE严格分离）最安全；TN-C-S 兼顾经济与安全；TT 系统要求全线强制安装 RCD 漏电保护；IT 系统适用于对供电连续性要求极高的特殊场景。</li>
+        <li><strong>三相不平衡与零线安全</strong>：不平衡负荷产生巨大零线合成电流，引发电压两极分化与变压器发热。<strong>零线绝对严禁串联开关或熔断器</strong>，防止“断零”烧毁设备。</li>
+        <li><strong>台区储能与接入规范</strong>：低压接入需遵循防孤岛保护（<2s切断）、电能质量（THD<5%）与配变容量 80% 承载力红线。台区储能凭借三相独立控制，可充当“电流搬运工”治理电压超限与不平衡。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在我国新建低压台区中，国家电网标准全面推广使用 Dyn11 接线组别的配电变压器，取代传统的 Yyn0 变压器。其最核心的技术依据是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. Dyn11 变压器的制造线圈用铜量比 Yyn0 减少约 30%</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 一次侧三角形繞组能为零序电流提供闭环回路，零序阻抗极小，能有效抑制三相不平衡导致的中性点位移</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. Dyn11 变压器能够将低压侧输出电压提升至 450V，从而大幅缩短供电半径</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. Dyn11 变压器的二次侧不需要引出零线，可直接省去低压中性线敷设成本</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：Dyn11 联结的高压侧为三角形（Delta）接法，当低压侧出现三相不平衡产生零序电流时，会在一次侧三角形绕组内诱导出闭环流动的零序环流，使得零序阻抗降至极低水平，极大地稳定了低压中性点电位，有效抑制了“零点漂移”和相电压异常升高。选项 A 说法错误，绕组用铜量与接线方式无关，主要由变压器容量与能效决定；选项 C 说法错误，Dyn11 额定输出仍为标准 0.4kV/220V，不会升高至450V；选项 D 字母“n”明确代表二次侧引出了中性线（零线），属于三相四线/五线制供电，必须敷设零线。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于低压 0.4kV 系统的接地与保护模式（TN/TT/IT），下列哪项物理概念与工程描述是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. TT 系统中设备碰壳短路电流极大，靠普通空气开关跳闸即可快速切断故障</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. TN-S 系统中 N 线与 PE 线在整个低压网络中是混接在一起的，可以随时互换</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. IT 系统电源中性点不接地或高阻接地，发生首次单相碰壳故障时电流极小，允许带故障继续运行</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. TN-C 系统非常适合在有爆炸危险的医院手术室和高层住宅中大力推广</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：IT 系统电源中性点不直接接地，当单相碰壳故障发生时，故障电流仅为对地电容电流（毫安级），外壳对地电压极低，不会引发触电事故，因此允许带首次故障连续运行，极大地提高了供电可靠性，选项 C 正确。选项 A 错误，TT 系统设备外壳独立接地，接地回路包含土壤电阻，短路电流很小，普通空开无法跳闸，必须强制装设 RCD 漏电保护器；选项 B 错误，TN-S 系统中 N 线（工作零线）与 PE 线（保护线）从变压器起必须严格分开，PE 线绝不允许通过工作电流；选项 D 错误，TN-C 系统 PEN 线带工作电流且易断线，绝对严禁用于高层住宅或易燃易爆场所。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 低压台区在运行中若发生严重的“零线断线（断零）”故障，会导致极其严重的后果。以下哪项关于“断零”物理过程的说法是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 断零后所有用户的相电压瞬间降为 0V，设备因缺相而全部停机</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 断零后失去了零线电位约束，轻负荷相用户的电压会被拉高直逼 380V 线电压，导致电器绝缘击穿烧毁</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 断零会使低压台区变压器立刻发生物理爆炸，导致全网停电</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 为了防止零线发热断裂，必须在零线上串联安装额定电流较小的保险丝（熔断器）</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：三相不平衡时若零线开路（断零），低压电网失去中性点电位钳制。此时重负荷相与轻负荷相的用电设备相当于串联接在 380V 的相间线电压上。阻抗较小的重负荷相分压极低，而阻抗较大的轻负荷相分到的电压可飙升至 300V~350V，瞬间击穿并烧毁大量电器，选项 B 正确。选项 A 错误，重负荷相电压变低但轻负荷相电压极高，绝非全部变为0V；选项 C 错误，断零主要影响末端用户电压分配，不会直接导致变压器本体爆炸；选项 D 属于致命误区，低压规范严禁在零线上安装熔断器或单极开关。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 高密度分布式光伏集中接入低压台区后，为什么容易在晴朗的午间引发“过压脱网”现象？其物理机理是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 阳光照射使逆变器内部温度过高，逆变器由于散热不良自动保护停机</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 午间光伏发电功率远超本地负荷，潮流反向通过低压线路流向配变，大电流在线阻上产生反向压升，导致末端电压超过 +7% 门槛</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 光伏逆变器在午间会吸收大量无功功率，导致电网功率因数降低进而拉低电压</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 变压器在午间会自动切断低压侧断路器以防止光伏电流反向倒灌事故</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：低压线路存在物理阻抗（$R$ 和 $X$）。当午间光伏大发且本地消纳不足时，电能从用户端向变压器端倒送。根据线路电压降公式 $\Delta U \approx \frac{P R + Q X}{U}$，由于有功功率 $P$ 变为负值（倒送），在线路上产生正向压升 $\Delta U$，导致线路末端电压被急剧抬高（甚至超过 250V~265V），触发逆变器的交流过压保护离网，选项 B 正确。选项 A 并非电网级过压脱网的主要原因；选项 C 错误，逆变器倒送有功不会吸收无功拉低电压；选项 D 错误，变压器本身是无源电磁设备，不会在午间自动切断断路器。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 关于低压台区储能（BES）系统的工程应用与控制策略，下列哪项说法是错误的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 台区储能可采用三相四桥臂独立控制拓扑，在三相不平衡时作为“电流搬运工”消除零线电流</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 台区储能在午间光伏大发时充电吸纳余电，在傍晚用电高峰放电，可有效缓解配变倒送过载与低电压难题</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 当 10kV 配电网跳闸停电时，台区储能系统必须在 2 秒内具备防孤岛保护能力，切断并网点</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 台区储能可以完全取代变压器中性点接地保护，因此安装储能后低压网可随意切断 PE 保安线</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：题目要求选出“错误的”说法。台区储能系统是电能调节设备，绝不能取代电网的基本接地保护体系（如 PE 保护线与中性点接地），切断 PE 保安线将导致严重的人身触电隐患，因此选项 D 说法严重错误，符合题意。选项 A 正确，三相四桥臂 PCS 能独立控制各相有功与无功，实现三相不平衡治理；选项 B 正确，台区储能通过“削峰填谷”降低变压器负载率并平抑电压波动；选项 C 正确，防孤岛保护是分布式储能安全的底线要求，必须在失电后迅速切离并网点。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_6_2_中压配电网架构.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">中压配电网架构</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_6_4_分布式能源接入挑战.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">分布式能源接入挑战</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_6_1_配电网概述.html">02_6_1 配电网概述</a></li>
+        <li><a href="02_6_2_中压配电网架构.html">02_6_2 中压配电网架构</a></li>
+        <li><a href="02_6_4_分布式能源接入挑战.html">02_6_4 分布式能源接入挑战</a></li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_6_3</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
