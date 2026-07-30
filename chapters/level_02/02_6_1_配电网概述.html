@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>配电网：最后一公里 — 配电系统 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析配电网：最后一公里的物理层级、网络拓扑、运行模式，以及新型电力系统下分布式光伏与储能接入带来的逆向功率流与电压控制挑战。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">配电系统</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">配电网：最后一公里</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_5_4_变电站自动化.html" class="nav-prev" title="上一节：变电站自动化">← 上节</a>
+        <a href="02_6_2_中压配电网架构.html" class="nav-next" title="下一节：中压配电网架构">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>配电系统</span>
+        <span class="sep">›</span>
+        <span>配电网：最后一公里</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_6_1</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>配电网：最后一公里</h1>
+      <p class="chapter-lead">从乡村台区光伏倒灌到城市电网末端电压骤降，剖析配电网的物理层级、拓扑结构与运行逻辑，探究新型电力系统下配电网从“单向单向管道”向“主动双向网络”演进的物理瓶颈与储能赋能路径。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>厘清物理定义与分级体系</strong>：深刻理解配电网在电力系统整体架构中的定位，掌握高压配电网（110kV/66kV）、中压配电网（10kV/20kV/35kV）与低压配电网（380V/220V）的电压层级与功能划分。</li>
+        <li><strong>掌握网络拓扑与运行铁律</strong>：熟悉辐射状网与环网拓扑结构，透彻理解配电网“环网结构、开环运行”的物理原因及供电可靠性（SAIDI/SAIFI）评估维度。</li>
+        <li><strong>定量推导逆向功率与电压异常</strong>：掌握配电网节点电压计算公式，理解高比例分布式光伏接入后引发“逆向功率流”导致末端电压升高与保护误动的物理机制。</li>
+        <li><strong>系统掌握配电网储能应用场景</strong>：结合《关于推进配电网高质量发展的指导意见》（发改能源〔2024〕143号），理解台区储能、工商业储能与智能软开关（SOP）在解决“末端低电压/高电压”及提升配电网柔性接纳能力中的工程实施方案。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：当屋顶光伏遇上“逆向倒灌”与台区告警</h2>
+      <p>2023年7月盛夏正午，浙江省北部某乡村台区的调控中心大屏上突然弹出一连串黄色告警：“10kV 农网 3 号线路 0.4kV 变台电压达到 252V（超出国家标准上限 242V），分布式光伏逆变器批量防孤岛过压保护跳闸！”</p>
+      <p>然而，仅仅在 8 个小时后的当天夜晚 21:00，同一台区却呈现出截然相反的惨状：随着村民归家开启空调、多辆电动汽车接入集中充电，台区末端农户家的电压骤降至 188V，日光灯剧烈闪烁，空调压缩机因低电压频繁自我保护停机。</p>
+      <p>明明几公里外的主干输电网和 110kV 变电站电力充沛、电压稳定，为什么到了这临门一脚的“最后一公里”，电网却遭遇了如同摆钟般剧烈的两极震荡？从过去几十年间“只管埋头送电”的沉静网络，到如今充满“逆向电流、电压飙升、台区超载”的热闹战场，配电网究竟经历了什么？储能技术又将如何在这一网络末梢扮演“镇海神针”的角色？</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      
+      <!-- 子模块一 -->
+      <section>
+        <h2>一、什么是配电网？电能传输的“末梢神经”与电压层级划分</h2>
+        
+        <p>在电力系统的巨大躯干中，发电厂是“心脏”，超高压/特高压输电网是“主动脉”，变电站是“血液中转枢纽”，而<strong>配电网（Distribution Network）</strong>则是遍布全社会每一个角落的“微血管系统”与“末梢神经”。它的核心使命是将从变电站降压后的电能，安全、可靠、优质地分配并输送给每一个终端用户——无论是大型重工业工厂、高科技园区，还是街角的小餐馆与居民楼内的千家万户。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活類比：物流快递体系 vs 电力传输体系</strong>
+            <p>如果将电力传输比作全国物流快递网络：</p>
+            <ul>
+              <li><strong>发电厂</strong> 类似于大型货源生产基地（工厂）；</li>
+              <li><strong>超高压/特高压输电网</strong> 类似于跨省高速铁路与国家级航空物流大干线，负责将大批量货物（高电压大功率）高速、低损耗地跨区域运输；</li>
+              <li><strong>大型变电站</strong> 类似于各省市的区域分拣中心与物流枢纽站；</li>
+              <li><strong>配电网</strong> 则完全对应于<strong>“快递送到家门前”的最后一公里配送网络</strong>——包括城市主干道上的中转货车（中压配电网）、社区快递驿站（配电变压器/台区），以及快递员骑着电动车穿街过巷送到住户门前的末梢配送（低压配电网）。</li>
+            </ul>
+            <p>没有这“最后一公里”的精准分拨与末梢触达，主干网传输再多的电能也只是空中楼阁。</p>
+          </div>
+        </div>
+
+        <h3>1. 配电网的三级电压划分体系</h3>
+        <p>配电网并非单一电压等级的简单线路，而是根据输送距离、容量要求及用户负荷类型，划分为呈金字塔结构的三个电压层级：</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>配电网层级</th>
+                <th>常见电压等级（中国标准）</th>
+                <th>典型传输距离</th>
+                <th>典型传输容量</th>
+                <th>主要服务对象与功能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>高压配电网（HVDN）</strong></td>
+                <td>110kV, 66kV (东北地区), 35kV (部分郊区)</td>
+                <td>10 ～ 50 km</td>
+                <td>20 ～ 100 MW</td>
+                <td>连接区域主网变电站与城市分区变电站；直接为特大型重工业企业（如钢铁厂、大型化工厂）供电。</td>
+              </tr>
+              <tr>
+                <td><strong>中压配电网（MVDN）</strong></td>
+                <td>10kV (全国主流), 20kV (苏州工业园区等)</td>
+                <td>1 ～ 15 km</td>
+                <td>2 ～ 10 MW</td>
+                <td>城市街道、园区骨干配电线路；为中型工商业、写字楼及配电变压器（台区）供电。</td>
+              </tr>
+              <tr>
+                <td><strong>低压配电网（LVDN）</strong></td>
+                <td>380V (三相四线), 220V (单相)</td>
+                <td>100 ～ 500 m</td>
+                <td>数十 ～ 数百 kW</td>
+                <td>台区配电变压器二次侧向下延伸；直接接入普通居民户用、小商户、路灯及小型分散式设备。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>在中压与低压交界处，存在一个极其关键的物理节点——<strong>配电变压器（简称“配变”）及其所在的供电区域（俗称“台区”）</strong>。配变将 10kV 中压降至 380V/220V 低压，一个台区通常覆盖几百户居民或一家小型工厂。台区是配电网中最贴近用户的基本管理单元，也是当前分布式能源冲击的最前沿。</p>
+
+        <div class="key-concept">
+          <h4>📌 配电网三相交流功率传输基本公式</h4>
+          <p>$$\begin{cases} P = \sqrt{3} \, U_L \, I_L \cos\phi \quad (\text{三相对称系统}) \\[6pt] \Delta P = 3 \, I_L^2 \, R = \frac{P^2 + Q^2}{U_L^2} \, R \quad (\text{三相线路功率损耗}) \end{cases}$$</p>
+          <p><strong>工程含义</strong>：$U_L$ 为线电压，$I_L$ 为线电流，$\cos\phi$ 为功率因数，$R$ 为线路等效电阻。配电网电压等级越低（如从 10kV 降至 380V，电压降低约 26 倍），在传输相同功率 $P$ 时，电流 $I_L$ 将急剧增大 26 倍。由于线路损耗与电流平方成正比（$\Delta P \propto I^2$），低压配电网的单位距离电阻损耗极大，因此低压线路的供电半径必须严格限制在几百米以内！</p>
+        </div>
+
+        <h3>2. 配电网的核心设备家族</h3>
+        <p>配电网的物理实体由各种高低压设备巧妙组合而成，主要包含以下核心成员：</p>
+
+        <ul>
+          <li><strong>配电变压器（Distribution Transformer）</strong>：将 10kV 降压至 380V/220V 的核心电磁设备，常见的有干式变压器（用于室内写字楼）和油浸式变压器（用于户外杆上台区）。</li>
+          <li><strong>环网柜（Ring Main Unit, RMU）</strong>：装设于中压节点（如地下室、路边箱变），用于实现线路分段、联络与故障隔离的金属封闭开关设备。</li>
+          <li><strong>柱上开关 / 断路器（Pole-mounted Circuit Breaker）</strong>：架空线路上常见的安全卫士，具备切断短路故障电流的能力，常配合重合闸控制器实现故障自动隔离。</li>
+          <li><strong>配电自动化终端（FTU / DTU / TTU）</strong>：
+            <ul>
+              <li><strong>FTU（馈线终端）</strong>：监测柱上开关状态并执行遥控；</li>
+              <li><strong>DTU（站所终端）</strong>：监测环网柜与开闭所；</li>
+              <li><strong>TTU（配变终端）</strong>：专门安装在台区变压器侧，实时监测低压侧电压、电流、功率因数与谐波。</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 子模块二 -->
+      <section>
+        <h2>二、配电网的结构拓扑与运行模式：从“单向辐射”到“环网开环”</h2>
+        
+        <p>配电网在物理上是如何把千万条线路连接起来的？在长达百年的电力工业历史中，为了平衡<strong>建设成本、维护复杂度与供电可靠性</strong>，工程师们总结出了一套经典的拓扑结构与运行铁律。</p>
+
+        <h3>1. 两种经典网络拓扑结构</h3>
+
+        <h4>① 辐射状拓扑（Radial Architecture）</h4>
+        <p>辐射状网络类似于一棵大树。从变电站 10kV 母线引出一条主干线（树干），沿着街道向外延伸，途中分支引出若干支线（树枝），最后连接至各个台区配变（树叶）。电流严格按照从“变电站 → 主干线 → 分支线 → 用户”的单一方向流动。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>辐射状网的优缺点分析</strong>
+            <ul>
+              <li><strong>优点</strong>：结构简单明了，建设投资最省；继电保护配置极为简单（仅需单向过流保护，电流超限即跳闸）。因此在广袤的农村配电网和早期城镇中被广泛采用。</li>
+              <li><strong>缺点</strong>：可靠性极差！主干线发生任何一点故障（如树木倒伏压断导线），故障点之后的所有下游用户将全部停电（N-1 校验无法通过）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h4>② 环网拓扑与“手拉手”联络线（Ring Main Architecture）</h4>
+        <p>为了提升供电可靠性，现代城市配电网普遍采用了“手拉手”环网结构。即从两个不同的变电站（或同一变电站的不同母线段）引出两条 10kV 线路，在两条线路的末端或中间通过一个<strong>联络开关（Tie Switch）</strong>连接起来，形成一个闭合的环形结构。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：双向通车的环形互通立交</strong>
+            <p>辐射网就像一条死胡同道路，一旦入口发生塌方，胡同里的所有人彻底无法出门；而“手拉手”环网就像一条连接东西两个城区的高架桥，平时中间设有一道临时隔离栅栏。当西边路段修路封路时，只要打开隔离栅栏，西边的居民就可以调头从东边城区的高架桥出口顺利驶出。这就实现了“单边故障、双向转供”。</p>
+          </div>
+        </div>
+
+        <h3>2. 运行铁律：“环网结构、开环运行”</h3>
+        <p>虽然物理线路连接成了闭合的环形，但在实际运行中，配电网必须遵守一条铁律——<strong>“环网结构，开环运行”（Open-loop Operation of Closed-Loop Grid）</strong>！这意味着在正常工作状态下，联络开关必须处于断开状态（常开点），将环网切分成两条独立的辐射状线路运行。</p>
+
+        <p>为什么不让联络开关常闭，直接闭环运行呢？这背后的物理原因主要有三点：</p>
+        <ol>
+          <li><strong>避免电网环流（Circulating Current）</strong>：不同变电站母线之间的电压幅值与相位很难完全一致。一旦闭环，电压差会在环网中感应出巨大的电网环流，不仅增加无功损耗，还会占用导线容量。</li>
+          <li><strong>极大简化故障保护整定</strong>：开环运行时，网络中的电流方向始终是单向确定的。保护装置只需检测自上而下的单向过电流；若闭环运行，短路电流将从两侧同时涌向故障点，继电保护必须升级为昂贵且复杂的方向保护与差动保护。</li>
+          <li><strong>限制短路电流容量</strong>：闭环运行相当于将多个电源并联，故障时的短路电流极大，可能超出中压开关柜的开断能力，引发设备爆炸事故。</li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>供电可靠性的核心指标：SAIDI 与 SAIFI</strong>
+            <p>评价一个城市配电网好坏的核心标准是<strong>供电可靠率（Power Supply Reliability）</strong>，通常使用以下国际通用指标测量：</p>
+            <ul>
+              <li><strong>SAIDI（系统平均停电时长）</strong>：用户平均每年停电的小时数。中国顶尖城市（如上海陆家嘴、广州珠江新城）的 SAIDI 低于 <strong>5 分钟/年</strong>（供电可靠率 99.999%），而普通农村地区可能在数小时以上。</li>
+              <li><strong>SAIFI（系统平均停电频率）</strong>：用户平均每年停电的次数。</li>
+            </ul>
+            <p>实现高可靠率的核心手段，就是利用自动化开关在发生故障时，于数秒内完成“故障定位 → 自动隔离 → 联络开关合闸非故障区恢复供电（FA, Distribution Automation）”。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块三 -->
+      <section>
+        <h2>三、新型电力系统下的深刻变局：从“被动分配”到“主动双向网络”</h2>
+        
+        <p>在过去近百年的时间里，配电网的设计思想完全建立在一个基本假设之上：<strong>电源在上方（大电厂与输电网），负荷在下方（终端用户），能量只从上往下单向流动</strong>。这种传统配电网被称为<strong>被动配电网（Passive Distribution Network, PDN）</strong>。</p>
+
+        <p>然而，随着中国“双碳”目标的推进与新型电力系统的建设，分布式光伏（整县屋顶光伏、农光互补）、分散式风电、用户侧储能以及电动汽车（EV）呈现出爆炸式增长。配电网的物理环境发生了翻天覆地的变化！</p>
+
+        <h3>1. 产消者（Prosumer）崛起与能量双向流动</h3>
+        <p>千家万户的用户不再只是单纯消耗电能的“消费者（Consumer）”，而是变成了既能消耗电能、又能向电网反向卖电的<strong>“产消者（Prosumer = Producer + Consumer）”</strong>。</p>
+        <p>在晴朗的午间，当千万个屋顶光伏板同时全力发电、而用户自身用电量较低时，多余的电能就会穿过低压台区变压器，反向倒灌进 10kV 中压配电网，甚至倒灌回 110kV 变电站母线。这种现象被称为<strong>“逆向功率流”（Reverse Power Flow）</strong>。</p>
+
+        <h3>2. 逆向功率流引发的四大物理“阵痛”</h3>
+
+        <h4>① 阵痛一：末端电压剧烈飙升与越限</h4>
+        <p>在传统单向配电网中，导线存在电阻 $R$ 和感抗 $X$。当电流 $I$ 从变电站流向末端负荷时，沿着线路会产生电压降 $\Delta U$：</p>
+
+        <div class="key-concept">
+          <h4>📌 配电网线路节点电压降估算公式</h4>
+          <p>$$U_{\text{末端}} \approx U_{\text{首端}} - \frac{P \cdot R + Q \cdot X}{U_{\text{额定}}}$$</p>
+          <p><strong>物理含义</strong>：当传输有功功率 $P > 0$（负荷消耗）时，末端电压 $U_{\text{末端}}$ 低于首端电压 $U_{\text{首端}}$。线路越长、负荷越大，$U_{\text{末端}}$ 跌落越严重（“低电压问题”）。因此，电网公司习惯于在变电站将首端电压稍微调高（如调至 $1.05 U_{\text{额定}}$），以保证末端用户电压不低于 $0.95 U_{\text{额定}}$。</p>
+        </div>
+
+        <p>但是，当末端大量接入分布式光伏时，有功功率发生翻转，$P$ 变为负值（$P < 0$）。代入公式可知：</p>
+        <p>$$U_{\text{末端}} \approx U_{\text{首端}} - \frac{(-P_{\text{光伏}}) \cdot R + Q \cdot X}{U_{\text{额定}}} = U_{\text{首端}} + \frac{P_{\text{光伏}} \cdot R - Q \cdot X}{U_{\text{额定}}}$$</p>
+        <p>这意味着，<strong>末端电压不再降低，反而沿着线路一路抬升</strong>！在光伏大发的正午，由于首端电压本来就偏高，末端节点电压很容易被抬升至 $1.15 U_{\text{额定}}$（如 253V 以上），导致用户家里的敏感电器过压烧毁，或者引发分布式光伏逆变器频繁触及“过压保护”而批量脱网。</p>
+
+        <h4>② 阵痛二：台区配变反向重载与过热烧毁</h4>
+        <p>传统的台区配电变压器是按照单向降压传输设计的。当台区内分布式光伏装机容量超过配变额定容量的 80% 甚至 100% 时，正午反向倒灌的功率会使变压器长时间处于超负荷运行状态。反向功率引发的过载不仅大幅降低变压器绝缘寿命，还会引发配变保护熔断器熔断乃至变压器起火。</p>
+
+        <h4>③ 阵痛三：三相不平衡与中性线过流</h4>
+        <p>在低压 380V/220V 配电网中，许多户用分布式光伏是以 220V 单相方式接入的。如果某一相（如 A 相）安装的光伏过多，而 B 相、C 相较少，就会造成严重的三相不平衡：</p>
+        <ul>
+          <li>A 相电压被大幅抬高，而 B、C 相电压偏低；</li>
+          <li>中性线（零线）中流过巨大的不平衡电流，导致中性线剧烈发热，甚至引发零线烧断事故，进而导致单相电器遭受 380V 相间电压冲击而毁灭性损坏。</li>
+        </ul>
+
+        <h4>④ 阵痛四：传统继电保护误动与盲目</h4>
+        <p>传统配电网的三段式过流保护建立在“故障电流必然来自上游变电站”的假设之上。当分布式电源（DG）遍布线路各处时：</p>
+        <ul>
+          <li><strong>保护拒动（盲目）</strong>：当线路发生短路故障时，分布式电源注入短路电流，抬高了故障点残压，导致上游保护检测到的短路电流减小，低于保护整定值，保护无法按时跳闸切除故障；</li>
+          <li><strong>保护误动（误跳）</strong>：当相邻线路发生故障时，本线路上的分布式电源反向向故障点提供短路电流，导致本线路无故障的断路器误跳闸，扩大停电范围。</li>
+        </ul>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：山东与河南分布式光伏“红黄绿”区域预警机制</strong>
+            <p>截至 2023 年底，中国分布式光伏累计装机已突破 2.5 亿千瓦，其中山东、河南、河北三省的户用光伏占比最高。在部分农业大县，分布式光伏装机容量甚至达到了当地白天最大负荷的 3 到 5 倍！</p>
+            <p>由于配电线路与台区变压器无法承载巨大的反向倒灌功率，2023 年下半年起，山东、河南等多地国网公司开始发布<strong>配电网容量接纳“红黄绿”预警地图</strong>。被标记为“红色区域”的台区和县域，因承载能力彻底饱和，暂停新增分布式光伏的并网申请。这一现实困局逼迫配电网必须加速向可感知、可调节的<strong>主动配电网（Active Distribution Network, ADN）</strong>升级。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块四 -->
+      <section>
+        <h2>四、配电网高质量发展与储能（EES）的“最后一公里”赋能</h2>
+        
+        <p>面对分布式能源高比例接入带来的剧烈冲击，依靠传统的“砸钱埋电线、不停扩容变压器”这种粗放式建设已经难以为继。2024 年 2 月，国家发展改革委、国家能源局联合印发《关于推进配电网高质量发展的指导意见》（发改能源〔2024〕143号），明确指出：<strong>配电网要向“源网荷储”协同互动的智能化网络转变，强化台区储能与分布式储能的调峰控压能力</strong>。</p>
+
+        <p>储能系统（Energy Storage System, ESS）凭其毫秒级的双向功率调节能力，正在成为解开配电网“最后一公里”物理困局的关键钥匙。</p>
+
+        <h3>1. 储能赋能配电网的三大核心场景</h3>
+
+        <h4>① 台区储能（Substation/Transformer Station EES）——治理电压越限与反向过载</h4>
+        <p>在分布式光伏高渗透的低压台区，部署容量为 30kW/60kWh 至 100kW/200kWh 的集装箱式或柜式<strong>台区储能系统</strong>。</p>
+        <ul>
+          <li><strong>正午“吸能”控压</strong>：正午光伏大发、电压即将突破 242V 警戒线时，台区储能以最大功率充电，将反向倒灌的电能强行吸入电池中，把台区电压牢牢压回安全范围内；</li>
+          <li><strong>晚高峰“释放”顶峰</strong>：夜晚居民用电高峰、电压跌落时，储能系统反向放电，补充台区功率缺口，消除末端低电压，并防止配变正向过载。</li>
+        </ul>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：社区防洪蓄水池</strong>
+            <p>台区储能就像是在小区排水管网末端建造的一个智能防洪蓄水池。正午暴雨（光伏大发）来袭、排水管（配电线路）即将溢水漫灌时，蓄水池自动打开闸门吸纳积水；等到旱季（夜晚用电高峰）管网干涸时，再将蓄水池里的水抽出来供给居民洗涤使用。这样既防止了水灾（过压），又保障了旱季用水（消除低电压）。</p>
+          </div>
+        </div>
+
+        <h4>② 工商业储能与动态增容（Dynamic Capacity Expansion）</h4>
+        <p>对于许多工厂和商业综合体，由于生产线扩大，原本的 10kV 配变容量已经饱和。如果向电网申请变压器增容，不仅需要缴纳昂贵的供电贴费，还要等待数月的基础设施施工。</p>
+        <p>通过在用户侧安装工商业储能系统（如 215kWh 柜式液冷储能）：</p>
+        <ul>
+          <li><strong>削峰填谷（Peak Shaving）</strong>：在电价低谷时段充电，在高峰电价时段放电，赚取高额峰谷电价差收益；</li>
+          <li><strong>动态增容（Peak Clipping）</strong>：当工厂大型设备启动瞬间引发冲击负荷、导致总功率即将超出变压器容量上限时，储能毫秒级放电补足缺口，使变压器免于过载跳闸，避免了数百万的变压器扩容改造成本。</li>
+        </ul>
+
+        <h4>③ 柔性配电网与智能软开关（SOP, Soft Open Point）+ 储能</h4>
+        <p>传统配电网的联络开关是机械断路器，只能进行“全开”或“全关”的粗暴操作。而在现代柔性配电网中，工程师利用背靠背电压源型变流器（VSC）构成的<strong>智能软开关（SOP）</strong>替代传统的联络开关。</p>
+
+        <div class="key-concept">
+          <h4>📌 智能软开关（SOP）与储能集成架构</h4>
+          <p>$$\text{线路 A (10kV)} \longrightarrow \text{VSC 变流器 1} \longleftrightarrow \begin{matrix} \text{直流母线} \\ \updownarrow \\ \text{储能电池 (BESS)} \end{matrix} \longleftrightarrow \text{VSC 变流器 2} \longleftarrow \text{线路 B (10kV)}$$</p>
+          <p><strong>工程优势</strong>：SOP 实现了两条 10kV 线路之间的<strong>无间断柔性功率传输与连续无功调节</strong>。中间集成的直流母线可直接挂载分布式储能。当线路 A 光伏过剩、线路 B 负荷偏重时，SOP 不仅能将线路 A 的多余电力精准转移到线路 B，还能将多余电力存入电池，彻底解耦了配电网的拓扑限制。</p>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：虚拟电厂（VPP）如何聚合配电网“散珠碎玉”？</strong>
+            <p>单一的户用储能（5kW/10kWh）或台区储能容量太小，无法直接参与省级电力现货市场或调频辅助服务市场。然而，通过物联网（IoT）与边缘计算终端（TTU），<strong>虚拟电厂（Virtual Power Plant, VPP）</strong>可以将分散在配电网各处的成千上万个台区储能、工商业储能、电动汽车（V2G）以及可控负荷（如中央空调）聚合起来。</p>
+            <p>在物理上，它们依然分布在千家万户的配电网末端；但在数字逻辑上，VPP 将它们聚合成了一个当量达到 <strong>百兆瓦级（100MW+）</strong> 的“虚拟巨型发电机”，统一接受省调控中心的指挥调度，实现“积小流以成江海”的经济与技术跨越。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 子模块五 -->
+      <section>
+        <h2>五、总结与知识图谱</h2>
+        <p>配电网作为电力系统的“最后一公里”，正在经历百年未有之大变局。从高压、中压到低压层层递进的电压架构，到“环网结构、开环运行”的运行铁律，奠定了其高可靠性的基础。而在高比例分布式新能源涌入的今天，逆向功率流引发的电压越限、配变反向过载与保护误动，倒逼配电网必须从被动管道向主动网络转变。</p>
+        <p>台区储能、工商业储能与智能软开关（SOP）的引入，赋予了配电网在时空维度上任意挪移电能的柔性控制能力，为新型电力系统打通了最关键的末梢环节。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>配电网核心要点记忆口诀</strong>
+            <ul>
+              <li><strong>分级划归清晰</strong>：高压输分配，中压走干线，低压进台区。</li>
+              <li><strong>拓扑运行铁律</strong>：环网提高可靠性，常开运行防环流。</li>
+              <li><strong>逆流阵痛根源</strong>：光伏大发 $P$ 翻转，末端电压沿线升。</li>
+              <li><strong>储能镇海神针</strong>：正午吸能降电压，夜晚放电顶高峰。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>网络层级与物理功能</strong>：配电网包含高压（110kV/66kV）、中压（10kV/20kV/35kV）和低压（380V/220V）三个层级。台区配变是连接中低压的核心节点，限制低压供电半径是降低 $I^2 R$ 线损的物理必然要求。</li>
+        <li><strong>拓扑结构与开环运行</strong>：城市中压配电网广泛采用“手拉手”环网结构，但必须遵守“闭环设计、开环运行”原则，以避免电网环流、降低短路电流并简化单向过流保护整定。</li>
+        <li><strong>逆向功率与电压越限</strong>：分布式光伏大规模接入打破了传统的单向功率流向。根据节点电压估算公式 $\Delta U \approx \frac{PR+QX}{U}$，正午光伏反向送电导致 $P < 0$，引发线路末端电压剧烈升高过压越限。</li>
+        <li><strong>储能赋能与高质量发展</strong>：依据发改能源〔2024〕143号文件，台区储能（控压与防反向过载）、工商业储能（动态增容与削峰填谷）及智能软开关（SOP）是解决“最后一公里”消纳瓶颈、建设主动配电网（ADN）的核心技术支撑。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1. 城市 10kV 中压配电网普遍采用“手拉手”环网结构，但在正常运行时联络开关通常处于断开状态（开环运行）。以下哪项不是采用“开环运行”的核心物理原因？</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 防止不同变电站母线由于电压幅值或相位微小差异产生较大的电网环流</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 维持电流方向的单向性，从而大幅简化继电保护装置的整定与配置</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 降低发生故障时的短路电流水平，避免超出开关设备的开断能力</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 彻底消除导线上的高频谐波与电容无功充电电流</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：开环运行主要解决的是电网环流、继电保护简化和短路电流控制问题（ABC 均正确）。开关的开闭状态属于工频（50Hz）拓扑切换，无法消除由非线性负荷产生的“高频谐波”，也不能消除交流线路固有的“对地电容无功充电电流”（选项 D 错误，符合题意）。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2. 晴朗正午时分，某低压台区接入了高比例分布式户用光伏，导致末端居民家中电压飙升至 250V（超过国家标准上限）。根据配电网节点电压降估算公式 $\Delta U \approx \frac{P R + Q X}{U}$，导致电压升高的根本物理原因是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 光伏大发使线路传输的有功功率 $P$ 变为较大的负值，导致沿线电压降翻转为“电压升”</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 光伏逆变器向电网吸收了过多的无功功率 $Q$，导致线路电感 $X$ 剧烈增大</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 光伏发出的直流电直接混入了交流低压网，抬高了基波电压有效值</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 低压导线的等效电阻 $R$ 在正午高温下急剧减小为零</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：当分布式光伏发电量远大于本地负荷时，功率倒灌使得有功功率 $P < 0$。在节点电压公式 $U_{\text{末端}} \approx U_{\text{首端}} - \frac{P R + Q X}{U}$ 中，减去一个负数相当于加上一个正数，导致线路末端电压沿着功率倒灌方向升高，形成过压越限（选项 A 正确）。光伏逆变器输出交流电（C 错），导线电阻受热增大而非减小（D 错）。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3. 为什么低压配电网（380V/220V）的供电半径通常需要严格限制在几百米（如 200m～500m）以内？</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 因为 220V 电流的传播速度远低于 10kV 电流，距离太长会导致电能无法及时送达</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 电压等级越低，传输相同功率时的电流越大，线路 $I^2 R$ 损耗与电压降随距离增加急剧恶化</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 低压线路容易产生巨大的对地电容无功充电电流，导致线路发生电磁谐振</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 国家电网规程规定 380V 电压无法穿过混凝土建筑物</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：根据 $P = \sqrt{3} U I \cos\phi$ 与 $\Delta P = 3 I^2 R$，低压网运行电压 $U$ 很低，传相同功率时线电流 $I$ 非常大。导线电阻 $R$ 与距离成正比，如果供电半径过长，巨大的电流会导致极大的线路功率损耗和末端严重低电压（选项 B 正确）。电磁波传播速度与电压无关（A 错），电容充放电主要影响高压长距离线路（C 错）。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4. 在分布式光伏高渗透的农村台区，部署“台区储能系统”核心解决的工程痛点是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 替代 10kV 变电站内的主变压器进行全省电力调频</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 在正午吸纳过剩光伏防止电压越限与配变反向过载，在晚负荷高峰放电消除末端低电压</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 将低压交流电直接转换为特高压直流电送往外省</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 提高台区光伏板的光电转换效率</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：台区储能部署在低压配变侧，核心作用是解决本地消纳与电压问题。正午光伏大发时充电“吸能”，压低台区电压并减轻变压器反向过载；夜晚高峰放电“补能”，提升末端电压（选项 B 正确）。台区储能容量较小（数十到数百 kWh），无法替代主变做全省调频（A 错），更不能直接转特高压直流（C 错）。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5. 关于现代配电网中的“智能软开关（SOP, Soft Open Point）”，以下说法正确的是：</strong></p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. SOP 是基于电力电子变流器（VSC）构建的，能够实现两条配电线路间功率的连续精准调节</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. SOP 本质上是一种机械式高压熔断器，断开速度为数秒级</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. SOP 只能传输有功功率，完全无法提供无功补偿能力</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. SOP 必须串联在发电机的定子绕组内部才能正常工作</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：智能软开关（SOP）利用背靠背电力电子变流器取代传统机械联络开关，实现了线路间有功功率的连续、毫秒级精准控制以及两端无功功率的独立补偿（选项 A 正确，BC 错误）。SOP 部署于配电网联络节点，而非发电机内部（D 错误）。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_5_4_变电站自动化.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">变电站自动化</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_6_2_中压配电网架构.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">中压配电网架构</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_5_4_变电站自动化.html">上一节：变电站自动化</a></li>
+        <li><a href="02_6_2_中压配电网架构.html">下一节：中压配电网架构</a></li>
+        <li><a href="02_6_3_低压台区与用户接入.html">相关章节：低压台区与用户接入</a></li>
+        <li><a href="02_6_4_分布式能源接入挑战.html">相关章节：分布式能源接入挑战</a></li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_6_1</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
