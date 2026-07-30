@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分布式能源接入挑战 — 配电系统 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析高比例分布式光伏与储能接入配电网引发的双向潮流、电压抬升、三相不平衡、继电保护失效与孤岛效应等核心物理挑战，并系统阐述分布式储能与智能配网的技术应对方案。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_02</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">配电系统</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">分布式能源接入挑战</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="02_6_3_低压台区与用户接入.html" class="nav-prev" title="上一节：低压台区与用户接入">← 上节</a>
+        <a href="02_7_1_五级调度体系.html" class="nav-next" title="下一节：五级调度体系">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_02</span>
+        <span class="sep">›</span>
+        <span>配电系统</span>
+        <span class="sep">›</span>
+        <span>分布式能源接入挑战</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">02_6_4</span>
+        <span class="reading-time">⏱ 约30分钟</span>
+        <span class="difficulty">🟡 中等</span>
+      </div>
+      <h1>分布式能源接入挑战：从单向被动网络到双向主动电网的物理变革</h1>
+      <p class="chapter-lead">传统配电网建立在“单向辐射供电、末端无源、电压沿途递减”的百年设计基石之上。然而，随着分布式光伏、分散式风电与用户侧储能的大规模涌入，配电网正经历从单向“被动受电网”向多电源交织“双向主动网”的深刻演进。本节将带你拆解反向功率流引发的电压抬升、保护误动与拒动、孤岛效应等核心物理挑战，并揭示分布式储能在破局承载力瓶颈中的关键工程价值。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一：理解传统配网与分布式能源接入后的根本性物理演变</strong> — 掌握从单向辐射网络向“源-网-荷-储”双向多电源网络的转变机制，厘清功率双向流动对配网运行特性的深远影响。</li>
+        <li><strong>核心目标二：深刻剖析高比例分布式能源接入引发的四大核心物理挑战</strong> — 掌握反向功率流（Reverse Power Flow）导致的电压抬升、三相电压不平衡、过流保护误动/拒动以及电能质量恶化原理。</li>
+        <li><strong>核心目标三：彻底厘清孤岛效应（Islanding Effect）与防孤岛保护机制</strong> — 理解计划外孤岛的安全隐患，掌握被动式与主动式防孤岛检测技术（如主动频率偏移法）的物理工作原理及其盲区（NDZ）。</li>
+        <li><strong>核心目标四：掌握分布式储能（DES）与智能配电网在缓解接入瓶颈中的工程应用</strong> — 了解配电网承载力评估“红黄绿”预警机制，掌握台区储能自柔性消纳、四象限无功调压（Volt-Var）与台区治理的实践方案。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：盛夏正午的“逆变器脱网潮”与危险的反向倒送电流</h2>
+      <p>在华东某“整县推进”分布式光伏示范村，2025年盛夏的一个晴朗正午12点30分，天空万里无云，阳光炽热。村里200多户村民屋顶安装的分布式光伏正在以满功率运行，整个台区光伏总发电功率高达 <strong>240kW</strong>。然而，此时正值午饭过后，村里的生产与生活用电负荷处于低谷，全台区总用电负荷仅仅只有 <strong>30kW</strong>。</p>
+      <p>多余的 <strong>210kW</strong> 清洁电力无法在本地消耗，只能通过村头配电变压器反向倒送回上级 10kV 中压配电线路。就在此时，运维监控后台突然跳出密集告警：村里位于线路末端的几十户村民家中，光伏逆变器纷纷发出急促警报，随后成片脱网停机！逆变器屏幕显示：“<strong>交流侧过压保护动作（线路电压飙升至 268.5V，远远超出国家标准规定的 220V±7% 允许上限）</strong>”。</p>
+      <p>更令人始料未及的是，几公里外的 10kV 变电站内，出线断路器突然误跳闸，整条线路瞬间停电。变电站保护记录显示：由于本条线路上的分布式光伏向隔壁发生短路的相邻线路倒送大电流，本线路的过流保护装置误以为本线路发生了严重故障！而在电网停电后，村里几台未配备合格防孤岛保护的小型逆变器居然仍在继续发电，向断电的线路反向送电，形成了极度危险的“计划外孤岛”，对准备上杆抢修的电力工人构成了严重的触电生命威胁！</p>
+      <p>为什么明明是清洁高效的光伏发电，发电量越大反而越容易把电压“撑爆”导致脱网？为什么原本安全的继电保护装置在分布式电源接入后会发生误动与拒动？要解答这些困扰新能源发展的工程痛点，我们需要深刻理解分布式能源接入对传统配电网带来的物理物理重塑。</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      
+      <!-- 第一部分 -->
+      <section>
+        <h2>一、传统配网物理架构的“天生假设”与分布式能源冲击</h2>
+        
+        <h3>1.1 传统配电网的百年基石：单向辐射状网络</h3>
+        <p>自爱迪生与特斯拉时代创立现代电力系统以来，传统配电网在设计与建造时，都默许了一个延续了上百年的根本性物理假设：<strong>电力是单向流动的</strong>。</p>
+        <p>在传统的电网物理拓扑中，电力在顶端的高压/超高压输电网生成，经由变电站逐级降压（110kV → 35kV → 10kV → 0.4kV），最终呈树枝状（辐射状拓扑，Radial Topology）输送到末端的各个工厂与家庭。在这种架构下：</p>
+        <ul>
+          <li><strong>电源位于首端</strong>：变电站是整个配电网唯一的能量注入源头；</li>
+          <li><strong>负荷位于末端</strong>：所有用户都是纯粹的电能“被动消费者”（Consumers）；</li>
+          <li><strong>潮流单向流动</strong>：电流永远从高电压等级的变电站流向低电压等级的末端用户；</li>
+          <li><strong>电压单调衰减</strong>：由于导线存在电阻与感抗，线路上的电压从变电站出口到线路末端随距离增加而单调下降。</li>
+        </ul>
+
+        <h3>1.2 什么是分布式能源（DER）？</h3>
+        <p><strong>分布式能源（Distributed Energy Resources，简称 DER）</strong>，是指直接接入 35kV 及以下中低压配电网、位于用户侧或接近负荷中心的小型发电与储能设施。其单体容量通常从几千瓦（如户用光伏）到数兆瓦（如工商业储能、分散式风电）不等。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>专业概念区分：分布式电源 vs 集中式新能源电站</strong>
+            <p>许多初学者容易混淆分布式光伏与集中式光伏电站。两者的核心物理差异在于：</p>
+            <ul>
+              <li><strong>接入电压等级</strong>：集中式光伏电站通过 110kV/330kV/500kV 输电网升压并网，直接参与主网调度；分布式电源则直接嵌入 10kV 中压线或 0.4kV 低压台区。</li>
+              <li><strong>地理分布与控制</strong>：集中式电站成片占地、集中控制；分布式电源数以百万计地分散在建筑物屋顶、园区内部，呈现极高的分散性与隐蔽性。</li>
+              <li><strong>电网侵入深度</strong>：分布式电源直接改变了配电网物理末端的电流与电压分布，对配电网安全运行的影响更为直接和剧烈。</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>1.3 从“被动受电网”到“主动双向网”的角色转变</h3>
+        <p>当千家万户的屋顶铺满光伏板、企业厂区安装起储能电站时，原本纯粹的“电能消费者”蜕变成了兼具发电与用电双重属性的“产消者”（Prosumers）。配电网的物理边界因此被彻底打破：</p>
+        <p>在正午发电高峰或储能放电时，配电网末端节点从“汲取能量的汇”变成了“注入能量的源”。这种变化使得配电网从一个静态的、可预测的、单向被动接收网络，演化变身成为一个动态的、多电源交织的、双向主动控制网络。百年配电网所依赖的电压控制、故障保护与容量规划逻辑，随之面临前所未有的物理冲击。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：单向落差引水渠 vs 末端安装高压抽水泵</strong>
+            <p>我们可以将传统配电网比作一座从山顶自来水厂（变电站）顺山势修建的“单向落差引水渠”：</p>
+            <ul>
+              <li><strong>传统单向流</strong>：水厂在最高处，水沿着主干渠和支渠顺流而下送到千家万户。水压在山顶最高，越到山脚末端水压越低。水管上的单向阀门和流量计都是按照水“从上往下流”设计的。</li>
+              <li><strong>接入分布式电源</strong>：现在，山脚下的几百户村民突然在自家水龙头装上了超大功率的高压抽水泵（光伏/储能），并在正午同时向引水管网里猛烈反向抽水！</li>
+              <li><strong>后果</strong>：原本水压最低的山脚末端，水压瞬间被抽得比山顶还高；水流在管网里开始倒流；原本防范上方洪水漏水的止回阀被逆向水流冲开导致误动作；如果山顶水厂关闸停水修水管，山脚抽水泵还在继续抽水，会导致整条水管依然带压，威胁修水管工人的生命安全。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第二部分 -->
+      <section>
+        <h2>二、核心挑战一：双向潮流与电压抬升/波动问题</h2>
+
+        <h3>2.1 潮流反向（Reverse Power Flow）的物理机制</h3>
+        <p>在配电网中，**潮流（Power Flow）**指的是电能在网络支路中的流动方向与分布。在传统配电网中，有功功率 $P$ 和无功功率 $Q$ 始终由变电站母线流向线路末端，即 $P > 0$。</p>
+        <p>当配电线路或台区接入分布式电源（DER）后，节点处的净有功功率变为：</p>
+        <p>$$P_{net} = P_{load} - P_{DER}$$</p>
+        <p>在日光强烈的正午时分，分布式光伏大发，若 $P_{DER} > P_{load}$，则净功率 $P_{net} < 0$。这意味着过剩的电能不再由电网供给用户，而是由用户侧向电网反向倒送。电流方向发生 $180^\circ$ 倒转，这就是**反向功率流（Reverse Power Flow，RPF）**。</p>
+
+        <h3>2.2 线路电压降落公式与电压抬升原理</h3>
+        <p>电压控制是配电网运行的核心指标。我国国家标准（GB/T 12325《电能质量 供电电压偏差》）规定，220V 单相供电电压偏差不得超过额定电压的 $+7\%$ 和 $-10\%$（即 198V ~ 235.4V，部分农网放宽至 $+10\%$ 即 242V）。</p>
+        <p>我们通过配电线路的简化电路物理模型来推导电压变化。假设某配电线路首端电压为 $U_0$，线路电阻为 $R$，感抗为 $X$，线路末端连接负荷与分布式电源：</p>
+
+        <p>在传统没有分布式电源时（$P_{DER}=0, Q_{DER}=0$），末端节点电压 $U$ 相对于首端电压 $U_0$ 的电压降落 $\Delta U$ 近似表达为：</p>
+        <p>$$\Delta U = U_0 - U \approx \frac{P_{load} R + Q_{load} X}{U_0}$$</p>
+        <p>由于负荷吸收有功 $P_{load} > 0$ 与无功 $Q_{load} > 0$，因此 $\Delta U > 0$，即末端电压 $U < U_0$。线路越长、负荷越大，末端电压降落越大（电压越低）。因此电网工程中会在变电站端适当调高母线电压，以补偿沿线电压降落。</p>
+
+        <p>然而，当末端接入分布式电源注入有功功率 $P_{DER}$ 和无功功率 $Q_{DER}$ 时，线路两端的电压差变为：</p>
+        <p>$$\Delta U_{DER} = U_0 - U \approx \frac{(P_{load} - P_{DER})R + (Q_{load} - Q_{DER})X}{U_0}$$</p>
+
+        <p>当正午光伏爆发性发电导致 $P_{DER} \gg P_{load}$ 时，有功项 $(P_{load} - P_{DER})R$ 变为显著的负值。中低压配电线路与高压输电线路不同，其导线截面较细，电阻 $R$ 相对很大，阻抗比 $R/X$ 往往达到 $2 \sim 5$（高压网中 $R/X \ll 1$）。因此，电阻项产生的负电压降在数值上占据绝对主导地位！</p>
+
+        <p>此时，$\Delta U_{DER} < 0$，意味着：</p>
+        <p>$$U = U_0 + \frac{(P_{DER} - P_{load})R + (Q_{DER} - Q_{load})X}{U_0} > U_0$$</p>
+
+        <p><strong>末端节点电压不仅没有下降，反而被反向“顶高”，且离变电站越远、电阻 $R$ 越大、倒送功率 $P_{DER}$ 越高，末端电压抬升（Voltage Rise）就越剧烈！</strong></p>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>核心物理规律：配电网 $R/X$ 比值与电压抬升敏感度</strong>
+            <p>在中低压配电网中，导线电阻 $R$ 远大于感抗 $X$（高阻抗特性）。这意味着<strong>节点电压幅值对有功功率 $P$ 的变化极度敏感</strong>。分布式电源注入的有功功率会直接转化为节点电压的快速上升。反向倒送功率每增加 100kW，线路末端电压可能抬升数伏至十余伏，极其容易突破 242V 的法定理性上限。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>工程危害：“越发电越脱网”的恶性循环</strong>
+            <p>当线路末端电压被抬升至 242V 以上时，逆变器会根据国家标准触发“交流过压保护”而切机脱网。一旦大量逆变器集中脱网，倒送功率瞬间消失，线路电压又骤降至正常范围；过压恢复后，逆变器经过几分钟延时重新并网发电，电压再次飙升并引发二次脱网！这种反复启停振荡不仅严重破坏电能质量，还会导致逆变器内部功率器件（IGBT）因频繁电冲击而过热烧毁。</p>
+          </div>
+        </div>
+
+        <h3>2.3 间歇性云遮与电压闪变</h3>
+        <p>分布式光伏的输出功率受气象条件影响极度剧烈。在多云天气下，一块厚重的云层漂过村庄上方，可能在短短 3~5 秒内使光伏输出功率剧降 80% 以上；云层漂走后，功率又在数秒内迅速恢复满发。</p>
+        <p>这种极高频次、大幅度的功率波动注入配电网，会导致节点电压产生剧烈的动态起伏，引发**电压闪变（Voltage Flicker）**，使居民家中的照明灯光频繁闪烁。同时，为了维持电压稳定，配变电站的**有载调压变压器（On-Load Tap Changer，OLTC）**和电容器组将被迫频繁动作。原本设计寿命长达数万次的 OLTC 机械分接头，在极高频次的切换下，可能在半年内就会严重磨损损坏。</p>
+
+        <h3>2.4 户用光伏引发的三相不平衡加剧</h3>
+        <p>我国低压 0.4kV 台区采用三相四线制（A、B、C 三相加中性线 N）。居民用户大多采用 220V 单相接入。在农村“整县推进”光伏建设中，户用光伏的安装具有高度随机性。</p>
+        <p>如果 A 相线路上安装了 50kW 光伏，而 B 相、C 相只安装了 5kW，正午时分 A 相电压会被强烈抬高（可能达到 255V），而 B 相和 C 相电压相对较低。这种严重的**三相电压不平衡（Three-phase Voltage Unbalance）**会导致：</p>
+        <ul>
+          <li><strong>零点漂移与零线过载</strong>：变压器中性点物理电位发生严重偏移，中性线（零线）中产生极大的矢量叠加电流，引发零线发热甚至烧断；</li>
+          <li><strong>三相电动机过热</strong>：接入该台区的工业或农业三相电动机（如抽水泵、加工机床）会产生反序磁场，导致电动机额外发热、效率剧降乃至烧毁。</li>
+        </ul>
+      </section>
+
+      <!-- 第三部分 -->
+      <section>
+        <h2>三、核心挑战二：继电保护与配电自动化失效</h2>
+
+        <h3>3.1 传统配网过流保护的物理前提</h3>
+        <p>为了在发生短路故障时迅速切除故障线路、保障人员与设备安全，传统 10kV 配电线路普遍装备了基于电流大小的**三段式过流保护装置**：</p>
+        <ul>
+          <li><strong>Ⅰ段：无时限电流速断保护</strong> — 针对线路首端严重短路，瞬间跳闸；</li>
+          <li><strong>Ⅱ段：限时电流速断保护</strong> — 针对线路中段故障，带极短延时跳闸；</li>
+          <li><strong>Ⅲ段：定时限过电流保护</strong> — 针对线路末端故障及过载，作为后备保护。</li>
+        </ul>
+        <p>这套运行了数十年的整定保护逻辑，建立在两个绝对前提上：<strong>1. 系统中只有一个电源（上级变电站）；2. 故障短路电流只能从变电站单向流向故障点。</strong> 然而，分布式电源的介入彻底破坏了这两个前提。</p>
+
+        <h3>3.2 故障电流反向导致的保护误动（Sympathetic Tripping）</h3>
+        <p>如图所示，假设变电站同一母线上引出了两条馈线：馈线 A 和馈线 B。馈线 A 上接入了容量较大的分布式电源（DER），而馈线 B 上没有接入。</p>
+
+        <p>当馈线 B 发生金属性短路故障时，短路点电压瞬间骤降。此时，馈线 A 上的分布式电源虽然并不位于故障馈线上，但由于其本身也是一个电势源，它会通过母线**向邻近的故障馈线 B 反向倒送巨大的短路电流**！</p>
+
+        <p>如果馈线 A 出口处的断路器装设的是普通的无方向性过流保护，该保护装置检测到流过本线路的电流超过了整定门限，就会错误地动作切断断路器！结果导致没有任何故障的馈线 A 被误跳闸切除，造成停电范围的不扩大，这种现象被称为**保护误动或越级跳闸（Sympathetic Tripping）**。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：单向安检闸口与混乱的逆向救援人群</strong>
+            <p>把馈线断路器比作“高速公路入口的单向安检闸口”，它的规则是：“只要看到有车从入口向外猛冲，就说明出大事了，立刻关闸封路”。</p>
+            <p>当隔壁车道发生车祸时，本条车道上停着的大量本地小车（分布式电源）为了帮忙，全部调转车头往隔壁故障点猛冲。入口的安检闸口看到本车道突然有大量车逆向冲出来，无法分辨这些车是去救火还是坏人逃跑，只能一律按规矩关闸封路——导致本条原本完全通畅的车道被无辜封死。这就是保护误动。</p>
+          </div>
+        </div>
+
+        <h3>3.3 故障电流“遮蔽”导致的保护拒动（Protection Blinding）</h3>
+        <p>比误动更危险的是**保护拒动（Protection Blinding）**。假设在某条配电线路的中段接入了分布式电源，而在线路末端发生了短路故障。</p>
+
+        <p>在发生故障时，故障点的总短路电流 $I_f$ 由两部分提供：来自上游变电站系统侧的电流 $I_{sys}$，以及来自线路中段分布式电源提供的电流 $I_{der}$，即：</p>
+        <p>$$I_f = I_{sys} + I_{der}$$</p>
+
+        <p>由于分布式电源在故障点上游分担注入了一很大一部分短路电流，使得从系统侧变电站流出的电流 $I_{sys}$ 显著减小。变电站出口处的保护装置只能检测到 $I_{sys}$，检测到的电流值甚至低于预先整定的过流启动门限！</p>
+
+        <p>结果是：**线路末端已经发生了严重短路起火，但上游变电站的断路器却认为电流正常而拒绝跳闸！** 故障切除延时或拒动会引发电缆绝缘烧毁、配变爆炸乃至火灾事故。</p>
+
+        <h3>3.4 非同步重合闸的二次冲击危害</h3>
+        <p>配电线路的故障中，超过 80% 属于雷击闪络、树枝碰线等**瞬时性故障**。因此，配电网普遍装备了**自动重合闸（Auto-Reclosing）**机制：断路器跳闸切断故障后，等待 0.5~1 秒让电弧熄灭绝缘恢复，随后自动重新合闸恢复供电。</p>
+        <p>当线路接入分布式电源后，如果线路发生瞬时故障跳闸，主电网侧已断开，但分布式电源未能瞬间脱网，继续支撑着线路余压。由于分布式电源缺乏大电网的频率钳制，其旋转磁场或逆变相位会迅速与电网相位发生漂移。</p>
+
+        <p>当 1 秒后主电网重合闸自动合闸瞬间，两侧电压存在极大的**相位差（Phase Angle Difference）**。这相当于在非同步状态下强行将两个独立交流电源并网，会产生高达正常额定电流 $5 \sim 10$ 倍的巨大短路冲击电流与过电压，极易直接炸毁逆变器 IGBT 模块或拉断变压器绕组！</p>
+      </section>
+
+      <!-- 第四部分 -->
+      <section>
+        <h2>四、核心挑战三：孤岛效应与防孤岛保护机制</h2>
+
+        <h3>4.1 什么是孤岛效应（Islanding Effect）？</h3>
+        <p><strong>孤岛效应（Islanding Effect）</strong>，是指当电网因故障跳闸、计划内检修或人工操作切断主电源供电时，接入配电网的分布式电源（DER）未能及时检测到停电状态并切离电网，而是继续向周围连接的局部负荷维持供电，从而形成一个**在电气上与主电网脱离、但内部自身维持运行的独立供电孤岛**。</p>
+
+        <p>孤岛分为两类：</p>
+        <ul>
+          <li><strong>计划内孤岛（Intentional Islanding）</strong>：如微电网（Microgrid）或构网型储能系统，在主电网停电时经过精心设计的无缝切换，有组织地为重要负荷（如医院、数据中心）继续独立供电；</li>
+          <li><strong>计划外孤岛（Unintentional Islanding）</strong>：由于逆变器检测失灵或控制失效，在主电网无预警停电后无意间形成的随机孤岛。<strong>计划外孤岛是电力工程中必须严格杜绝的严重安全隐患！</strong></li>
+        </ul>
+
+        <h3>4.2 计划外孤岛的三大致命危害</h3>
+        <ol>
+          <li><strong>人身触电生命危险</strong>：当线路发生故障或电网检修停电时，电力抢修人员接到停电指令，在未采取安全接地措施的情况下上杆作业。如果末端光伏逆变器形成孤岛向线路反向倒送电（俗称“反送电”），原本以为安全的停电线路瞬间带上 220V/380V 甚至经过变压器升压后的 10kV 高压，将直接引发抢修人员触电亡故事故。</li>
+          <li><strong>严重破坏用户用电设备</strong>：在孤岛运行状态下，失去了无限大容量主电网对电压和频率的强力钳制。孤岛内部的电压幅值和频率完全取决于分布式发电功率与局部负荷的动态平衡。一旦平衡打破，孤岛电压可能飙升至 300V 以上或频率漂移至 60Hz 以上，瞬间毁坏孤岛内所有通电的用户家电与敏感工业设备。</li>
+          <li><strong>引发非同步重合闸爆炸</strong>：如前文所述，主电网自动重合闸合闸时，由于孤岛内电压相位与主电网完全不一致，相角差导致的非同步并网冲击会造成破坏性设备损坏。</li>
+        </ol>
+
+        <h3>4.3 防孤岛保护（Anti-Islanding Protection）的技术原理</h3>
+        <p>为了保障电网安全，国家标准（如 GB/T 19964、GB/T 33593）严格规定：<strong>分布式电源必须具备快速可靠的防孤岛保护功能。一旦主电网失压，逆变器必须在 2.0 秒（通常要求 0.2 秒）内自动断开与电网的连接脱网！</strong></p>
+
+        <p>防孤岛检测技术主要分为两大类：**被动式检测法**与**主动式检测法**。</p>
+
+        <h4>(1) 被动式检测法（Passive Methods）</h4>
+        <p>被动式检测不改变逆变器的输出信号，仅仅通过高精度传感器实时监测逆变器并网点（PCC）的电能质量参数。当主电网断开形成孤岛时，监测以下物理量的突变：</p>
+        <ul>
+          <li><strong>过压/欠压保护（OVP/UVP）与过频/欠频保护（OFP/UFP）</strong>：监测 PCC 点电压幅值与频率是否超出正常范围（如电压 187V~242V，频率 49.5Hz~50.2Hz）；</li>
+          <li><strong>相位跳变检测（Phase Jump Detection，PJD）</strong>：主电网断开瞬间，负荷阻抗角的变化会导致并网点电压相位发生突然跳变；</li>
+          <li><strong>谐波突变检测</strong>：主电网断开后，电网的低阻抗吸收作用消失，逆变器输出的高次谐波在本地负荷阻抗上产生的谐波电压显著增加。</li>
+        </ul>
+
+        <div class="key-concept">
+          <span class="key-concept-icon">📌</span>
+          <div class="key-concept-content">
+            <strong>核心物理瓶颈：防孤岛盲区（Non-Detection Zone，NDZ）</strong>
+            <p>被动式检测存在无法克服的致命死穴——<strong>防孤岛盲区（NDZ）</strong>。当主电网切断瞬间，如果孤岛内分布式电源发电的功率 $P_{DER}, Q_{DER}$ 与本地负荷消耗的功率 $P_{load}, Q_{load}$ <strong>恰好精确相等（$\Delta P \approx 0, \Delta Q \approx 0$）</strong>，孤岛内的电压幅值和频率将完全不会发生变化！被动检测保护装置会误以为主电网依然完好，从而完全失效，无法触发脱网。</p>
+          </div>
+        </div>
+
+        <h4>(2) 主动式检测法（Active Methods）</h4>
+        <p>为了彻底消除被动式的防孤岛盲区，现代光伏与储能逆变器普遍采用了**主动式防孤岛检测技术**。其核心物理思想是：**“主动打扰、借力放大”**。</p>
+
+        <p>逆变器控制系统在输出电流或频率中，主动注入人为设计的、微小的正反馈扰动信号（如微小的频率偏移或无功扰动）：</p>
+        <ul>
+          <li><strong>电网正常并网时</strong>：主电网相当于一个容量无限大的“超级稳定器”，主电网强大的电压和频率钳制能力会瞬间吸收并抵消逆变器注入的微小扰动，并网点电压和频率依然保持标准的 50Hz；</li>
+          <li><strong>主电网断开（发生孤岛）时</strong>：失去大电网的钳制约束后，逆变器注入的微小扰动在正反馈控制回路的作用下被快速雪崩式放大！频率或电压在几十毫秒内被迅速拉飞，远超过/欠频或过/欠压保护的整定门限，强制逆变器瞬间保护跳闸。</li>
+        </ul>
+
+        <p>其中最典型的代表是**主动频率偏移法（Active Frequency Drift，AFD）**。逆变器输出电流波形在每个周期结尾处被微小拉长或缩短一个时间差 $\Delta t$。孤岛发生后，该时间差逐周期正反馈积累，使得频率迅速偏离 50Hz 触发跳闸，实现了在功率完全匹配下依然零盲区可靠切除孤岛。</p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>技术演进：从“见孤岛即切断”到“微电网无缝构网切换”</strong>
+            <p>传统的传统跟网型（Grid-Following）光伏逆变器遵循严格防孤岛规范，见孤岛必须在 0.2 秒内“自杀式脱网”。然而，随着储能技术发展，新型<strong>构网型储能（Grid-Forming BESS）</strong>打破了这一限制。它具备毫秒级孤岛识别与虚拟同步机控制能力，能够在主电网失电 10ms 内，自动从跟网模式无缝切换为构网电压源模式，既防范了向主电网反送电，又能为本地重要负荷提供不间断的“无缝微电网”支撑！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第五部分 -->
+      <section>
+        <h2>五、承载力瓶颈与分布式储能治理解决方案</h2>
+
+        <h3>5.1 配电网分布式电源承载力（Hosting Capacity）评估</h3>
+        <p>随着分布式新能源爆发式增长，一条配电线路或一个配电台区究竟最多能吸收多少分布式光伏？这引出了**配电网承载力（Hosting Capacity，简称 HC）**的概念。</p>
+        <p>配电网承载力，指的是在不破坏电网安全稳定运行、不引发电压超限、不造成设备过载的前提下，配电网所能接入的分布式电源最大累积容量。评估承载力需要受到三大物理极限的严格约束：</p>
+        <ol>
+          <li><strong>热稳定极限（Thermal Limit）</strong>：正午倒送功率不得超过配电变压器的额定容量（通常要求反向负载率不超过 80%~100%），且不得超出中低压导线的安全载流量。</li>
+          <li><strong>电压偏差极限（Voltage Limit）</strong>：反向功率引发的线路末端最高电压，不得突破国家标准上限（$+7\%$ 或 $+10\%$）。在绝大多数中低压长距离线路中，<strong>电压偏差极限往往比热稳定极限更早触发，成为限制光伏接入的首要瓶颈</strong>。</li>
+          <li><strong>短路容量与保护整定极限（Short-Circuit Limit）</strong>：分布式电源注入的短路电流累加后，不得超过现有断路器的开断遮断容量。</li>
+        </ol>
+
+        <p>国家能源局与国家电网颁布了 《DL/T 2041 分布式电源接入配电网承载力评估导则》，在全国范围内实施分布式光伏承载力“红、黄、绿”三色等级预警管理：</p>
+
+        <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem;">
+          <thead>
+            <tr style="background-color: var(--color-primary-light); color: var(--color-primary-dark); text-align: left;">
+              <th style="padding: 10px; border: 1px solid var(--color-border);">预警等级</th>
+              <th style="padding: 10px; border: 1px solid var(--color-border);">承载力剩余状态</th>
+              <th style="padding: 10px; border: 1px solid var(--color-border);">配网物理特征</th>
+              <th style="padding: 10px; border: 1px solid var(--color-border);">工程管控措施</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--color-border); font-weight: bold; color: #2E7D32;">🟢 绿色区域</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">承载力充裕</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">光伏渗透率 &lt; 50%，电压与负载均在安全范围</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">允许分布式电源直接电网接入并网</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--color-border); font-weight: bold; color: #F57C00;">🟡 黄色区域</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">承载力预警</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">光伏渗透率 50%~80%，正午末端电压接近临界上限</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">需开展针对性评估，优先配置储能或柔性调节设备</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--color-border); font-weight: bold; color: #C62828;">🔴 红色区域</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">承载力饱和受阻</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">光伏渗透率 &gt; 80%，反向倒送过载，电压严重超标脱网</td>
+              <td style="padding: 10px; border: 1px solid var(--color-border);">暂停新建分布式电源无条件并网，必须强制配置储能或改造线路</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>5.2 储能（BESS）在破局接入瓶颈中的四大工程价值</h3>
+        <p>面对分布式能源接入带来的物理瓶颈，传统手段是电网进行“大拆大建”的硬性升级（换更粗的电缆、更换更大容量的变压器），但这需要巨大的资金投入与漫长的建设周期。**分布式储能（Battery Energy Storage System，BESS）**以其高响应速度与灵活控制能力，成为了最经济高效的软性解方案。</p>
+
+        <h4>(1) 反向功率削峰与自柔性消纳</h4>
+        <p>在低压台区或线路末端部署分布式储能电站（如 100kW/215kWh 一体化台区储能柜）。在正午光伏发电高峰、功率反向倒送时，储能系统自动开启充电模式，将过剩的 100kW 电能吸纳存储到电池组中，直接消除反向功率流，将末端电压拉回合规范围；在夜间居民用电高峰期，储能系统释放电能，缓解配变重过载。实现了“正午吸峰、夜间填谷”的台区自平衡。</p>
+
+        <h4>(2) 四象限运行与 Volt-Var 动态无功调压</h4>
+        <p>储能变流器（PCS）不仅能够充放有功功率 $P$，还具备四象限运行能力，能够独立控制无功功率 $Q$ 的吸收与发出。</p>
+
+        <p>根据前述电压降落物理公式：</p>
+        <p>$$\Delta U \approx \frac{P R + Q X}{U_0}$$</p>
+
+        <p>正午光伏大发注入有功 $P > 0$，导致电阻项 $P R$ 强行把电压拉高。此时，台区储能 PCS 系统可以控制自身**吸收感性无功功率（$Q < 0$）**。由于感抗项 $Q X$ 变成负值，无功产生的负电压降可以精准抵消有功产生的正电压抬升！通过这种 **Volt-Var（电压-无功）自动控制**，无需消耗电池寿命充放有功，仅凭 PCS 的无功调节能力就能将节点电压平滑钳制在安全区间。</p>
+
+        <h4>(3) 三相不平衡与零线电流动态治理</h4>
+        <p>采用三相独立相控架构的台区储能 PCS 系统，能够实时监测台区 A、B、C 三相电流与中性线电流。当出现三相不平衡时，PCS 可以在三相间实施“跨相功率转移”——从电压偏高、光伏大发的 A 相吸收功率充电，同时向电压偏低的 B 相、C 相放电注入功率。瞬间将严重的物理三相不平衡度降至 5% 以下，中性线电流降至零附近。</p>
+
+        <h4>(4) 虚拟电厂（VPP）与柔性直流（SOP）协同聚合</h4>
+        <p>将成千上万个分散的台区储能、户用光储系统通过物联网通信聚合为**虚拟电厂（Virtual Power Plant，VPP）**。利用**智能软开关（Smart Open Point，SOP）**等电力电子设备，在相邻台区之间建立柔性直流互联，实现台区之间余缺互济与分布式能源的高比例无感消纳。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：山东聊城与浙江湖州“台区储能+光储协同”示范项目</strong>
+            <p>在山东聊城与浙江湖州等分布式光伏渗透率超过 80% 的“红区”台区，国网公司部署了 **100kW/215kWh 台区智能一体化储能系统**：</p>
+            <ul>
+              <li><strong>工程实效数据</strong>：正午光伏满发时段，台区储能系统以 80kW 功率自动充电，成功吸纳倒送功率。台区末端节点电压从原本严重的 <strong>262.5V 瞬间压降至 232.0V</strong>，彻底消除了光伏逆变器过压脱网现象。</li>
+              <li><strong>承载力提升</strong>：项目实施后，该台区在不更换配变和电缆的前提下，分布式光伏承载力提升了 <strong>35%</strong>，台区三相不平衡度由 38% 降至 4.2%，实现了光伏 100% 就地消纳与电网安全运行的双赢。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>单向至双向的物理变革</strong>：传统配电网基于“单向供电、末端无源”假设设计；分布式能源（DER）接入使其演化为“源-网-荷-储”双向主动网络，彻底改变了电流方向与电压分布。</li>
+        <li><strong>双向潮流与电压抬升</strong>：在正午负荷低谷、光伏大发时，反向功率流 $P_{net} < 0$ 穿过配变倒送。受中低压配网高阻抗（$R/X \gg 1$）影响，电阻项 $P R$ 导致线路末端电压强烈抬升，引发逆变器过压脱网与闪变。</li>
+        <li><strong>保护误动、拒动与重合闸危害</strong>：分布式电源倒送短路电流会导致邻近非故障馈线保护误动跳闸，或遮蔽故障电流导致本线路保护拒动；主电网断路器自动重合闸可能因两侧相位差引发严重的非同步并网冲击。</li>
+        <li><strong>孤岛效应与主动防孤岛</strong>：计划外孤岛威胁抢修人员生命安全与设备安全。被动防孤岛存在防孤岛盲区（NDZ），现代逆变器通过主动频率偏移（AFD）等正反馈注入技术，实现零盲区快速脱网。</li>
+        <li><strong>承载力评估与储能治理</strong>：配网承载力受热稳定、电压偏差与短路容量限制，实施“红黄绿”预警管理。分布式储能（BESS）通过削峰填谷、四象限无功调压（Volt-Var）与三相平衡治理，是破局承载力瓶颈的核心工程手段。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> 在中低压配电网中，分布式光伏大发导致线路末端节点电压反向抬升，其最根本的电路物理原因是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 配电线路感抗 $X$ 远大于电阻 $R$，反向无功功率导致电压剧烈上升</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 配电线路电阻 $R$ 相对较大，反向倒送有功功率在电阻上产生了负向电压降</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 光伏逆变器内部升压变压器输出频率过高，触发电网谐振过电压</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 配电变压器高压侧磁通饱和，导致二次侧感应电动势异常升高</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：中低压配电线路导线截面较细，电阻 $R$ 远大于感抗 $X$（阻抗比 $R/X$ 大）。根据电压降落近似公式 $\Delta U \approx \frac{(P_{load}-P_{DER})R + (Q_{load}-Q_{DER})X}{U_0}$，当光伏倒送有功功率 $P_{DER} > P_{load}$ 时，有功电阻项变成负值，使得末端电压高于首端电压，发生电压抬升。选项 A 颠倒了中低压网 $R$ 和 $X$ 的大小关系（高压网才是 $X \gg R$）；选项 C 和 D 混淆了电压抬升与谐振过电压及变压器磁饱和机制，故错。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 当配电线路中段接入分布式电源、末端发生短路故障时，容易导致上游变电站断路器保护“拒动”（ Protection Blinding ），这是因为：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 分布式电源拉高了电网频率，导致上游继电器无法识别交流信号</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 分布式电源向故障点分担注入了短路电流，使流过上游保护装置的电流减小</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 分布式电源吸收了故障点产生的全部短路电流，使线路短路电流降为零</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 逆变器过压保护抢在上游过流保护之前触发动作，切断了保护信号通道</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：当故障发生在分布式电源下游时，故障点总短路电流 $I_f = I_{sys} + I_{der}$。分布式电源注入了 $I_{der}$，分担了故障电流供给，导致从系统上游变电站流出的电流 $I_{sys}$ 显著变小，甚至低于上游过流保护的启动整定门限，从而引发保护“拒动”（遮蔽）。选项 A 错误，短路时频率不会导致继电器无法识别；选项 C 错误，分布式电源是注入电流而非吸收电流；选项 D 混淆了保护动作与信号通道逻辑。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 被动式防孤岛保护（如过/欠压、过/欠频检测）存在“防孤岛盲区（NDZ）”，发生盲区时的物理特征是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 孤岛内光伏逆变器的输出功率极大，瞬间拉飞了电压检测传感器</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 孤岛内分布式电源的发电功率与本地负荷消耗的功率恰好精确相等</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 主电网断路器动作速度过快，未给逆变器留下采样时间</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 逆变器输出的交流电谐波畸变率过低，无法达到谐波检测阈值</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：被动防孤岛检测依赖孤岛形成后电压或频率偏离正常范围。当孤岛内分布式发电功率与负荷功率完全平衡（$\Delta P \approx 0, \Delta Q \approx 0$）时，孤岛内的电压幅值和频率将维持在标准额定值，被动保护装置无法感知主电网断开，从而进入检测盲区（NDZ）。选项 A 会使电压飙升触发过压保护，不会产生盲区；选项 C 和 D 均非防孤岛盲区发生的物理充要条件。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 主动频率偏移法（Active Frequency Drift，AFD）能够实现零盲区防孤岛保护，其核心物理工作原理是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 在逆变器输出信号中注入微小频率扰动，利用失电后正反馈将频率拉飞触发保护</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 定期切断逆变器输出电流，通过检测是否有反向回波来判断电网是否存在</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 通过高频无线电通信实时接收主电网变电站出线开关的跳闸状态信号</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 连续吸收大电网的无功功率，强制使并网点电压幅值保持在临界边界</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：主动频率偏移法（AFD）在并网电流中主动注入微小的频率偏移扰动。当大电网并联连接时，大电网强行钳制系统频率为 50Hz，微小扰动被吸收；主电网失电形成孤岛后，缺乏大电网钳制，微小频率扰动在逆变器正反馈控制下雪崩放大，迅速超过过/欠频保护整定门限而触发跳闸。选项 B 属于脉冲回波法且不常用；选项 C 属于转移跳闸等外部通信法而非逆变器主动控制法；选项 D 说法错误且破坏电能质量。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 储能变流器（PCS）利用“ Volt-Var ”（电压-无功）控制动态抑制正午光伏大发引起的线路末端电压抬升，其无功调节策略是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 吸收容性无功功率，增大线路正向无功电压降</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 发出感性无功功率，利用无功电流抬高末端电压</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 吸收感性无功功率（$Q < 0$），利用负向无功电压降抵消有功倒送产生的电压抬升</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 封锁无功输出通道，将功率因数强制固定在 0.8 滞后状态</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：根据电压变化公式 $\Delta U \approx \frac{P R + Q X}{U_0}$，正午光伏倒送有功 $P > 0$ 会通过电阻项 $P R$ 导致电压升高。此时控制储能 PCS 吸收感性无功（即注入负无功 $Q < 0$），使得感抗项 $Q X$ 为负值，利用负向的无功压降去精准抵消有功造成的电压抬升，从而将节点电压维持在安全范围。选项 A、B、D 的调节方向均无法有效抑制电压抬升，甚至会加剧过压。</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="02_6_3_低压台区与用户接入.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">低压台区与用户接入</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="02_7_1_五级调度体系.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">五级调度体系</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="02_6_2_中压配电网架构.html">02_6_2 中压配电网架构</a> — 了解 10kV 配电网架与辐射网运行特性</li>
+        <li><a href="02_6_3_低压台区与用户接入.html">02_6_3 低压台区与用户接入</a> — 掌握 0.4kV 台区拓扑、配变组别与三相平衡治理</li>
+        <li><a href="02_7_1_五级调度体系.html">02_7_1 五级调度体系</a> — 了解配电网自动化与分布式能源调度响应机制</li>
+        <li><a href="../level_03/03_1_1_储能变流器PCS基本拓扑与原理.html">03_1_1 储能变流器PCS基本拓扑与原理</a> — 深入理解 PCS 四象限运行与无功控制物理机制</li>
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">02_6_4</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
