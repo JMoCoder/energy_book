@@ -1,10 +1,10 @@
 # 中国网储系统性学习手册 (energy_book)
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Version](https://img.shields.io/badge/Version-v3.5-green.svg)
+![Version](https://img.shields.io/badge/Version-v3.6-green.svg)
 ![Build Status](https://img.shields.io/badge/Deploy-GitHub%20Pages-orange.svg)
 
-> **从零基础到网储专家** —— 涵盖电能基础、电力系统、电力市场、电化学、储能设备、系统工程、商业投资与前沿技术 8 大模块 + 看懂电费单、网储投建全流程、电力市场化交易 3 大专题，全书共 **308 个独立章节**，正文约 **155 万字**。
+> **从零基础到网储专家与资产管理者** —— 涵盖电能基础、电力系统、电力市场、电化学、储能设备、系统工程、商业投资与前沿技术 8 大模块 + 6 大实战专题（看懂电费单、网储投建全流程、电力市场化交易、投后与运维监督、项目与基金测算、合规合同与风控），全书共 **352 个独立章节**，正文约 **200 万字**。
 
 ---
 
@@ -13,7 +13,7 @@
 《中国网储系统性学习手册》是一个全景式的电化学与新型储能系统知识库平台。项目采用极简轻量、零依赖的现代化前端技术架构（HTML5 + CSS3 + Standard ESJavaScript），结合高可读性的结构化 JSON 目录索引，支持单页导航、全量模糊搜索以及响应式阅读体验。
 
 ### 🌟 核心特色
-- **系统性课程体系**：从 Level 0 至 Level 8 递进式设计，覆盖物理/化学原理到百兆瓦级电站投资决策全链路；另设 SP1（看懂电费单）、SP2（网储投建全流程）、SP3（电力市场化交易）三大专题。
+- **系统性课程体系**：从 Level 0 至 Level 8 递进式设计，覆盖物理/化学原理到百兆瓦级电站投资决策全链路；另设 SP1~SP6 六大实战与资管专题（含电费单负荷诊断、投建全流程、市场化交易、投后与运维监督、项目与基金测算实战、合规合同与风险管控）。
 - **PWA 全平台原生体验**：全面支持 Windows/Linux/macOS 桌面端及 Android/iOS Safari 手机端 PWA 渐进式应用安装，提供原生独立窗口交互与一键添加到主屏幕。
 - **开箱即用与离线缓存**：内置 Service Worker 动态缓存机制，支持无网络（Offline）环境下的流畅章节阅读与双击 `index.html` 零依赖离线使用。
 - **现代化视觉与 UI/UX**：内置响应式布局、高亮卡片导航、搜索筛选与难度标记。
@@ -38,7 +38,7 @@ energy_book/
 │       └── deploy.yml        # GitHub Actions 自动化部署工作流
 ├── data/
 │   └── toc.json              # 目录大纲与元数据索引（存储章节映射与完成状态）
-├── chapters/                 # 章节正文目录 (按 Level 划分子目录)
+├── chapters/                 # 章节正文目录 (按 Level / SP 划分子目录)
 │   ├── level_00/             # Level 0 写在前面
 │   ├── level_01/             # Level 1 电能基础知识
 │   ├── level_02/             # Level 2 电力系统
@@ -50,7 +50,10 @@ energy_book/
 │   ├── level_08/             # Level 8 前沿技术与专家视野
 │   ├── sp_01/                # TOPIC SP1 看懂电费单与负荷曲线
 │   ├── sp_02/                # TOPIC SP2 网储投建全流程
-│   └── sp_03/                # TOPIC SP3 电力市场化交易专题
+│   ├── sp_03/                # TOPIC SP3 电力市场化交易专题
+│   ├── sp_04/                # TOPIC SP4 储能资产投后与运维监督
+│   ├── sp_05/                # TOPIC SP5 网储项目与基金测算实战
+│   └── sp_06/                # TOPIC SP6 储能合规合同与风险管控
 ├── assets/                   # 静态资源目录（图片、样式、PWA 图标与安装引擎）
 │   ├── css/main.css          # 全局主样式表（包含 PWA 安装按钮与 Modal 样式）
 │   ├── js/pwa-install.js     # 跨平台 PWA 安装唤起与网络状态监测引擎
@@ -66,10 +69,10 @@ energy_book/
 {
   "meta": {
     "title": "中国网储系统性学习手册",
-    "version": "v3.5",
-    "lastUpdated": "2026-07-29",
-    "totalSections": 308,
-    "totalWords": 1550000
+    "version": "v3.6",
+    "lastUpdated": "2026-07-30",
+    "totalSections": 352,
+    "totalWords": 2000000
   },
   "levels": [
     {
