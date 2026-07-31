@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电化学势与标准电极电位 — 电化学基础 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电化学势与标准电极电位的核心物理原理、工程应用与实战案例。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ① 顶部固定导航栏 -->
+  <nav class="top-nav" id="top-nav">
+    <div class="top-nav-inner">
+      <a href="../../index.html" class="nav-home" title="返回主页">
+        <span class="nav-home-icon">⚡</span>
+        <span class="nav-home-text">网储手册</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="nav-level">LEVEL_04</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-chapter">电化学基础</span>
+        <span class="nav-sep">›</span>
+        <span class="nav-section">电化学势与标准电极电位</span>
+      </div>
+      <div class="nav-chapter-jump">
+        <a href="04_1_2_电极与电解质.html" class="nav-prev" title="上一节：电极与电解质">← 上节</a>
+        <a href="04_1_4_法拉第定律.html" class="nav-next" title="下一节：法拉第定律：量化电化学">下节 →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ② 章节页眉 -->
+    <header class="chapter-header">
+      <div class="breadcrumb">
+        <span class="level-tag">LEVEL_04</span>
+        <span class="sep">›</span>
+        <span>电化学基础</span>
+        <span class="sep">›</span>
+        <span>电化学势与标准电极电位</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="file-id">04_1_3</span>
+        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="difficulty">🟢 入门</span>
+      </div>
+      <h1>电化学势与标准电极电位</h1>
+      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+    </header>
+
+    <!-- ③ 学习目标 -->
+    <section class="learning-goals">
+      <h2>📚 本节学习目标</h2>
+      <ul>
+        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
+        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
+        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+      </ul>
+    </section>
+
+    <!-- ④ 场景引入 -->
+    <section class="scene-intro">
+      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
+      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+    </section>
+
+    <!-- ⑤ 正文内容 -->
+    <main class="chapter-content">
+      <section>
+        <h2>一、[主题一]</h2>
+        <p>正文内容（目标 5,000+ 字）……</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：[概念名称]</strong>
+            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>二、[主题二]</h2>
+        <p>正文内容……</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：[项目/政策名称]</strong>
+            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ⑥ 本节小结 -->
+    <section class="chapter-summary">
+      <h2>📝 本节小结</h2>
+      <ul>
+        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
+        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
+        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+      </ul>
+    </section>
+
+    <!-- ⑦ 知识测验 -->
+    <section class="quiz-section">
+      <h2>❓ 知识测验</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q1">
+        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+        </div>
+        <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+        </div>
+      </div>
+
+      <button class="btn-check-answer" onclick="checkAnswers()">查看答案与解析</button>
+      <p class="quiz-score" id="score-display"></p>
+    </section>
+
+    <!-- ⑧ 章节底部导航 -->
+    <nav class="bottom-nav">
+      <a href="04_1_2_电极与电解质.html" class="bottom-nav-prev">
+        <span class="bnav-label">← 上一节</span>
+        <span class="bnav-title">电极与电解质</span>
+      </a>
+      <a href="../../index.html" class="bottom-nav-home">🏠 主页</a>
+      <a href="04_1_4_法拉第定律.html" class="bottom-nav-next">
+        <span class="bnav-label">下一节 →</span>
+        <span class="bnav-title">法拉第定律：量化电化学</span>
+      </a>
+    </nav>
+
+    <!-- ⑨ 相关章节 -->
+    <section class="cross-refs">
+      <h2>🔗 相关章节</h2>
+      <ul class="cross-ref-list">
+        <li><a href="../../index.html">返回目录主页</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑩ 页脚 -->
+    <footer class="chapter-footer">
+      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">04_1_3</span></p>
+    </footer>
+
+  </div>
+
+  <!-- 返回页首悬浮按钮 -->
+  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+
+  <script src="../../assets/js/quiz.js"></script>
+</body>
+</html>
