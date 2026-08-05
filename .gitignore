@@ -23,3 +23,5 @@ build/
 # User runtime data
 data/user_data/
 
+# Documents (excluded from git)
+documents/

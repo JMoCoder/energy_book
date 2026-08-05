@@ -403,10 +403,17 @@ a:hover { text-decoration: underline; }
 }
 
 /* ── 11. 数据表格 ───────────────────────────────────────────────── */
+.table-wrapper,
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+}
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5rem 0;
+  margin: 0;
   font-size: var(--text-sm);
   background: var(--c-bg-card);
   border-radius: var(--radius-md);
