@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>场景适配选择原则 — 储能技术路线总览 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析场景适配选择原则的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析电力系统在发电侧、电网侧与用户侧不同场景下储能技术的选择原则，解构功率型、能量型与容量型储能的适配逻辑，详述度电成本（LCOS）、调频里程与充放电深度的工程应用与真实案例。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,65 +57,398 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">05_1_4</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>场景适配选择原则</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">储能选型不是简单的技术堆砌，而是物理特性、经济账本与安全红线在特定场景下的最佳交汇。本节将为你揭示如何为不同的电网需求精准选配最适合的技术路线。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>掌握电力系统场景划分</strong>：能够清晰划分发电侧、电网侧、用户侧储能的应用需求，并理解其对功率和能量特性的不同侧重。</li>
+        <li><strong>理解关键选型参数的物理意义</strong>：深入理解储能时长、调频里程、充放电深度对电池寿命及电站收益的影响机制。</li>
+        <li><strong>算清项目经济账本</strong>：掌握度电成本（LCOS）与全生命周期成本（TCO）的构成及工程估算方法。</li>
+        <li><strong>识别政策与安全红线</strong>：掌握中国主要安全规程及“二十五项反措”对储能选型的一票否决规则。</li>
+        <li><strong>掌握工程比选方法论</strong>：能够运用四步决策流和混合储能匹配方法，独立完成实际电网工程的储能技术方案比选。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：一次盲目配储引发的“半年退化危机”</h2>
+      <p>2023年，我国西北某风光储一体化项目正式并网。为了满足电网“按新能源装机容量10%配置2小时储能”的硬性要求，开发商采购了一套标准的磷酸铁锂（Lithium Iron Phosphate，LFP）能量型电能存储系统。由于该地区风光波动剧烈，且当地电网调频辅助服务收益丰厚，项目业主在并网后直接将这套储能电站投入到高频次的“一次调频”服务中。</p>
+      <p>然而，仅仅运行了六个月，现场就拉响了警报：电池系统频繁出现局部超温告警，部分电芯的健康状态（State of Health，SOH）骤降至82%，整个系统的可用容量衰减了近20%，不得不被迫停机。电网公司因该站无法满足调频响应速度和持续时间，开出了高额罚单，开发商不仅没赚到调频辅助服务的钱，反而面临着电芯提前报废、系统重构的巨大经济损失。</p>
+      <p>为什么本应能用十年的电池，在短短半年内就“衰老致残”？根本原因在于**场景错配**。这套系统设计之初是为了每天充放电一到两次的缓慢“能量搬移”而设计的，却被强行安排去干需要毫秒级响应、充放电高频切换的“功率调频”粗活。这就像让一个长跑运动员去跑高密度的折返跑，结果必然是身体崩溃。如何根据不同的应用场景，科学、严谨地选择匹配的技术路线？这就是本节要探讨的核心问题。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+      
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、电网需求多维象限与储能角色的深度解构</h2>
+        <p>在复杂的电力系统中，储能并非单一功能的“蓄电池”，而是扮演着多重角色。要实现储能的精准选型，首先需要将电网的需求划分到不同的物理和时间维度中。从宏观上看，储能的应用场景可以被划分为三个核心需求象限：功率型、能量型和容量型。</p>
+        
+        <h3>1. 功率型、能量型与容量型储能的本质差异</h3>
+        <p>这三类储能的核心区别在于其**放电持续时间**以及**响应速度**的要求不同：</p>
+        <ul>
+          <li><strong>功率型（Power-oriented）</strong>：这类场景要求储能系统在极短的时间内（毫秒级至秒级）爆发出极大的功率，通常不需要持续太长时间（一般在几秒钟到15分钟之间）。其核心任务是稳定系统频率、抑制电网电压瞬时闪变。</li>
+          <li><strong>能量型（Energy-oriented）</strong>：这类场景要求储能系统提供数小时的平稳功率输出（通常为1至4小时）。其主要用于新能源的平滑出力、削峰填谷以及工商业的峰谷套利。</li>
+          <li><strong>容量型（Capacity-oriented）</strong>：这类场景要求储能系统提供更长跨度的能量支撑，放电时间通常在4小时以上，甚至达到数天、数周。其目标是应对季节性负荷缺口、区域停电备用等重大电网安全保障。</li>
+        </ul>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：储能时长（Storage Duration）</h4>
+          <p>储能时长是指储能系统以额定功率连续放电所能持续的时间。其数学定义为：系统额定能量（瓦时）与系统额定功率（瓦特）的比值。例如，一个 10 MW / 20 MWh 的储能系统，其储能时长就是 20 MWh / 10 MW = 2 小时。</p>
+        </div>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：水流、水坝与阀门</strong>
+            <p>如果把电能流转类比为供水系统：</p>
+            <p><strong>功率型储能</strong>就像是水管上的快速气动阀门与稳压安全阀。当水压（电网频率）因外部波动突然骤增或骤减时，阀门必须在毫秒级时间内打开或关闭，释放掉多余的压力或补水。它不需要很大容积的水罐，但对阀门的反应速度和耐受频繁摩擦（循环寿命）的能力要求极高。</p>
+            <p><strong>能量型储能</strong>就像是一个中型的家用储水箱。水箱在水价低（谷电）或多余供水时接水，在停水或用水高峰（峰电）时放水供全家洗澡使用。水箱需要两三个小时才能装满或放空，它不需要阀门能在千分之一秒内反应，但需要保证较高的装水/放水效率（充放电效率），不能在漏水（自放电）上浪费太多。</p>
+            <p><strong>容量型储能</strong>则是一个巨大的水库。它的主要任务是防汛和抗旱，将梅雨季节的洪水积蓄起来，等到几个月后的旱季再缓慢放水灌溉农田。它在短期内无法提供极速的压力调节，但必须拥有超乎想象的蓄水容量（超长储能时长）和极低的长期存储损耗。</p>
+          </div>
+        </div>
+
+        <h3>2. 响应时间与持续时间的物理尺度划分</h3>
+        <p>我们用图一将不同场景的物理需求可视化。横轴代表响应速度，纵轴代表持续放电时间。可以清晰地看出，抽水蓄能、压缩空气等机械储能，全钒液流电池等化学储能，以及磷酸铁锂、飞轮储能等，分别占据了不同的性能区间。没有任何一种单一的技术能够同时在毫秒级响应、百兆瓦级功率、十小时级持续时间这三个维度上做到极致。因此，场景适配的本质就是根据电网在时间与空间上的不同痛点，选择落在对应象限的技术路线。</p>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 400" width="100%" height="100%" style="background-color: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+            </defs>
+            
+            <line x1="80" y1="340" x2="740" y2="340" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="80" y1="340" x2="80" y2="40" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <text x="740" y="365" font-size="14" fill="#1A1A2E" font-weight="600" text-anchor="end">响应速度 (从慢到快) →</text>
+            <text x="95" y="55" font-size="14" fill="#1A1A2E" font-weight="600" text-anchor="start">放电持续时间 (由短到长) ↑</text>
+            
+            <!-- 容量区 -->
+            <rect x="90" y="60" width="240" height="120" rx="6" fill="#F8F9FA" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="210" y="90" font-size="14" fill="#4A5568" font-weight="600" text-anchor="middle">容量/长时储能区 (LDES)</text>
+            <text x="210" y="115" font-size="12" fill="#718096" text-anchor="middle">抽水蓄能、压缩空气、液流电池</text>
+            <text x="210" y="135" font-size="12" fill="#718096" text-anchor="middle">（4小时 - 数天）</text>
+            
+            <!-- 能量区 -->
+            <rect x="360" y="100" width="350" height="130" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="535" y="135" font-size="15" fill="#1A5F96" font-weight="600" text-anchor="middle">能量型储能区 (Energy Storage)</text>
+            <text x="535" y="165" font-size="13" fill="#1A1A2E" text-anchor="middle">磷酸铁锂电池、钠离子电池</text>
+            <text x="535" y="190" font-size="12" fill="#4A5568" text-anchor="middle">（1小时 - 4小时，如新能源配储、工商业套利）</text>
+            
+            <!-- 功率区 -->
+            <rect x="420" y="245" width="290" height="80" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="565" y="270" font-size="15" fill="#F57C00" font-weight="600" text-anchor="middle">功率型储能区 (Power Services)</text>
+            <text x="565" y="295" font-size="13" fill="#1A1A2E" text-anchor="middle">飞轮储能、超级电容器、高倍率锂电</text>
+            <text x="565" y="315" font-size="12" fill="#4A5568" text-anchor="middle">（毫秒 - 分钟级，如一次调频、电能质量）</text>
+            
+            <!-- 刻度 -->
+            <text x="160" y="355" font-size="12" fill="#718096" text-anchor="middle">分/小时级</text>
+            <text x="380" y="355" font-size="12" fill="#718096" text-anchor="middle">秒级</text>
+            <text x="600" y="355" font-size="12" fill="#718096" text-anchor="middle">毫秒级</text>
+            
+            <text x="70" y="300" font-size="12" fill="#718096" text-anchor="end">秒/分级</text>
+            <text x="70" y="200" font-size="12" fill="#718096" text-anchor="end">小时级</text>
+            <text x="70" y="100" font-size="12" fill="#718096" text-anchor="end">天/周级</text>
+          </svg>
+          <figcaption>图一：储能应用场景技术适配象限图</figcaption>
+        </figure>
+
+        <h3>3. 中国电网结构特征对储能技术需求的强约束</h3>
+        <p>中国电网具有独特的“强直弱交”与“特高压集中送端、高负荷密度受端”的空间特征。这导致了电网对储能的需求不仅取决于物理参数，更受到电网空间维度的强力约束。在西北等大型新能源基地送端系统，系统惯量极低，新能源出力的剧烈波动和特高压直流断线故障会直接威胁电网的安全稳定。此时，电网极其渴望具备快速功率支撑能力的技术路线，不仅要求储能具有高响应速度，更要求其具备构网能力。</p>
+        <p>这就形成了中国储能市场的特有格局：在特高压送端侧，大容量电站正逐步推广“构网型变流器（Grid-forming Power Conversion System）”，并配合能在秒级响应的功率型储能；而在受端负荷中心，则主要强调削峰填谷的能量搬移，以减轻电网在尖峰负荷时段的输配电通道压力。</p>
+      </section>
+
+      <section>
+        <h2>二、场景适配的技术与经济性评价工具箱</h2>
+        <p>在了解电网需求的物理象限后，我们需要一套系统性的评价体系，将不同储能技术方案放在统一的天平上进行衡量。这套评价体系由两大部分组成：技术性能指标与经济性评估账本。</p>
+        
+        <h3>1. 技术层面的多维指标</h3>
+        <p>不同储能技术的关键性能参数存在极大跨度。为了指导工程实践，我们可以参考下表对主流储能技术路线进行横向比选：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>技术路线</th>
+                <th>系统能量效率 (RTE)</th>
+                <th>全生命周期循环寿命</th>
+                <th>响应时间</th>
+                <th>典型储能时长</th>
+                <th>平均系统造价 (元/Wh)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>磷酸铁锂电池 (LFP)</strong></td>
+                <td>85% - 92%</td>
+                <td>6,000 - 10,000 次</td>
+                <td>&lt; 20 毫秒</td>
+                <td>1 - 4 小时</td>
+                <td>0.8 - 1.1</td>
+              </tr>
+              <tr>
+                <td><strong>钠离子电池 (SIB)</strong></td>
+                <td>80% - 85%</td>
+                <td>3,000 - 5,000 次</td>
+                <td>&lt; 20 毫秒</td>
+                <td>1 - 4 小时</td>
+                <td>0.6 - 0.9 (成熟期)</td>
+              </tr>
+              <tr>
+                <td><strong>全钒液流电池 (VRFB)</strong></td>
+                <td>70% - 75%</td>
+                <td>15,000 - 20,000 次</td>
+                <td>&lt; 50 毫秒</td>
+                <td>4 - 10 小时</td>
+                <td>2.0 - 3.0</td>
+              </tr>
+              <tr>
+                <td><strong>抽水蓄能 (PHS)</strong></td>
+                <td>75% - 80%</td>
+                <td>&gt; 30,000 次</td>
+                <td>数分钟</td>
+                <td>&gt; 6 小时</td>
+                <td>0.3 - 0.5 (折合容量)</td>
+              </tr>
+              <tr>
+                <td><strong>飞轮储能 (FESS)</strong></td>
+                <td>85% - 90%</td>
+                <td>&gt; 1,000,000 次</td>
+                <td>&lt; 5 毫秒</td>
+                <td>数秒 - 15分钟</td>
+                <td>8.0 - 15.0</td>
+              </tr>
+              <tr>
+                <td><strong>先进压缩空气 (CAES)</strong></td>
+                <td>60% - 70%</td>
+                <td>&gt; 20,000 次</td>
+                <td>数分钟</td>
+                <td>&gt; 4 小时</td>
+                <td>0.7 - 1.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. 经济层面的度电成本与全生命周期成本估算方法</h3>
+        <p>在商业化运营中，选择哪种技术路线，其核心驱动力是**经济可行性**。开发商和投资者常用度电成本（Levelized Cost of Storage，LCOS）来衡量项目全生命周期的经济表现。为了帮助大家直观理解这一概念，我们先建立一个概念性的认知，再给出具体的核算公式。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：度电成本（LCOS）</h4>
+          <p>LCOS 指的是储能电站在整个全生命周期内，每向电网放出一度电（1 kWh）所必须分摊的综合成本，它将初始建站投资、全生命周期运维开支和充电成本综合平均化。</p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：共享单车的“每公里出行成本”</strong>
+            <p>假设你购买了一辆高品质的共享单车供自己长期使用：</p>
+            <p>你的<strong>初始买车钱</strong>就是初始建站投资（CAPEX）。你骑行期间更换轮胎、链条加润滑油的<strong>维护费用</strong>就是年度运维成本（OPEX）。由于你是骑车出行，你每天吃饭消耗的热量折合的<strong>食物开销</strong>，就相当于储能系统充电所需的充电成本。</p>
+            <p>如果你为了省钱买了一辆便宜但极易生锈的劣质自行车，骑了50公里车架就断裂报废了，那么折算下来你“每公里出行成本”会高得惊人。相反，如果你花高价买了一辆坚固耐用、免维护且传动效率极高的山地车，虽然买车时花了重金，但它陪你骑行了50,000公里没有发生任何故障，平摊下来你“每公里出行成本”就会极其低廉。这就是为什么在频繁循环的场景下，不能只盯着建站初置成本，而必须综合衡量度电成本（LCOS）的本质原因。</p>
+          </div>
+        </div>
+
+        <p>在工程分析中，度电成本（LCOS）通常采用折现的方法进行精细评估。下面是应用最为广泛的 LCOS 经典计算式：</p>
+        <p>$$LCOS = \frac{I_0 + \sum_{t=1}^{N} \frac{M_t + C_t}{(1+r)^t}}{\sum_{t=1}^{N} \frac{E_{dis,t}}{(1+r)^t}}$$</p>
+        <p>在这个等式中，分子代表了全生命周期的总支出折现值，分母代表了全生命周期的总放电量折现值：</p>
+        <ul>
+          <li><strong>$I_0$</strong>：储能系统的初始资本支出（Capital Expenditure，CAPEX），即电站总建设投资（元）。</li>
+          <li><strong>$M_t$</strong>：第 $t$ 年的运营维护与设备更换成本（Operational Expenditure，OPEX），包括电芯退化后中期补芯或电池组局部更换的开支。</li>
+          <li><strong>$C_t$</strong>：第 $t$ 年的充电成本（元），即年度充电电量乘以当地充电平均电价。</li>
+          <li><strong>$E_{dis,t}$</strong>：第 $t$ 年的系统累计放电电量（kWh），受电芯退化衰减和年运行天数的影响。</li>
+          <li><strong>$r$</strong>：项目的资金折现率，代表资金的时间成本。</li>
+          <li><strong>$N$</strong>：储能电站的运营寿命期（年）。</li>
+        </ul>
+        <p>通过该式可以看出，要想降低 LCOS，一方面要降低分子中的初始建站成本 $I_0$ 和运维成本 $M_t$，并提高系统效率以减少充电成本 $C_t$；另一方面必须增大分母，即选择循环寿命长、衰减慢的技术，从而在生命周期内放出更多的电量。</p>
+
+        <h3>3. 政策准入与安全红线下的“一票否决”制</h3>
+        <p>如果说 LCOS 决定了项目“能赚多少钱”，那么安全与政策则决定了项目“能不能开工”。在中国，储能的选型必须首先通过严格的合规性审查与安全红线检验。</p>
+        
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>国家政策约束：国家能源局“二十五项反措”</strong>
+            <p>2022年6月，国家能源局印发了《防止电力生产事故的二十五项重点要求（2022年版）》，其中第2.12节关于“防止电化学储能电站火灾事故”做出了极其严苛的硬性规定：</p>
+            <p><strong>“中大型电化学储能电站不得选用三元锂电池、钠硫电池，不宜选用梯次利用动力电池。”</strong></p>
+            <p>这一条款直接切断了三元锂电池在国内大中型网侧、源侧储能电站中的应用可能，使得磷酸铁锂（LFP）和非可燃的液流电池迅速成为绝对主导。即使三元锂电池的能量密度更高，但在国家级安全红线面前，直接面临“一票否决”。</p>
+          </div>
+        </div>
+        
+        <p>除了电池种类的限制，安装位置也有严格的消防政策规范。例如根据国家标准《电化学储能电站设计规范》（GB 51048），电化学储能电池室不应设置在人员密集场所的上一层、下一层或贴邻，且除专用应急备用电源外，锂电池系统严禁设置在地下室或高层建筑的内部。在这些受限空间场景下，若必须部署储能，设计人员往往必须改用安全性极高、完全无热失控风险的全钒液流电池，或者采用铅炭电池技术路线。安全硬约束直接凌驾于经济账本之上，成为场景选型适配的“第一道关卡”。</p>
+      </section>
+
+      <section>
+        <h2>三、发输电侧典型应用场景及技术适配原则</h2>
+        <p>在发输电侧（电源侧和主网输电侧），储能通常呈现出兆瓦（MW）乃至百兆瓦级的大型化特点，主要用于平滑新能源出力、参与系统调频以及辅助主网潮流控制。以下我们对两个最典型、也是利润与痛点最集中的应用场景进行深度剖析。</p>
+        
+        <h3>1. 发电侧新能源配储：平滑出力与减少弃电的折中选择</h3>
+        <p>为了保障电网消纳安全，我国多数省份要求风电、光伏电站强制配置一定比例（如装机容量的10% - 20%）的储能系统。在此场景下，储能的主要工作是“能量搬移”：在中午光伏大发或夜间风电大发但电网无法消纳时，将电能存下来；在傍晚用电高峰或电网有空间时释放。这类应用对响应速度要求一般，但要求储能系统具有较高的转换效率（RTE）和适中的建设成本。</p>
+        <p><strong>技术适配建议</strong>：当前最适配的技术路线依然是磷酸铁锂电池（LFP），其 RTE 高达 90% 左右，建设造价低廉。然而，随着新能源消纳红线的推移，青海、甘肃等省份逐步要求配储时长延长至4小时及以上。随着时长要求的增加，全钒液流电池（VRFB）和先进压缩空气储能（CAES）的每瓦时边际容量成本将逐步显现优势，正成为长时配储的热门比选方案。</p>
+
+        <h3>2. 发电侧火储联合调频：极高频次微循环下的寿命考验</h3>
+        <p>我国火电厂联合储能参与电网辅助服务调频，是目前电化学储能商业化变现最为成功的场景之一。电网的频率控制可以分为一次调频和二次调频。传统的燃煤机组由于热力系统具有热惯性和机械迟滞，响应电网自动发电控制（Automatic Generation Control，AGC）指令的速度慢（通常需数十秒甚至数分钟），且调节精度低、容易出现超调或反调。火电厂配置高倍率储能系统（通常为 0.5C 到 2C 的高倍率电池系统）后，由储能系统负责前期的极速响应，火电机组随后缓慢爬坡接替，能够显著提升联合调频机组的综合调频性能指标。</p>
+        <p>然而，调频场景对储能的充放电要求极度苛刻：储能系统需要根据电网频率波动不断进行“浅充浅放”的快速切换，每天的微循环次数可能高达数百次。如果采用普通的能量型锂电池，会在极短时间内因循环寿命耗尽而报废。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：调频里程（Regulation Mileage）</h4>
+          <p>调频里程是指储能系统或发电机组在参与电网调频辅助服务时，响应调度指令所产生的有功功率调节输出绝对值的累加之和。调频里程直接体现了储能系统“干了多少活”，而不是其“容量有多大”。</p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：出租车费与停放车位</strong>
+            <p>如果你的储能电站是一辆出租车：</p>
+            <p><strong>额定容量</strong>就像是这辆车停在停车场里所占的车位大小。如果你只是做传统的削峰填谷（能量型储能），出租车每天只跑两趟长途，上午跑一趟，下午跑一趟，车费（收益）主要取决于你的车能装多少货（容量）。</p>
+            <p>而在<strong>调频场景</strong>下，出租车是在火车站出站口拉短途旅客，司机必须不断地起步、加速、减速、刹车、倒车。虽然这辆车可能一天下来都没有驶出方圆十公里，但它一天里起停了几百次，车轮摩擦转动累积的总物理距离——也就是**调频里程**——非常庞大。调频辅助服务的结算机制就是根据这个累计的行程计费。如果出租车的发动机零件不耐磨（循环寿命差），在频繁的起停摩擦下很快就会损坏。因此在调频场景下，我们必须选用性能极其强韧、耐磨损的“特种赛车”（功率型储能）。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>真实案例：山西火储联合调频项目选型博弈</strong>
+            <p>在山西电网AGC调频辅助服务市场中，调频补偿直接与调频里程和性能系数挂钩。山西某 2×600 MW 燃煤电厂为了提升机组竞争力，计划在电厂内部增设一套 18 MW / 9 MWh 的火储联合调频系统。</p>
+            <p>在方案比选中，设计院提供了两套技术路线比选：方案一是采用常规的 0.5C 磷酸铁锂电池，初始 CAPEX 仅为 1100 万元，但预计在每天数百次快速浅充放循环下，电池仅能维持 1.5 年；方案二是采用 2C 高倍率磷酸铁锂电池（配有增强型石墨负极和液冷散热），初始 CAPEX 达 1650 万元（高出50%），但预期寿命可达 5 年以上，且能够维持更高的平均性能系数。经过全生命周期 LCOS 测算，虽然方案二初始投资较大，但由于其调频里程衰减极慢，其每兆瓦调频里程的均摊成本远低于方案一，项目最终选用方案二并取得了优秀的投资回报。这证明了在高频调频工况下，功率型/倍率型特性的适配性优于单纯的成本导向选型。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>四、电网侧及用户侧典型应用场景与适配选型</h2>
+        <p>相比于发输电侧，电网侧与用户侧储能更贴近负荷中心，其商业模式更为多元，受空间、安全和投资回收期的约束也更为直接。本节主要剖析电网侧共享储能与用户侧工商业储能的适配逻辑。</p>
+        
+        <h3>1. 电网侧共享/独立储能电站：以多重商业模式为导向的长寿命需求</h3>
+        <p>独立/共享储能电站通常由第三方投资建设，不直接绑定单一风光电厂，而是作为独立的市场主体参与电力运行。在中国的电力市场环境下，共享储能通常具有“多重收益叠加”的商业模式，包括新能源容量租赁费、电力现货市场峰谷差价套利、以及电网调峰/调频辅助服务补偿。这意味着，共享储能电站每天可能需要根据调度指令进行“一充一放”甚至“两充两放”，并且在过渡时段协助进行系统紧急备用。高频的调用模式对电池的全生命周期循环寿命和效率提出了双重挑战。</p>
+        <p><strong>适配原则</strong>：电网侧共享储能电站单体规模大（通常在 100 MW / 200 MWh 以上），对初始投资和建设周期极其敏感。目前，2小时至4小时的磷酸铁锂电池系统在这一场景中占据了95%以上的份额。但是，对于大容量、长时间放电的示范性电网侧调峰电站，全钒液流电池凭借其无热失控风险、活性物质可循环再生、以及在 100% 充放电深度下仍能运行 20,000 次以上的超长寿命特性，正逐步在一些国家级示范项目中替代锂离子电池作为长时段（4小时以上）调峰的首选。</p>
+
+        <h3>2. 用户侧工商业削峰填谷：极致效率、高安全与紧凑占地的要求</h3>
+        <p>用户侧工商业储能的核心盈利机制非常纯粹——**峰谷套利（Peak-Valley Arbitrage）**。企业在夜间低谷电价时充电，在白天高峰电价时放电供工厂生产使用，从而赚取高额的电价差额。在中国工商业配电网中，用户侧储能通常具有以下显著特点：一是距离负荷极近，设备通常紧邻厂房、车间或配电室，安全要求极为苛刻；二是土地成本高或占地受限，要求储能系统具有极高的能量密度；三是投资回收期要求紧凑，业主通常期望在5至6年内收回成本。</p>
+        <p><strong>适配原则</strong>：工商业储能目前几乎百分之百采用磷酸铁锂集成一体柜。这是因为 LFP 能够提供最佳的体积能量密度与 RTE 组合，同时在规模量产后系统造价非常低。然而，为了在不损害电池寿命的前提下榨取最大的峰谷套利价差，工商业储能项目的日常运行控制必须精确管理其充放电深度。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：充放电深度（Depth of Discharge，DoD）</h4>
+          <p>充放电深度是指电池释放的容量占其额定容量的百分比。如果一个电池充满了电，然后放出了 80% 的能量，其 DoD 就是 80%。DoD 的大小与电池内部活性物质的结构应力紧密相关，直接决定了电池的循环寿命。</p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：拉伸橡皮筋的拉力与疲劳度</strong>
+            <p>你可以把电池中锂离子的嵌入和脱出过程，类比为反复拉伸一根橡皮筋：</p>
+            <p>如果你每次都把橡皮筋拉到极限长度（相当于 100% DoD 深度放电），橡皮筋内部的分子链会承受极大的张力，拉伸几次之后，橡皮筋就会发生永久的塑性形变，迅速变松并最终断裂。这对应着电池材料晶格的崩塌和活性物质的脱落。</p>
+            <p>相反，如果你每次拉伸橡皮筋时，只拉到它最大长度的 80%（相当于 80% DoD 浅放电），橡皮筋就能一直工作在舒适的弹性形变区间。虽然你每次拉伸释放的拉力（放电容量）稍微变少了一点，但这根橡皮筋可以反复拉伸上万次而不会失去弹性。在工商业储能的日常运维中，通过限制最大放电深度，虽然牺牲了单次的部分放电量，但能让电站的经济寿命翻倍。</p>
+          </div>
+        </div>
 
         <div class="callout callout-case">
           <span class="callout-icon">🏗️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>真实案例：浙江某制造工厂“两充两放”DoD控制方案</strong>
+            <p>浙江省某精密制造企业安装了一套 1 MW / 2 MWh 的工商业储能系统，利用浙江省特有的“两充两放”电价政策（即每天中午和夜间各充电一次，在白天两个峰段放电）进行套利。</p>
+            <p>在设计初期，运营团队面临两种控制模式选择：模式一，追求单日套利收益最大化，执行 100% DoD 运行，每天放出 4 MWh 电量。系统仿真显示，在此模式下，LFP 电池将在第 4 年初出现容量衰减至 80% 的情况，需要提前自费补芯；模式二，限制放电上限与下限，将 DoD 严格限制在 80% 运行，每天放出 3.2 MWh 电量。虽然短期单日收益下降了 20%，但电池的预期衰减寿命被成功延长至 8.5 年，完美覆盖了项目的整个资金回收期与盈利期。经过财务测算，模式二的全生命周期内部收益率（IRR）比模式一高出了近 3.5 个百分点。该案例充分展示了在工商业套利场景中，科学适配 DoD 运行策略的技术经济学价值。</p>
           </div>
         </div>
       </section>
+
+      <section>
+        <h2>五、典型多场景适配决策流与混合储能系统</h2>
+        <p>在掌握了单一应用场景的适配逻辑后，我们如何将其转化为工程设计中的标准化流程？同时，面对电网越来越复杂的复合需求，单一技术路线往往捉襟见肘，混合储能技术由此应运而生。</p>
+        
+        <h3>1. 工程选型的“四步决策流”</h3>
+        <p>在进行具体网储项目的工程方案设计时，项目总工和设计院通常会遵循以下四步决策程序：</p>
+        <ol>
+          <li><strong>第一步：识别主导场景与物理约束</strong>。明确该电站的核心定位：是以平滑新能源出力为主（能量型），还是参与 AGC 快速调频为主（功率型），或者是为了解决长期消纳问题（容量型）。同时确定电站周边的水文、占地、交通等天然约束。</li>
+          <li><strong>第二步：进行技术初筛</strong>。将场景要求的响应速度、放电时长、爬坡速率等参数，与不同技术路线的物理边界进行比对，排除不达标的技术。例如，如果放电时间要求 6 小时以上，且附近无水源，可直接排除抽水蓄能和常规锂电池，将重点放在液流电池与压缩空气上。</li>
+          <li><strong>第三步：应用安全与政策红线“一票否决”</strong>。严格对照《二十五项反措》、地方消防规范以及环保要求。若项目位于厂区地下室内，则必须排除具有热失控风险的锂电池。</li>
+          <li><strong>第四步：全生命周期技术经济性比选（TCO/LCOS 分析）</strong>。在通过前三步筛选的备选方案中，代入当地的电价结构、辅助服务补偿机制和各技术的衰减曲线，计算出全生命周期的 LCOS 和 IRR。选择综合度电成本最低、投资收益最优的方案作为最终推荐方案。</li>
+        </ol>
+
+        <h3>2. 混合储能系统的组合逻辑</h3>
+        <p>随着我国“双高”电网特性的加剧，单一类型的储能系统在面对复合需求时往往面临尴尬处境：如果选用纯功率型的飞轮储能，虽然调频性能优异，但容量太小，无法满足新能源长达数小时的平滑出力要求；如果选用纯能量型的锂电池，高频的调频指令又会导致电池极速退化。为了解决这一痛点，**混合储能系统（Hybrid Energy Storage System，HESS）**逐步走向历史舞台。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：混合储能系统（HESS）</h4>
+          <p>HESS 是指将两种或两种以上在响应速度、功率特性、能量密度或循环寿命上具有显著互补优势的储能技术进行有机组合，通过统一的多能源控制协调系统（EMS），共同满足电力系统复杂多变调节需求的储能系统。</p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：特种特工与主力重装部队的协同作战</strong>
+            <p>在一个现代化的特种作战任务中：</p>
+            <p>电网在毫秒级时间内出现的瞬时频率扰动和电能质量闪变，就像是突然发起袭击的极少数敌方狙击手。如果直接调动行动缓慢的主力重装部队（常规能量型锂电池或火电机组）去围剿，不仅反应慢、消耗大量弹药和补给（导致电池频繁充放电导致折旧成本高昂），而且效果极差。</p>
+            <p>此时，指挥官应该派遣动作极快、单兵战斗力极强但无法持久作战的<strong>特种特工</strong>（飞轮储能或超级电容器）在几毫秒内精确压制并消灭敌人。而当敌人大部队发起持久的正面强攻（数小时的负荷高峰期缺电）时，则必须依靠<strong>主力重装部队</strong>以稳健的节奏提供源源不断的持久火力压制。将特种特工与重装部队混合编制，通过指挥部（能量管理系统，EMS）协调指挥，才能以最低的综合代价（全生命周期成本最低）打赢这场战役。</p>
+          </div>
+        </div>
+
+        <p>在混合储能系统中，最经典的组合便是“飞轮储能 + 磷酸铁锂电池”。图二展示了其有功功率控制与分频策略：当电网调度指令下达后，EMS 控制系统通过快速傅里叶变换或高通滤波器，将指令中的高频波动部分提取出来，分派给飞轮系统，飞轮利用其毫秒级响应和近乎无限的循环次数吸收这部分冲击；而低频的平稳功率需求则分派给 LFP 电池。这种分频控制极大地减轻了锂电池的微循环折旧压力，实现了整体寿命与性能的双赢。</p>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 240" width="100%" height="100%" style="background-color: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px; font-family: 'Noto Sans SC', sans-serif;">
+            <defs>
+              <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+            </defs>
+            
+            <rect x="30" y="90" width="140" height="60" rx="6" fill="#F8F9FA" stroke="#4A5568" stroke-width="1.5"/>
+            <text x="100" y="120" font-size="14" fill="#1A1A2E" font-weight="600" text-anchor="middle">电网调度指令</text>
+            <text x="100" y="140" font-size="12" fill="#718096" text-anchor="middle">(P_demand)</text>
+            
+            <path d="M 170 120 L 220 120 L 220 60 L 250 60" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead2)"/>
+            <path d="M 170 120 L 220 120 L 220 180 L 250 180" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead2)"/>
+            
+            <text x="210" y="110" font-size="11" fill="#718096" text-anchor="middle">分频控制</text>
+            
+            <rect x="260" y="30" width="220" height="60" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="370" y="55" font-size="14" fill="#F57C00" font-weight="600" text-anchor="middle">高频功率分量 (P_high)</text>
+            <text x="370" y="75" font-size="12" fill="#1A1A2E" text-anchor="middle">分配至 飞轮系统 快速平抑</text>
+            
+            <rect x="260" y="150" width="220" height="60" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="370" y="175" font-size="14" fill="#1A5F96" font-weight="600" text-anchor="middle">低频稳态分量 (P_low)</text>
+            <text x="370" y="195" font-size="12" fill="#1A1A2E" text-anchor="middle">分配至 常规LFP电池 持续消纳</text>
+            
+            <path d="M 480 60 L 530 60 L 530 120 L 550 120" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead2)"/>
+            <path d="M 480 150 L 530 150 L 530 120 L 550 120" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arrowhead2)"/>
+            
+            <rect x="560" y="90" width="140" height="60" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+            <text x="630" y="120" font-size="14" fill="#2E7D32" font-weight="600" text-anchor="middle">合成输出功率</text>
+            <text x="630" y="140" font-size="12" fill="#1A1A2E" text-anchor="middle">(P_actual = P_high + P_low)</text>
+          </svg>
+          <figcaption>图二：混合储能系统（LFP电池+飞轮）的控制策略与功率流图</figcaption>
+        </figure>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>典型示范工程：国家电投乌兰察布混合储能应用示范</strong>
+            <p>在内蒙古乌兰察布，“源网荷储”一体化关键技术示范项目中，面对高比例新能源并网引发的急剧随机波动，项目设计团队摒弃了单一化学电池方案，建设了包含飞轮储能系统、磷酸铁锂电池与全钒液流电池相结合的混合储能应用示范。</p>
+            <p>在该站的能量管理控制下，响应时间小于 5 毫秒的磁悬浮飞轮储能负责瞬时平滑风电机组的阵风冲击；响应时间在 20 毫秒左右的磷酸铁锂电池负责日内分钟级出力修正；而长寿命的全钒液流电池则承担数小时级的高比例弃风弃光消纳。联合运行数据表明，飞轮系统的加入让锂电池的日均浅充放电频率降低了 78%，显著减缓了锂电池的微裂纹扩展与活性锂损失，将电池整体寿命延长了 2.5 年以上，为高比例新能源并网提供了极具工程推广价值的示范样板。</p>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>功率型与能量型储能是电网的不同物理需求</strong>：一次调频等毫秒级响应场景侧重功率型储能（如飞轮、高倍率电池）；新能源配储与削峰填谷等数小时级场景侧重能量型或容量型储能（如LFP、液流电池）。</li>
+        <li><strong>度电成本（LCOS）是项目技术比选的关键经济指标</strong>：LCOS 计算不仅考虑初始投资（CAPEX），更高度依赖系统的寿命循环次数、转换效率（RTE）以及日常运维与更换费用（OPEX）。</li>
+        <li><strong>安全与消防是我国配储项目的首要一票否决红线</strong>：国家能源局“二十五项反措”明令禁止在中大型储能电站中采用三元锂电池和钠硫电池，消防规范对室内安装位置也有严格限制。</li>
+        <li><strong>控制充放电深度（DoD）能有效延长电池寿命</strong>：在工商业及电网侧应用中，通过将 DoD 限制在 80% 左右运行，可大幅度减缓电芯内部活性材料退化，从而在全生命周期内获取更好的整体 IRR。</li>
+        <li><strong>混合储能系统（HESS）是复合需求下的必然趋势</strong>：通过将飞轮与常规锂电池进行组合，并结合统一的 EMS 分频协调控制，可以协同解决“毫秒级快速响应”与“数小时持久平滑”的物理冲突。</li>
       </ul>
     </section>
 
@@ -125,16 +458,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 以下哪项最准确地概括了“功率型储能”与“容量型储能”在物理机制和应用需求上的根本区别？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 功率型储能侧重能量密度与制冷效率，容量型储能侧重循环寿命与电压稳定性</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 功率型储能侧重毫秒至秒级的超快响应与瞬时功率，容量型储能侧重数小时以上的平稳持续供电</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 功率型储能必须采用液流电池技术，容量型储能必须选用机械抽水蓄能</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 功率型储能主要部署在用户侧，容量型储能主要部署在特高压变电站的低压侧</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：功率型与容量型储能的本质区别在于其“响应速度”与“持续时长”维度的物理分工。选项 B 正确概括了这种区分。功率型储能（如飞轮、超级电容器）主要用于解决瞬时频率跌落和电压暂降，响应时间极短（毫秒级）但放电时长极短；容量型储能（如抽蓄、长时长化学储能）主要用于平滑日内峰谷波动，放电时长通常需要数小时甚至天级。选项 A 将能量密度等非核心分类依据混淆；选项 C 的技术路线归属过于绝对，LFP 可通过调配 PCS 比例充当功率型或能量型；选项 D 对部署位置的描述不符合实际工程应用，两者均可部署在发电侧、电网侧或用户侧。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 根据国家能源局发布的《防止电力生产事故的二十五项重点要求（2022年版）》，以下哪种电池被明确禁止在中大型电化学储能电站中选用？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 磷酸铁锂电池</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 钠离子电池</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 三元锂电池</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 全钒液流电池</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：“二十五项反措”第2.12节明确规定：“中大型电化学储能电站不得选用三元锂电池、钠硫电池，不宜选用梯次利用动力电池”。因此选项 C 是正确答案。这是基于三元锂电池中镍钴锰氧化物正极材料在高温下极易分解并释放氧气，导致不可控热失控与爆燃的安全顾虑。磷酸铁锂电池（选项 A）和全钒液流电池（选项 D）因热失控风险相对极低，未被禁止，是目前中大型电站的主流选择；钠离子电池（选项 B）也未在反措的禁用清单中，属于重点支持开发的新兴技术。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在火电厂联合储能参与 AGC 二次调频的应用场景下，为什么通常不选用常规的 0.5C 能量型储能系统，而必须选择倍率更高的功率型系统？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 常规能量型系统的占地面积过大，火电厂内部无法提供足够的土地资源</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 调频工况下系统处于极高频次的浅充浅放快速循环状态，常规能量型系统会因循环疲劳发生寿命的快速衰减</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 只有高倍率系统才能实现与火电机组的并网运行，低倍率系统无法通过调度测试</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 能量型系统的电压水平不够稳定，导致调频精度无法满足山西电网等市场的门槛</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：调频服务对电芯的物理磨损极大，系统每天要响应数千次短时间充放电脉冲（高累积调频里程）。选项 B 正确解释了这一选型考量。常规的 0.5C 能量型电池是为平缓的峰谷套利而制，高频次的冲击会使其负荷应力过大、热失控防护受压，电芯材料在短时间内就会发生结构性降解导致提前报废。选项 A 不是首要的技术决定性因素；选项 C 的表述不正确，并网资质与电池倍率无直接关联，而是取决于控制与并网测试；选项 D 也是错误的，系统的调频精度主要由 EMS 控制和 PCS 的响应速度决定，而非电池本体的标称电压平稳度。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在工商业削峰填谷项目中，运营方通过 BMS 和 EMS 限制电池放电下限，将充放电深度（DoD）设定在 80% 运行，其最主要的工程目的是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 降低日常的充电成本开支，从而提高峰谷差价的单次净收益率</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 避免电池在充电时发生局部过热，将运营期间的安全事故概率降至为零</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 减缓电芯内部活性材料的晶格退化与机械应力损伤，从而延长整个储能系统的经济使用寿命</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 响应当地电网的自愿降容补偿政策，获取额外的辅助服务佣金</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：DoD 与电芯的循环衰减寿命呈强烈的非线性关系。选项 C 是正确的工程动机。锂离子在极高和极低荷电状态（SOC）下的脱嵌会使正负极材料晶格产生剧烈的机械胀缩应力，导致微裂纹扩散和活性锂损耗。限制 DoD 在 80%（即浅充浅放）能有效保护晶格结构，使其循环寿命远超 100% 全充全放模式，平摊下来的 TCO/LCOS 更加经济。选项 A 逻辑错误，充电量减少了，相应的单次放电收益也减少了，不能提高单次套利差；选项 B 中“事故率降至为零”的表述过于绝对；选项 D 与 DoD 设定的技术机制不相关。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在一个由“飞轮储能系统 + 常规磷酸铁锂电池”组成的混合储能系统（HESS）中，能量管理系统（EMS）分频协调控制策略的协调分配原则通常是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 飞轮系统处理高频波动的有功分量，磷酸铁锂电池处理低频平稳的有功分量</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 飞轮系统在白天峰值时段工作，磷酸铁锂电池在夜间低谷时段工作</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 飞轮系统负责提供无功补偿，磷酸铁锂电池负责提供有功平衡</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 飞轮系统作为备用电源在电网断电时启动，磷酸铁锂电池在常规状态下满负荷出力</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：混合储能系统（HESS）的核心在于特性的优势互补。选项 A 描述了其标准的分频控制逻辑。飞轮储能响应极快（秒级以下）、循环次数几乎无磨损，非常适合消纳高频的小幅度瞬时功率指令，从而使磷酸铁锂电池免受高频微循环的冲击；常规的磷酸铁锂电池则凭借低成本和大容量长时段放电优势，专门处理电网长期性、平稳的电力消纳指令。选项 B 以昼夜时间划分是不合理的；选项 C 划分了有功无功，但实际上飞轮与电池均为有功输出技术；选项 D 将飞轮定义为纯断电备用，浪费了其优秀的动态调节性能，不符合调频和新能源平滑出力的初衷。</p>
         </div>
       </div>
 
@@ -159,7 +552,11 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="05_1_1_储能技术分类.html">→ LEVEL_05 第05_1_1节：储能技术分类框架</a>（全面了解机械、电化学等主流储能基本原理）</li>
+        <li><a href="05_1_2_核心性能指标体系.html">→ LEVEL_05 第05_1_2节：核心性能指标体系</a>（掌握额定功率、充放电效率等参数的核心计算）</li>
+        <li><a href="05_1_3_各技术路线对比.html">→ LEVEL_05 第05_1_3节：各技术路线横向对比</a>（横向定量对比不同化学介质的技术优劣势）</li>
+        <li><a href="05_2_1_磷酸铁锂vs三元.html">→ LEVEL_05 第05_2_1节：磷酸铁锂vs三元：全面对比</a>（深入探讨电芯化学体系的细分选择原则）</li>
+        <li><a href="../../index.html">→ 返回目录主页</a>（获取整本手册的知识树体系）</li>
       </ul>
     </section>
 
@@ -172,7 +569,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
