@@ -3,7 +3,7 @@
  * 功能：提供离线缓存、资源渐进更新与全平台 PWA 安装保障
  */
 
-const CACHE_NAME = 'energy-storage-book-v3.6';
+const CACHE_NAME = 'energy-storage-book-v3.7';
 
 // 核心预缓存资源清单 (App Shell)
 const STATIC_ASSETS = [
