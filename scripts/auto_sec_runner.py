@@ -17,6 +17,7 @@ TOC_PATH = ROOT_DIR / "data" / "toc.json"
 AGY_BIN = "/home/jiamoo/.local/bin/agy"
 HELPER_SCRIPT = ROOT_DIR / "scripts" / "batch_generate_helper.py"
 VALIDATE_SCRIPT = ROOT_DIR / "scripts" / "validate_chapter.py"
+PROMPT_TEMPLATE_PATH = ROOT_DIR / "documents" / "撰写提示词模板.md"
 
 def get_all_sections():
     """从 toc.json 中获取所有章节列表及状态"""
@@ -99,16 +100,28 @@ def run_single_sec(sec_info, max_retries=3):
         print(f"❌ 找不到生成的 Prompt 文件: {prompt_path}")
         return False
 
-    # 2. 构建传递给独立 agy 进程的 Prompt
-    agent_prompt = f"""你是一个顶级的电力系统与电池储能专家工程写作智能体。
-请严格遵循《章节撰写总控指南》与包含全部规则大纲的自包含提示词包 (prompt_{sec_id}.md)！
-提示词绝对路径：{prompt_path}
+    # 2. 读取《撰写提示词模板.md》全文作为标准规范上下文注入
+    template_text = ""
+    if PROMPT_TEMPLATE_PATH.exists():
+        template_text = PROMPT_TEMPLATE_PATH.read_text(encoding="utf-8")
 
-当前写作目标：完成章节【{sec_id} — {sec_title}】的正文撰写与硬性质量验证。
+    # 3. 构建传递给独立 agy 进程的 Prompt
+    agent_prompt = f"""你是一个顶级的电力系统与电池储能专家工程写作智能体。
+
+【最高控制指令及规范模板（直接注入）】：
+{template_text}
+
+---
+
+【当前写作目标与硬性执行任务】：
+目标章节：【{sec_id} — {sec_title}】
+所属层级：{sec_info['level_id']} ({sec_info['level_title']}) / {sec_info['chap_title']}
+目标文件路径：{sec_info['abs_file_path']}
+独立 Prompt 路径：{prompt_path}
 
 【硬性执行步骤】：
 1. 用 view_file 仔细阅读 {prompt_path} 中的全部写作规范、大纲结构与 H2 序号连续性约束。
-2. 按照该 Prompt 撰写【{sec_title}】的完整 HTML 内容，直接覆盖写入到目标文件：{sec_info['abs_file_path']}。
+2. 按照《撰写提示词模板》与 {prompt_path}，撰写【{sec_title}】的完整 HTML 内容，直接覆盖写入到目标文件：{sec_info['abs_file_path']}。
 3. **字数与讲透要求**：必须根据提示词大纲，沿着 H2 标题（一、二、三...）逐步深入剖析，确保 <main class="chapter-content"> 内的纯中文汉字数达到 6,000 字以上！严禁盲目拼凑段落，严禁 H2 标题序号乱序！
 4. 撰写并落盘完成后，在终端运行：python3 {VALIDATE_SCRIPT} {sec_id}
 5. 如果校验未通过，仔细阅读报错信息，使用 replace_file_content 修正 HTML 内容，直到 validate_chapter.py 打印【✅ 所有规范校验通过！】且退出码为 0。

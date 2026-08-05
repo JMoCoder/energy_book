@@ -18,7 +18,6 @@ TOC_PATH = ROOT_DIR / "data" / "toc.json"
 PROMPTS_DIR = ROOT_DIR / "documents" / "prompts"
 PROMPT_TEMPLATE_PATH = ROOT_DIR / "documents" / "撰写提示词模板.md"
 RULES_PATH = ROOT_DIR / "documents" / "写作说明与规范.md"
-MASTER_GUIDE_PATH = ROOT_DIR / "documents" / "章节撰写总控指南.md"
 
 def load_toc() -> dict:
     if not TOC_PATH.exists():
@@ -78,9 +77,19 @@ def build_deep_prompt(sec_info: dict) -> str:
     file_rel_path = f"chapters/{level_id}/{sec['file']}"
     abs_html_path = ROOT_DIR / "chapters" / level_id / sec["file"]
 
+    template_content = ""
+    if PROMPT_TEMPLATE_PATH.exists():
+        template_content = PROMPT_TEMPLATE_PATH.read_text(encoding="utf-8")
+
     prompt_content = f"""# 《中国网储系统性学习手册》最高标准撰写任务：章节 `{sec_id}` ({sec_title})
 
 > **【重要】上下文隔离与质量铁律**：你当前处于一个**全新的、独立的上下文窗口**中。本 Prompt 包含了撰写本章节所需的全部规范、铁律与元数据。请发挥最高水准，撰写一份**丰满、深刻、讲透**的独立 HTML 章节。
+
+---
+
+## 【撰写提示词模板全文（规范上下文注入）】
+
+{template_content}
 
 ---
 
@@ -149,6 +158,7 @@ python3 scripts/publish_chapter.py {sec_id}
 
 **现在，请按照以上最高标准，直接为 `{file_rel_path}` 编写正文！**
 """
+    return prompt_content
     return prompt_content
 
 def generate_isolated_prompt_file(sec_info: dict) -> Path:
