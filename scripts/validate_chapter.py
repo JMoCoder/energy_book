@@ -58,6 +58,19 @@ def validate_html_file(file_path: Path) -> tuple[list[str], list[str]]:
 
     if '<nav class="bottom-nav">' not in content:
         errors.append("缺少章节底部导航 <nav class=\"bottom-nav\">")
+    else:
+        if 'bottom-nav-prev' not in content and 'bottom-nav-next' not in content:
+            errors.append("底部导航类名错误：必须使用 class=\"bottom-nav-prev\" 或 \"bottom-nav-next\"，禁止删除或篡改脚手架类名！")
+        if 'bnav-label' not in content or 'bnav-title' not in content:
+            errors.append("底部导航内部标签类名错误：必须包含 class=\"bnav-label\" 与 \"bnav-title\"！")
+        if 'bottom-nav-home' not in content:
+            errors.append("底部导航缺少主页跳转按钮 <a href=\"../../index.html\" class=\"bottom-nav-home\">🏠 主页</a>！")
+
+    if '<table' in content:
+        if 'class="data-table"' not in content:
+            errors.append("数据表格缺少标准类名 <table class=\"data-table\">，将导致表格没有全局蓝色表头与交替行样式！")
+        if 'class="table-wrapper"' not in content and 'class="table-container"' not in content:
+            errors.append("数据表格缺少外层容器 <div class=\"table-wrapper\">，将导致移动端表格截断或渲染异常！")
 
     if 'class="chapter-footer"' not in content and 'class="site-footer"' not in content:
         errors.append("缺少章节页脚节点 <footer class=\"chapter-footer\">")

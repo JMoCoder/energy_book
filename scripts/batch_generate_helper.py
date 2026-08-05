@@ -143,7 +143,9 @@ def build_deep_prompt(sec_info: dict) -> str:
    - 每题包含 `<div class="quiz-answer" id="qX-answer" style="display:none">`。
    - **每题解析不少于 100-150 字**，必须详细阐述为什么正确答案是对的，以及**为什么其他三个选项是错的**。
    - 保留 `<button class="btn-check-answer" onclick="checkAnswers()">` 与 `<p class="quiz-score" id="score-display"></p>`。
-6. **章节底部导航与相关章节 (`<nav class="bottom-nav">` 与 `<section class="cross-refs">`)**：保留并更新前后相邻章节链接。
+6. **数据表格规范**：凡是使用对比或数据表格，必须使用 `<div class="table-wrapper"><table class="data-table">...</table></div>` 结构，严禁遗漏 `class="data-table"`！
+7. **章节底部导航 (`<nav class="bottom-nav">`)**：绝对禁止篡改脚手架生成的 `<nav class="bottom-nav">` 内部结构与 CSS 类名！必须保留 `bottom-nav-prev`, `bottom-nav-next`, `bottom-nav-home`, `bnav-label`, `bnav-title` 类名！
+8. **相关章节 (`<section class="cross-refs">`)**：包含 3-5 个相关章节链接 `cross-ref-list`。
 
 ---
 

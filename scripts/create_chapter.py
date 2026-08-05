@@ -197,6 +197,25 @@ def main():
             <p>详细分析国内真实网储电站应用或最新政策规章……</p>
           </div>
         </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>对比维度</th>
+                <th>方案 / 概念 A</th>
+                <th>方案 / 概念 B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>核心特征</strong></td>
+                <td>特征描述 A</td>
+                <td>特征描述 B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
 

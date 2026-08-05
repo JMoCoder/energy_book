@@ -19,6 +19,8 @@ HELPER_SCRIPT = ROOT_DIR / "scripts" / "batch_generate_helper.py"
 VALIDATE_SCRIPT = ROOT_DIR / "scripts" / "validate_chapter.py"
 PROMPT_TEMPLATE_PATH = ROOT_DIR / "documents" / "撰写提示词模板.md"
 
+PUBLISH_SCRIPT = ROOT_DIR / "scripts" / "publish_chapter.py"
+
 def get_all_sections():
     """从 toc.json 中获取所有章节列表及状态"""
     if not TOC_PATH.exists():
@@ -79,7 +81,7 @@ def get_next_target(target_sec_id=None):
         return None
     
     for sec in sections:
-        if sec["status"] in ["draft", "pending"]:
+        if sec["status"] != "available":
             return sec
     return None
 
@@ -122,9 +124,12 @@ def run_single_sec(sec_info, max_retries=3):
 【硬性执行步骤】：
 1. 用 view_file 仔细阅读 {prompt_path} 中的全部写作规范、大纲结构与 H2 序号连续性约束。
 2. 按照《撰写提示词模板》与 {prompt_path}，撰写【{sec_title}】的完整 HTML 内容，直接覆盖写入到目标文件：{sec_info['abs_file_path']}。
-3. **字数与讲透要求**：必须根据提示词大纲，沿着 H2 标题（一、二、三...）逐步深入剖析，确保 <main class="chapter-content"> 内的纯中文汉字数达到 6,000 字以上！严禁盲目拼凑段落，严禁 H2 标题序号乱序！
-4. 撰写并落盘完成后，在终端运行：python3 {VALIDATE_SCRIPT} {sec_id}
-5. 如果校验未通过，仔细阅读报错信息，使用 replace_file_content 修正 HTML 内容，直到 validate_chapter.py 打印【✅ 所有规范校验通过！】且退出码为 0。
+3. **样式与 DOM 保护规则**：
+   - 凡有表格，必须包含外层容器 `<div class="table-wrapper"><table class="data-table">...</table></div>`。
+   - 绝对禁止篡改脚手架生成的 `<nav class="bottom-nav">` 内部结构与 CSS 类名（保留 `bottom-nav-prev`, `bottom-nav-next`, `bottom-nav-home`, `bnav-label`, `bnav-title`）！
+4. **字数与讲透要求**：必须根据提示词大纲，沿着 H2 标题（一、二、三...）逐步深入剖析，确保 <main class="chapter-content"> 内的纯中文汉字数达到 6,000 字以上！严禁盲目拼凑段落，严禁 H2 标题序号乱序！
+5. 撰写并落盘完成后，在终端运行：python3 {VALIDATE_SCRIPT} {sec_id}
+6. 如果校验未通过，仔细阅读报错信息，使用 replace_file_content 修正 HTML 内容，直到 validate_chapter.py 打印【✅ 所有规范校验通过！】且退出码为 0。
 
 请立即启动并完成本节撰写与校验！"""
 
@@ -148,11 +153,15 @@ def run_single_sec(sec_info, max_retries=3):
         elapsed = time.time() - start_time
         print(f"\n⏱️ 智能体进程执行结束 (耗时: {elapsed:.1f} 秒)")
 
-        # 3. 运行质量门禁校验
+        # 3. 运行质量门禁校验与自动发布
         val_res = subprocess.run([sys.executable, str(VALIDATE_SCRIPT), sec_id], capture_output=True, text=True)
         if val_res.returncode == 0:
             print(f"\n🎉 [质量门禁 PASS] 章节 {sec_id} 成功通过 validate_chapter.py 校验！")
-            update_section_status(sec_id, "available")
+            pub_res = subprocess.run([sys.executable, str(PUBLISH_SCRIPT), sec_id], capture_output=True, text=True)
+            if pub_res.returncode == 0:
+                print(f"🚀 [自动发布 SUCCESS] 章节 {sec_id} 已同步更新状态并部署推送至远端！")
+            else:
+                update_section_status(sec_id, "available")
             return True
         else:
             sleep_sec = 10 * attempt
