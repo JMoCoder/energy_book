@@ -64,8 +64,9 @@ def main():
     target_dir.mkdir(parents=True, exist_ok=True)
     target_file = target_dir / curr["file"]
 
-    if target_file.exists():
-        print(f"⚠️ 提示: 文件 {target_file.relative_to(ROOT_DIR)} 已存在，终止覆盖。")
+    force_overwrite = "--force" in sys.argv
+    if target_file.exists() and not force_overwrite:
+        print(f"⚠️ 提示: 文件 {target_file.relative_to(ROOT_DIR)} 已存在，终止覆盖。如需强制滚回模板请附加 --force 参数。")
         sys.exit(0)
 
     # 生成 HTML 骨架

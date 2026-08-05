@@ -73,18 +73,57 @@ def validate_html_file(file_path: Path) -> tuple[list[str], list[str]]:
     if match_cross and match_bnav and match_cross.start() < match_bnav.start():
         errors.append("DOM 顺序错误：相关章节 (<section class=\"cross-refs\">) 必须在 底部导航 (<nav class=\"bottom-nav\">) 之后")
 
-    # 4. 质量建议检查
+    # 4. 质量建议与硬性组件检查
     if 'callout-analogy' not in content:
-        warnings.append("建议至少包含一个生活类比组件 (callout-analogy)")
+        errors.append("缺少生活类比组件 (callout callout-analogy)：按深入浅出写作规范，每节必须包含生活类比！")
 
     if 'callout-case' not in content and 'callout-tips' not in content and 'callout-warning' not in content:
         warnings.append("建议使用侧边栏组件 (callout-case / callout-tips / callout-warning) 增强视觉层次")
 
-    # 5. 正文长度大致估算
-    clean_text = re.sub(r'<[^>]+>', '', content)
-    char_count = len(clean_text)
-    if char_count < 3000:
-        warnings.append(f"章节文字总量偏少 ({char_count} 字)，建议丰富正文内容至 5000+ 字")
+    # 5. 测验区质量校验（禁止纯计算题、检查解析字数）
+    quiz_answers = re.findall(r'<div[^>]*class=["\'][^"\']*quiz-answer[^"\']*["\'][^>]*>(.*?)</div>', content, re.DOTALL)
+    if quiz_answers:
+        if len(quiz_answers) < 5:
+            warnings.append(f"测验题数量较少 ({len(quiz_answers)} 题)，标准要求为 5 道单选题")
+        for idx, ans_text in enumerate(quiz_answers, 1):
+            clean_ans = re.sub(r'<[^>]+>', '', ans_text).strip()
+            if len(clean_ans) < 40:
+                warnings.append(f"第 {idx} 题测验解析字数偏少 ({len(clean_ans)} 字)，建议补充为什么其他选项是错误的深度解析(80-150字)")
+    else:
+        errors.append("测验区域缺少解析节点 <div class=\"quiz-answer\">")
+
+    # 检查测验题目是否包含计算题敏感词
+    quiz_section_match = re.search(r'<section\s+class=["\'].*?quiz-section.*?["\']>(.*?)</section>', content, re.DOTALL)
+    if quiz_section_match:
+        quiz_html = quiz_section_match.group(1)
+        calc_keywords = ["计算", "求出", "等于多少", "数值为", "多少A", "多少V", "多少W", "多少kW", "公式计算"]
+        found_calc = [kw for kw in calc_keywords if kw in quiz_html]
+        if found_calc:
+            warnings.append(f"测验题中疑似包含计算题敏感词 {found_calc}，规范规定测验题严禁出计算题，应考察概念理解与辨析")
+
+    # 6. 正文纯中文汉字长度与 H2 标题序号连续性检测
+    main_match = re.search(r'<main[^>]*class=["\'].*?chapter-content.*?["\'][^>]*>(.*?)</main>', content, re.DOTALL)
+    if main_match:
+        main_html = main_match.group(1)
+        chinese_chars = re.findall(r'[\u4e00-\u9fa5]', main_html)
+        chinese_count = len(chinese_chars)
+        if chinese_count < 6000:
+            errors.append(f"正文 <main class=\"chapter-content\"> 内的纯中文汉字数未达标 (仅 {chinese_count} 字)，要求正文讲深讲透不少于 6,000 纯汉字！")
+        
+        # 检查 H2 标题中文序号连续性 (一、二、三...)
+        h2_titles = re.findall(r'<h2>\s*([一二三四五六七八九十]+)、', main_html)
+        cn_nums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
+        expected_seq = cn_nums[:len(h2_titles)]
+        if h2_titles and h2_titles != expected_seq:
+            errors.append(f"正文 H2 标题中文序号出现不连续或乱序: 实际为 {h2_titles}，期望为 {expected_seq}，请检查文章结构大纲！")
+    else:
+        errors.append("缺少正文核心节点 <main class=\"chapter-content\">")
+
+    # 检查是否存在未填充的占位符
+    placeholders = ["XX_X_X", "TODO", "［待补充］", "[待补充]", "此处填写"]
+    found_placeholders = [ph for ph in placeholders if ph in content]
+    if found_placeholders:
+        warnings.append(f"检测到未填充的占位符: {found_placeholders}")
 
     return errors, warnings
 

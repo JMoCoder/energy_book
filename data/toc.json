@@ -659,7 +659,7 @@
               "title": "计划经济时代的电力",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "03_1_2",
@@ -667,7 +667,7 @@
               "title": "2002年：厂网分开",
               "difficulty": "🟢",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "03_1_3",
@@ -675,7 +675,7 @@
               "title": "2015年9号文：新一轮电改",
               "difficulty": "🟡",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "03_1_4",
@@ -683,7 +683,7 @@
               "title": "售电公司放开与增量配电",
               "difficulty": "🟡",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             },
             {
               "id": "03_1_5",
@@ -691,7 +691,7 @@
               "title": "电改现状与未来方向",
               "difficulty": "🟡",
               "words": 5000,
-              "status": "planned"
+              "status": "available"
             }
           ]
         },
