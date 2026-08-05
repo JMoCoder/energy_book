@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>节点电价LMP详解 — 电力现货市场 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析节点电价LMP详解的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析节点电价LMP的核心物理原理、数学分解、三节点经典算例推导以及其在储能选址与运营中的关键工程价值。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -33,7 +33,7 @@
       <div class="nav-breadcrumb">
         <span class="nav-level">LEVEL_03</span>
         <span class="nav-sep">›</span>
-        <span class="nav-chapter">电力现货市场</span>
+        <span class="nav-chapter">电力现货 market</span>
         <span class="nav-sep">›</span>
         <span class="nav-section">节点电价LMP详解</span>
       </div>
@@ -57,53 +57,349 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">03_3_4</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>节点电价LMP详解</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">破解电力现货市场“同网不同价”的物理与经济逻辑，掌握能量、阻塞、损耗分量的底层算例推导。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>核心目标一</strong>：明确阐述节点边际电价（Locational Marginal Pricing，LMP）的直觉概念、历史背景及相较于系统统一电价的核心物理区别。</li>
+        <li><strong>核心目标二</strong>：掌握 LMP 的数学三部曲分解，明确能量分量、阻塞分量与损耗分量的定义、物理行为及其在公式中的正负号经济逻辑。</li>
+        <li><strong>核心目标三</strong>：能够独立推导经典三节点网络系统在无阻塞和有阻塞场景下的有功潮流分布、发电机出力调度及各节点 LMP 的定量计算。</li>
+        <li><strong>核心目标四</strong>：掌握中国主要现货市场试点省份（山东、山西等）LMP 实施情况，并能评估“自触发阻塞”等效应对电池储能系统选址与运营套利的影响。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：同网不同价的百万元迷局</h2>
+      <p>在炎热的 7 月某天下午，山东某地的一家 100 兆瓦 / 200 兆瓦时（MW/MWh）大型独立电池储能系统（Battery Energy Storage System，BESS）电站的运行员小张正盯着交易系统屏幕。他惊奇地发现，距离自己电站仅 20 公里的另一家储能电站，其实时现货放电结算电价正处于 0.82 元/千瓦时（kWh）的高位。然而，小张自己电站所在的节点，实时现货电价居然被死死按在了 -0.05 元/kWh（负电价）的深渊。明明两家电站都接入在同一个省级电网上，甚至在地理上相隔不过二十分钟车程，电能的“商品价格”却呈现出冰火两重天的极端反差。如果在此时盲目跟风放电，小张的电站不仅拿不到高额收益，反而需要向电网倒贴电费，在短短两小时内就可能面临数万元的严重亏损。</p>
+      <p>这种令人困惑的“同网不同价”现象，并不是电网交易系统的软件 Bug，而恰恰是现代电力现货市场中最核心、最精妙的物价机制——节点边际电价（Locational Marginal Pricing，LMP）的正常表现。为什么看似连通一体的电网，在不同地点会拥有完全不同的电价？对于高度依赖电价空间价差与时间价差套利的电池储能来说，如何看懂节点电价这盏“引路灯”？本节将为你层层撕开 LMP 的物理内核与计算黑盒。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、什么是节点边际电价？——从单一电价到空间分级</h2>
+        <p>要理解节点边际电价（LMP），我们需要先跳出传统商品的定价思维。对于普通的实体商品，比如一瓶矿泉水，由于其可以通过卡车运送到城市的各个超市，其价格差异通常仅取决于零售商的加价，在同一个批发市场里，它的价格是完全统一的。早期电力市场也借鉴了这种思路，采用了全网统一的<strong>系统边际电价（Market Clearing Price，MCP）</strong>机制。</p>
+        <p>在 MCP 机制下，市场管理者将整个电网简化为一根“无限粗、无电阻”的超级铜排（集中参数假设）。在每一个交易时段，全省所有的发电机组统一排队竞价，由最后满足用电负荷的那台发电机的报价决定全网统一的清算电价。这种定价方式极其简单直观，但它忽略了一个致命的物理现实：<strong>电网是由数万条输电线路和变压器构成的复杂物理拓扑网络，电线的粗细（传输容量上限）是有限的，电线的电阻（网络损耗）是不可忽略的。</strong>当局部电网的用电负荷过大，或者局部新能源发电量极高，导致某些输电线路的潮流（电力流量）达到了其热稳定极限或安全稳定极限时，就会发生“<strong>输电阻塞（Transmission Congestion）</strong>”。</p>
+        <p>电网就像一条在早高峰被堵得水泄不通的高速公路。如果继续采用全网统一的 MCP 机制，市场清算出清的结果在物理上将是“无法执行”的——因为便宜的电送不过去，而缺电的地区又无法凭空得到电力供应。为了维持系统安全，电网调度机构必须在事后进行强行的人工干预，命令某些已经中标的便宜机组“少发电”（限产），并强令某些未中标的高价机组“多发电”（强启）。这种非市场化的重新调度，不仅扭曲了价格信号，还会产生庞大的不平衡资金（重调度补偿费用），最终由全网用户买单。为了解决电网物理约束与市场经济规律的冲突，节点边际电价（LMP）应运而生。大白话说，<strong>节点边际电价就是：在电网的某一个具体位置（节点），如果负荷增加 1 兆瓦（MW），系统为了安全、物理合规地满足这 1 MW 需求所需要付出的最小经济成本。</strong></p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：外卖配送与路网拥堵的闭环对应</strong>
+            <p>为了直观理解 LMP 的空间分级特征，我们可以将其类比为一个城市的外卖订餐系统：</p>
+            <ul>
+              <li><strong>发电机组 = 各大餐饮店</strong>。有的餐饮店做菜成本极低、报价便宜（如位于郊区的大型中央厨房，报价 15 元/份），有的餐饮店成本很高、报价贵（如市中心的高级餐厅，报价 50 元/份）。</li>
+              <li><strong>电力负荷 = 饥饿的顾客</strong>。顾客分布在城市的不同小区（节点）。</li>
+              <li><strong>输电线路 = 城市的道路和桥梁</strong>。不同道路的通车能力（带宽限制）是有限的。</li>
+              <li><strong>电力网络损耗 = 外卖员跑腿的体力消耗与时间成本（运费）</strong>。</li>
+            </ul>
+            <p><strong>场景一（无阻塞）</strong>：如果今天路网完全畅通，没有发生任何拥堵。当市中心的顾客（节点 A）点一份外卖时，系统自然会调度郊区便宜的中央厨房（机组 G1，15元）做饭，并派外卖员送过去。此时，全城任何一个小区的顾客多点一份外卖，系统增加的边际成本都是 15 元。全城外卖价格基本统一为 15 元（相当于无阻塞时的 MCP 统一电价）。</p>
+            <p><strong>场景二（发生阻塞）</strong>：突然，连接郊区到市中心的高架桥发生严重车祸，道路彻底瘫痪，限制了每小时只能通过极少数的外卖车辆（输电阻塞）。此时，市中心小区的顾客（节点 A）又增加了一份订单。因为高架桥被堵死了，郊区便宜的中央厨房做好了饭也送不过来。为了不让市中心的顾客挨饿，外卖平台唯一的选择就是调度市中心本地那家价格昂贵的高级餐厅（高价机组 G2，50元）做饭并就近配送。因此，市中心节点的“边际炸鸡电价”瞬间飙升到了 50 元。</p>
+            <p>与此同时，郊区那家中央厨房因为路送不出去，做出来的饭只能就地折价处理或者停产，郊区节点的“边际电价”可能会跌到 5 元甚至为负（为了把积压的库存处理掉）。<strong>你看，同一时刻，因为高架桥的拥堵限制，不同小区的外卖清算价格瞬间分化了。</strong>这就是节点电价 LMP 的物理本质。</p>
+          </div>
+        </div>
+
+        <p>在现代大电网中，LMP 的引入将电能的“时间价值”和“空间价值”完美地融为一体。它不仅实现了市场出清与物理调度的“一步到位”，更重要的是，它向全社会发出了极其精确的价格信号：电价高企的节点代表着电网的瓶颈，是最急需建设发电机组或储能电站的地方；而电价频频降为负数的节点则代表着电力严重过剩或输电受限，提醒投资者不要继续在此盲目扩张，或者应当建设储能来消纳局部弃电。在中国电力体制改革进程中，这一价格信号正变得越来越重要。</p>
+      </section>
+
+      <section>
+        <h2>二、节点电价的三驾马车：LMP 的核心数学分解</h2>
+        <p>在电力系统的实际最优潮流（Optimal Power Flow，OPF）计算中，某一个节点 $i$ 在特定交易时段的 LMP 是通过求解一个以系统总购电成本最小化为目标函数、以基尔霍夫定律和输变电设备物理极限为约束条件的数学规划问题得到的。通过拉格朗日乘数法的数学推导，我们可以将节点 $i$ 的电价 $LMP_i$ 精确地拆解为三个分量：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心公式：LMP 的三部曲分解</h4>
+          <p>$$\text{LMP}_i = \text{MEC} + \text{MCC}_i + \text{MLC}_i$$</p>
+          <p><strong>公式参数工程含义说明：</strong></p>
+          <ul>
+            <li>$\text{LMP}_i$：节点 $i$ 的节点边际电价（元/MWh 或 元/kWh），是发电机组在该节点售电以及用户/储能充电在该节点结算的最终现货价格。</li>
+            <li>$\text{MEC}$：<strong>边际能量分量</strong>（Marginal Energy Component，元/MWh），代表在系统无阻塞、无损耗的理想状态下，多满足系统 1 MW 负荷的边际成本。该分量在全网所有节点是完全一致的。</li>
+            <li>$\text{MCC}_i$：<strong>边际阻塞分量</strong>（Marginal Congestion Component，元/MWh），代表由于输电线路容量受限，为了满足节点 $i$ 增加 1 MW 负荷，系统不得不偏离最经济的发电排产顺序（如减少便宜机组出力，增加昂贵机组出力）而导致的额外系统成本。该分量随空间变化，可正可负。</li>
+            <li>$\text{MLC}_i$：<strong>边际损耗分量</strong>（Marginal Loss Component，元/MWh），代表由于输电线电阻发热产生的网络损耗，在节点 $i$ 增加 1 MW 负荷时，全网必须额外多发出的电能所对应的经济成本。该分量同样随空间变化，可正可负。</li>
+          </ul>
+        </div>
+
+        <h3>1. 边际能量分量（MEC）</h3>
+        <p>边际能量分量是整个系统电价的“基准底座”。为了计算它，系统会在电网中指定一个特定的节点作为<strong>参考节点（Slack Bus，亦称平衡节点或松弛节点）</strong>。参考节点的作用是吸收全网的功率不平衡，并作为其他所有节点进行电气灵敏度计算的基准点。如果在没有任何阻塞和损耗的假设下，全网任何一个节点增加 1 MW 负荷，都等价于在参考节点增加 1 MW 负荷。此时，系统只需要调度当前全网报价最低的待发电机组（边际机组）增发 1 MW 即可。因此，MEC 的数值等于参考节点的边际发电机报价。当全网用电需求增加、煤价攀升或网络负荷拉升时，边际机组报价上升，MEC 会同步整体抬升，带动全网电价基准上涨。</p>
+
+        <h3>2. 边际阻塞分量（MCC）</h3>
+        <p>边际阻塞分量是导致空间电价分化的最主要元凶。它深刻反映了电网物理结构对商业交易的限制。当电网中某条或多条线路的潮流达到安全上限时，我们就说断面发生阻塞。为了防止线路过载烧毁，电网的电力调度系统必须执行限制。此时，如果在位于“阻塞受端”（缺电区）的节点 $i$ 增加 1 MW 负荷，系统绝对不能增加位于“阻塞送端”（多电区）的便宜发电机的出力，因为这会让已经满载的线路彻底崩溃。调度中心必须退而求其次，在受端本地启动高价的发电机，甚至调用昂贵的应急燃气轮机。这多付出的成本，就是该节点正的边际阻塞分量（$\text{MCC}_i > 0$），它会推高受端节点的电价，惩罚局部负荷。</p>
+        <p>反之，如果在送端（多电区）的节点 $j$ 增加 1 MW 负荷，这实际上是在就地“消纳”电能，反而能够腾出原本送不出去的输电线路容量，允许便宜的发电机稍微多发一点电。从系统最优化的角度看，在送端增加负荷是有利于降低系统总成本的。因此，送端节点的边际阻塞分量通常为负值（$\text{MCC}_j < 0$），导致该节点的 LMP 大幅低于系统基准电价，甚至可能被拉低为负电价。对于建设在送端的发电机组而言，MCC 的负值相当于一种“空间惩罚”，强迫其降低出力或以极低价结算。</p>
+
+        <h3>3. 边际损耗分量（MLC）</h3>
+        <p>边际损耗分量则代表了物理电网中无法避免的“运损成本”。根据焦耳定律，电能流过输电线会产生有功功率损耗，线损与电流的平方成正比（$P_{loss} = I^2 R$）。因此，当节点 $i$ 的负荷增加 1 MW 时，从电气距离较远的发电机输送过来的电能，在路上必然有一部分会损耗掉。假设线损灵敏度为 5%，这意味着为了让节点 $i$ 确实得到 1 MW 的电能，发电机必须发出 1.05 MW 的功率。那多出来的 0.05 MW 电能同样是有价格的，必须折算成钱，由节点 $i$ 的用户承担。因此，距离主电源电气距离越远、输电通道越薄弱的末梢节点，其 $\text{MLC}_i$ 越大且为正值，推高了该点电价。</p>
+        <p>在某些特定电气拓扑下，如果在紧邻大发电机的受端节点或者潮流对冲节点增加负荷，这可能会降低全网的总物理损耗（潮流就地平衡，免去了远距离输电），此时该节点的边际损耗分量就会呈现负值（$\text{MLC}_i < 0$）。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>注意：LMP 的结算逻辑差异</strong>
+            <p>在实际工程和财务结算中，发电机组和储能电站是按照他们<strong>所接入的具体节点的 LMP</strong> 进行结算的，而负荷用户在某些电力市场中（如中国广东、山西现货市场）为了防范零售侧价格波动过于剧烈，往往采用<strong>全网统一的加权平均电价（或者分区综合电价）</strong>进行结算。这种“发电侧付节点价、用电侧付平均价”的非对称结算方式，是储能资产进行商业开发和收益测算时必须高度注意的政策细节，直接影响着投资回报率（ROI）的计算。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>三、实战算例：三节点系统的 LMP 计算推导</h2>
+        <p>为了让初学者能够彻底掌握 LMP 背后看似神秘的数学机制，我们在此设计一个电力系统教学中最为经典、结构最简的<strong>三节点系统（3-Bus System）</strong>算例。我们将通过手把手的加减乘除推导，还原在无损耗电网中（$\text{MLC}=0$），由于输电阻塞的发生，各节点 LMP 是如何被计算出来的。</p>
+
+        <h3>1. 算例系统基础设定</h3>
+        <p>我们的三节点电网呈等边三角形拓扑分布，如图 1 所示：</p>
+        <ul>
+          <li><strong>节点 1（参考节点 Slack Bus）</strong>：接入发电机 G1，其发电边际报价 $C_1 = 100$ 元/MWh，容量上限无限。我们指定节点 1 为全网的参考节点，其边际能量分量即为 $\text{MEC} = 100$ 元/MWh。</li>
+          <li><strong>节点 2</strong>：接入发电机 G2，其发电边际报价 $C_2 = 300$ 元/MWh，容量上限无限。</li>
+          <li><strong>节点 3</strong>：无发电机，仅连接着一个集中电力负荷 L。</li>
+          <li><strong>网络阻抗</strong>：为了简化计算，我们假定三条输电线路（线路 1-2、线路 2-3、线路 1-3）的长度相同、导线型号一致，即<strong>三条线路的电抗 $X$ 完全相等</strong>（电阻忽略不计）。</li>
+        </ul>
+
+        <h3>2. 基尔霍夫定律与潮流分配灵敏度（PTDF）</h3>
+        <p>在直流潮流（DC Power Flow）近似下，由于三条线路的电抗完全相等，电网就等效为一个完全对称的电阻分流网络。根据直流电路的分流定律，我们可以轻松求得<strong>发电功率转移分布因子（Power Transfer Distribution Factor，PTDF）</strong>。PTDF 决定了从某一个节点注入功率并在另一个节点取出时，各条支路上分担的潮流比例：</p>
+        <ul>
+          <li><strong>情况一：从节点 1 注入 1 MW，在节点 3 取出。</strong>
+            电能从 1 到 3 有两条并联路径：路径一为直接连接的“线路 1-3”，电抗为 $X$；路径二为绕道的“线路 1-2 $\rightarrow$ 线路 2-3”，总电抗为 $X + X = 2X$。根据并联分流公式，电流与阻抗成反比。因此，有 $\frac{2}{3}$ 的潮流会走路径一（线路 1-3），另外 $\frac{1}{3}$ 的潮流会走路径二（线路 1-2 和 线路 2-3）。
+            所以，流经线路 1-2 的潮流为：$\text{PTDF}_{1-2,\ 1\rightarrow3} = 1/3 \approx 0.333$。
+          </li>
+          <li><strong>情况二：从节点 2 注入 1 MW，在节点 3 取出。</strong>
+            同理，电能从 2 到 3 的两条并联路径为：路径一为直接连接的“线路 2-3”，电抗为 $X$；路径二为绕道的“线路 2-1 $\rightarrow$ 线路 1-3”，电抗为 $2X$。因此，有 $\frac{2}{3}$ 的潮流直接通过线路 2-3 流向 3；有 $\frac{1}{3}$ 的潮流会逆着线路 1-2 的正方向（从 2 流向 1），再通过线路 1-3 流向 3。
+            如果我们规定线路 1-2 的潮流正方向为<strong>从节点 1 流向节点 2</strong>，那么从节点 2 注入并输送至节点 3 的电能，流经线路 1-2 的潮流系数就为负值：
+            $\text{PTDF}_{1-2,\ 2\rightarrow3} = -1/3 \approx -0.333$。
+          </li>
+        </ul>
+
+        <p>现在，我们为线路 1-2 设定一个物理输电极限：<strong>该线路的最大允许有功潮流 $F_{\max} = 40$ MW</strong>。其他两条线路（1-3 和 2-3）容量极大，暂不考虑其阻塞风险。</p>
+
+        <!-- 插入 SVG 图表 -->
+        <figure class="svg-figure">
+          <svg width="100%" height="280" viewBox="0 0 800 280" style="background-color: #FAFAFA; border-radius: 8px;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+              <marker id="arrow-high" markerWidth="10" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#F57C00" />
+              </marker>
+            </defs>
+            
+            <!-- 输电线路（三角形） -->
+            <!-- 线路 1-2 (发生阻塞，使用粗虚橙线) -->
+            <line x1="400" y1="65" x2="250" y2="200" stroke="#F57C00" stroke-width="3" stroke-dasharray="5 3" />
+            <!-- 线路 1-3 -->
+            <line x1="400" y1="65" x2="550" y2="200" stroke="#1A5F96" stroke-width="2" />
+            <!-- 线路 2-3 -->
+            <line x1="250" y1="200" x2="550" y2="200" stroke="#1A5F96" stroke-width="2" />
+            
+            <!-- 节点圆圈 -->
+            <circle cx="400" cy="65" r="20" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <circle cx="250" cy="200" r="20" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <circle cx="550" cy="200" r="20" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            
+            <!-- 节点编号文本 -->
+            <text x="400" y="70" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#1A1A2E" text-anchor="middle">1</text>
+            <text x="250" y="205" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#1A1A2E" text-anchor="middle">2</text>
+            <text x="550" y="205" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#1A1A2E" text-anchor="middle">3</text>
+            
+            <!-- 发电机与负荷标注 -->
+            <!-- 节点 1: G1 -->
+            <rect x="360" y="5" width="80" height="25" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5" />
+            <text x="400" y="22" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#2E7D32" text-anchor="middle">G1: 100元/MWh</text>
+            <path d="M 400 30 L 400 45" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrowhead)" />
+            
+            <!-- 节点 2: G2 -->
+            <rect x="110" y="188" width="95" height="25" rx="4" fill="#FFF3E0" stroke="#F57C00" stroke-width="1.5" />
+            <text x="157" y="204" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#F57C00" text-anchor="middle">G2: 300元/MWh</text>
+            <path d="M 205 200 L 225 200" stroke="#F57C00" stroke-width="1.5" marker-end="url(#arrowhead)" />
+            
+            <!-- 节点 3: 负荷 L -->
+            <rect x="580" y="188" width="110" height="25" rx="4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.5" />
+            <text x="635" y="204" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">负荷 L: 150 MW</text>
+            <path d="M 530 200 L 575 200" stroke="#9E9E9E" stroke-width="1.5" />
+            
+            <!-- 线路限额与阻塞标注 -->
+            <rect x="235" y="100" width="125" height="34" rx="4" fill="#FFF3E0" stroke="#F57C00" stroke-width="1" />
+            <text x="297" y="114" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#F57C00" text-anchor="middle" font-weight="bold">线路 1-2 限额 40MW</text>
+            <text x="297" y="127" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#F57C00" text-anchor="middle" font-weight="bold">【潮流达40MW阻塞】</text>
+            
+            <text x="525" y="115" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">线路 1-3 (潮流 95 MW)</text>
+            <text x="400" y="215" font-family="Noto Sans SC, sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">线路 2-3 (潮流 55 MW)</text>
+          </svg>
+          <figcaption>图 1：三节点系统发生线路 1-2 输电阻塞时的网络调度与潮流分布状态</figcaption>
+        </figure>
+
+        <h3>3. 场景 A：无输电阻塞（低负荷，负荷 $L = 90$ MW）</h3>
+        <p>假设此时系统处于用电谷期，节点 3 的负荷需求仅为 90 MW。电力调度系统的唯一任务是以最低成本满足这 90 MW 的用电。由于发电机 G1 的报价（100元）远远低于发电机 G2（300元），系统最优选择显然是最大化调用便宜的 G1，而将高报价的 G2 关停。即：</p>
+        <p>$$P_{G1} = 90 \text{ MW},\quad P_{G2} = 0 \text{ MW}$$</p>
+        <p>此时，我们需要验算此时电网中的关键线路“线路 1-2”是否超载。根据前面推导的分流系数：</p>
+        <p>$$F_{1-2} = P_{G1} \times \text{PTDF}_{1-2,\ 1\rightarrow3} = 90 \text{ MW} \times \frac{1}{3} = 30 \text{ MW}$$</p>
+        <p>因为 $F_{1-2} = 30 \text{ MW} < F_{\max} = 40$ MW，线路未发生阻塞，电网处于自由流动状态。在这个状态下，如果我们在节点 3 增加 1 MW 负荷，系统会如何应对？由于线路 1-2 还有 10 MW 的富余容量，系统会非常自然地让最便宜的发电机 G1 增发 1 MW。增加的系统总发成本仅仅是 G1 增发这 1 MW 的报价，即 100 元/MWh。</p>
+        <p>同理，如果在节点 1 增加 1 MW 负荷，直接就地由 G1 增发 1 MW 供给，成本增加 100 元/MWh；在节点 2 增加 1 MW 负荷，由 G1 增发 1 MW 并通过网络分流送达，同样不会导致任何超载，边际成本也是 100 元/MWh。<strong>结论：在电网无阻塞且无损耗的理想情况下，全网各节点的 LMP 实现了“天天下大同”，全部等于发电机 G1 的报价 100 元/MWh。</strong></p>
+
+        <h3>4. 场景 B：输电阻塞发生（高负荷，负荷 $L = 150$ MW）</h3>
+        <p>当天气变热，节点 3 的用电负荷从 90 MW 猛增至 150 MW。如果系统依然试图全部使用最便宜的 G1 来供应（$P_{G1} = 150\text{ MW},\ P_{G2} = 0\text{ MW}$），那么流经线路 1-2 的理想有功潮流计算将变为：</p>
+        <p>$$F_{1-2} = 150 \text{ MW} \times \frac{1}{3} = 50 \text{ MW}$$</p>
+        <p>这严重超出了该线路 40 MW 的物理极限！如果调度强行如此排产，线路 1-2 将会因为过载保护触发跳闸，进而引发整个三节点系统的崩溃。因此，调度中心必须介入，限制便宜发电机 G1 的出力，并被迫开启高报价的发电机 G2。我们需要通过求解以下二元一次方程组，计算出此时系统的最优经济出力组合：</p>
+        <ol>
+          <li><strong>功率平衡约束</strong>（总发电 = 总负荷）：
+            $$P_{G1} + P_{G2} = 150\text{ MW}$$
+          </li>
+          <li><strong>线路 1-2 潮流极限约束</strong>（潮流正好等于 40 MW 的极限值）：
+            $$P_{G1} \times \text{PTDF}_{1-2,\ 1\rightarrow3} + P_{G2} \times \text{PTDF}_{1-2,\ 2\rightarrow3} = 40\text{ MW}$$
+            代入 PTDF 系数：
+            $$P_{G1} \times \frac{1}{3} + P_{G2} \times \left(-\frac{1}{3}\right) = 40\text{ MW} \implies \frac{P_{G1} - P_{G2}}{3} = 40 \implies P_{G1} - P_{G2} = 120\text{ MW}$$
+          </li>
+        </ol>
+        <p>联立上述两式，我们有：</p>
+        <p>$$\begin{cases} P_{G1} + P_{G2} = 150 \\ P_{G1} - P_{G2} = 120 \end{cases}$$</p>
+        <p>非常容易解得此时的机组排产结果为：</p>
+        <p>$$P_{G1} = 135 \text{ MW},\quad P_{G2} = 15 \text{ MW}$$</p>
+        <p>此时系统运行的每小时总成本为：$135 \text{ MW} \times 100\text{ 元/MWh} + 15 \text{ MW} \times 300\text{ 元/MWh} = 18,000$ 元。</p>
+
+        <h3>5. 场景 B 下各节点 LMP 的手算推导</h3>
+        <p>现在，到了最关键的时刻。在此阻塞平衡状态下，如果各个节点单独增加 1 MW 负荷，系统会如何调度？各节点的电价 LMP 会发生怎样的奇妙分化？</p>
+
+        <h4>（1）计算节点 1 的电价 $\text{LMP}_1$</h4>
+        <p>如果在节点 1 增加 1 MW 的负荷，而总负荷中心依然在节点 3，相当于在节点 1 本地产生 1 MW 用电。由于发电机 G1 本身就接入在节点 1，系统只需要让 G1 增发 1 MW 就可以在本地完美就地消纳这部分负荷。这 1 MW 电能不需要流经阻塞的线路 1-2 输送到别处，因此完全不会加剧线路 1-2 的过载。因此，系统直接调用 G1 增发 1 MW。系统总发成本改变量为 $1\text{ MW} \times 100\text{ 元/MWh} = 100$ 元。
+        <strong>结论：节点 1 的 LMP1 = 100 元/MWh。</strong>这也正是系统的能量分量 $\text{MEC} = 100$ 元/MWh。</p>
+
+        <h4>（2）计算节点 2 的电价 $\text{LMP}_2$</h4>
+        <p>如果在节点 2 增加 1 MW 负荷。如果这 1 MW 负荷由位于节点 1 的便宜发电机 G1 增发来供应，因为电能从 1 输送到 2，有 $\frac{2}{3}$ 的潮流会通过线路 1-2，这会使原本已经满载（40 MW）的线路 1-2 过载。为了防止过载，系统绝对不能增发 G1。相反，如果由节点 2 本地的发电机 G2 增发 1 MW 满足节点 2 本地的 1 MW 负荷，电能就地消纳，在直流潮流下对线路 1-2 的潮流改变量为 0。因此，系统最经济的调度决策是：G1 保持出力 135 MW 不变，由 G2 增发 1 MW。此时系统总成本增加：$1 \text{ MW} \times 300 \text{ 元/MWh} = 300$ 元。
+        <strong>结论：节点 2 的 LMP2 = 300 元/MWh。</strong>其阻塞分量为 $\text{MCC}_2 = 300 - 100 = 200$ 元/MWh。</p>
+
+        <h4>（3）计算节点 3 的电价 $\text{LMP}_3$</h4>
+        <p>如果在负荷点（节点 3）增加 1 MW 负荷，系统会怎么调度？我们知道，如果直接让 G1 增发 1 MW 供给 3，线路 1-2 会增加 $\frac{1}{3}$ MW 潮流，导致过载；如果直接让 G2 增发 1 MW 供给 3，由于 G2 到 3 的潮流对线路 1-2 的分流是反方向的（$-1/3$ MW），这反而会减轻线路 1-2 的负载（降为 39.667 MW），但付出的成本是 G2 的高价（300元）。
+        为了寻找系统成本最低的组合，我们设 G1 增发 $dP_{G1}$，G2 增发 $dP_{G2}$，它们必须满足两个死条件：
+        <ul>
+          <li><strong>条件一（功率平衡）</strong>：$dP_{G1} + dP_{G2} = 1\text{ MW}$</li>
+          <li><strong>条件二（阻塞线路潮流变化为 0）</strong>：
+            $$dP_{G1} \times \text{PTDF}_{1-2,\ 1\rightarrow3} + dP_{G2} \times \text{PTDF}_{1-2,\ 2\rightarrow3} = 0 \implies \frac{1}{3} dP_{G1} - \frac{1}{3} dP_{G2} = 0 \implies dP_{G1} = dP_{G2}$$
+          </li>
+        </ul>
+        联立这两个条件：
+        $$\begin{cases} dP_{G1} + dP_{G2} = 1 \\ dP_{G1} = dP_{G2} \end{cases} \implies dP_{G1} = 0.5 \text{ MW},\quad dP_{G2} = 0.5 \text{ MW}$$
+        为了让节点 3 的负荷增加 1 MW 且线路 1-2 不超载，系统必须“搭便车式”地调度：让便宜的 G1 增发 0.5 MW，同时让高价的 G2 增发 0.5 MW！
+        此时系统增加的总成本为：
+        $$dP_{G1} \times C_1 + dP_{G2} \times C_2 = 0.5 \times 100 + 0.5 \times 300 = 50 + 150 = 200 \text{ 元/MWh}$$
+        <strong>结论：节点 3 的 LMP3 = 200 元/MWh。</strong>其阻塞分量为 $\text{MCC}_3 = 200 - 100 = 100$ 元/MWh。</p>
+
+        <!-- 插入数据对比表格 -->
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>节点编号</th>
+                <th>无阻塞 LMP (元/MWh)</th>
+                <th>有阻塞 LMP (元/MWh)</th>
+                <th>边际能量分量 MEC</th>
+                <th>边际阻塞分量 MCC</th>
+                <th>该节点对应发电机出力 (有阻塞)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>节点 1 (参考点)</strong></td>
+                <td>100</td>
+                <td><strong>100</strong></td>
+                <td>100</td>
+                <td>0</td>
+                <td>G1: 135 MW (便宜被限产)</td>
+              </tr>
+              <tr>
+                <td><strong>节点 2</strong></td>
+                <td>100</td>
+                <td><strong>300</strong></td>
+                <td>100</td>
+                <td>+200</td>
+                <td>G2: 15 MW (高价被强启)</td>
+              </tr>
+              <tr>
+                <td><strong>节点 3 (负荷点)</strong></td>
+                <td>100</td>
+                <td><strong>200</strong></td>
+                <td>100</td>
+                <td>+100</td>
+                <td>无发电机 (负荷 150 MW)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>通过这个硬核算例，我们清晰地看到：仅仅因为一条线路的输电容量受限，在没有考虑任何物理线损的前提下，全网的电价瞬间从 100 元撕裂成了 100、200、300 元不等。空间电价差异的本质，是系统为了绕开物理安全瓶颈，不得不支付给高成本发电机的“安全溢价”。这对于电网资产运营商的物理布局选择具有颠覆性的启示。</p>
+      </section>
+
+      <section>
+        <h2>四、从账单到电网：节点电价的工程与政策意义</h2>
+        <p>节点边际电价（LMP）的运行逻辑极其完美地将“物理电网”的运行规律映射到了“商业结算”中。在我国，自 2017 年启动首批电力现货市场试点以来，现货市场的设计普遍围绕着是否采用节点电价展开了深入的论证。最终，包括山西、山东、广东、甘肃、内蒙古等在内的多个新能源大省及用电核心省份，均无一例外地选择了节点电价（LMP）出清机制，这是由我国电力系统的物理国情决定的。</p>
+
+        <h3>1. 为什么中国现货市场试点青睐 LMP？</h3>
+        <p>以山西和山东为例。山西省是我国电力体制改革的排头兵，也是典型的“晋电外送”基地。山西电网呈现出明显的“北电南送”电气特征。晋北地区（同煤、神头等汇集站）集中了全省最大规模的煤电和风电光伏基地，而晋中（太原负荷区）和晋南地区则是主要的用电中心。由于“北电南送”的输电通道（断面）经常在新能源大发或者夏季用电高峰期发生严重阻塞，如果强行采用全网统一电价（MCP），市场将无法给出正确的供需信号。</p>
+        <p>实施 LMP 后，在新能源大发、北送通道满载时，晋北送端节点的电价由于边际阻塞分量（MCC）为大负值，导致实时电价迅速被打压到极低水平，甚至多次出现 0 元/MWh 或负电价；而受端太原负荷中心的节点电价依然维持在 400-500 元/MWh 的高位。这种巨大的空间电价差，正是 LMP 释放的最真实、最迫切的系统物理状态信号。</p>
 
         <div class="callout callout-case">
           <span class="callout-icon">🏗️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>中国真实案例：山西现货市场中断面阻塞与空间价差</strong>
+            <p>在山西现货市场的实际运行中，由国网山西电力调控中心管理的“雁同-神头”断面是典型的常态化阻塞断面。在春季和秋季的上午 11:00 左右，晋北地区光伏出力达到峰值，而外送华北的主网通道容量受限，导致该输电断面发生严重向上阻塞。此时，晋北区域内的 50 余个发电节点 LMP 常常跌至 50 元/MWh（0.05元/度）以下，甚至触发 0 元下限；而与此同时，晋南运城地区的受端节点电价由于不得不调用本地调峰机组，电价依然保持在 380 元/MWh 左右。高达 330 元/MWh 的巨大跨区域空间价差，直接催生了山西南部与北部两类储能项目完全不同的收益模型，引导了后期储能电站精准地向晋北“价格洼地”进行规划选址。</p>
+          </div>
+        </div>
+
+        <h3>2. LMP 机制的核心工程与政策价值</h3>
+        <ul>
+          <li><strong>引导发电机组和储能合理投资选址（规划层面）</strong>：
+            如果电网某节点长期电价极低，说明该地电力严重过剩或送出受限。投资者看到这盏“红灯”，就会主动避开，或者选择在此建设“充电消纳”的储能电站；而在电价长期高企的节点，则会吸引发电机组和储能前去建设，从而在商业利益驱动下自发实现电网结构的优化。
+          </li>
+          <li><strong>提供精准的物理阻塞价格信号（运营层面）</strong>：
+            LMP 将深奥的电力系统潮流方程，转化为了商业世界的“价格账单”。它迫使市场主体为自己占用电网通道、增加电网损耗的行为支付合理的代价，或者获得应有的红利。这实现了电力现货交易在物理上的“自清算”，调度机构无需再为事后的人工纠偏支付高昂的补偿资金。
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>五、储能的“点金石”：LMP 如何决定储能的生死存亡</h2>
+        <p>对于电池储能系统（BESS）而言，节点边际电价（LMP）既是决定其能否盈利的“点金石”，也是稍有不慎就会导致项目亏损甚至夭折的“鬼门关”。储能在现货市场中依靠“低吸高抛”赚取峰谷价差，在 LMP 机制下，这不仅仅是一个<strong>时间维度的博弈</strong>（低谷充、高峰放），更是一个<strong>空间维度的博弈</strong>。</p>
+
+        <h3>1. 空间套利：储能的新大陆</h3>
+        <p>在传统的单一电价（MCP）下，储能只能在时间轴上寻找价差。但在 LMP 机制下，因为阻塞分量 MCC 的存在，空间价差在特定时段可以远远超过时间价差。例如，在光伏大发的中午，送端节点 $A$ 因为阻塞，电价跌到了 -0.08 元/kWh（负电价），而受端节点 $B$ 电价为 0.35 元/kWh。此时，建在送端节点 $A$ 的储能电站可以通过“充电”来消纳送不出去的光伏电，不仅不用交电费，反而能拿到 0.08 元/kWh 的充电补贴（相当于电网付钱请你充电）。到了晚上用电高峰，阻塞消除，全网电价接轨，该节点电价涨到 0.65 元/kWh，储能再放电卖出。<strong>储能本时段的套利空间直接拉大到了 0.65 - (-0.08) = 0.73 元/kWh，远超单一电价下的普通价差。</strong></p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>选址技巧：寻找电网的“漏斗节点”</strong>
+            <p>优质的储能选址，应当是电网中那些“<strong>常年发生向下阻塞（MCC为负，电价极低），但晚上又能顺利送出（MCC恢复为0或正值）</strong>”的漏斗型节点。这通常位于大型风光基地汇集站的下侧，或者电气阻抗较大、输电通道细弱的送端“口袋网”中。</p>
+          </div>
+        </div>
+
+        <h3>2. 自触发阻塞效应（Self-Induced Congestion）：储能的自我毁灭</h3>
+        <p>这是每一个储能开发商在项目可研阶段都必须进行定量仿真的致命风险。大白话说，<strong>自触发阻塞就是：储能电站自己的大功率充电或放电行为，改变了所在节点的潮流分布，从而把原本没有阻塞的线路“充堵”了，或者把原本电价高企的节点“放贬值”了。</strong>我们用生活类比来说明物理机理：</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：地铁站的早高峰踩踏与自堵塞</strong>
+            <p>想象一个宽敞的地铁站大厅，它有一个通往外面的通道（输电线路，限流 100 人/分钟）。平时，大厅里零星有几个人出站，通道完全畅通，大家出站的体验非常好，效率极高（无阻塞，节点电价正常）。</p>
+            <p>突然，一辆满载 500 人的大巴车直接停在了地铁站门口，这 500 人同时试图在 1 分钟内全部挤进这个通道出站（大容量储能突然以 100 MW 最大功率开始放电，试图把电力送入主网）。因为通道的设计极限只有 100 人，大巴车上下来的这群人瞬间把通道堵得水泄不通，发生了严重的拥拥堵和挤压（触发物理输电阻塞）。结果，不仅大巴车上的人出不去，连地铁大厅里原本想出站的零星乘客也走不了了，大家被堵在里面动弹不得（该节点 MCC 瞬间跌为大负数，LMP 发生断崖式下跌）。</p>
+            <p>在这个类比中：
+              <ul>
+                <li><strong>大巴车上的人 = 储能放电的庞大电量</strong>；</li>
+                <li><strong>狭窄的通道 = 接入该节点的薄弱配电网或联络线</strong>；</li>
+                <li><strong>通道发生踩踏 = 触发输电阻塞，限制了其他联络通道的承载，节点电价贬值</strong>。</li>
+              </ul>
+            </p>
+          </div>
+        </div>
+
+        <p>在物理上，一个 100MW/200MWh 的独立储能电站在现货放电时，等价于在并网节点瞬间注入了 100 MW 的有功功率。如果该节点的系统承载力（电气短路容量或可用输电能力）较低，这 100 MW 的潮流会立刻占满周边线路的剩余容量，触发向外送出的输电阻塞。一旦阻塞发生，系统为了安全，就会根据拉格朗日乘子自动计算出该节点极大的负 $\text{MCC}$，导致该节点 LMP 瞬间从 0.6 元/kWh 暴跌至 0.2 元/kWh。储能本想在高价时段大赚一笔，却因为自己的放电行为，把价格给“砸”了下去。这种现象在电力系统工程中被称为<strong>“储能出清的自触发阻塞效应”</strong>。</p>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：如何通过现货出清仿真规避自堵塞</strong>
+            <p>为了在工程开发中规避自触发阻塞，开发商必须利用专业的电力系统仿真软件（如 PSS/E、BPA 或自定义的现货出清模拟器），输入目标并网节点所在区域的电网拓扑、历史负荷、新能源出力预测以及周边其他机组的报价信息。通过运行包含储能有功注入的<strong>最优潮流（OPF）出清模型</strong>，扫描不同储能容量（如 50MW、100MW、200MW）及不同出力曲线下的节点 LMP 敏感度。通常，我们会计算一个核心指标——<strong>节点电价衰减灵敏度（$\frac{d\text{LMP}}{dP_{\text{BESS}}}$，元/(MWh·MW)）</strong>。如果该灵敏度绝对值过大，说明该节点非常“娇贵脆弱”，储能应当考虑减小并网设计容量，或者通过采用分时、分段放电的控制策略来维持价格不发生崩溃，从而真正释放储能作为电网灵活性调节资源的商业价值。</p>
           </div>
         </div>
       </section>
@@ -113,9 +409,10 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>核心概念</strong>：节点边际电价（LMP）是满足电网某节点增加 1 MW 负荷所付出的最小系统边际成本。它与全网统一电价（MCP）的最大物理区别在于其完整考虑了电网输电限额和网络损耗的约束。</li>
+        <li><strong>三部曲拆解</strong>：LMP 由三个分量构成，即 $\text{LMP} = \text{MEC} + \text{MCC} + \text{MLC}$。其中能量分量 MEC 全网一致，阻塞分量 MCC 反映电网物理瓶颈（可正可负），损耗分量 MLC 反映电阻发热损失的运费。</li>
+        <li><strong>算例启示</strong>：通过三节点算例可以证明，即使在无损耗电网中，一旦某条线路潮流达到极限发生阻塞，为了绕过瓶颈，系统就不得不减少便宜机组出力、强启高报价本地机组，直接导致空间电价的剧烈分裂。</li>
+        <li><strong>储能实践</strong>：LMP 是储能选址的“生死簿”。送端向下的阻塞会创造充电的“负电价黄金机会”；但必须通过潮流和敏感度仿真防范储能大功率放电自身引起的“自触发阻塞效应”，避免放电瞬间砸低结算价格。</li>
       </ul>
     </section>
 
@@ -125,16 +422,106 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在节点边际电价（LMP）的三部分组成中，关于“边际阻塞分量（MCC）”的物理与经济特性，以下哪种说法是正确的？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 边际阻塞分量反映了电网电阻发热的经济损耗，在全网所有节点均恒为正值</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 在发生输电阻塞时，由于送端（多电区）增加负荷有助于就地消纳并缓解阻塞，其节点的 MCC 通常为负值，导致 LMP 降低值</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 只要系统总用电负荷增加，全网各节点的边际阻塞分量 MCC 就会同步、等比例地整体上升</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 边际阻塞分量仅由变压器的容量上限决定，与输电线路的电抗及拓扑结构完全无关</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：
+            本题旨在考察对边际阻塞分量（MCC）本质的辨析。
+            <strong>选项 B 正确</strong>：在电力系统中，发生阻塞时，送端（通常是新能源富集区）的电力无法输送出去，多余的电力在这里堆积。如果在送端节点增加负荷，这实际上起到了就地消纳的作用，可以腾出输电断面容量，使系统能多发便宜的电。因此，从系统优化角度看，在送端增加负荷降低了系统运行成本，所以送端节点的 MCC 为负，拉低了该点电价（甚至可能出现负电价）。
+            <strong>选项 A 错误</strong>：反映电网电阻发热损耗的是边际损耗分量（MLC），且 MLC 可正可负，并非恒为正。
+            <strong>选项 C 错误</strong>：MCC 与网络阻塞情况直接相关，并非随总负荷整体等比例上涨，无阻塞的节点其 MCC 可以为 0。
+            <strong>选项 D 错误</strong>：MCC 是由全网输电断面的安全稳定极限决定的，与线路的阻抗、电抗等电气参数以及电网拓扑紧密相连。
+          </p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在本节推导的经典无损耗三节点系统算例中，当线路 1-2 的潮流达到 40 MW 极限发生阻塞时，为什么在节点 3（负荷点）增加 1 MW 负荷，系统需要同时调度发电机 G1 和 G2 各增发 0.5 MW？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 因为 G1 和 G2 的物理容量完全相同，系统在任何情况下都必须平均分配发电任务</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 因为增发 G1 会使线路 1-2 潮流增加 1/3 MW，而增发 G2 会使线路 1-2 潮流减少 1/3 MW，只有两者各增发 0.5 MW，才能在满足 1 MW 负荷增量的同时，保持线路 1-2 潮流改变量为 0，防止过载</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 因为节点 3 距离节点 1 和节点 2 的电气距离完全不对称，电流无法通过线路 1-3 直接输送</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 因为系统为了维持频率稳定，必须限制发电机 G1 的出力增长速率不能超过 G2</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：
+            本题考察对三节点阻塞算例中物理潮流分配约束的理解。
+            <strong>选项 B 正确</strong>：根据转移分布因子（PTDF），从节点 1 发电送往节点 3 时，有 1/3 的潮流会流经线路 1-2；而从节点 2 发电送往节点 3 时，因为分流方向相反，有 1/3 的潮流会逆向流过线路 1-2，相当于对线路 1-2 贡献了 -1/3 的潮流改变量。在 1-2 已经满载阻塞（40 MW）时，任何正的有功改变量都会导致过载。为了满足 3 节点 1 MW 的负荷增加，我们需要满足总功率平衡：$dP_{G1} + dP_{G2} = 1$。为了使 1-2 潮流不增加，必须满足：$\frac{1}{3} dP_{G1} - \frac{1}{3} dP_{G2} = 0 \implies dP_{G1} = dP_{G2}$。联立求解得到 $dP_{G1} = dP_{G2} = 0.5$ MW。
+            <strong>选项 A 错误</strong>：系统经济调度是以总成本最小为目标，并非平均分配。
+            <strong>选项 C 错误</strong>：三节点拓扑中 1-3 是有直接相连线路的，并非无法输送。
+            <strong>选项 D 错误</strong>：潮流出清和电价结算是基于静态/准静态有功平衡约束，不涉及毫秒级的频率动态响应限制。
+          </p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 关于节点边际电价（LMP）与传统的系统统一电价（MCP）在电力市场运行中的本质区别，下列叙述错误的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. MCP 假设电网是无电阻、无限粗的理想铜排，而 LMP 能够将物理电网的输电容量上限和网络损耗约束融入市场竞价</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 在没有发生任何输电阻塞和电网损耗的理想情况下，各节点的 LMP 将退化为全网统一的数值，与 MCP 等效</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 采用 MCP 机制的电力现货市场，其物理出清和商业结算是一步到位的，不需要任何事后非市场化重调度</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. LMP 能够向电力系统规划者提供精确的空间价格信号，指示电网瓶颈，从而有效引导发电机和储能的选址</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：
+            本题是选非题，考察 LMP 与 MCP 的对比。
+            <strong>选项 C 本身说法错误，故为正确答案</strong>：由于 MCP 忽略了物理电网的输电限制，竞价中标的结果在物理上可能由于线路超载而无法执行，因此必须在事后由调度中心强行进行非市场化的安全重调度（重新指派发电出力），这会导致物理调度与商业清算脱节，产生巨额的不平衡账单。而采用 LMP 机制的电力现货市场，其物理出清与商业结算才是一步到位、一致的。
+            <strong>选项 A 正确</strong>：准确概括了两种电价机制对物理电网的不同抽象模型。
+            <strong>选项 B 正确</strong>：如果无阻塞和无损耗，全网 LMP 全都等于参考节点边际发电机报价（MEC），即退化为全网统一价格。
+            <strong>选项 D 正确</strong>：LMP 产生的空间价差是引导网源合理布局、打通电网物理瓶颈的有力经济杠杆。
+          </p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 对于在现货市场中运行的电池储能系统（BESS），“自触发阻塞效应（Self-Induced Congestion）”对其商业运营会带来什么直接的负面影响？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 储能大功率放电会直接烧毁电池组的保护板，导致电站发生连锁物理跳闸故障</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 储能充电会降低接入节点的边际损耗分量（MLC），使充电结算价格大幅升高</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 储能大功率放电改变了局部电网的潮流，触发或加剧了并网节点向外的输电阻塞，导致该节点的 LMP 被自己“砸低”，严重压缩了放电的套利空间</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 自触发阻塞会使得电网强制将储能电站的运营模式从“自主申报”修改为“全额无偿调用”</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：
+            本题考察储能现货运营中非常核心的“自触发阻塞效应”这一概念。
+            <strong>选项 C 正确</strong>：储能电站（如 100 MW 级）在短时间内以大功率向电网放电，等效于在该并网节点注入了海量有功功率。由于电网输电能力有限，这股强潮流极易将外送的电网线路推至满载极限，从而触发阻塞。一旦发生阻塞，该节点的边际阻塞分量 MCC 就会跌为很大的负值，导致该节点的 LMP 在储能放电的瞬间发生断崖式下跌，使储能不得不以极低的实际电价结算其放电电量，侵蚀了本应获得的套利收益。
+            <strong>选项 A 错误</strong>：自触发阻塞是电网层面潮流变化导致的电价机制，与电池本身的物理保护板损坏无关。
+            <strong>选项 B 错误</strong>：储能在送端充电时，这实际上相当于增加了负荷，有助于消纳当地电力，通常会使该节点的 MCC 升高（向 0 靠拢），结算价格应该是被抬高（或负电价减轻），但不是因为 MLC。
+            <strong>选项 D 错误</strong>：虽然电价受到了影响，但并不会导致市场规则强行取消储能的自主申报交易资格，这纯粹是价格出清的自然经济结果。
+          </p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 某储能电站准备在我国某电力现货市场省份进行投资建设。为了深入评估并网节点的 LMP 波动性及自阻塞风险，工程可研阶段最科学的分析方法是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 仅收集该省全网的历史平均负荷曲线，简单套用一年的历史 MCP 统一价格进行 Excel 收益试算</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 对目标节点的 LMP 历史曲线进行统计，并利用电力系统最优潮流（OPF）出清模型，推测储能不同出力下节点的电价衰减灵敏度，评估电网网架的承载能力</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 只要该节点的电位和电压质量合格，即可判定该节点绝对不会发生任何输电阻塞，直接满负荷建设</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 将储能全部建设在负荷最为集中的市中心变电站，以此确保充放电时段的 MLC 永远恒定为负值</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：
+            本题考察储能工程项目前期规划可研的实际分析方法。
+            <strong>选项 B 正确</strong>：在 LMP 现货市场下，各节点价格差异极大，且存在自触发阻塞风险。可研阶段必须结合目标节点的 LMP 历史数据，更重要的是使用电力系统仿真软件（如最优潮流 OPF）模拟储能电站并网后的电力注入对电网潮流的影响，推断出节点电价对储能功率的衰减灵敏度，从而科学评估最适宜的并网容量与交易排产策略。
+            <strong>选项 A 错误</strong>：简单套用全网平均负荷或 MCP 会完全忽略节点电价的空间差异和阻塞惩罚，导致收益测算严重失真。
+            <strong>选项 C 错误</strong>：节点电压合格（稳态指标）与输电线路在高峰期是否发生有功潮流阻塞（潮流分布约束）是两个不同范畴的电网问题。
+            <strong>选项 D 错误</strong>：市中心变电站地价极高、安全准入门槛严苛，并不适合大容量储能建设，且 MLC 会随系统运行状态动态改变，无法保证恒定为负。
+          </p>
         </div>
       </div>
 
@@ -159,20 +546,22 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="03_3_1_电力现货市场基本原理.html">→ 03_3_1 电力现货市场基本原理</a>（理解现货市场的基本出清逻辑与时间价值）</li>
+        <li><a href="03_3_3_实时市场运行.html">→ 03_3_3 实时市场运行</a>（掌握实时出清与日前出清的动态协调机制）</li>
+        <li><a href="03_3_5_储能现货市场机会.html">→ 03_3_5 储能在现货市场中的机会</a>（分析储能如何利用 LMP 空间与时间差套利）</li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
 
     <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
-      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">03_3_4</span></p>
+      <p>中国网储系统性学习手册 v3.6 &nbsp;|&nbsp; <span class="file-id">03_3_4</span></p>
     </footer>
 
-  </div>
+  </div><!-- /page-wrapper -->
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
