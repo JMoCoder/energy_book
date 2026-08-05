@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日前市场出清 — 电力现货市场 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析日前市场出清的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析电力现货日前市场出清的核心物理原理、SCUC与SCED双阶段优化算法、节点边际电价（LMP）形成机制及独立储能日前申报与出清策略。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,54 +57,302 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">03_3_2</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>日前市场出清</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">解密电力现货日前交易的物理引擎，从SCUC、SCED两阶段优化到LMP节点边际电价形成，剖析独立储能如何锁定日前最优充放电曲线。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>学习目标一</strong>：深刻理解日前市场出清的竞价与报价机制，掌握独立储能“双向单体”申报特征。</li>
+        <li><strong>学习目标二</strong>：掌握安全约束机组组合（SCUC）与安全约束经济调度（SCED）的核心决策模型与物理约束体系。</li>
+        <li><strong>学习目标三</strong>：理解节点边际电价（LMP）的三个数学分量及其背后的电网拥堵与影子价格经济物理本质。</li>
+        <li><strong>学习目标四</strong>：能够分析跨时段状态耦合约束下独立储能的日前套利逻辑，并规避日前报价的“贪婪陷阱”。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：午间“负电价”的强制充电告警</h2>
+      <p>2024年5月的一天中午，山东某100 MW / 200 MWh独立电化学储能电站的集控室内，突然弹出了高频充电运行指令。此刻，全省日前现货市场出清结果刚刚公布，中午12:00至14:00的节点边际电价（LMP）被死死地按在系统下限：-80元/MWh。这意味着，全网由于光伏发电大发导致电力系统极度供大于求，发电机组必须贴钱请负荷消耗电量，而储能电站作为日前出清的“充电负荷”，每充入一度电，系统非但不用收费，反而会向其支付0.08元的调峰补偿。相反，如果该站值班人员觉得此时电池SOC偏高想强行违约不充电，那么在明天的实时结算中，该站将不得不按实时飙升的价格回购这部分日前偏差电量，面临高达数万元的差价重罚。</p>
+      <p>日前市场出清的每一个96点出力曲线和节点价格，都是怎么在日前（运行日前一天）通过调度中心的超级计算机集群计算出来的？它又是如何像无形的手一样，跨越时空决定着全省上万台发电机组和储能电站明天的运行命运？让我们揭开发电报价到系统数学优化出清的神秘面纱。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、日前市场的基石：报价与竞价机制</h2>
+        <p>电力现货市场在时间维度上通常分为日前市场（Day-Ahead Market，DAM）、日内市场和实时市场。日前市场是电力现货交易的绝对核心，其出清结果确定的发电机组日前出力曲线和交易量，占据了现货全天交易总额的80%以上。为什么不能像股票交易或普通的蔬菜批发那样，全凭运行当天的即时供需来决定？这源于电力系统无法大规模低成本储存以及长距离输电的强物理限制。如果当天才开始撮合交易，电网极易因为输电通道过载导致烧毁电线甚至大面积停电；同时，大型煤电机组的启动和并网是一个非常复杂的物理加热与机械应力演变过程，通常需要数小时乃至上十小时。因此，日前市场在运行前一天（D-1日）提前出清，实质上是为第二天的电网运行提供了一场精密的“带妆彩排”。</p>
+        <p>在日前市场中，市场主体的“申报行为”是竞价撮合的核心起点。我国现货市场主流的报价方式可以细分为以下几类主体：</p>
+        <p><strong>1. 发电侧的阶梯报价</strong>：发电机组通常采用多段式的阶梯报价方式。他们需要在D-1天规定的申报截止时间前，向电力交易系统提交第二天的报价曲线。这根曲线的横坐标代表发电功率（MW），纵坐标代表愿意接受的最低售电价格（元/MWh）。在数学上，为了确保优化问题有唯一的解且符合经济学逻辑，报价曲线必须是单调非递减的。也就是说，发电机发的第一度电可能报价较便宜（因为这属于其基本技术出力范围，不发不行），随着出力不断上升，由于燃料边际消耗率增加、锅炉效率下降，其边际报价只能升高或持平，不能越发越便宜。</p>
+        <p><strong>2. 负荷侧（用电侧）的分类申报</strong>：根据现货市场的设计深度，用户侧可以分为“报量报价”与“报量不报价”两类。报量报价意味着大型工业用户或售电公司愿意根据价格波动调整用电需求（如申报在电价高于1000元/MWh时减少用电），从而参与市场的需求侧响应；报量不报价则意味着用户把明天的用电需求视为刚性需求，只报预测电量，完全被动接受市场的出清电价。</p>
+        <p><strong>3. 独立储能的“双向单体”报价</strong>：储能电站是日前现货市场中最为特殊的交易主体，它具有双重身份。当电价低迷时，它充电，扮演用电负荷（买电）；当电价高企时，它放电，扮演发电机组（卖电）。因此，日前出清系统要求独立储能电站必须同时申报两条独立的报价曲线：</p>
+        <ul>
+          <li><strong>充电报价曲线（买电意愿）</strong>：单调非递增曲线。横坐标为充电功率，纵坐标为最高愿意支付的充电电价。价格越低，储能充电意愿越强，充电功率越大。</li>
+          <li><strong>放电报价曲线（卖电意愿）</strong>：单调非递减曲线。横坐标为放电功率，纵坐标为最低要求获得的放电电价。价格越高，储能放电意愿越强，放电功率越大。</li>
+        </ul>
+        <p>这两条曲线在物理和经济决策上必须保留一个清晰的“空白夹角”，用于隔离充放电的频繁切换。如果两条曲线报价发生重叠（例如放电报价低于充电报价），在出清计算时就会引发逻辑悖论，使得储能自己跟自己交易，导致电池在没有为电网提供任何潮流平衡贡献的前提下白白损耗寿命。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：日前报价出清与民航超前舱位预订</strong>
+            <p>日前市场出清，非常类似于大型航空公司提前一天对明天的国际长途航班进行机组排班和舱位预售。</p>
+            <p>在这个类比中：发电机组相当于机票代理商，需要在日前提交明天的飞机可提供座位数以及对应票价（发电量与阶梯报价）；旅客相当于用电负荷，提前一天填报自己明天的出行计划。如果通往某个核心城市的航线由于空域流量限制（输电线路发生物理过载），便宜的普通客机塞不进去了，航空公司（调度中心）就必须紧急调配本地更昂贵但可以随开随走的公务机（本地昂贵的燃气机组）来满足新增旅客。储能电站则像是在机场旁开办“钟点休息室加倒票点”的特许商户：它在日前发现便宜的非高峰班次机票时（低谷电价），买下大量座位（充电储能）；而在第二天商务客流暴增、一票难求时（高峰电价），把昨晚囤下的座位退返或以高价转让（放电套利）。为了不亏本，这个商户必须仔细核算自己钟点房折旧费（电池寿命衰减成本）和机票退改手续费损失（往返效率损失），制定合理的日前双向申报策略。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实例：国家发改委《电力现货市场基本规则（试行）》对日前出清的政策指引</strong>
+            <p>2023年9月，国家发展改革委、国家能源局联合印发了《电力现货市场基本规则（试行）》（发改能源规〔2023〕1217号），这是我国首个在全国范围内统一规范电力现货市场建设的顶层设计文件。该规则明确指出：日前现货市场应采用“日前申报、日前出清、日前财务锁定、日后偏差清算”的组织模式。该文件的发布，为独立储能电站直接作为独立市场主体参与日前报价奠定了法理基础。此后，以山东、山西、甘肃为代表的示范省份均细化了针对独立储能的日前市场“报量报价”双向出清办法，实现了独立储能在日前市场中自主优化充放电的时序规划。</p>
+          </div>
+        </div>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 240" width="100%" height="240px" style="background: #FAFAFA; border-radius: 8px;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#1A5F96" />
+              </marker>
+            </defs>
+            <line x1="50" y1="120" x2="750" y2="120" stroke="#4A5568" stroke-width="3" marker-end="url(#arrowhead)" />
+            <circle cx="100" cy="120" r="8" fill="#1A5F96" />
+            <text x="100" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">D-1日 09:00</text>
+            <text x="100" y="150" text-anchor="middle" font-size="11" fill="#4A5568">市场申报开始</text>
+            <text x="100" y="170" text-anchor="middle" font-size="11" fill="#718096">发电与储能申报报价曲线</text>
+            
+            <circle cx="280" cy="120" r="8" fill="#1A5F96" />
+            <text x="280" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">D-1日 10:30</text>
+            <text x="280" y="150" text-anchor="middle" font-size="11" fill="#4A5568">申报截止与数据收集</text>
+            <text x="280" y="170" text-anchor="middle" font-size="11" fill="#718096">收集负荷及新能源预测</text>
+            
+            <circle cx="480" cy="120" r="8" fill="#F57C00" />
+            <text x="480" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">D-1日 12:00-15:00</text>
+            <text x="480" y="150" text-anchor="middle" font-size="11" fill="#4A5568">出清算法引擎运行</text>
+            <text x="480" y="170" text-anchor="middle" font-size="11" fill="#718096">SCUC与SCED算法联立求解</text>
+            
+            <circle cx="680" cy="120" r="8" fill="#2E7D32" />
+            <text x="680" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">D-1日 17:00前</text>
+            <text x="680" y="150" text-anchor="middle" font-size="11" fill="#4A5568">出清结果正式发布</text>
+            <text x="680" y="170" text-anchor="middle" font-size="11" fill="#718096">下发 96点充放电计划与LMP</text>
+          </svg>
+          <figcaption>图1：日前市场出清业务时间线与关键数据流向</figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>二、日前出清的核心算法：SCUC 与 SCED</h2>
+        <p>收集完所有发电厂、用电用户和储能电站的日前申报曲线后，调度中心的超级计算机便开始运行日前市场最核心的“物理与经济大脑”——日前出清算法。日前出清算法不是简单的价格排序，它必须保证出清结果在现实物理网架上是安全可执行的。这就需要通过大规模的数学规划方法，实现两个核心算法模块的闭环协同运行：</p>
+        <p><strong>1. 安全约束机组组合（Security Constrained Unit Commitment，SCUC）</strong>：该算法主要解决的是“开不开机”的问题。在电力系统中，大型燃煤发电机组（如600 MW超超临界机组）无法像电灯开关那样随开随用。每一次点火启动，都需要消耗大量的燃油进行漫长的锅炉预热，开机成本高达数十万。同时，为了避免温度剧烈变化导致气缸开裂等材料热应力损坏，机组一旦开机，必须持续运行若干小时（最小运行时间限制）；一旦停机，也必须保持关闭状态数小时以使设备安全冷却（最小停机时间限制）。SCUC的数学本质是一个超大规模的混合整数线性规划（MILP）问题，其中的主要优化决策变量是0-1整数（例如 $u_{i,t}=1$ 代表第 $i$ 台机组在第 $t$ 小时处于运行状态，$u_{i,t}=0$ 代表处于关机状态）。SCUC会在满足全网负荷预测及备用容量安全要求的条件下，寻找使全网发电机组总体启停成本和运行成本之和最小的开机排班表。</p>
+        <p><strong>2. 安全约束经济调度（Security Constrained Economic Dispatch，SCED）</strong>：当SCUC把明天的“机组开机状态”确定下来后，SCED负责解决“出力多少”的问题。SCED的步长通常为15分钟（对应全天96个时段），它的决策变量是发电机组的具体有功功率出力值 $P_{i,t}$（是一个连续变化的MW数值）。SCED会以SCUC锁定的机组启停表为边界，根据市场主体的阶梯申报价格，在满足系统发用平衡、机组爬坡速率限制以及电网输电安全通道最大容量的前提下，优化出全天96点各机组的出力曲线，实现总体的购电成本最低。</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：日前SCUC/SCED两阶段优化出清模型</h4>
+          <p>在日前出清中，日前优化引擎的目标函数通常是最小化系统总的发电与启停运行成本（或最大化社会福利）：</p>
+          $$\min_{P, u} \sum_{t=1}^{T} \sum_{i=1}^{N} \left[ C_i(P_{i,t}) \cdot u_{i,t} + S_i(u_{i,t}, u_{i,t-1}) \right]$$
+          <p><strong>公式参数的工程与物理含义说明：</strong></p>
+          <ul>
+            <li>$T$ 和 $N$：代表优化优化的总时间段数（通常为96个时段）和参与出清的机组总数量。</li>
+            <li>$C_i(P_{i,t})$：发电机组 $i$ 在 $t$ 时刻出力为 $P_{i,t}$ 时的边际发电运行成本函数（由报价曲线积分得到，代表燃料耗费成本）。</li>
+            <li>$u_{i,t} \in \{0, 1\}$：机组 $i$ 在 $t$ 时刻的启停状态决策变量，为0-1整数规划中的二元整型数。</li>
+            <li>$S_i(u_{i,t}, u_{i,t-1})$：机组 $i$ 由于状态变化（如由0变为1）所产生的单次物理启停成本。</li>
+          </ul>
+          <p><strong>系统必须无条件满足的物理边界约束条件：</strong></p>
+          <p>1. <strong>系统发用平衡约束</strong>：$\sum_{i=1}^{N} P_{i,t} = D_t + L_t$。其中 $D_t$ 为第 $t$ 时刻的系统总预测负荷，$L_t$ 为该时刻的系统电网网损功率。这体现了电力系统中发电与负荷必须秒级实时平衡的铁律。</p>
+          <p>2. <strong>安全输电限制（潮流容量约束）</strong>：对电网中任意一条关键输电线路 $l$，必须满足：</p>
+          $$-F_l^{max} \le \sum_{i=1}^{N} GSF_{l, i} \cdot (P_{i,t} - P_{ref, t}) \le F_l^{max}$$
+          <p>这里 $GSF_{l, i}$ 称为<strong>发电机转移因子（Generation Shift Factor）</strong>，它是一个代表电网物理网架阻抗分布的拓扑灵敏度系数。它描述了在节点 $i$ 上增加 1 MW 的发电出力，有多少比例的电磁潮流会流经输电线路 $l$。$F_l^{max}$ 是该输电线路的最大安全传输容量热极限。如果潮流计算超出了这个限额，出清算法将自动削减相关节点便宜机组的出力，以防止电网烧毁。</p>
+        </div>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：车间重型设备排班（SCUC）与各设备调速（SCED）</strong>
+            <p>日前出清的两阶段算法，非常类似于一家拥有大型工业设备的制造工厂在安排明天的生产计划。</p>
+            <p>- <strong>机组组合阶段（SCUC）</strong>：车间主任（SCUC算法）必须决定明天开启哪几台大型机器。一些重型老机器（如大型火电机组）预热极为缓慢，启动一次要烧大半吨重油（启停成本高），而且启动后为了防止炉体变形，至少要连续工作8小时才能关机（最小运行约束）。如果车间主任随便排班，频繁开关机器，即便机器运行时能耗再低，庞大的设备折旧和启停油耗也会让工厂亏损。因此，这一步重点在于确定设备状态的“排班表”。</p>
+            <p>- <strong>经济调度阶段（SCED）</strong>：机器开启并热机就绪后，车间班长（SCED算法）每隔15分钟调整一次各机器的输送带输出功率（出力 MW 级曲线）。当工厂负荷增加时，班长微调这几台已经在运转机器的转速，尽量让燃煤消耗最低（燃料成本最低）的机器多产出。但是，输送带是有最大承载负荷上限的（输电线路潮流约束），如果运往仓库的某些通道太窄，班长就算知道1号低成本机器效率最高，也只能强行降低1号机器的产出，转而开启通道畅通但能耗偏高的2号机器。</p>
+          </div>
+        </div>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 300" width="100%" height="300px" style="background: #FAFAFA; border-radius: 8px;">
+            <defs>
+              <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#1A5F96" />
+              </marker>
+            </defs>
+            <rect x="30" y="50" width="150" height="200" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" />
+            <text x="105" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="#0D3F6F">市场日前输入数据</text>
+            <text x="40" y="110" font-size="11" fill="#1A1A2E">· 全省负荷与新能源预测</text>
+            <text x="40" y="140" font-size="11" fill="#1A1A2E">· 市场主体阶梯报价曲线</text>
+            <text x="40" y="170" font-size="11" fill="#1A1A2E">· 电网潮流网络拓扑结构</text>
+            <text x="40" y="200" font-size="11" fill="#1A1A2E">· 储能电量SOC初始条件</text>
+
+            <line x1="180" y1="150" x2="220" y2="150" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+            <rect x="220" y="80" width="180" height="140" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2" />
+            <text x="310" y="105" text-anchor="middle" font-size="14" font-weight="600" fill="#F57C00">第1阶段：SCUC</text>
+            <text x="310" y="125" text-anchor="middle" font-size="11" fill="#718096">安全约束机组组合</text>
+            <text x="310" y="155" text-anchor="middle" font-size="11" fill="#1A1A2E">决策变量: 机组启停状态 (0-1)</text>
+            <text x="310" y="180" text-anchor="middle" font-size="11" fill="#1A1A2E">优化目标: 启停与备用成本最小</text>
+
+            <line x1="400" y1="150" x2="440" y2="150" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead2)" />
+            <text x="420" y="140" text-anchor="middle" font-size="10" fill="#718096">状态传递</text>
+
+            <rect x="440" y="80" width="180" height="140" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" />
+            <text x="530" y="105" text-anchor="middle" font-size="14" font-weight="600" fill="#2E7D32">第2阶段：SCED</text>
+            <text x="530" y="125" text-anchor="middle" font-size="11" fill="#718096">安全约束经济调度</text>
+            <text x="530" y="155" text-anchor="middle" font-size="11" fill="#1A1A2E">决策变量: 96点出力值 (连续量)</text>
+            <text x="530" y="180" text-anchor="middle" font-size="11" fill="#1A1A2E">物理约束: 线路潮流过载限制</text>
+
+            <line x1="620" y1="150" x2="660" y2="150" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+            <rect x="660" y="50" width="120" height="200" rx="6" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.5" />
+            <text x="720" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="#4A5568">日前出清输出</text>
+            <text x="670" y="110" font-size="11" fill="#1A1A2E">· 96点出力曲线</text>
+            <text x="670" y="140" font-size="11" fill="#1A1A2E">· 节点边际价格 LMP</text>
+            <text x="670" y="170" font-size="11" fill="#1A1A2E">· 机组运行安排表</text>
+            <text x="670" y="200" font-size="11" fill="#1A1A2E">· 锁定日前交易合同</text>
+          </svg>
+          <figcaption>图2：日前出清双阶段（SCUC + SCED）决策协同流程图</figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>三、日前价格的科学形成：从 MCP 到 LMP</h2>
+        <p>日前出清算法在计算出发用电曲线的同时，也伴随着现货交易核心价格的诞生。目前，现货市场的价格定价体系经历了系统出清价格（MCP）向节点边际电价（LMP）的演进过程。如何科学地给不同地点的电能定价，是引导系统潮流健康分配和独立储能合理投资的决定性因素。</p>
+        
+        <h3>3.1 系统出清价格（MCP）</h3>
+        <p>系统出清电价（Market Clearing Price，MCP）代表了电力市场的“理想无摩擦定价”。它假设电网中所有的输电线路都是“无限粗的超导线”，无论发电机组在哪里，发出的电都可以无损耗、无阻碍地瞬间送达系统中的任何一个负荷。出清时，调度系统将全网所有发电机组提交的日前阶梯报价按照价格从低到高依次横向排列，拼接成一根“系统边际发电供给曲线”；随后，将其与系统总体的垂直负荷预测线相交。两条线交点对应的发电主体的边际报价，就是该时刻全网统一的系统出清价格。由于不考虑地理位置和线路受限，此时全网各节点电价完全一致。当电网局部发生严重的送电瓶颈时，MCP定价将彻底失真，无法向市场发送有效的空间引导信号。</p>
+
+        <h3>3.2 节点边际电价（LMP）</h3>
+        <p>为了精准反映电网物理网络瓶颈对电能价值的时空影响，我国主流电力现货市场全面采用节点边际电价（Locational Marginal Pricing，LMP）定价机制。在日前现货出清时，LMP是指在满足电网所有物理及安全输电约束的前提下，在某一个特定节点上增加1 MW的微小负荷所导致的系统总购电边际成本的增量。LMP在数学上是日前SCED经济调度中，各节点有功功率平衡方程对应的拉格朗日乘子，俗称“影子价格”。</p>
+        <p>在日前现货市场中，每一个节点上的LMP都是由以下三个物理分量线性叠加而成的：</p>
+        $$\lambda_i = \lambda_{energy} + \lambda_{loss, i} + \lambda_{congestion, i}$$
+        <p><strong>1. 系统电能价格（System Energy Price，$\lambda_{energy}$）</strong>：代表全网在没有任何输电阻塞和电网损耗时的边际发电成本。这是LMP的基准值，在同一时刻，全网所有节点的电能分量完全一致，反映了市场的总体供需和边际燃料变动趋势。</p>
+        <p><strong>2. 网损价格（Loss Price，$\lambda_{loss, i}$）</strong>：电能在输电网络中长距离流过阻抗线路时，会发生热损耗。向远离电源的末端节点 $i$ 供应1 MW电能，电源端由于网损，可能需要实际发出1.03 MW的电。这多出的3%网损成本对应的金额就是网损价格分量。在常规的送受电情况下，网损分量较小，但在某些情况下，如果向某节点增加负荷反而能抵消其他重载线路的潮流损耗，该节点的网损敏感度将为负，从而产生负的网损电价，降低该节点的LMP。</p>
+        <p><strong>3. 拥堵价格（Congestion Price，$\lambda_{congestion, i}$）</strong>：这是节点电价形成差异的最核心原因。当某条输电通道发生潮流拥堵、达到其最大传输热容量极限时，远端便宜的电送不过来，调度只能强行关小便宜的发电机，并点火开大受电端节点本地高成本的应急机组。为满足该受电端新增负荷，系统不得不支付极其高昂的本地机组开机费和发电费，这种由于物理网络瓶颈导致的边际溢价，就是拥堵价格分量。拥堵价格的幅值非常剧烈，往往会导致相距不过几十公里的两个节点产生数倍的差价。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：LMP构成与网络订餐账单组成</strong>
+            <p>我们可以将节点边际电价（LMP）的三个分量，类比为我们在订餐平台上下单外卖时付出的总账单：</p>
+            <p>1. <strong>餐品基础费（系统电能价格）</strong>：不管你在城市的哪个角落，餐厅制作同一份牛肉拉面的食材与人工成本是完全一样的，在同一时刻，全城人点这盒拉面的基础餐费完全统一（全网相同的电能价格分量）。</p>
+            <p>2. <strong>配送路途油耗（网损价格）</strong>：如果你家住在距离餐厅非常偏远的远郊，外卖骑手在路上骑摩托车需要额外消耗汽油，饭菜在路上也有一定的变凉折旧，因此平台需要多收你1-2元的长途配送油耗损耗（这就是节点的网损价格分量）。</p>
+            <p>3. <strong>雨天交通拥堵费（拥堵价格）</strong>：如果今天通往你家新区的跨海大桥发生了严重的交通事故（输电断面发生物理拥堵），市区的便宜外卖骑手根本无法通过大桥送单。平台为了保障你家的送餐，被迫以极高时薪临时紧急雇佣了你家小区门口本地闲置的“高额专职配送员”。这使得本次派送的额外成本大幅度飙升。这多付出的加急拥堵附加费，就是节点的拥堵价格分量。最终，堵车小区的住户总付餐费（LMP）就会大幅高出市区。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：拥堵盈余的结算机制与金融输电权（FTR）</strong>
+            <p>在日前现货出清中，负荷节点上的用户按照各自节点的LMP（通常较高）支付购电款，而发电节点上的发电厂按照各自节点的LMP（发生拥堵时较低）获得售电收入。由于拥堵导致：买方支付的总资金大于卖方收到的总资金。在日前出清系统的财务账户中产生的这笔巨额沉淀资金，被称为<strong>“拥堵盈余（Congestion Surplus）”</strong>。</p>
+            <p>在国际成熟市场中，为了防范拥堵电价波动给发电商和售电商带来的财务风险，交易中心会发行“金融输电权（Financial Transmission Rights，FTR）”。市场主体可以通过日前竞拍购买某条通道的FTR。当该通道发生拥堵产生拥堵盈余时，这笔钱将按FTR份额返还给持有者，对冲其高昂的拥堵差价，从而在财务上实现完美的风险规避。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>四、日前出清如何决定储能的命运：充放电计划与跨时段耦合</h2>
+        <p>对于独立储能电站而言，其在日前市场中的出清机制与火电等常规发电机组有着本质的不同。发电机组在第 $t$ 小时的发电量，只要不超过其最大出力上限和爬坡能力，与其余小时是互不干扰的。而储能电站具有天然的**“跨时段状态耦合（Temporal Coupling）”**物理属性：它在中午12:00能够放出多少电，不仅取决于当前的电价，更严密取决于它在上午光伏大发时充入了多少电。</p>
+        
+        <h3>4.1 储能日前出清的状态转移模型</h3>
+        <p>在日前现货出清的SCED优化计算中，储能电站被抽象为一个具有荷电状态（State of Charge，SOC）物理变化规律的跨时段耦合约束体。它在24小时（96个时段）内的储能电量演变必须服从以下状态转移方程：</p>
+        $$SOC_t = SOC_{t-1} + \frac{P_{charge, t} \cdot \eta \cdot \Delta t}{E_{cap}} - \frac{P_{discharge, t} \cdot \Delta t}{E_{cap} \cdot \eta}$$
+        <p><strong>公式参数的工程含义说明：</strong></p>
+        <ul>
+          <li>$SOC_t$ 和 $SOC_{t-1}$：分别为 $t$ 时段和 $t-1$ 时段结束时储能电池的电量百分比状态（取值范围需满足安全充放电区间，通常为5%~95%以保护寿命）。</li>
+          <li>$P_{charge, t}$ 和 $P_{discharge, t}$：储能在该时段的日前充电有功功率和放电有功功率（MW），受电池最大充放电倍率及PCS容量限制。</li>
+          <li>$E_{cap}$：储能电池的额定能量容量（MWh），反映其最大能存储的物理极限。</li>
+          <li>$\eta$：储能电站的效率因子（$\eta \le 1.0$），其充电效率与放电效率的乘积 $\eta^2$ 即为<strong>往返效率（Round-Trip Efficiency，RTE）</strong>。公式中充电功率乘以效率、放电功率除以效率，精准量化了电能变流及内阻发热造成的电量损失。</li>
+          <li>$\Delta t$：日前出清的时间段步长（日前结算中通常为0.25小时，即15分钟为一个时段）。</li>
+        </ul>
+        <p>这就迫使日前出清算法在运算时，不能采用“按时段割裂求解”的传统做法，而必须通过大规模二次规划，将明天全天的96个时段联立起来，作为一个整体矩阵进行求解。只有这样，出清算法才能算出一根在24小时内充放电总量守恒、且SOC绝不越界的合理充放电调度计划。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
-          </div>
+        <h3>4.2 日前出清曲线的“合同锁定”与双结算机制</h3>
+        <p>在日前市场出清结束后，调度系统向独立储能下发的《日前出清曲线》一旦经公示发布，便具备了法律性质的“财务合同”效力。这意味着，该储能电站已经锁定了明天在什么时间段充电多少、放电多少，以及按何种日前电价结算。当明天实际运行到来时，市场遵循**“日前出清确定日前合同，实时运行偏差独立结算”**的双结算（Dual Settlement）机制。储能电站的实际运行结算总收益由以下数学模型严格决定：</p>
+        $$W_{total} = \sum_{t=1}^{96} \left[ P_{DA, t} \cdot LMP_{DA, t} + (P_{RT, t} - P_{DA, t}) \cdot LMP_{RT, t} \right] \cdot \Delta t$$
+        <p><strong>日前与实时双结算财务逻辑拆解：</strong></p>
+        <ul>
+          <li>第一部分 $P_{DA, t} \cdot LMP_{DA, t} \cdot \Delta t$：日前出清量部分。无论运行日实际情况如何，日前出清的充电和放电量全部雷打不动地按日前出清产生的节点电价 $LMP_{DA, t}$ 进行一次财务清算。</li>
+          <li>第二部分 $(P_{RT, t} - P_{DA, t}) \cdot LMP_{RT, t} \cdot \Delta t$：实际出力与日前合同的“偏差结算部分”。如果储能电站在实际运行中的实际功率 $P_{RT, t}$ 与日前计划 $P_{DA, t}$ 产生偏离，其偏差部分将按运行当天的实时市场价格 $LMP_{RT, t}$ 进行独立结算（多余的卖回给系统，不足的从系统回购）。</li>
+        </ul>
+        <p>这种设计意味着，如果储能电站通过日前预测，成功在日前锁定了一笔低价充电合约，但在实际运行中，实时电价因为新能源突发暴跌而变得更低，或者因为负荷暴增导致实时电价极高，储能可以主动偏离日前计划，并在实时阶段通过偏差結算获得更为丰厚的价差收益。这在制度上赋予了储能基于日前-实时价差进行动态二次套利的巨大空间。</p>
+      </section>
+
+      <section>
+        <h2>五、日前市场出清的优化实例与策略分析</h2>
+        <p>在参与现货竞价的工程实践中，由于日前出清对电价和潮流的复杂影响，储能电站的运维团队若不掌握出清算法的底层逻辑，极易导致策略偏差。以下深入剖析如何规避报价陷阱，并通过科学手段保护电池资产、优化出清计划。</p>
+
+        <h3>5.1 电池退化成本与日前出清的“价差红线”</h3>
+        <p>电化学电池是有物理寿命上限的。锂离子在充电和放电的往复嵌入/脱嵌过程中，会不可逆地产生析锂、SEI膜增厚以及活性物质损失，导致容量衰减。这种由于充放电循环产生的电池老化折旧成本，在电力经济学中被称为<strong>电池退化成本（Battery Degradation Cost）</strong>。</p>
+        <p>运维团队在进行日前报价前，必须严密核算本电站的退化成本。若忽略此项成本，盲目参与日前现货出清，将会导致“充放电所得收益还抵扣不了电池寿命折旧”的亏损惨剧。以国内某 typical 的百兆瓦级储能电站为例，其电池单次满循环的退化折旧成本大约在0.12~0.18元/kWh。考虑到电池系统75%~85%的综合往返效率（RTE），以及PCS等设备的站用变辅助电耗，该电站充放电的综合边际成本在0.25元/kWh（折合250元/MWh）左右。这就是该站日前套利的**“物理价差红线”**。日前报价中，放电申报电价与充电申报电价的差值必须牢牢高出这根红线，否则每一次出清都是在割肉亏损。</p>
+
+        <h3>5.2 规避“贪婪陷阱”的合理报价策略</h3>
+        <p>⚠️ 常见误区：日前报价的“贪婪陷阱”。</p>
+        <p>许多刚入行的储能投资商或电站运维人员会认为：既然是要套利，那我应该把日前充电报价报得极低（如0元/MWh），而把放电报价报得极高（如上限1500元/MWh），这样只要出清，我必然能拿到最大的峰谷差。这便踏入了出清机制中的“贪婪陷阱”。</p>
+        <p>在日前SCED出清算法中，系统是根据全网所有电源和负荷报价的“优先级排序”来决定谁出清的。如果你充电报0元，系统在日前低谷期的出清电价通常在50~150元/MWh，因为你的买电意愿（0元）低于市场出清价格，算法会判定“储能不充电”；如果你放电报1500元，日前高峰期的出清电价通常在600~900元/MWh，因为你的卖电要求（1500元）高于市场出清价，算法会判定“储能不放电”。最终，储能电站在日前市场中将会得到一根从头到尾为0 MW的出力曲线——全天完全不出清，电站被迫闲置一天。由于电站每天要平摊固定投资折旧（如每天折旧数万元），闲置不交易等于直接亏损。合理的报价必须采用“机会成本动态报价法”，即基于日前价格预测，将充电报价报在明日现货谷电价偏高的位置，将放电报价报在明日峰电价偏低的位置，主动迎合出清价格的形成，确保拿到最优的出清调度权。</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>报价策略名称</th>
+                <th>日前充电申报价格 (元/MWh)</th>
+                <th>日前放电申报价格 (元/MWh)</th>
+                <th>日前市场出清成功率</th>
+                <th>单日套利收益（毛利润）</th>
+                <th>电池老损与退化速度</th>
+                <th>工程应用与策略评估</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>极端保守策略</b></td>
+                <td>≤ 50 (仅在极低价买)</td>
+                <td>≥ 1200 (仅在极高价卖)</td>
+                <td>小于 5% (高概率闲置)</td>
+                <td>极低 (面临严重的固定折旧亏损)</td>
+                <td>极慢 (电池处于静置状态)</td>
+                <td>仅适用于现货市场电价严重失控、波幅极低且无补偿机制的非理性市场阶段</td>
+              </tr>
+              <tr>
+                <td><b>贪婪定价策略</b></td>
+                <td>≤ 100 (低价买入)</td>
+                <td>≥ 950 (高价售出)</td>
+                <td>15% ~ 25% (部分时段出清)</td>
+                <td>中等 (1万 ~ 3.5万元/日)</td>
+                <td>较慢 (轻度充放电循环)</td>
+                <td>适用于迎峰度夏、煤炭燃料成本飙升导致峰谷价差极度扩张的迎峰时期</td>
+              </tr>
+              <tr>
+                <td><b>机会成本动态报价</b></td>
+                <td>预测谷价 + 50 (偏高买入)</td>
+                <td>预测峰价 - 50 (偏低售出)</td>
+                <td><b>大于 85% (高概率出清)</b></td>
+                <td><b>高 (5.5万 ~ 12万元/日)</b></td>
+                <td>中等 (处于标准的每日满额循环)</td>
+                <td><b>主力推荐策略！</b> 现货价格波幅常态化、新能源高比例消纳的现货市场环境</td>
+              </tr>
+              <tr>
+                <td><b>价格接受者策略</b></td>
+                <td>报量不报价 (完全接受市价)</td>
+                <td>报量不报价 (完全接受市价)</td>
+                <td>接近 100% (绝对完全出清)</td>
+                <td>波动极大 (极易受突发负电价冲击)</td>
+                <td>极快 (充放电频次可能过高)</td>
+                <td>适用于有政策性容量电价补偿、或者强制性由调度代行日前运行指令的示范工程</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </main>
@@ -113,9 +361,11 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>报价本质</strong>：日前现货出清是建立在日前申报基础上的。为了保证出清数学模型的最优解，发电和放电阶梯报价曲线必须满足单调非递减的物理规律，独立储能电站必须采用“双向单体”独立申报以建立充放电隔离死区。</li>
+        <li><strong>核心算法</strong>：日前出清由SCUC和SCED两阶段算法协同运行。SCUC利用混合整数规划解决机组“开关机排班”的0-1整数约束；SCED利用有功经济调度在满足电网潮流安全容量的前提下，优化出全天96点出力曲线。</li>
+        <li><strong>价格形成</strong>：节点边际电价（LMP）是日前出清形成的主要价格机制，由系统电能价格、网损价格和拥堵价格线性叠加而成。其中拥堵价格分量由线路安全潮流容量约束的“影子价格”决定，并在市场中产生拥堵盈余。</li>
+        <li><strong>结算机制</strong>：日前出清的出力曲线在财务上具有法律合同效力，在运行日实际执行时，采用“日前锁定、实时偏差清算”的双结算机制，为储能偏离日前计划进行动态二次套利提供了制度保障。</li>
+        <li><strong>报价要点</strong>：储能报价必须核算电池退化老化的“价差红线”，并规避一味追求大价差的“贪婪陷阱”，通过机会成本动态报价法提高出清概率并保证电站设备资产的健康增值。</li>
       </ul>
     </section>
 
@@ -125,16 +375,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在日前市场出清算法中，安全约束机组组合（SCUC）和安全约束经济调度（SCED）承担着完全不同的优化决策任务。下列关于这两者决策分工与物理约束的描述中，正确的是：</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. SCUC主要决策机组在未来每个时段的具体发电出力数值，而SCED决定哪些机组需要在线和离线。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. SCUC主要处理包含机组最小启停限制与启动成本的0-1整数规划问题，而SCED是在机组启停确定后优化出力曲线的连续规划问题。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. SCED在日前出清优化时无需考虑输电线路的潮流和容量限制，只有SCUC阶段需要考虑网络约束。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 独立储能的荷电状态（SOC）和容量上下限仅在SCUC阶段作为决策约束，而在SCED出力优化阶段不予考虑。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查日前出清中SCUC与SCED的核心区别。选项A将两者的任务说反了；选项C是错误的，因为SCED的核心任务之一就是满足安全约束（包括线路最大潮流限制），否则出清的出力值在实际物理网络中将无法执行；选项D是错误的，因为储能电站的SOC状态转移方程是贯穿全天96个时段的跨时段强耦合约束，如果SCED不考虑SOC约束，就会得出超出电池物理容量极限的无法实现的发电出力曲线；选项B正确描述了SCUC and SCED的数学本质和物理制约关系。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 节点边际电价（LMP）是日前市场价格形成的主流机制。关于LMP中网损价格分量与拥堵价格分量的物理与经济学本质，下列叙述错误的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 拥堵价格分量是由输电线路最大输送容量限制对应的“影子价格”与转移因子相乘得到的。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 当输电通道没有发生任何潮流超限拥堵时，全网各节点的拥堵价格分量均为零，此时各节点的LMP仅受网损和系统电能电价影响。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 每一个节点上的网损价格分量必然都是正值，因为根据物理定律，电能沿金属导线传输必然伴随着电阻热损耗。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 拥堵发生时，受电端节点的拥堵价格通常为正（电价被抬高），而送电端节点的拥堵价格通常为负（便宜的电送不出去导致本地降价）。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查LMP的物理及经济组成。选项A和D正确描述了拥堵价格的影子价格形成逻辑和极性特征；选项B正确，当无拥堵时线路容量约束松弛，影子价格为零，因此拥堵分量清零；选项C是错误的，虽然物理网损总是为正（电线上总是消耗能量），但在电网的边际变化分析中，如果在某节点增加负荷反而能够抵消或降低系统当前主流方向的输电损耗（即起到了潮流对冲作用），该节点增加负荷对全网总损耗的贡献就是负的，此时该节点的网损敏感度为负，因而网损价格分量可能为负值，进而拉低该节点的LMP价格。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 某独立储能电站为了在日前市场中谋取可观的套利收益，在进行报价申报时，下列哪项做法是应当避免的“贪婪陷阱”？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 申报的充电价格与放电价格的差值，至少需要能够覆盖电池单次充放电产生的往返效率损耗和电池退化折旧成本。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 将充电报价报为全网最低限价（如0元/MWh），将放电报价报为全网最高限价（如1500元/MWh），以确保价差利润最大。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 在日前申报截止前，通过气象和负荷预测预估明日电价的大致波动范围，并依据此范围进行策略卡位报价。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 为防止充放电在同一小时内高频无序切换，在两条报价曲线之间设置合理的物理与报价隔离区间。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查储能在日前竞价中的贪婪陷阱概念。选项A、C和D均属于科学合理报价的规范性操作，用于规避亏损、锁定计划和保护电池资产；而选项B是典型的“贪婪陷阱”。如果在出清竞价时，充电报极低值、放电报极高值，这两个极端报价会游离在电力系统实际出清价格波动区间的边界之外（实际市场出清价极少能低至0元且高至1500元），导致该储能电站在日前市场中由于价格条件不满足而无法被系统调度选中，出清功率全天为0 MW。这非但无法套利，反而因为设备闲置而蒙受固定折旧费用的严重亏损。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 日前市场现货出清过程中产生的“拥堵盈余（Congestion Surplus）”，其形成的物理机理与结算去向是怎样的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 它是由于电网公司人为抬高电价以牟取垄断性暴利而产生的，这笔盈余应全数划归电网企业作为自由可供分配利润。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 它是市场出清失败的标志，代表社会福利没有达到最大化，通常必须强制全额退还给发电企业。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 它是基于LMP定价机制下由于电网物理拥堵引起的受电端付款多、送电端得钱少产生的财务沉淀。在我国，这笔钱具有严格政策审计流向，通常放入平抑资金池冲抵电网运行非平衡费用，不能由电网公司自由支配。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 拥堵盈余反映了负荷预测的误差大小，当负荷预测完全精准且没有误差时，拥堵盈余便会自动清零。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查拥堵盈余的经济学机理和中国政策应用。选项A是错误的，拥堵盈余是物理线路容量限制下出清优化的自然副产物，属于专款专用的公用资金，严禁归为电网自由利润；选项B是错误的，拥堵盈余是在客观物理瓶颈下实现全网社会福利最大化的必然结果，而非市场失败的标志；选项D是错误的，拥堵盈余是由线路通道容量受限本身导致的，与负荷预测是否精准没有绝对的一对一映射关系；选项C准确指出了拥堵盈余产生于LMP买方付得多、卖方收得少的数学现实，并说明了中国现货规则下对该盈余规范平抑的去向。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 我国电力现货市场普遍采用日前与实时双结算（Dual Settlement）机制。关于该机制对参与日前出清的储能电站的实际财务影响，下列说法正确的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 日前出清曲线锁定后便不可有任何偏离，一旦实时运行偏离了日前计划，偏差部分将遭受双倍价格的行政性罚款。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 日前出清仅作为一次非约束性的运行“模拟”，所有主体的最终交易量和电价完全以运行当天的实际出力及实时价格为准进行单一结算。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 储能日前出清锁定的电量和价格在财务上成立。若实时实际充电量少于日前计划，相当于储能在实时阶段以实时电价将多买的电量反向卖出给系统进行经济清算。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 当实时出清价格低于日前出清价格时，储能电站在日前市场中出清并锁定的高价放电计划将会被调度中心单方面废除并重新出清。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查日前与实时双结算的结算本质。选项A是错误的，偏离计划不是简单遭受双倍行政罚款，而是按偏差结算机制进行正常的市场化对冲清算；选项B是错误的，日前出清具有坚固的财务合同效力，绝非模拟，我国不实行实时单一结算；选项D是错误的，日前出清锁定的合同受法律保护，任何实时价格波动都无法改变日前已达成部分的交易结果与电价结算；选项C正确表达了双结算机制的数学内核：若日前出清了10 MW充电，实时只充了8 MW，偏差量为+2 MW，储能等同于在实时市场中以实时LMP价格卖回了这多余的2 MW电量，完成了财务闭环。</p>
         </div>
       </div>
 
@@ -159,6 +469,8 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="03_3_1_现货市场设计原理.html">上一节：现货市场设计原理</a>（理解现货市场的顶层架构与时序设计）</li>
+        <li><a href="03_3_3_实时市场运行.html">下一节：实时市场运行</a>（掌握实时阶段的滚动出清与偏差清算机制）</li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
@@ -172,7 +484,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
