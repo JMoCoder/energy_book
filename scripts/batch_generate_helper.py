@@ -126,7 +126,7 @@ def build_deep_prompt(sec_info: dict) -> str:
 
 ### 3. 公式与专业词汇使用原则
 - **专业词汇**首次出现时必须附带中英文全称：`储能变流器（Power Conversion System，PCS）`，后文方可直接用缩写。
-- **公式控制**：切勿孤立抛出公式或堆砌变形公式，每个公式前须有文字铺垫，后须紧跟工程含义解读。
+- **公式铁律——非必要不引入**：公式助理解概念，不是显示深度的工具。**同时满足以下两个条件才引入公式**：（1）该关系用文字和类比无法准确完整表达；且（2）缺了它读者无法建立正确数量级直觉或工程实践无法落地。**能用一句话说清楚的不用公式；为了“看起来严谨”而加公式的，绝对不允许。** 公式密度参考上限：概念科普类全节≤ 2个，原理分析类≤ 4个，技术计算类按需。不得孤立报公式，必须前有文字铺垫、后有工程含义说明。
 
 ---
 
@@ -139,7 +139,7 @@ def build_deep_prompt(sec_info: dict) -> str:
 3. **正文内容 (`<main class="chapter-content">`)**：2-6 个层层递进的 H2 模块，插入 `callout-analogy`, `callout-case`, `callout-tips`, `callout-warning` 等丰富卡片。
 4. **本节小结 (`<section class="chapter-summary">`)**：3-5 条精炼复盘。
 5. **知识测验 (`<section class="quiz-section">`)**：
-   - **5 道深度单选题**（严禁出纯数值计算题，必须考察概念理解与辨析）。
+   - **5 道深度单选题**，**以检验概念理解与辨析为核心**，绝对不得出纯数值计算题。**唯一例外**：若本节本身就是讲某一完整计算流程，则允许出 1 道与该流程直接相关的应用题，但必须考察对计算逻辑的理解与辨析。
    - 每题包含 `<div class="quiz-answer" id="qX-answer" style="display:none">`。
    - **每题解析不少于 100-150 字**，必须详细阐述为什么正确答案是对的，以及**为什么其他三个选项是错的**。
    - 保留 `<button class="btn-check-answer" onclick="checkAnswers()">` 与 `<p class="quiz-score" id="score-display"></p>`。
