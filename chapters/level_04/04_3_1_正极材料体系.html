@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>正极材料体系 — 电极材料科学 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析正极材料体系的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析正极材料体系（LFP/NCM/NMC）的核心物理原理、晶体结构类型、电压平台与能量密度决定机制，对比分析不同技术路线的优劣，并结合中国网储工程实例探讨材料选型与博弈。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -61,61 +61,378 @@
         <span class="difficulty">🟢 入门</span>
       </div>
       <h1>正极材料体系</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">深入剖析磷酸铁锂与三元材料的微观晶体结构、电压平台与本征安全，解析大型网储电站正极路线博弈与前沿演进。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>掌握正极材料的核心物理分类</strong>：能够清晰阐述橄榄石结构（LFP）与层状结构（NMC）在微观晶体结构、键能强弱及锂离子扩散通道（一维 vs 二维）上的本质区别。</li>
+        <li><strong>理解电压平台与容量的决定机制</strong>：掌握正极材料脱嵌锂过程中的多相共存与单相固溶反应机理，理解其对放电电压平台（3.2V vs 3.7-3.8V）和实际放电容量的决定性作用。</li>
+        <li><strong>深入剖析失效与安全性机理</strong>：深刻理解高脱锂状态下正极材料发生晶格崩溃、相变以及晶格析氧的动力学与热力学原理，掌握阳离子混排对电池寿命的负面作用。</li>
+        <li><strong>具备网储工程设计与评估能力</strong>：能够结合中国最新网储安全标准（如防电力建设事故重点要求等）、全生命周期度电成本（LCOS）和极寒温控指标，对网储电站正极路线选型进行科学的工程博弈与取舍。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：高温风暴下的双重预警</h2>
+      <p>在我国西北某百兆瓦级新能源并网配套储能电站的现场，一期工程的3C舱级液冷磷酸铁锂（LFP）电池舱正与二期规划的分布式工商业三元锂电池（NCM）样机进行联合调试。突如其来的夏季沙尘暴伴随着极端高温，导致现场辅机系统瞬间断电，正在以大倍率充电的电池舱内部温度开始急剧攀升。此时，集控中心大屏幕上，三元材料电池舱的二阶热失控预警信号频频闪烁，而一旁的磷酸铁锂电池舱数据则相对平稳。</p>
+      <p>这一幕正是网储工程中正极材料体系博弈的真实缩影。在电网级储能（BESS）项目中，安全与经济是永恒的主题。为什么同样是锂离子电池，磷酸铁锂在发生物理短路或高温事故时仅会冒烟，而三元材料却极易在极短时间内发生猛烈的自燃甚至爆炸？为什么三元材料能提供乘用车般强劲的动力和极高的能量密度，但在我国电网侧大型储能电站中，磷酸铁锂却占据了超过95%的绝对主导地位？这一切的根本答案，并不在电池外壳或电解液上，而在于其微观世界里，正极材料那完全不同的晶体结构与化学键能。本节将带你走入正极材料的微观物理世界，揭示晶体结构如何决定网储电站的安危与盈亏。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
-      <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+      <h2>一、 正极材料在锂离子电池中的核心角色与电化学本征</h2>
+      <p>在锂离子电池中，正极材料是决定电池能量密度的“天花板”。由于锂离子本身不带自由电子，其必须依靠在正负极材料晶格中的嵌入和脱出（Intercalation/Deintercalation）来实现化学能与电能的转换。正极材料不仅是电池中锂离子的“主要来源”（即在出厂时就自带了所有的活性锂），也是电池充电和放电的“起点”与“终点”。</p>
+      <p>从重量和成本构成来看，在整个电池单体中，正极材料的重量占比高达35%-40%，成本占比更是在不同锂盐价格周期下占到电芯总材料成本的30%至50%。因此，正极材料的改性、合成以及路线选型，是降低网储系统资本支出（Capital Expenditure，CAPEX）和提升度电循环经济性的核心战场。</p>
+      <p>正极材料的电化学活性本源于其晶格中过渡金属离子（如铁、镍、钴、锰等）的价态变化。当外部电源强行充电时，外部电源抽取电子，正极晶格中的过渡金属发生氧化反应（价态升高），与此同时，为了维持局域电中性，锂离子（$Li^+$）从正极晶格的空隙或通道中脱出，通过电解液迁移至负极。放电时则相反。这也就意味着，正极材料能够容纳多少锂离子，以及过渡金属离子的变价能力，直接决定了电池的实际比容量（Specific Capacity）。</p>
 
-        <div class="callout callout-analogy">
-          <span class="callout-icon">🔍</span>
-          <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
-          </div>
+      <div class="callout callout-analogy">
+        <span class="callout-icon">🔍</span>
+        <div class="callout-content">
+          <strong>生活类比：锂离子的“公寓大楼”与“房客退租”</strong>
+          <p>如果把锂离子电池的充放电过程比作一个城市的交通运转，那么正极材料就像是城市中的一栋“超大型高层公寓大楼”，而活性锂离子就是住在里面的“房客”。负极材料则相当于马路对面的“大型停车场”。</p>
+          <p><strong>充电（退租与出行）</strong>：清晨，城市需要运转，所有的“房客”（锂离子）退房走出大楼，跨过马路（电解液），住进停车场的车位里（嵌入负极石墨层）。由于大楼里的房客全走空了（高电压脱锂状态），这栋公寓楼只剩下了钢筋水泥的框架（过渡金属与氧组成的骨架结构）。</p>
+          <p><strong>放电（归巢与入住）</strong>：夜晚，房客们从停车场（负极）走出来，原路返回公寓大楼（嵌入正极）。如果这栋公寓楼的通道设计不合理（如一维通道），房客们就会在走廊里发生拥堵，入住速度就会变慢（倍率性能差）；如果这栋大楼的结构在房客走空时容易发生摇晃甚至层间坍塌（晶格畸变与相变），那么等房客晚上回来时，就会发现很多房间已经坏掉，再也无法住人，导致能够入住的房客数量越来越少（电池容量衰减）。</p>
         </div>
-      </section>
+      </div>
 
-      <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+      <p>在大型电网侧电池储能系统（Battery Energy Storage System，BESS）中，储能系统的容量通常在百兆瓦时级以上，例如在我国山东、山西等地的独立调峰储能项目中，正极材料的本征物理衰减率决定了整个电站的收益折现期。如果正极材料晶体结构脆弱，在高倍率调频（频繁充放电）的工况下极易发生局域微裂纹或相变，会导致电站运行不到5年就面临提前更换电池的窘境，极大地损害了项目的财务净现值。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
-          </div>
+      <h2>二、 橄榄石结构：磷酸铁锂（LFP）的强韧安全基石</h2>
+      <p>磷酸铁锂（Lithium Iron Phosphate，LFP）是典型的聚阴离子型正极材料，具有正交晶系中的橄榄石型晶体结构，空间群为 $Pnma$。在 LFP 的微观世界里，氧原子（$O$）与磷原子（$P$）形成了极其稳定的四面体结构（$PO_4^{3-}$ 聚阴离子团），而铁原子（$Fe$）与氧原子形成八面体结构（$FeO_6$）。这些四面体和八面体通过共顶角和共棱的方式紧密连接，在三维空间中构成了极为坚固的网状骨架。</p>
+      <p>其核心物理本征在于：$PO_4$ 内部的 $P-O$ 键具有极强的共价键特征，键能高达约 $5.4\text{ eV}$。在电池发生物理损坏、内部过热、外部挤压或过充到高电位时，即使晶格内部的锂离子被全部抽空，铁离子的配位结构发生改变，其强烈的 $P-O$ 共价键依然能牢牢地把氧原子锁死在晶格中，不让其析出。这在根本上杜绝了晶格释氧引起的自发热失控，是 LFP 具备本征高安全性的源头。</p>
+      <p>尽管橄榄石结构赋予了 LFP 无与伦比的安全性，但它也带来了致命的电化学瓶颈——一维锂离子扩散通道。在 LFP 晶体中，锂离子只能沿着平行于 $b$ 轴（即 [010] 晶向）的狭窄通道进行一维移动，而无法在 $a$ 轴和 $c$ 轴方向跨越由聚阴离子和过渡金属八面体构成的坚硬格点。这种一维限制就像在窄胡同里排队一样，一旦通道中出现任何晶体缺陷（如过渡金属占位或杂质原子），锂离子的扩散就会被彻底堵死，表现为本征锂离子扩散系数极低（约 $10^{-14} \text{ to } 10^{-16} \text{ cm}^2/\text{s}$）。</p>
+      <p>此外，由于铁氧八面体在空间上被磷氧四面体分隔，过渡金属之间的电子轨道重叠度极小，导致其电子电导率也极低。在工业生产中，必须采用“纳米化”（将正极颗粒尺寸缩减至 100-300 纳米，以缩短一维扩散路径）和“碳包覆”（在纳米颗粒表面覆盖一层 2-5 纳米的非晶态导电碳层，构筑二维电子通路）的方法，才能使 LFP 具备商业实用价值。</p>
+
+      <div class="callout callout-analogy">
+        <span class="callout-icon">🔍</span>
+        <div class="callout-content">
+          <strong>生活类比：安全屋中的“窄胡同单行道”</strong>
+          <p>磷酸铁锂（LFP）的晶体结构就像是一座用<strong>加厚钢筋混凝土（PO₄ 聚阴离子团）</strong>建造的超级安全屋。这座房子的墙壁极其结实，无论是火烧（高温）还是用锤子砸（针刺/挤压），承重墙都不会倒塌，大楼内部的氧气和易燃物也被物理隔离，绝不会发生火灾蔓延。</p>
+          <p>然而，这栋安全屋有一个极大的缺陷：它没有宽敞的电梯或双向大堂，只设计了一条条<strong>极其狭窄、只能容纳一人通过的一维单行胡同走廊（b轴一维通道）</strong>。所有的房客（锂离子）在入住和退房时，必须排成一单列纵队，依次从这根胡同里挤出去。如果胡同里有个人不小心摔倒或者有垃圾桶阻挡（晶体错位缺陷），整条胡同的所有人就都会被堵死，无法动弹。这就是为什么 LFP 电池在低温下或者大电流充放电时，极易因为“排队”太慢而导致电池内阻暴增、极化严重的微观动力学成因。</p>
         </div>
-      </section>
+      </div>
+
+      <p>在实际的储能工程中，LFP 的坚固结构表现为长达 10-15 年的日历寿命和 8000-15000 次的超高循环寿命，极高地契合了电网侧调峰电站“高频、重载、长期”的运营诉求。</p>
+
+      <div class="callout callout-case">
+        <span class="callout-icon">🏗️</span>
+        <div class="callout-content">
+          <strong>实例：内蒙古乌兰察布风光储三峡现代能源拆解示范项目</strong>
+          <p>在内蒙古乌兰察布，三峡集团建成了国内最大规模的“风光储”联合示范项目，其中新型电化学储能规模达 150 MW/300 MWh。该电站全部选用了高循环寿命的磷酸铁锂（LFP）正极材料电池系统。</p>
+          <p><strong>工程考量</strong>：内蒙古地区昼夜温差大，夏季高温可达 35°C 以上，冬季极寒可达 -30°C 以下。选用 LFP 正极路线的根本出发点在于两点：一是<strong>安全性</strong>，高共价键 LFP 极大地降低了集装箱式储能舱在夏季极端条件下的热失控火灾概率；二是<strong>全寿命周期经济性</strong>。在风光平价上网的背景下，储能电站需要每天执行“两充两放”的调峰策略，年均循环次数超 700 次。LFP 电池高达 8000 次以上的循环寿命，能确保电站在 10 年以上的运营期内无需进行昂贵的二次电池模组更换，保证了电站的度电成本低于 0.25 元/kWh，实现了真正的商业化闭环。</p>
+        </div>
+      </div>
+
+      <h2>三、 层状结构：三元材料（NMC/NCM）的能量巅峰与失效边界</h2>
+      <p>三元材料（锂镍钴锰氧，$LiNi_xCo_yMn_{1-x-y}O_2$，通常简写为 NMC/NCM）属于六方晶系，空间群为 $R\bar{3}m$。在微观层面上，三元材料表现出极富秩序感的“三明治”层状结构。它由过渡金属原子（$Ni, Co, Mn$）与氧原子形成的八面体层（$MO_2$）和锂原子层交替堆叠而成。这种层状结构的伟大之处在于：锂层为锂离子提供了宽敞的二维平面扩散通道。锂离子在晶格中不需要像在 LFP 中那样排单列纵队通过，而是可以在整个平行二维平面内进行自由的、跨格点快速平面迁移。因此，三元材料具有极高的锂离子扩散系数和卓越的倍率性能（即大电流充放电能力）。</p>
+      <p>三元材料之所以被称为“三元”，是因为它通过动态调配过渡金属层中镍、钴、锰三种元素的摩尔比例，实现了能量密度、寿命和安全性的多维平衡：</p>
+      <ul>
+        <li><strong>镍（Ni）</strong>：是容量的主要贡献者。镍的价态在充放电中会在 $+2 \rightarrow +3 \rightarrow +4$ 之间变化，提供主要的氧化还原电子。镍比例越高（例如从 NCM523 升级到 NCM811），材料能释放的锂离子越多，实际比容量就越大。然而，高比例的 $Ni^{4+}$ 极不稳定，极易自发还原并释放出氧气。</li>
+        <li><strong>钴（Co）</strong>：是结构的稳定剂。钴能够显著抑制阳离子混排（由于 $Ni^{2+}$ 和 $Li^+$ 半径极其接近，合成或充放电中镍易跑去锂层堵塞通道）。此外，钴能降低电荷转移阻抗，提升电池的倍率性能。但钴资源匮乏，价格极其昂贵且易波动。</li>
+        <li><strong>锰（Mn）</strong>：是安全防护网。锰在充放电过程中不参与价态变化，始终保持为稳定的 $+4$ 价。它的存在是为了维持晶格内部的化学稳定性，在发生脱锂时提供结构上的力学支撑，从而提高材料的热分解温度。</li>
+      </ul>
+      <p>高能量密度的代价是结构的不稳定性。在充电至高电压（例如相对金属锂大于 4.2 V）时，大量的锂离子从锂层中脱出，这导致过渡金属层之间的静电排斥力急剧增加。此时，高价态的 $Ni^{4+}$ 具有极强的氧化性，一旦电池内部温度由于内外部短路或过载达到 160-200°C 的临界区间，晶格中的氧离子（$O^{2-}$）就会被氧化并以氧气（$O_2$）的形式从正极结构中被释放出来。在电池舱的密闭高压环境下，析出的活性氧气与高温下蒸发的易燃有机电解液蒸汽相遇，会瞬间触发剧烈的氧化还原放热反应，导致灾难性的链式爆燃。</p>
+
+      <div class="callout callout-analogy">
+        <span class="callout-icon">🔍</span>
+        <div class="callout-content">
+          <strong>生活类比：繁华商场的“多层开放式书架”与“顽皮猴子抢座”</strong>
+          <p>三元层状材料的微观结构，就像是一个设计极其现代化的<strong>多层开放式图书馆书架</strong>。书架层（过渡金属氧层）非常坚固，层与层之间的间隙很宽阔，形成了<strong>二维平面通道</strong>。这使得管理员和读者（锂离子）可以从任何一个水平方向极其快速地拿取和放回书籍（自由迁入迁出），完全没有狭窄单行道的拥堵感。这也是三元电池能提供极快充放电速度和极高储书量（高能量密度）的根源。</p>
+          <p>但这个图书馆系统有两个重大隐患：</p>
+          <p><strong>结构外部坍塌</strong>：一旦书架上的书被借走超过一大半（高电压深脱锂状态），层板之间没有足够的支撑，整座铁制书架就会在微弱的震动或过热下发生<strong>层间结构扭曲甚至彻底垮塌（晶格相变崩塌）</strong>，导致书架报废（容量不可逆衰减）。</p>
+          <p><strong>阳离子混排（Cation Mixing）</strong>：在图书馆里，有一些性格调皮且体型极像读者的猴子（$Ni^{2+}$ 阳离子）。当大批读者（$Li^+$）退租离开书架去外面活动时，这些猴子就会趁虚而入，偷偷爬上书架，占领读者原本的卧室（锂位）。当真正的读者（锂离子）晚上放电想回来时，发现自己床位被猴子占了，而且猴子赖着不走。这不仅让电池能容纳的锂离子变少，更严重的是，这些猴子还会把通道堵死，使得旁边的读者也无法进出。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+          <strong>安全警告与中国政策红线</strong>
+          <p>2022 年，国家能源局在<strong>《防止电力建设工程施工安全事故三十项重点要求》</strong>中明确规定：<strong>“中大型电化学储能电站不得选用三元锂电池、钠硫电池，不应选用梯次利用动力电池”</strong>。</p>
+          <p>这一极具行业颠覆性的规定，其科学依据正是基于三元材料正极“高压状态下易析氧自燃”的物理本征。对于动辄数万节电芯紧密排列的集装箱式储能系统，一旦发生一处局部热失控，三元材料析出的氧气会充当强烈的助燃剂，导致任何常规灭火介质（如七氟丙烷、气溶胶等）都无法扑灭内部反应。该文号的下发，事实上宣告了三元正极系统在中国电网侧中大型储能电站中的“退出”，目前仅在海外出海储能系统或小规模工商业储能、电动汽车领域保留应用。</p>
+        </div>
+      </div>
+
+      <h2>四、 晶体结构与电化学性能的底层逻辑对比与公式推导</h2>
+      <p>为了让读者直观理解不同正极材料在微观晶体结构和宏观电化学表现上的差异，下表汇总了主流正极材料的技术参数对比。特别需要指出的是，除了 LFP 和三元外，锰酸锂（Lithium Manganese Oxide，LMO）作为具有三维通道的尖晶石结构材料，在低成本网储中也曾有研究，此处一并予以对比。</p>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>技术指标/正极材料</th>
+              <th>磷酸铁锂 (LFP)</th>
+              <th>镍钴锰三元 (NCM523)</th>
+              <th>高镍三元 (NCM811)</th>
+              <th>锰酸锂 (LMO)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>晶体结构/空间群</strong></td>
+              <td>橄榄石型 / $Pnma$</td>
+              <td>层状结构 / $R\bar{3}m$</td>
+              <td>层状结构 / $R\bar{3}m$</td>
+              <td>尖晶石型 / $Fd\bar{3}m$</td>
+            </tr>
+            <tr>
+              <td><strong>锂离子扩散维度</strong></td>
+              <td>一维通道 (1D)</td>
+              <td>二维平面 (2D)</td>
+              <td>二维平面 (2D)</td>
+              <td>三维隧道 (3D)</td>
+            </tr>
+            <tr>
+              <td><strong>理论比容量 ($\text{mAh/g}$)</strong></td>
+              <td>170</td>
+              <td>278</td>
+              <td>275</td>
+              <td>148</td>
+            </tr>
+            <tr>
+              <td><strong>实际克容量 ($\text{mAh/g}$)</strong></td>
+              <td>140 - 150</td>
+              <td>160 - 180</td>
+              <td>195 - 210</td>
+              <td>100 - 120</td>
+            </tr>
+            <tr>
+              <td><strong>平均工作电压 (V)</strong></td>
+              <td>3.2</td>
+              <td>3.7</td>
+              <td>3.8</td>
+              <td>4.0</td>
+            </tr>
+            <tr>
+              <td><strong>材料能量密度 ($\text{Wh/kg}$)</strong></td>
+              <td>约 450 - 480</td>
+              <td>约 600 - 660</td>
+              <td>约 740 - 800</td>
+              <td>约 400 - 480</td>
+            </tr>
+            <tr>
+              <td><strong>脱锂体积变化率</strong></td>
+              <td>~6.8% (稳定)</td>
+              <td>~2.0% (中脱锂)</td>
+              <td>>8.0% (剧烈应力)</td>
+              <td>~6.5%</td>
+            </tr>
+            <tr>
+              <td><strong>热失控释氧温度 (°C)</strong></td>
+              <td>>310°C (不明显释氧)</td>
+              <td>约 220°C (释氧)</td>
+              <td>约 160 - 180°C (剧烈释氧)</td>
+              <td>约 250°C (较稳定)</td>
+            </tr>
+            <tr>
+              <td><strong>典型循环寿命 (次)</strong></td>
+              <td>6,000 - 12,000</td>
+              <td>2,500 - 4,000</td>
+              <td>1,500 - 2,500</td>
+              <td>500 - 1,500</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="svg-figure">
+        <svg viewBox="0 0 800 320" width="100%" height="100%" style="background-color: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px; font-family: var(--font-body);">
+          <!-- Definitions for markers and gradients -->
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#1A5F96" />
+            </marker>
+            <!-- Gradient for LFP (Olivine) -->
+            <linearGradient id="grad-lfp" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E8F2FF"/>
+              <stop offset="100%" stop-color="#BDD7EE"/>
+            </linearGradient>
+            <!-- Gradient for NCM (Layered) -->
+            <linearGradient id="grad-ncm" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFF3E0"/>
+              <stop offset="100%" stop-color="#FFE0B2"/>
+            </linearGradient>
+            <!-- Gradient for LMO (Spinel) -->
+            <linearGradient id="grad-lmo" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E8F5E9"/>
+              <stop offset="100%" stop-color="#C8E6C9"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Panel 1: LFP (Olivine) 1D Channel -->
+          <g transform="translate(10, 10)">
+            <rect x="0" y="0" width="240" height="260" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+            <text x="120" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A2E">橄榄石结构 (LFP)</text>
+            <!-- Draw stable PO4-FeO6 framework -->
+            <rect x="30" y="50" width="180" height="150" fill="url(#grad-lfp)" stroke="#1A5F96" stroke-width="1.5" rx="4"/>
+            <!-- Draw 1D Channels -->
+            <line x1="75" y1="50" x2="75" y2="200" stroke="#4A5568" stroke-width="2" stroke-dasharray="4,4"/>
+            <line x1="120" y1="50" x2="120" y2="200" stroke="#4A5568" stroke-width="2" stroke-dasharray="4,4"/>
+            <line x1="165" y1="50" x2="165" y2="200" stroke="#4A5568" stroke-width="2" stroke-dasharray="4,4"/>
+            <!-- Lithium ions in channel -->
+            <circle cx="75" cy="80" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="75" y="84" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="120" cy="110" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="120" y="114" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="165" cy="140" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="165" y="144" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="75" cy="170" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="75" y="174" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <!-- 1D Arrow -->
+            <path d="M120,70 L120,95" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <path d="M120,150 L120,125" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <text x="120" y="225" text-anchor="middle" font-size="13" fill="#4A5568" font-weight="500">一维扩散通道 (仅b轴向)</text>
+            <text x="120" y="245" text-anchor="middle" font-size="12" fill="#718096">强 P-O 共价键，结构极稳固</text>
+          </g>
+
+          <!-- Panel 2: NCM (Layered) 2D Planes -->
+          <g transform="translate(280, 10)">
+            <rect x="0" y="0" width="240" height="260" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+            <text x="120" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A2E">层状结构 (NCM/NMC)</text>
+            <!-- Layers -->
+            <!-- Metal Oxide Layer 1 -->
+            <rect x="30" y="50" width="180" height="25" fill="#CBD5E0" stroke="#4A5568" stroke-width="1.5" rx="2"/>
+            <text x="120" y="67" text-anchor="middle" font-size="12" fill="#1A1A2E" font-weight="bold">过渡金属氧层 (MO₂)</text>
+            <!-- Li Layer 1 -->
+            <g opacity="0.9">
+              <circle cx="60" cy="92" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+              <text x="60" y="96" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+              <circle cx="120" cy="92" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+              <text x="120" y="96" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+              <circle cx="180" cy="92" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+              <text x="180" y="96" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+              <!-- 2D Arrows -->
+              <path d="M75,92 L105,92" stroke="#1A5F96" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+              <path d="M165,92 L135,92" stroke="#1A5F96" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            </g>
+            <!-- Metal Oxide Layer 2 -->
+            <rect x="30" y="110" width="180" height="25" fill="#CBD5E0" stroke="#4A5568" stroke-width="1.5" rx="2"/>
+            <text x="120" y="127" text-anchor="middle" font-size="12" fill="#1A1A2E" font-weight="bold">过渡金属氧层 (MO₂)</text>
+            <!-- Li Layer 2 -->
+            <g opacity="0.9">
+              <circle cx="90" cy="152" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+              <text x="90" y="156" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+              <circle cx="150" cy="152" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+              <text x="150" y="156" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+              <path d="M105,152 L135,152" stroke="#1A5F96" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            </g>
+            <!-- Metal Oxide Layer 3 -->
+            <rect x="30" y="170" width="180" height="25" fill="#CBD5E0" stroke="#4A5568" stroke-width="1.5" rx="2"/>
+            <text x="120" y="187" text-anchor="middle" font-size="12" fill="#1A1A2E" font-weight="bold">过渡金属氧层 (MO₂)</text>
+            
+            <text x="120" y="225" text-anchor="middle" font-size="13" fill="#4A5568" font-weight="500">二维平面扩散通道</text>
+            <text x="120" y="245" text-anchor="middle" font-size="12" fill="#718096">高容量，但深度脱锂后结构易塌</text>
+          </g>
+
+          <!-- Panel 3: LMO (Spinel) 3D Channels -->
+          <g transform="translate(550, 10)">
+            <rect x="0" y="0" width="240" height="260" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+            <text x="120" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A2E">尖晶石结构 (LMO)</text>
+            <!-- 3D Lattice Grid representation -->
+            <rect x="30" y="50" width="180" height="150" fill="url(#grad-lmo)" stroke="#2E7D32" stroke-width="1.5" rx="4"/>
+            <!-- Diagonal paths to show 3D nature -->
+            <line x1="50" y1="70" x2="190" y2="180" stroke="#4A5568" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <line x1="190" y1="70" x2="50" y2="180" stroke="#4A5568" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <!-- Li ions in network -->
+            <circle cx="80" cy="90" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="80" y="94" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="160" cy="100" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="160" y="104" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="100" cy="150" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="100" y="154" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <circle cx="140" cy="140" r="10" fill="#F57C00" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="140" y="144" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="bold">Li+</text>
+            <!-- Multi-directional arrows -->
+            <path d="M92,100 L128,130" stroke="#1A5F96" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            <path d="M150,110 L115,140" stroke="#1A5F96" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            
+            <text x="120" y="225" text-anchor="middle" font-size="13" fill="#4A5568" font-weight="500">三维互联隧道 (8a-16c-8a)</text>
+            <text x="120" y="245" text-anchor="middle" font-size="12" fill="#718096">优异功率性能，但Mn易溶解</text>
+          </g>
+        </svg>
+        <figcaption>图1：主流正极材料晶体结构与锂离子扩散路径（一维、二维与三维通道）对比示意图</figcaption>
+      </figure>
+
+      <p>为了深刻把握这些材料的电化学极限，我们必须进行基础物理量的定量推导。理解这两个公式，对于在实际工程中科学评估电池容量和功率表现至关重要。</p>
+
+      <div class="key-concept">
+        <h4>📌 核心概念：正极材料理论比容量计算公式</h4>
+        <p>正极活性物质的理论克容量 $q_{theory}$ 是指单位质量的正极物质完全脱出锂离子时所释放出的理论电量，其通用计算公式为：</p>
+        <p>$$q_{theory} = \frac{n \cdot F}{3.6 \cdot M}$$</p>
+        <p><strong>参数及单位说明：</strong></p>
+        <ul>
+          <li>$q_{theory}$：理论比容量，单位为毫安时每克（$\text{mAh/g}$）。</li>
+          <li>$n$：每个化学式单位（Formula Unit）中能够参与电化学氧化还原反应并脱出的锂离子摩尔数（常数，无量纲）。对于 $LiFePO_4$ 理论上完全脱锂时 $n=1$；对于三元材料，完全脱锂时 $n=1$。</li>
+          <li>$F$：法拉第常数（Faraday's Constant），数值为 $96,485\text{ C/mol}$，代表每摩尔单价离子所带的净电荷量。</li>
+          <li>$M$：正极材料的活性摩尔质量，单位为克每摩尔（$\text{g/mol}$）。</li>
+          <li>$3.6$：单位换算系数。因为 $1\text{ Ah} = 3600\text{ C}$，所以将库伦转换为毫安时（$\text{mAh}$）需乘以 $1000$ 再除以 $3600$，等价于除以 $3.6$。</li>
+        </ul>
+      </div>
+
+      <p><strong>理论容量的工程计算与约束推导</strong>：</p>
+      <p>以磷酸铁锂（$LiFePO_4$）为例，各元素的相对原子质量分别为：$Li=6.94$，$Fe=55.85$，$P=30.97$，$O=16.00$。可以计算得到其摩尔质量 $M = 6.94 + 55.85 + 30.97 + 16.00 \times 4 = 157.76\text{ g/mol}$。当晶格中的锂离子全部脱出（即 $n=1$）时，代入上述公式：</p>
+      <p>$$q_{theory} = \frac{1 \times 96485}{3.6 \times 157.76} \approx 170.1\text{ mAh/g}$$</p>
+      <p>而在实际生产中，为了防止晶格结构因完全抽空而受到不可逆的破坏，以及克服材料内部颗粒的阻抗极化，我们一般不会将锂离子全部脱出。例如高镍三元材料（NCM811，摩尔质量约 $97.2\text{ g/mol}$，理论容量高达 $275\text{ mAh/g}$），如果强行令脱锂量接近 1，晶格中的氧离子会被剧烈氧化引发爆燃，且晶胞体积会在高电压下发生急剧收缩，产生毁灭性的应力裂纹。因此，工程上通常限制其工作截止电压，使实际脱锂量控制在约 0.7 到 0.75 之间，此时实际释放的容量约为 $200\text{ mAh/g}$ 左右。</p>
+
+      <div class="key-concept">
+        <h4>📌 核心概念：正极材料质量能量密度关系式</h4>
+        <p>正极活性材料所能输出的理论质量能量密度 $E$ 取决于其实际可利用的比容量与平均工作电压平台的乘积：</p>
+        <p>$$E = q_{actual} \cdot V_{avg}$$</p>
+        <p><strong>参数及单位说明：</strong></p>
+        <ul>
+          <li>$E$：质量能量密度，单位为瓦时每公斤（$\text{Wh/kg}$），或等价表示为毫瓦时每克（$\text{mWh/g}$）。</li>
+          <li>$q_{actual}$：材料实际发挥的比容量，单位为毫安时每克（$\text{mAh/g}$）。</li>
+          <li>$V_{avg}$：充放电过程中正极材料相对于锂金属负极的平均工作电压平台，单位为伏特（V）。</li>
+        </ul>
+      </div>
+
+      <p>这个公式揭示了为什么三元材料在能量密度上能够对磷酸铁锂形成显著的代差。磷酸铁锂（LFP）的实际比容量约为 $145\text{ mAh/g}$，平均放电电压平台约为 $3.2\text{ V}$，其质量能量密度为：$E_{LFP} = 145 \times 3.2 = 464\text{ Wh/kg}$。而高镍三元（NCM811）的实际比容量为 $200\text{ mAh/g}$，由于过渡金属层的高电位，平均工作电压平台高达 $3.8\text{ V}$，其质量能量密度为：$E_{NCM} = 200 \times 3.8 = 760\text{ Wh/kg}$。</p>
+      <p>可以看出，高镍三元的材料级能量密度比 LFP 高出约 63%。这种材料级性能的代差，在传导至电芯和系统级时，会导致三元电池系统能轻松实现 200 Wh/kg 以上的系统级能量密度，而 LFP 系统的系统级能量密度通常被限制在 140-160 Wh/kg。在要求极高空间集成度（例如集装箱储能体积受限、海上储能平台空间极度紧张）的场景中，三元正极系统可以用更小的物理占地面积提供成倍的电量储备。</p>
+      <p>为什么 LFP 能够拥有上万次的超长寿命，而三元材料的寿命往往只有其三分之一？这与它们脱锂时的“晶格相变”密切相关。LFP 在脱锂过程中经历的是典型的两相反应（从 $LiFePO_4$ 直接相变到 $FePO_4$），这两相的晶格常数非常接近，晶胞体积的变化率仅为 $-6.8\%$。这意味着在充放电循环中，正极颗粒内部的晶格应力积累极其微弱，颗粒不会发生粉化或产生微裂纹。而三元层状材料（特别是高镍材料）在充电后期（脱锂量超过 70% 时）会经历从 $H2$ 相到 $H3$ 相的剧烈晶格相变。这会导致 $c$ 轴方向发生急剧的非对称性晶格收缩（体积收缩率通常超 $8\%$）。在反复的体积伸缩过程中，三元材料的一次晶粒边界会产生严重的各向异性机械微裂纹。这些裂纹一旦产生，便会成为电解液侵入的通道，导致活性金属离子溶解、液固界面副反应加剧，从而引起正极结构不可逆的退化与容量跳水。</p>
+
+      <h2>五、 网储工程实践：正极材料选择的多维博弈与未来演进</h2>
+      <p>在网储工程的开发阶段，项目投资决策主要依赖于对全生命周期度电成本（Levelized Cost of Storage，LCOS）的测算。尽管三元电池的高能量密度能节省电池舱外壳、集装箱支架、电缆以及土地租赁等部分外围资本支出，但从整个生命周期来看，LFP 在经济性上依然占据绝对优势：</p>
+      <ul>
+        <li><strong>初始购置成本（CAPEX）</strong>：LFP 正极由于不需要高价的钴和镍，主要成分铁、磷和锂在国内拥有极强的本土产业链优势，其原材料成本显著低于三元材料。</li>
+        <li><strong>全生命周期度电成本（LCOS）</strong>：LCOS 能够最直观地体现正极寿命的影响。由于 LFP 能够循环 8000 次以上，在 15 年的运营期内几乎不需要更换电芯；而循环寿命仅 3000 次左右的三元系统，在运行至第 5-6 年时就必须进行整站电芯的重置。这意味着三元系统需要再次投入巨大的二次 CAPEX，直接推高了其全生命周期度电成本，使其在调峰等重载场景下完全丧失了与 LFP 的竞争实力。</li>
+      </ul>
+      <p>在电网侧储能中，正极材料的本征低温缺陷是系统效率的一大杀手。在我国华北、东北及西北的极寒冬季，环境温度常年低于 -15°C。由于 LFP 具有一维扩散通道的先天限制，低温下其阻抗极高。如果在没有主动温控的情况下强行在极寒环境下充电，极易在负极表面引发锂金属析出，导致严重的枝晶安全隐患。</p>
+
+      <div class="callout callout-tips">
+        <span class="callout-icon">💡</span>
+        <div class="callout-content">
+          <strong>网储工程技巧：低温极寒下的“主动热管理能耗博弈”</strong>
+          <p>在设计北方极寒地区（如新疆哈密或内蒙古二连浩特）的 LFP 网储电站时，工程师必须对<strong>主动液冷温控能耗</strong>与<strong>系统效率衰减</strong>进行精密的平衡计算。</p>
+          <p>由于 LFP 正极的一维通道在低温下几乎冻结，必须通过液冷机组强制将电池舱内部温度加热并维持在 15°C 至 25°C 的黄金工作区间。但这会耗费大量的“辅助系统耗电”，导致整个储能电站的<strong>综合循环效率（Round-Trip Efficiency，RTE）</strong>从常温下的 85% 下降到 75% 甚至更低。因此，针对极端低温地区，正极包覆纳米碳技术和电解液超低温添加剂的优化，是减少温控能耗、提升网储盈利能力的工程核心方向。</p>
+        </div>
+      </div>
+
+      <p>正极材料的发展并没有停留在 LFP 与 NCM 的双雄对决中，针对各自痛点的改性路线正在加速工程落地：</p>
+      <p><strong>磷酸锰铁锂（Lithium Manganese Iron Phosphate，LMFP）</strong>：这是目前最具前景的 LFP 升级路线。通过在磷酸铁锂中引入锰元素，形成固溶体 $LiFe_{1-x}Mn_xPO_4$。它完美继承了聚阴离子橄榄石结构的高安全性，但由于锰的引入，使充放电过程中的电压平台由 3.2V 强力拉升到了 3.7V - 4.1V 附近。根据能量密度公式，这能在安全性不降级的前提下，让系统能量密度瞬间提升 15% 以上，使得 LMFP 成为下一代中大型网储电站的热门候选正极材料。</p>
+      <p><strong>钠离子电池正极材料（Sodium-ion Cathodes）</strong>：为彻底摆脱对稀缺锂资源的绝对依赖，以地壳中含量极丰的钠作为电荷载体的钠离子电池正极路线已开启百兆瓦级示范。其正极材料主要包括聚阴离子型（如磷酸钒钠）、层状过渡金属氧化物（如钠镍锰铜氧）和普鲁士蓝类似物。其中，普鲁士蓝路线成本极低，层状氧化物能量密度较高，但聚阴离子型钠正极由于具有本征的三维通道，拥有极佳的低温充放电特性和安全表现，正逐步在极寒地区、弱电网区以及中小型用户侧网储中展现出强劲的生命力。</p>
+
+      <div class="callout callout-extension">
+        <span class="callout-icon">🔭</span>
+        <div class="callout-content">
+          <strong>深入探索：聚阴离子钠离子正极的三维通道优势</strong>
+          <p>钠离子电池的聚阴离子型正极材料（如磷酸钒钠 $Na_3V_2(PO_4)_3$）具有类似于 NASICON（Na Super Ionic Conductor，钠超离子导体）的三维互联骨架。这种宽敞的三维网状通道不仅比 LFP 的一维窄胡同大得多，而且使得钠离子能在三维空间的任意方向进行几乎无阻碍的快速扩散。这使得其在 -40°C 的极端低温下，依然能发挥出 80% 以上的容量，且能实现超高倍率（大于 10C）的充放电响应。这为未来在高纬度极寒地区部署无温控辅助能耗的“冷启动”电网调频储能系统开辟了全新的技术路径。</p>
+        </div>
+      </div>
     </main>
 
     <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>微观结构决定宏观电化学本征</strong>：正极材料是电池的“锂源”与能量天花板。其晶体结构（LFP 的一维通道 vs NCM 的二维通道）和化学键能（$P-O$ 共价键 vs $M-O$ 离子键）决定了电池的安全边界、容量与电压平台。</li>
+        <li><strong>磷酸铁锂本征高安全但有动力学瓶颈</strong>：LFP 的橄榄石结构具有强大的氧锁死效应，抗热失控性极佳。然而，一维扩散通道和低本征导电率限制了其倍率性能，工业上必须通过纳米化和碳包覆予以改性。</li>
+        <li><strong>三元材料能量密度极高但存在热失控风险</strong>：NMC 的层状结构提供二维平面快速扩散通道，容量和工作电压平台（3.7-3.8V）双高。然而，在高脱锂高电压状态下晶格易释氧自燃，且存在阳离子混排和晶格相变微裂纹失效。</li>
+        <li><strong>中国网储选型深受安全政策与全生命周期经济性主导</strong>：鉴于电网储能对循环寿命（要求 >8000 次）和热失控风险的严苛门槛，LFP 成为绝对的工程主导路线。三元材料因受国家安全规范禁令限制，目前已退出了国内中大型储能电站市场。</li>
+        <li><strong>前沿改性与新材料加速演进</strong>：磷酸锰铁锂（LMFP）通过引入锰元素拉升放电平台，有望成为 LFP 性能升级的生力军；钠离子电池聚阴离子正极以其优秀的三维互联隧道结构，展现出卓越的低温和高倍率优势。</li>
       </ul>
     </section>
 
@@ -125,16 +442,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 关于磷酸铁锂（LFP）正极材料的橄榄石晶体结构，下列说法中正确的是：</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 其结构中的磷氧四面体通过强共价键锁死氧原子，是其高温和过充下不易发生热失控的底层物理原因。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 锂离子在橄榄石结构中拥有三维立体的快速扩散平面，因此其倍率性能和超低温放电性能极为出色。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 当锂离子完全从磷酸铁锂中脱出后，其晶体骨架会发生剧烈收缩并坍塌，导致容量永久衰减。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 铁氧八面体的空间排列直接为锂离子提供宽敞的通道，不需要通过纳米化或碳包覆进行电化学改性。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：选项 A 正确。$PO_4$ 四面体中的 $P-O$ 共价键键能极大（约 $5.4\text{ eV}$），在高温和高脱锂状态下不易断裂释放出氧气，从而避免了氧气与有机电解质剧烈反应引起的热失控，这是 LFP 本质安全性的基石。选项 B 错误，磷酸铁锂为一维锂离子扩散通道，而非三维或二维，因此其常温下电导率较低，低温性能较差。选项 C 错误，磷酸铁锂在完全脱锂成 $FePO_4$ 时，其体积变化率仅为约 $6.8\%$，结构非常稳定，不会发生晶格崩塌。选项 D 错误，由于一维通道的限制和较低的本征导电率，未改性的 LFP 无法直接使用，必须通过纳米化和表面碳包覆等手段提高导电性。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在三元层状正极材料（NMC/NCM）中，关于镍（Ni）、钴（Co）、锰（Mn）三种元素在电化学反应中的主要角色，下列叙述错误的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 镍元素是主要的氧化还原活性中心，提高镍的比例可以显著提升材料的实际比容量和能量密度。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 钴元素主要用于稳定二维层状晶体结构，抑制阳离子混排并提升电子导电率，以保证良好的倍率性能。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 锰元素不参与充放电过程中的价态变化，主要是作为结构支撑物，起到提高热稳定性和结构安全性的作用。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 镍含量的提高虽然能增加能量密度，但会显著提高热失控的起始温度，从而使电池更加安全。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：选项 D 错误（符合题意）。随着镍含量的增加（如从 NCM523 演变到高镍 NCM811），材料的热稳定性会显著变差，热失控起始温度从 220°C 以上降低至 160-180°C，且爆燃剧烈度大幅增加，而非更安全。选项 A 正确，镍主要通过 $Ni^{2+}/Ni^{3+}$ 和 $Ni^{3+}/Ni^{4+}$ 变价参与电化学反应，是比容量的绝对贡献者。选项 B 正确，钴在维持层状晶体完整性、防止锂/镍混排方面起到了关键的骨架稳定作用。选项 C 正确，锰通常在充放电中保持为稳定的 $+4$ 价，不贡献容量，只作为非活性骨架来维持结构安全性。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在层状过渡金属氧化物正极材料中，经常会提到“阳离子混排”（Cation Mixing）这一物理缺陷。下列关于阳离子混排的描述，哪一项是正确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 阳离子混排是指电解液中的杂质阳离子侵入正极，从而增加了电化学反应活性。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 它是由于 Nickel 离子的离子半径与锂离子极其接近，在合成或充放电中镍占了锂的位置，堵塞了扩散通道。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 阳离子混排有利于锂离子在二维平面通道内的快速扩散，从而提升了电池的充放电倍率性能。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 这种缺陷通常只在具有橄榄石结构的磷酸铁锂材料中发生，在三元材料中不会出现。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 正确。在层状过渡金属氧化物中，$Ni^{2+}$ 离子半径与 $Li^+$ 离子半径高度接近（分别为 $0.69\text{ Å}$ 和 $0.76\text{ Å}$），在合成或高电压充电脱锂状态下，镍离子极易跑去占据锂层的空位。这不仅锁死了原本位置的锂离子，而且镍离子本身会起到“路障”的作用，阻碍锂离子的二维层间扩散。选项 A 错误，阳离子混排是晶格内部金属离子与锂离子的错位，不涉及电解液。选项 C 错误，混排会增加电池内阻，导致容量衰减、倍率性变差。选项 D 错误，阳离子混排是三元层状正极特有的缺陷，橄榄石结构不发生此类混排。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 国家能源局发布的限制中大型电化学储能电站选用三元锂电池的安全政策，其背后的主要考量在于两者的热失控化学行为存在根本差异。关于这一差异的叙述，正确的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 磷酸铁锂在热失控时完全不产生任何可燃性气体，而三元锂电池热失控会释放出大量的氢气和一氧化碳。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 三元正极在高电压脱锂状态下极不稳定，受热易分解并释放出活性氧，会在密闭空间内助燃并引起爆炸；而磷酸铁锂的氧原子被强共价键牢牢束缚，极难在热失控中释放氧气。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 磷酸铁锂材料的导电性比三元材料高得多，因此在发生短路时自身发热量极小，不容易达到热失控温度。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 三元正极的材料熔点极低，在充放电过程中会像液体一样流动，导致电极发生严重变形和短路。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 正确。三元材料热失控时发生晶格释氧（氧气从晶体内部析出），在高温下与易燃的有机电解液蒸汽发生强烈的氧化还原反应，属于内部自带助燃剂的爆燃。而 LFP 的 $P-O$ 共价键极为坚固，释氧温度高且析出量极少，因此本征安全系数极高。选项 A 错误，LFP 热失控时也会释放出由电解液分解产生的可燃气体（CO、H2、CH4等），依然需要做好排气泄压防爆设计。选项 C 错误，LFP 的导电性实际上显著低于三元材料，其高安全性来源于化学键的稳定性而非导电性能。选项 D 错误，三元正极在工作温度下为固体晶体，不会熔化流动，此叙述不符合事实。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在我国北方极寒地区（如内蒙古、新疆等网储电站），冬季低温环境给磷酸铁锂（LFP）储能电站的运营带来了极大的挑战。下列关于低温对正极材料及网储系统影响的分析，最符合实际的是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 低温下 LFP 晶体中的一维锂离子扩散通道会完全闭合，导致电池在极低温度下完全无法放电，只能通过外部火加热才能恢复工作。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 相比于三元材料，LFP 的低温电导率衰减更剧烈，主要是因为其本身就是一维扩散，低温下晶格振动减弱，锂离子穿过瓶颈所需的活化能更高，内阻暴增导致可用容量大幅衰减。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 为解决 LFP 的低温问题，我国网储工程普遍放弃了主动温控，转而通过在电池中掺杂大量贵金属钴来提高低温导电率。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 低温环境下 LFP 电池在充电时不存在锂析出风险，因此电站可以在冬季无限制地使用大倍率进行快速充电。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 正确。LFP 固有的电化学缺陷是其低温性能差，锂离子沿一维通道迁移需要跨越较高的能垒。在低温下，由于活化能不足，离子迁移极其困难，表现为扩散系数降低 2-3 个数量级，电极极化剧烈增大，系统可用能量明显缩水。选项 A 错误，LFP 低温放电性能虽变差，但一维通道绝非完全闭合，-20°C 下仍能释放部分容量，且电站有温控系统维持温度。选项 C 错误，LFP 的核心优势是低成本，工程中绝不会掺杂贵金属钴，而是通过主动热管理系统和低温电解液来优化。选项 D 错误，低温大功率充电会因为动力学迟缓在负极表面引发严重的析锂，导致锂枝晶短路隐患，因此低温充电必须严格限制电流（降额充电）。</p>
         </div>
       </div>
 
@@ -159,7 +536,10 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="04_1_1_锂离子电池工作原理.html">→ 04.1.1 锂离子电池工作原理</a>（了解脱嵌锂电化学反应的基础背景）</li>
+        <li><a href="04_2_5_充放电能量分析.html">→ 04.2.5 充放电能量分析与效率</a>（复习能量损耗与发热的物理本质）</li>
+        <li><a href="04_3_2_负极材料.html">→ 04.3.2 负极材料</a>（深入探索与正极材料相配合的石墨/硅基材料体系）</li>
+        <li><a href="04_4_1_电解液与隔膜基础.html">→ 04.4.1 电解液与隔膜基础</a>（探讨在正极氧化性下电解液的成膜与分解化学）</li>
       </ul>
     </section>
 
@@ -172,7 +552,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
