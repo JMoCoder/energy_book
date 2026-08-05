@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>法拉第定律：量化电化学 — 电化学基础 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析法拉第定律：量化电化学的核心物理原理、工程应用与实战案例。">
+  <title>法拉第定律：量化电化学 — 电化学基础 | 中国网储系统性学习手册</title>
+  <meta name="description" content="本节深入剖析法拉第定律的微观物理本质、宏观定量公式及其在电化学储能工程中的核心应用。从容量单位Ah的起源到BMS安时积分法的漂移之谜，再到200MWh储能电站的活性物质物质量核算，全面讲透量化电化学的底层逻辑。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,55 +57,290 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">04_1_4</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约45分钟</span>
+        <span class="difficulty">🟡 入门</span>
       </div>
       <h1>法拉第定律：量化电化学</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">电化学反应的本质是电荷与质量的协同转换。本节将带你穿越微观原子世界与宏观储能工程，通过法拉第定律理解电池容量的物理底座，掌握核心的定量估算与活性物质转换法则。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>能够从微观电子得失与宏观物质称重的协同守恒中</strong>，深刻阐明法拉第定律的物理本质及生活类比。</li>
+        <li><strong>掌握法拉第常数的微观物理来源与数值</strong>，能熟练运用法拉第第一、第二定律综合公式开展电量、活性物质摩尔量与质量的相互换算。</li>
+        <li><strong>理解电池容量单位 Ah/mAh 对应的电化学实质</strong>，能通过法拉第定律计算出各体系电池材料的理论极限克容量。</li>
+        <li><strong>理解安时积分法在电池管理系统中的应用原理</strong>，剖析导致电站运行中荷电状态漂移、虚电告警以及库仑效率降低的电化学机制。</li>
+        <li><strong>能够基于真实的百兆瓦级电化学储能电站运行参数</strong>，定量核算大规模充放电循环中活性锂离子的不可逆损失，评估其对资产折旧的价值意义。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：消逝的“电量”与电池舱的“虚电跳闸”</h2>
+      <p>在中国山东某共享储能电站的 100MW/200MWh 满充满放并网调试现场，发生了令现场工程师头疼的一幕。调试工程师小张正在后台监控着 10 号电池舱的各项运行数据。系统已经以 50MW 的大功率持续放电了近 4 个小时，根据电池管理系统（Battery Management System，BMS）计算得出的系统荷电状态（State of Charge，SOC）显示，当前系统依然拥有 12% 的剩余容量，完全可以继续支撑最后的调试步骤。然而，就在几分钟后，三声刺耳的系统告警声打破了控制室的宁静——“3号电池簇发生单体欠压三级告警！”、“7号电池簇发生单体欠压三级告警！”紧接着，系统为了保护电芯不被过放电损坏，主控高压控制柜自动跳闸，整舱调试被迫中断。</p>
+      <p>为什么明明精心标定好的“电量”在实际放电中会突然“消失”？BMS 算法是根据什么物理法则去估算那数十万只电芯在内部跑过了多少电荷，又消耗了多少活性物质？这就需要揭开电池内部微观的“电荷搬运”奥秘——迈克尔·法拉第在近两百年前确立的法拉第定律（Faraday's laws of electrolysis）。本节将从最底层的化学反应量化出发，带你一步步探索这一支撑起整个储能电化学帝国的基石定律。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、 从炼金术到定量科学：法拉第定律 the 物理本质</h2>
+        <p>在 19 世纪初，人类对电和化学反应的理解还处于混沌的经验摸索时期。虽然伏打电堆的问世让人们能够获得持续的电流，但当时的科学家们普遍认为，电是一种无形的“流体”，而电解反应只是某种杂乱无章的、类似于“电火花分解物质”的过程。直到英国物理学家迈克尔·法拉第（Michael Faraday）在 1833 年至 1834 年间，进行了一系列极为精密、系统的电解实验。他利用自己设计的检流计和天平，定量测量了流过不同酸碱、盐类电解质的电荷总量，并细致记录了电极上析出或溶解的金属质量。</p>
+        <p>法拉第最终发现，无论电解质溶液的浓度、温度如何改变，也无论电极材料和反应类型有多复杂，在电极上析出的物质质量，与流过电路的电量之间，都存在着极其严密的线性正比关系。这一重大的定量规律，彻底将化学从神秘的炼金术和定性描述中解放出来，使其跨入了精密定量科学的时代。</p>
+        <p>在此期间，法拉第为了证明电流的大小是能够精确度量的，甚至发明了一种被称为“水力电量计”（Water Voltameter）的仪器。这种仪器通过测量电解水产生的氢气和氧气的累积体积来计量电荷总量。他发现，只要通过电极的电量相同，收集到的气体体积在相同的温度和压强下就完全恒定。这一发明让当时的科学界大为震惊，因为它以无可辩驳的实验事实证明了电流并非是一种虚无缥缈的流体，而是可以通过其产生的电化学效应对反应物质进行精确度量和称重的。这直接驳斥了当时流行的“接触电理论”，奠定了电化学定量分析的科学地位。</p>
+        <p>从微观物理本质来看，法拉第定律阐明了一个极其朴素且美丽的真理：**电化学反应就是“数电子来称重量”。**</p>
+        <p>在电池内部，任何一个离子的电化学得失电子反应都是一一对应的。比如一个锂离子 $\text{Li}^+$ 想要从负极石墨层中脱嵌出来并溶解到电解质中，外部电路就必定要在负极集流体上“收回”一个电子；反之，若在正极上析出一个纯铜原子，就必须由溶液中的二价铜离子 $\text{Co}^{2+}$ 捕获两个电子。电子是电量的载体，也是反应物的微观纽带。流过外部电路的电荷量，直接体现了电池内部发生了多少个活性离子的迁移与转化。这就形成了一条电量与质量之间坚不可摧的“微观守恒纽带”。</p>
 
         <div class="callout callout-analogy">
-          <span class="callout-icon">🔍</span>
-          <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+          <div class="callout-header"><span class="callout-icon">🔍</span>生活类比：玩具加工厂里的“硬币”与“包装重量”</div>
+          <div class="callout-body">
+            <p>设想一个自动化玩具包装厂。流水线上的机械臂每包装一个金属小熊玩具，就必须在投币口投入恰好 2 枚特制硬币。硬币源源不断地从投币口滑入（这代表外部电路输入的电流和电荷），机械臂据此封装玩具并将其装入货车运出（这代表电极上析出或消耗的活性物质）。</p>
+            <p>在这个工厂里，我们想知道运走了多少公斤玩具（析出物质的质量），有两种办法：要么直接拿大秤去称货车的总重，要么直接去数硬币箱里到底塞进了多少枚硬币。因为每 2 枚硬币必定对应一个玩具，而每个玩具的重量是恒定的。这就是法拉第定律的本质：通过“数”电路里跑过了多少个电子（硬币），就能百分之百精确地算出电池里有多少克活性物质（玩具）发生了反应。</p>
           </div>
+        </div>
+
+        <p>在电化学储能工程中，法拉第定律是电池极片设计和工艺制程的底层法则。以锂离子电池为例，正负极极片中的活性物质匹配并不是任意的，而是通过严密的电化学摩尔匹配来设计的。工程上把这种正负极容量的比值称为“负正比”（N/P Ratio，也称 Negative to Positive Ratio）。为了防止在快速充电时锂离子来不及嵌入负极石墨而还原为金属锂（即“析锂”现象），负极石墨能容纳的锂离子摩尔量（对应电荷量）必须略大于正极可脱出的锂离子摩尔量，其设计典型值通常在 1.1 到 1.2 之间。如果偏离这一基于法拉第定律算出的摩尔比，电池在循环中轻则容量迅速衰减，重则会因析锂引发锂枝晶刺穿隔膜，导致热失控的致命安全隐患。</p>
+        <p>在实际的极片涂覆与干燥制备中，法拉第定律的匹配关系更是决定电池物理寿命的寿命线。正极材料（如磷酸铁锂）在充电脱锂时，晶格体积会发生约 6.5% 的收缩；而负极石墨在嵌锂时，体积则会发生大约 10% 的膨胀。这种微观材料的体积变化是由发生氧化还原反应的锂离子摩尔量（直接由法拉第定律决定）直接决定的。工程上必须在极片中加入导电剂和粘结剂（如聚偏氟乙烯 PVDF，羧甲基纤维素钠 CMC 与丁苯橡胶 SBR）来形成多孔网络，并维持一定的孔隙率（通常正极在 25%-30%，负极在 30%-35%）。如果反应的锂离子摩尔量超过了材料能承受的体积极限，粘结剂就会失效，导致活性物质粉化并脱离集流体，在宏观上表现为电池内阻骤增和容量的快速衰减。</p>
+      </section>
+
+      <section>
+        <h2>二、 法拉第定律的数学表达与物理常数</h2>
+        <p>法拉第定律通常被细分为两条独立的物理定理，但它们在数学上可以完美地合并为一个统一的表达式。</p>
+        <p><strong>法拉第第一定律</strong>：在电化学反应中，电极上发生化学变化的物质质量 $m$，与通过电极的电荷量 $Q$ 成正比。用公式简单表达即为：$m \propto Q$。</p>
+        <p><strong>法拉第第二定律</strong>：相同的电荷量通过不同的电解反应系统时，各电极上析出或消耗的物质质量 $m$，与该物质的化学当量（即摩尔质量 $M$ 除以反应中的得失电子数 $z$）成正比。即：$m \propto \frac{M}{z}$。</p>
+        <p>连接这两条定律的宏观物理常数，正是大名鼎鼎的<strong>法拉第常数（Faraday constant，用 $F$ 表示）</strong>。从物理概念上解释，法拉第常数代表了**一摩尔（$\text{mol}$）单价电子所携带的总电量**。</p>
+        <p>我们可以从微观的基本常数推导出法拉第常数的精确值。阿伏伽德罗常数（Avogadro constant，用 $N_{\text{A}}$ 表示）为一摩尔物质所包含的粒子数：
+        $$N_{\text{A}} \approx 6.02214 \times 10^{23} \text{ mol}^{-1}$$
+        而单个电子所携带的基本电荷（元电荷，用 $e$ 表示）为：
+        $$e \approx 1.60218 \times 10^{-19} \text{ C}$$
+        将这两个常数相乘，就得到了将微观粒子数转化为宏观库仑电量的桥梁——法拉第常数：
+        $$F = e \cdot N_{\text{A}} \approx 96485.33 \text{ C/mol}$$
+        在普通的储能工程计算中，我们通常取近似值 $96485 \text{ C/mol}$（或直接使用 $96500 \text{ C/mol}$ 简化估算）。这意味着，只要外部电路中流过了大约 96,485 库仑的电量，在电池内部就会有恰好一摩尔单价的活性物质（如一摩尔的锂离子）在正负极极片间完成迁移反应。</p>
+        
+        <p>将上述关系进行数学整合，我们就得到了法拉第定律的量化综合表达式。在电池中，通过的电量 $Q$ 往往是电流 $I$ 在充电或放电时间 $t$上的累积。因此，第一公式表示电量与转移电子摩尔量之间的关系：</p>
+        
+        <div class="key-concept">
+          📌 <strong>电化学反应电量基本公式</strong>
+          $$Q = I \cdot t = z \cdot F \cdot n$$
+          <div class="concept-explanation">
+            <ul>
+              <li>$Q$：流过的总电量，单位为库仑（$\text{C}$，即安培·秒 $\text{A}\cdot\text{s}$）。</li>
+              <li>$I$：充放电电流，单位为安培（$\text{A}$）。</li>
+              <li>$t$：电流通过的时间，单位为秒（$\text{s}$）。</li>
+              <li>$z$：参与电化学反应的电荷数（得失电子数），无量纲。对于单价金属（如 $\text{Li}^+$、$\text{Na}^+$），其值为 1；对于二价金属（如 $\text{Zn}^{2+}$、$\text{Pb}^{2+}$），其值为 2。</li>
+              <li>$F$：法拉第常数，恒为 $96485 \text{ C/mol}$。</li>
+              <li>$n$：实际参与反应的活性物质的摩尔量，单位为摩尔（$\text{mol}$）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>由于物质的质量 $m$（单位 g）与摩尔量 $n$（单位 mol）及摩尔质量 $M$（单位 g/mol）之间的关系为 $m = n \cdot M$，将此关系代入上式，我们便可推导得到第二个用于直接计算电极材料反应重量的法拉第公式：</p>
+
+        <div class="key-concept">
+          📌 <strong>活性物质反应质量公式</strong>
+          $$m = \frac{M \cdot Q}{z \cdot F} = \frac{M \cdot I \cdot t}{z \cdot F}$$
+          <div class="concept-explanation">
+            <ul>
+              <li>$m$：发生氧化还原反应而被消耗、溶解或析出的活性物质质量，单位为克（$\text{g}$）。</li>
+              <li>$M$：该活性物质的摩尔质量，单位为克每摩尔（$\text{g/mol}$）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>在工程中，该公式具有明确的指导意义。例如在设计电池的机械外壳和内部膨胀空间时，可以通过该公式计算出极片在脱嵌锂之后其活性晶格结构的质量和体积改变。此外，由于充放电电流并非完全是恒定不变的（例如电网调频时储能电站需要频繁进行无规律的快速充放电切换），此时电量 $Q$ 必须写成电流对时间的积分形式：$Q = \int I(t)dt$。这个微分质量关系在预测电池内部热效应（由于电化学相变热与摩尔反应速率 $\frac{dn}{dt}$ 直接挂钩）中也是不可或缺的底层参数。</p>
+      </section>
+
+      <section>
+        <h2>三、 电池容量单位的电化学本质与极限比容量</h2>
+        <p>对于初入储能领域的学习者，经常会产生一个疑问：在物理学中，电量的标准单位是库仑（$\text{C}$），那为什么在电池规格书、储能设计方案甚至手机规格中，大家使用的容量单位都是安时（$\text{Ah}$）或毫安时（$\text{mAh}$）？</p>
+        <p>从物理定义来看，库仑表示“以一安培电流放电一秒钟所转移的电量”即 $1 \text{ C} = 1 \text{ A}\cdot\text{s}$。然而，在储能工程实践中，“秒”这个时间尺度实在是太短暂了。我们设计并网储能电站时，通常是以“小时”为单位来规划系统的放电时间（例如 2 小时充放电系统、4 小时长时储能系统）。如果使用库仑，一个看似普通的电芯也会呈现出极为庞大的数值。例如目前中国主流电网侧储能中大规模使用的 $280 \text{ Ah}$ 铁锂电芯，其换算为库仑后的数值为：$280 \text{ Ah} \times 3600 \text{ s/h} = 1,008,000 \text{ C}$，即超过了 100 万库仑。如果把整个储能站数十万只电芯的容量用库仑累加，数值电量会膨胀为数十亿库仑，这在工程读数、显示以及跨系统换算中会带来极大的麻烦和计算出错概率。</p>
+        <p>相比之下，安时（$\text{Ah}$）直接把“放电电流（A）”与“工作时间（h）”进行乘积化，极其贴合电站调度和用户用电的直观体验：一个 $280\text{ Ah}$ 的电芯，理论上意味着它能以 $280\text{ A}$ 的电流稳定放电 $1\text{ 小时}$，或者以 $140\text{ A}$ 的电流稳定放电 $2\text{ 小时}$，非常便于工程估算。</p>
+
+        <div class="callout callout-tips">
+          <div class="callout-header"><span class="callout-icon">💡</span>记忆技巧：Ah/mAh 与摩尔电子的快速换算</div>
+          <div class="callout-body">
+            <p>在微观尺度下，你可以把 1 Ah 视为一种“摩尔电子包”。我们可以通过法拉第常数，算出一只电芯流过 1 Ah 的容量，其内部到底有多少电子在“跑动”：</p>
+            <p>$$1 \text{ Ah} = 3600 \text{ C}$$</p>
+            <p>$$n_{\text{e}} = \frac{3600 \text{ C}}{96485 \text{ C/mol}} \approx 0.03731 \text{ mol}$$</p>
+            <p>因此，<strong>1 Ah 容量对应的本质就是转移了大约 0.0373 摩尔（即 $2.25 \times 10^{22}$ 个）电子</strong>。在开发和计算任何新型电池材料时，这个常数可作为一个极其便捷的万能系数。</p>
+          </div>
+        </div>
+
+        <p>同时，在商业设计中，我们不仅关心电荷的容量（$\text{Ah}$），更关心电池所蕴含的总能量。因为把电荷推过外部电路是需要“电压”的。将容量乘以电芯的工作平台电压，就得到了电站资产核算和能量计算的直接指标——瓦时（$\text{Wh}$）或度电（千瓦时，$\text{kWh}$）。</p>
+        <p>基于法拉第定律，我们可以推导出任何一种电化学反应活性物质的<strong>理论比容量（Theoretical specific capacity，单位一般用 $\text{mAh/g}$ 或 $\text{Ah/kg}$ 表示）</strong>。比容量是指单位质量的电极材料能够释放出的最大电荷量。这是评估一种材料有没有潜力做高能量密度电池的最关键指标。其理论计算式可表示为：
+        $$C_{\text{theory}} = \frac{z \cdot F}{3.6 \cdot M} \quad (\text{mAh/g})$$
+        这里的系数 $3.6$ 是由于要从“库仑每克（$\text{C/g}$）”换算为“毫安时每克（$\text{mAh/g}$）”而引入的换算常数：$\frac{1 \text{ C}}{1 \text{ g}} = \frac{1 \text{ A}\cdot\text{s}}{1 \text{ g}} = \frac{1000 \text{ mA} \cdot \frac{1}{3600}\text{ h}}{1 \text{ g}} = \frac{1}{3.6} \text{ mAh/g}$。</p>
+        <p>让我们通过以下四个具体的电化学活性材料来计算其极限理论比容量，体验一下法拉第定律的支配力：</p>
+        
+        <p><strong>1. 纯金属锂的理论克容量计算：</strong><br>
+        锂（$\text{Li}$）是自然界中密度最小、电位最低的金属元素，其发生脱嵌反应：$\text{Li} \rightarrow \text{Li}^+ + \text{e}^-$，得失电子数 $z = 1$。锂的摩尔质量 $M = 6.94 \text{ g/mol}$。代入公式：
+        $$C_{\text{theory, Li}} = \frac{1 \times 96485}{3.6 \times 6.94} \approx 3862 \text{ mAh/g}$$
+        这也是为什么锂金属电池一直被公认为电池研发的“圣杯”——它每克竟然能提供高达近 $3.86\text{ Ah}$ 的超高电量！</p>
+
+        <p><strong>2. 磷酸铁锂（$\text{LiFePO}_4$）正极材料的理论克容量计算：</strong><br>
+        磷酸铁锂在充放电时的主要反应为：$\text{LiFePO}_4 \rightarrow \text{FePO}_4 + \text{Li}^+ + \text{e}^-$，每个反应转移一个锂离子和一个电子，因此 $z = 1$。它的分子量 $M = 157.76 \text{ g/mol}$。代入公式：
+        $$C_{\text{theory, LFP}} = \frac{1 \times 96485}{3.6 \times 157.76} \approx 170 \text{ mAh/g}$$
+        在真实的电芯生产中，主流铁锂材料的实际克容量可以达到 $140 \sim 150 \text{ mAh/g}$，已经非常接近这一由法拉第定律限制的理论天花板。</p>
+
+        <p><strong>3. 硅碳负极中纯硅材料的理论极限克容量计算：</strong><br>
+        硅（$\text{Si}$）作为下一代高能量密度电池负极材料，其摩尔质量 $M = 28.085 \text{ g/mol}$。在完全锂化状态下，每个硅原子最大可以与 3.75 个锂离子结合（形成 $\text{Li}_{15}\text{Si}_4$ 晶体合金），相当于反应中每摩尔硅原子对应得失 $3.75$ 摩尔的电子，即得失电子数 $z = 3.75$。代入理论比容量计算公式：
+        $$C_{\text{theory, Si}} = \frac{3.75 \times 96485}{3.6 \times 28.085} \approx 3579 \text{ mAh/g}$$
+        这比传统的石墨负极理论容量（$372 \text{ mAh/g}$）高了近十倍！然而，法拉第定律同样也支配着硅的物理体积膨胀：当大量锂离子强行嵌入硅的晶格时，会产生高达 $300\%$ 的体积应变。这会导致电极结构粉化和 SEI 膜破裂。在工程制备中，厂商通常必须将纳米硅与多孔碳复合（制成硅碳负极），以牺牲部分理论比容量为代价换取循环寿命的延长。</p>
+
+        <p><strong>4. 钠离子电池普鲁士蓝负极与三元材料等不同体系的定量对比：</strong><br>
+        下面，为了全面了解各类储能体系的物理极限，我们将主要活性材料的电化学参数汇总在下表中：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>电化学体系</th>
+                <th>主反应得失电子数 ($z$)</th>
+                <th>活性材料分子式</th>
+                <th>活性材料摩尔质量 ($M$, g/mol)</th>
+                <th>理论极限比容量 (mAh/g)</th>
+                <th>工程实际发挥比容量 (mAh/g)</th>
+                <th>电化学材料主要局限性</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>金属锂负极</strong></td>
+                <td>1</td>
+                <td>$\text{Li}$</td>
+                <td>6.94</td>
+                <td>3,862</td>
+                <td>— (尚未安全量产)</td>
+                <td>循环中极易形成锂枝晶，存在严重起火隐患</td>
+              </tr>
+              <tr>
+                <td><strong>金属钠负极</strong></td>
+                <td>1</td>
+                <td>$\text{Na}$</td>
+                <td>22.99</td>
+                <td>1,165</td>
+                <td>— (开发中)</td>
+                <td>钠活性极高，在液态电解液中界面极不稳定</td>
+              </tr>
+              <tr>
+                <td><strong>三元正极(NMC811)</strong></td>
+                <td>1 (基于单锂脱嵌)</td>
+                <td>$\text{LiNi}_{0.8}\text{Co}_{0.1}\text{Mn}_{0.1}\text{O}_2$</td>
+                <td>97.22</td>
+                <td>275</td>
+                <td>200 ~ 210</td>
+                <td>脱锂过多时晶格结构易崩溃，释放氧气导致热失控</td>
+              </tr>
+              <tr>
+                <td><strong>磷酸铁锂正极(LFP)</strong></td>
+                <td>1</td>
+                <td>$\text{LiFePO}_4$</td>
+                <td>157.76</td>
+                <td>170</td>
+                <td>140 ~ 150</td>
+                <td>平台电压低，电导率和锂扩散系数较低</td>
+              </tr>
+              <tr>
+                <td><strong>液流电池活性钒</strong></td>
+                <td>1 (单步价态变化)</td>
+                <td>$\text{V}^{4+}/\text{V}^{5+}$</td>
+                <td>50.94</td>
+                <td>526 (单钒单质计)</td>
+                <td>约 20 ~ 30 (受电解液溶解度限制)</td>
+                <td>活性物质溶于稀硫酸中，能量密度极低，需庞大泵体系统</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
-
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+        <h2>四、 储能工程中的法拉第定律实践：SOC 估算与电荷丢失</h2>
+        <p>在储能电站的实际运行中，了解每个电芯的荷电状态（SOC，即电池剩余电量与额定容量的比值）是电池管理系统（BMS）的核心任务。目前电站工程中最常用、最经典的方法是<strong>安时积分法（Colulomb Counting）</strong>，其物理底座正是法拉第第一定律：流过的外部电荷量与内部活性物质的变化直接挂钩。</p>
+        <p>安时积分法的基本计算关系式为：</p>
+        
+        <div class="key-concept">
+          📌 <strong>安时积分法计算公式</strong>
+          $$\text{SOC}(t) = \text{SOC}(t_0) + \frac{1}{Q_{\text{usable}}} \int_{t_0}^{t} \eta_{\text{I}} \cdot I(\tau) d\tau$$
+          <div class="concept-explanation">
+            <ul>
+              <li>$\text{SOC}(t)$：在 $t$ 时刻的电池荷电状态，常用百分比（%）表示。</li>
+              <li>$\text{SOC}(t_0)$：初始时刻 $t_0$ 的电池荷电状态。</li>
+              <li>$Q_{\text{usable}}$：当前温度和老化状态下的电池最大可用容量，单位为安时（$\text{Ah}$）。</li>
+              <li>$I(\tau)$：回路充放电电流，单位为安培（$\text{A}$）。充电电流定义为正值，放电电流定义为负值。</li>
+              <li>$\eta_{\text{I}}$：库仑效率（电流效率），考虑充电效率和副反应损耗，无量纲。</li>
+            </ul>
           </div>
         </div>
+
+        <p>尽管安时积分法逻辑简单，但在实际的百兆瓦级储能电站中，如果仅仅依赖这个公式，系统用不了几天就会发生严重的 SOC 计算漂移，导致场景引入中提到的“虚电跳闸”故障。这是为什么？</p>
+        <p>第一个工程痛点是<strong>电流传感器的精度和零点漂移</strong>。储能电池舱内通常使用精密分流器（Shunt）或者霍尔电流传感器（Hall Effect Sensor）来测量母线电流。但任何传感器都存在测量精度限制和零点偏置误差。例如，一个标称 1000A 的霍尔传感器，在完全没有电流通过时，其读数可能会随机产生 0.2A 的零漂。如果储能电站在电网闲置时静置了 24 小时，这 0.2A 的零漂电流就会被安时积分法错误地累计进去，从而导致 $0.2 \text{ A} \times 24 \text{ h} = 4.8 \text{ Ah}$ 的电量偏差。对于单体 $280\text{ Ah}$ 的电芯而言，这相当于产生了一个高达 $1.7\%$ 的 SOC 虚增或虚降。时间一旦拉长到数周，这种“温水煮青蛙”式的积分偏差会越来越大，直到系统内部的物理状态与算法的估算状态南辕北辙。</p>
+        <p>为了克服积分漂移，储能工程通常采用“多算法融合”管理策略。在电舱处于零电流的静置状态时，BMS 会读取单体电芯的端电压。由于在开路状态下，电芯的开路电压（Open Circuit Voltage，OCV）与 SOC 之间存在着一条极其稳定的物理映射关系曲线（OCV-SOC 曲线），BMS 会在电芯静置达到热力学平衡后（通常要求静置 2 至 4 小时），通过查表法获取真实的 SOC 并强制对安时积分器进行“静置校准”。此外，在充放电末期，电芯因极化增大导致端电压快速触及截止电位时，BMS 也会利用“满充校准”或“放空校准”来强制纠偏，保证计算的真实性。</p>
+        <p>第二个痛点是<strong>库仑效率（Coulombic Efficiency，CE）无法达到完美的 100%</strong>。所谓的库仑效率，是指电池在同一个充放电循环内，放电所释放的电荷量与充电所注入的电荷量之比：
+        $$\eta_{\text{C}} = \frac{Q_{\text{discharge}}}{Q_{\text{charge}}}$$
+        根据法拉第定律，如果库仑效率小于 100%，则意味着充电时外部电路注入电池内部的电子，并没有百分之百地用于把正极的锂离子搬运到负极石墨中（主反应），而是有一小部分被一些“微观小偷”——副反应悄悄卷走了。</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-header"><span class="callout-icon">⚠️</span>常见误区：99.9% 库仑效率的“长寿错觉”</div>
+          <div class="callout-body">
+            <p>在电池科研论文中，很多研究者会宣称其新研发的电池具备“99.9% 的超高库仑效率”。在普通人看来，99.9% 的效率意味着每次只损失 0.1%，电池应该非常耐用。但这在商业并网储能电站中其实是一个寿命的“隐形杀手”。</p>
+            <p>我们来做个推算：一个 100MW/200MWh 的电站，如果每天进行 1.5 次满充满放循环。如果库仑效率是 99.9%，意味着每次循环都有 0.1% 的活性锂离子因为发生不可逆副反应（如电解液溶剂氧化、固体电解质界面膜 SEI 膜持续增厚）而被锁死。仅仅运行两年（大约循环 1000 次），其累积的活性锂离子损失量就会达到大约：</p>
+            <p>$$1 - (0.999)^{1000} \approx 63.2\%$$</p>
+            <p>这意味着两年后，电池竟然会因为化学成分不可逆流失而只剩 36.8% 的电量！因此，用于网侧电化学储能的长寿命电芯，其真实的单体循环库仑效率必须至少达到 <strong>99.99% 以上</strong>（甚至 99.999%），才能保证 6000 次以上（15-20年）的长期运行要求。</p>
+          </div>
+        </div>
+
+        <p>在电站现场，这部分“丢失的电量”通常有以下两个去处：</p>
+        <p>1. <strong>微观副反应与 SEI 膜自我修复：</strong> 电池在充放电时，由于电解液在电极表面的热力学不稳定，会持续发生氧化分解，在负极表面反应生成固体电解质界面（Solid Electrolyte Interphase，SEI）膜。随着电池充放电中的膨胀与收缩，SEI 膜会发生微观龟裂，这导致电解液与极片内部暴露的新表面继续反应，持续剥夺和锁死本该参与循环的锂离子。</p>
+        <p>2. <strong>析锂与“死锂”的形成：</strong> 特别是在寒冷冬季或大电流充电时，正极搬运过来的锂离子来不及在负极石墨层中“找到客房”嵌入，直接在石墨表面发生了金属锂的还原。这部分金属锂不仅非常活泼，极易与周围的电解液发生极其剧烈的副反应，还极易脱离电极的电解质连通网络。这些被化学反应包裹、孤立并脱离主电路的金属锂颗粒，在电化学上被称为“死锂”（Dead Lithium）。从法拉第定律的宏观表现来看，就等于电量凭空丢失了，电池的实际可用容量受到了不可逆的削减。</p>
+      </section>
+
+      <section>
+        <h2>五、 中国储能实战案例：200MWh 储能电站的电化学微观核算</h2>
+        <p>为了让大家直观地感受宏观的储能工程是如何受微观法拉第定律的绝对支配，我们以目前国内真实并网运行的山西某 100MW/200MWh 共享储能电站项目为对象，进行一轮细致的“电化学微观物理核算”。</p>
+
+        <div class="callout callout-case">
+          <div class="callout-header"><span class="callout-icon">🏗️</span>中国真实案例：山西浑源 100MW/200MWh 独立储能电站</div>
+          <div class="callout-body">
+            <p>该储能电站位于山西省大同市浑源县，是山西省首批电网侧共享储能示范项目之一。整个电站额定并网输出功率为 100MW，系统总储能容量为 200MWh。电站的电池舱内，使用的全部是主流厂家生产的标称单体电压为 3.2V、标称容量为 280Ah 的磷酸铁锂（LFP）电芯。通过串并联连接，多只电芯集成入电池簇，最终以集装箱舱的形式向电网送电。</p>
+          </div>
+        </div>
+
+        <p><strong>1. 电站电芯的微观数量级核算：</strong><br>
+        首先，我们计算该电站内部包含多少只 280Ah 的电芯。单只电芯的标称能量为：
+        $$W_{\text{cell}} = 3.2 \text{ V} \times 280 \text{ Ah} = 896 \text{ Wh} = 0.896 \text{ kWh}$$
+        若要组成一个 200MWh（即 200,000 kWh）的庞大储能电站，需要的单体电芯总数约为：
+        $$N = \frac{200,000 \text{ kWh}}{0.896 \text{ kWh}} \approx 223,214 \text{ 只}$$
+        这 22.3 万只电芯，就是电化学微观世界的微观反应器。每一次充放电，它们都在同时进行着电子的搬运与离子的迁移。</p>
+
+        <p><strong>2. 满充满放循环中的活性锂离子质量流转核算：</strong><br>
+        现在，我们要计算该储能电站每一次经历满充满放的完整测试循环，到底有多少纯锂元素在电池的正极与负极之间进行了跨越隔膜的搬运？</p>
+        <p>根据公式，200MWh 电站完全放出 200MWh 能量，在电池端（假设工作平台电压为 3.2V）对应的总电量 $Q_{\text{total}}$ 为：
+        $$Q_{\text{total}} = \frac{200 \times 10^6 \text{ Wh}}{3.2 \text{ V}} = 62.5 \times 10^6 \text{ Ah}$$
+        为了方便应用法拉第第一定律，我们将安时电量换算为国际基本电量单位库仑（C）：
+        $$Q_{\text{total}} = 62.5 \times 10^6 \text{ Ah} \times 3600 \text{ s/h} = 2.25 \times 10^{11} \text{ C}$$
+        即：每次放电完毕，外部电路中流过的总电量高达 2250 亿库仑！</p>
+        <p>根据法拉第电量与反应摩尔量的基本公式，流过这些电量时，所对应的转移电子摩尔数 $n_{\text{e}}$（在铁锂电池中，锂离子脱嵌是单价反应，因此离子摩尔量与电子摩尔量相等，得失电子数 $z = 1$）为：
+        $$n_{\text{e}} = \frac{Q_{\text{total}}}{F} = \frac{2.25 \times 10^{11} \text{ C}}{96485 \text{ C/mol}} \approx 2,331,865 \text{ mol}$$
+        这些在电芯内部穿梭的锂离子的质量 $m_{\text{Li}}$ 可以根据锂的摩尔质量（$M_{\text{Li}} = 6.941 \text{ g/mol}$）算得：
+        $$m_{\text{Li}} = n_{\text{e}} \cdot M_{\text{Li}} = 2,331,865 \text{ mol} \times 6.941 \text{ g/mol} \approx 16,185,475 \text{ g} \approx 16.19 \text{ 吨}$$
+        <strong>这是一个震撼性的结论：</strong> 该储能电站在每一次充放电过程中，虽然宏观上我们只看到集装箱内的变压器发出嗡嗡声、外部高压电线在输送电力，但在微观的化学层面，整座电站的正负极片之间，<strong>实际上如同开过了一辆大货车，在电芯内部“无形”且完美守恒地搬运了高达 16.19 吨的锂元素！</strong></p>
+        <p>同样地，正极材料磷酸铁锂（$M_{\text{LFP}} = 157.76 \text{ g/mol}$）在这场反应中，参与脱嵌反应的材料总量为：
+        $$m_{\text{LFP}} = n_{\text{e}} \cdot M_{\text{LFP}} = 2,331,865 \text{ mol} \times 157.76 \text{ g/mol} \approx 367,875,022 \text{ g} \approx 367.88 \text{ 吨}$$
+        每一次循环，有高达 367.88 吨的活性正极粉体材料参与了晶格结构的完全相变。这也是为什么长时间频繁充放电会导致材料表面承受巨大的微观循环应力，从而引发晶格裂纹、极片粉化脱落，造成物理老化衰减的深层原因。</p>
+
+        <p><strong>3. 活性锂不可逆损失的“死锂”资产价值量化：</strong><br>
+        假设该电站运行了 3 年，由于持续的高强度充放电，电池发生了自然衰减。BMS 显示，电站的最大可用能量从 200MWh 下降到了 180MWh，即损失了原本的 10% 可用容量（折合损失电量为 $6.25 \times 10^6 \text{ Ah}$）。</p>
+        <p>在储能工程中，研究表明，磷酸铁锂电池的大部分循环容量衰减，都直接归因于“活性锂离子的不可逆损失（Loss of Active Lithium，LLI）”，这部分锂被消耗在 SEI 膜持续生长或形成了死锂。我们假设在这 10% 的容量衰减中，有 80% 是由于不可逆的析锂副反应或死锂化引起的。那么，有多少纯锂变成了废渣？</p>
+        <p>因 LLI 损失的不可逆电量 $Q_{\text{loss}}$ 为：
+        $$Q_{\text{loss}} = 6.25 \times 10^6 \text{ Ah} \times 80\% = 5.0 \times 10^6 \text{ Ah} = 1.8 \times 10^{10} \text{ C}$$
+        代入法拉第定律公式，换算出被锁死、退出了循环的锂离子摩尔量：
+        $$n_{\text{loss}} = \frac{1.8 \times 10^{10} \text{ C}}{96485 \text{ C/mol}} \approx 186,547 \text{ mol}$$
+        其对应的不可逆死锂的实际质量 $m_{\text{loss}}$ 为：
+        $$m_{\text{loss}} = 186,547 \text{ mol} \times 6.941 \text{ g/mol} \approx 1,294,822 \text{ g} \approx 1.29 \text{ 吨}$$
+        这说明，在三年的电站运行中，有**高达 1.29 吨原本充满活力的锂元素，在不可逆的微观副反应中永久失效，变成了毫无价值的“电化学死锂”**。如果按照中国碳酸锂（每吨含锂元素约 18.8%）近年来的市场价格换算，这笔废弃原材料的隐形损失就高达数十万元人民币。该电化学量化结果为电站开发商对储能资产的全生命周期健康状态（State of Health，SOH）的评估、衰减趋势预警以及废旧电池残值估算，提供了铁一般的微观定量证据。</p>
       </section>
     </main>
 
@@ -113,9 +348,11 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>法拉第定律的物理本质</strong>：电化学反应本质是“数电子来称重量”。在微观世界中，外部电路通过的宏观电量与内部得失电子反应的活性离子的摩尔数完全正比守恒。</li>
+        <li><strong>核心物理常数与计算</strong>：法拉第常数 $F = e \cdot N_{\text{A}} \approx 96485 \text{ C/mol}$，是连接电化学微观粒子数与宏观库仑电量的物理纽带。通过 $Q = zFn$ 和 $m = \frac{MQ}{zF}$ 能够精确换算充放电电量与活性物质反应质量。</li>
+        <li><strong>容量单位的本质</strong>：电池容量采用安时（Ah）或毫安时（mAh）而非库仑（C），是因为 Ah 直接将电流与时间结合，更符合小时级的工程直观。$1\text{ Ah}$ 本质上对应转移了约 $0.0373 \text{ mol}$ 的摩尔电子。</li>
+        <li><strong>储能工程局限与漂移</strong>：BMS 估算 SOC 最常用的“安时积分法”容易因为电流传感器的零点漂移产生时间累积误差，且电池库仑效率（CE）无法达到 100%（副反应、析锂与死锂化），导致估算值与化学状态脱节，需通过电压校准。</li>
+        <li><strong>中国案例微观核算</strong>：以山西 100MW/200MWh 电站为例，每次满充放电内部实际上“无形中”搬运了高达 16.19 吨的锂元素，运行 3 年衰减 10% 意味着有 1.29 吨活性锂变成了退出循环的“死锂”。</li>
       </ul>
     </section>
 
@@ -125,16 +362,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 从微观的物理本质来看，法拉第定律阐明了电化学反应中何种关键的守恒关系？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 外部电路中跑过的电子数量与内部参与反应的活性物质的摩尔量之间存在严格的物理对应关系</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 电池充电时两端端电压的变化量与正负极板的物理质量增加量成正比</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 电池在任何工作状态下其库仑效率都必然是 100%，能量在转换中完全没有损失</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 电解质溶液中阴阳离子的扩散流动速度与外部电路的电流大小在物理上完全等同</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：法拉第定律的微观本质就是电量（即外部流过的电子数目）与内部发生氧化还原得失电子的活性物质的物质的量（摩尔数）之间呈严格的正比关系。选项 B 错误，因为电压变化受电阻、极化等动态因素影响，与质量变化没有直接正比关系。选项 C 错误，由于自放电、SEI 膜持续生长等副反应存在，实际电池库仑效率必定小于 100%。选项 D 错误，离子的扩散速度属于电化学动力学性质，不代表外部宏观回路的总电流。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在储能电站的设计 and 管理中，电池容量通常使用“Ah”（安时）而非国际基本单位“C”（库仑），这主要是基于以下哪项工程考虑？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. Ah 是一种比库仑更基础的电量单位，能直接反映出更微观的电子单个转移数量</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. Ah 直接将充放电电流大小与时间尺度结合，极大地方便了电力系统的跨小时调度核算</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 库仑单位的数值偏小，若用其折算电池的能量（Wh）会导致物理量变小</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 库仑作为基本单位只能用来量化静电荷，无法在电化学流动电路中测量活性锂离子</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：由于储能系统的放电通常在小时级别（如 2 小时或 4 小时），使用 Ah（安时）能直接将放电电流（A）与放电小时（h）相乘，核算十分直观。相比之下，库仑单位以秒计（1 Ah = 3600 C），用于大容量储能系统时会产生极大的数值级，造成工程读数和跨小时调度极不方便。选项 A 错误，库仑才是电量的基本单位。选项 C 错误，换算并不改变能量的本质大小，Wh与库仑/安时皆可通过电压公式精确换算。选项 D 错误，库仑完全能用于流动电化学的量化。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 电池管理系统（BMS）中利用安时积分法估算荷电状态（SOC）时，以下哪项不是导致估算值在长期运行中发生累积漂移的底层原因？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 电流传感器在零电流时存在微小的零点漂移，在时间累积积分中被逐渐放大</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 电池内部发生不可逆的电解液氧化分解等副反应，使库仑效率未达到 100%</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 电池在长期放置时存在微小的内部自放电，而外部的电流表无法监测到这部分电量损失</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 活性锂离子在嵌入与脱出石墨晶格时，不需要消耗任何外部流过的电子电量</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：活性锂离子在正负极材料晶格间的脱嵌反应是伴随着电荷在外部电路中流转的，即必须消耗外部电子电量，这是安时积分法估算的基础，也是符合法拉第定律的，所以选项 D 的陈述本身是错误的，故选 D。选项 A、B、C 都是导致安时积分法无法完全体现电池真实的内部化学状态，从而引发 SOC 估算漂移的真实工程或物理机制，传感器的零漂和偏置会在积分中随时间累积，是安时积分累积漂移的主要工程原因。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在大型磷酸铁锂储能电站中，如果电池在运行中因异常发生了“析锂”副反应（锂枝晶形成），这将产生何种宏观与微观后果？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 锂离子直接在极片表面结晶，极大地增加了电池的理论克容量，使总寿命上升</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 金属锂与电解液反应形成不可逆的钝化产物并脱离主回路，导致活性锂损失（LLI），使容量永久衰减</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 析出的锂元素在极片上不再具有电荷数，即主反应的价态得失电子数 $z$ 彻底变为零</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 析锂仅仅只是宏观极片厚度发生变化，不会对电池的循环可用容量造成实质性的下降</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：析出的锂枝晶性质非常活泼，极易与周围的电解液发生化学副反应被包裹，从而“钝化”并脱离了电化学反应的主回路，形成了“死锂”（Dead Lithium）。这导致电池内部用于循环搬运的活性锂离子数量永久减少，发生不可逆的活性锂损失（LLI），表现为电池宏观容量的永久衰减。因此选项 B 正确。选项 A 错误，析锂不会增加克容量，反而降低寿命。选项 C 错误，析锂是单价还原，其得失电子数依然是 1。选项 D 错误，析锂是电池循环寿命与安全性的重大威胁。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 结合法拉第定律以及比容量公式，若想设计理论克容量（比容量）极高的电池活性物料，材料应该具备何种微观特征？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 材料的分子摩尔质量越小，且单个粒子反应中所涉及 of 得失电子数越多</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 材料的分子摩尔质量越大，且单个粒子反应中所涉及 of 得失电子数越少</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 材料必须完全具有极高的电导率，其摩尔质量的分子大小对容量并没有物理作用</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 只需依赖其所用的电解液种类，电极固体活性材料的本征属性无法限制克容量天花板</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：根据理论比容量的极限公式：$C_{\text{theory}} = \frac{z \cdot F}{3.6 \cdot M}$。活性材料的理论极限比容量与反应的得失电子数 $z$ 成正比，与活性材料的摩尔质量 $M$ 成反比。因此，为了获得极高的克容量，应当选择摩尔质量极小（轻量化，如锂、钠）且得失电子数极多（多价态，如铝、硫）的元素。故选项 A 正确。选项 B 的物理特征会导致比容量变得极低。选项 C 和 D 忽视了法拉第定律中摩尔质量这一绝对量化关系的影响。</p>
         </div>
       </div>
 
@@ -159,20 +456,23 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="04_1_1_氧化还原反应.html">04_1_1 — 氧化还原：电子的得与失</a></li>
+        <li><a href="04_1_2_电极与电解质.html">04_1_2 — 电极与电解质</a></li>
+        <li><a href="04_1_3_电化学势与标准电位.html">04_1_3 — 电化学势与标准电极电位</a></li>
+        <li><a href="04_2_1_吉布斯自由能与电压.html">04_2_1 — 吉布斯自由能与电池电压</a></li>
+        <li><a href="04_2_2_能释特方程与SOC.html">04_2_2 — 能斯特方程与SOC关系</a></li>
       </ul>
     </section>
 
     <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
-      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">04_1_4</span></p>
+      <p>中国网储系统性学习手册 v3.6 &nbsp;|&nbsp; <span class="file-id">04_1_4</span></p>
     </footer>
 
   </div>
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
