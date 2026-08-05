@@ -162,6 +162,11 @@ def run_single_sec(sec_info, max_retries=3):
                 print(f"🚀 [自动发布 SUCCESS] 章节 {sec_id} 已同步更新状态并部署推送至远端！")
             else:
                 update_section_status(sec_id, "available")
+            # 清理本章节的临时注入 Prompt 文件（仅删 prompt_{sec_id}.md，不触碰长期模板文件）
+            tmp_prompt = ROOT_DIR / "documents" / "prompts" / f"prompt_{sec_id}.md"
+            if tmp_prompt.exists():
+                tmp_prompt.unlink()
+                print(f"🧹 [清理] 已删除临时 Prompt 文件: {tmp_prompt.name}")
             return True
         else:
             sleep_sec = 10 * attempt
