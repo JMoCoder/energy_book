@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>液流电池工作原理 — 液流电池 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析液流电池工作原理的核心物理原理、工程应用与实战案例。">
+  <title>液流电池工作原理 — 液流电池 | 中国网储系统性学习手册</title>
+  <meta name="description" content="本节系统剖析液流电池的工作原理、双循环系统、电化学反应机理、功率与容量解耦的物理本质以及其在长时电网储能场景中的工程设计与能效管理。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,53 +57,397 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">05_3_1</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>液流电池工作原理</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">作为一种突破性的长时电化学储能技术，液流电池将能量存储与能量转换物理分离，实现了功率与容量的独立定制。本节将深度剖析液流电池的工作原理、双循环机制、电化学反应过程以及在电网长时储能场景中的工程设计与能效考量。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>掌握液流电池的物理架构与解耦机理</strong>：深入理解液流电池“电堆（功率）与储罐（容量）”完全解耦的硬件组成，掌握其在长时储能中的成本优势边界。</li>
+        <li><strong>理解氧化还原反应与钒电池价态变化</strong>：熟练掌握全钒液流电池在充放电过程中正负极钒离子价态（2+/3+与4+/5+）的转化过程，能正确书写并解释其电化学半反应方程式。</li>
+        <li><strong>分析关键能效指标与损耗路径</strong>：掌握库仑效率、电压效率与能量效率的定义及其相互关系，能分析分流电流、交叉污染与泵功损耗等主要能量损耗途径。</li>
+        <li><strong>认识热管理限制与材料老化机理</strong>：明确温度窗口限制在 10℃–40℃ 之间的物理化学原因，理解五氧化二钒热沉淀和低温结晶对系统的危害，掌握电极与离子膜的老化机制。</li>
+        <li><strong>具备网储工程选型与全生命周期经济性分析能力</strong>：能结合中国真实政策环境与大型电站案例，评估液流电池在 4 小时以上长时储能场景下的全生命周期度电成本（LCOS）与残值回收价值。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：当大连的深秋迎来电网保供告警</h2>
+      <p>在 2022 年国庆前夕，辽宁电网负荷调度中心突然发布预警：受冷空气南下 and 局部无风天气影响，辽东半岛的风力发电出力在未来数天内将出现大幅萎缩，而夜间采暖用电量却呈现爆发式增长。作为当时刚刚并网发电的全球最大液流电池储能调峰电站——大连液流电池储能调峰电站，接到了调度中心的紧急指令：在夜间用电尖峰时段，连续以 100MW 的满功率向电网放电 4 小时，以填补数十万度电的供电缺口。</p>
+      <p>面对如此高强度的长时持续放电需求，常规的锂电池电站通常会因为长期大电流放电导致电芯积热严重、消防安全压力倍增而不得不采取“降功率运行”或“分批放电”的折中策略。然而，大连液流电池电站的控制室内，值班工程师们神色轻松。因为他们知道，这个庞然大物的“心脏”（电堆）和“血液”（电解液）是完全分离的——即使电堆内部反应激烈，数十万升的电解液在强大的循环泵驱动下快速流动，源源不断地带走反应热量，并在外部热交换系统中轻松散热。最终，电站以平稳的输出电能圆满完成了连续 4 小时的电力保障任务，期间电堆内部最高温度始终未超过 35℃。</p>
+      <p>为什么液流电池能够在大容量、长时持续充放电的严酷场景下表现得如此从容和安全？它内部那如同生物“血液循环”一样的双循环管道是如何工作的？它又是如何打破传统电池“容量与功率绑死”的物理枷锁的？让我们揭开液流电池内部复杂的物理与化学图景，一探究竟。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、液流电池的基本定义与解耦架构</h2>
+        <p>从字面意思理解，液流电池就是“流动着电解液的电池”。与传统静态电池（如智能手机和电动汽车中常用的锂离子电池，其活性化学物质直接涂敷在金属箔片上并封装在密闭壳体内）有着根本性不同。液流电池将活性储能介质溶解在液态的电解质溶液中，通过外置的储液罐以及两套相互独立的管路泵送系统，使其在中央反应堆中流动并发生氧化还原反应，从而实现电能与化学能的互相转换。</p>
+        
+        <p>这种物理架构上的彻底变革，赋予了液流电池在化学能存储领域独一无二的物理特征：<strong>功率与容量的完全独立定制与解耦</strong>。传统电池的功率大小与储能容量在出厂时就已经通过电极涂布厚度与卷绕工艺彻底绑定，如果用户想要增加一倍的储能电量，就必须并联一倍体积的物理电池包，这就意味着必须同时支付对应电极材料、铜铝箔片与外壳的安全溢价。而液流电池则通过将功率发生场所和容量存储场所物理隔开，打破了这一限制。</p>
 
         <div class="callout callout-analogy">
-          <span class="callout-icon">🔍</span>
-          <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+          <div class="callout-header"><span class="callout-icon">🔍</span>生活类比：燃油车的油箱与发动机</div>
+          <div class="callout-body">
+            <p>液流电池的解耦工作机制，与我们日常接触的燃油汽车有着极其完美的类比：</p>
+            <ul>
+              <li><strong>发动机（对应反应电堆，Stack）</strong>：决定了这辆车能够跑得多快、拉多重的货物，即系统的<strong>输出功率（MW）</strong>。发动机的排量越大、气缸越多，瞬时爆发的动力就越强，但它本身并不决定这辆车能跑多远。</li>
+              <li><strong>油箱（对应电解液储罐，Tanks）</strong>：里面装载的汽油总量决定了这辆车加满一次油能跑多少公里，即系统的<strong>储能容量（MWh）</strong>。如果车主觉得续航不够，想把单次续航从 300 公里提升到 1200 公里，他不需要花大价钱去更换一个更大排量的发动机，而只需要在车底加挂一个容量更大的备用油箱。</li>
+              <li>在液流电池中，电解液就相当于汽油，储罐就相当于油箱，而反应电堆就相当于发动机。在网储工程设计中，要将一个 10MW/20MWh 的系统改造成 10MW/80MWh 的长时储能电站，工程师完全不需要改动电堆，而只需要多建几个塑料大罐子、多兑一些电解液即可。这正是长时储能场景下液流电池成本优势的核心来源。</li>
+            </ul>
           </div>
+        </div>
+
+        <p>一个完整的液流电池系统主要由以下核心硬件组件构成：</p>
+        <ul>
+          <li><strong>反应电堆（Cell Stack）</strong>：由多个单电池单元通过螺栓紧固、串联组装而成的中央反应室。它是电子和离子进行对流、扩散与界面电化学反应的物理场所。每个单电池单元内部包含两层双极板、夹在其中的多孔电极以及最核心的离子交换膜。</li>
+          <li><strong>电解液储罐（Electrolyte Tanks）</strong>：分为正极储罐和负极储罐。分别盛放带有不同价态金属离子（或有机小分子）活性物质的酸性水溶液。为了防止空气中的氧气与负极的低价态金属离子接触发生自放电氧化，负极储罐通常需要注入高纯氮气进行密封保护。</li>
+          <li><strong>循环泵与管路系统（Pumps & Piping System）</strong>：循环泵是整个系统的“心脏”，管路是“血管”。泵必须具备极高的耐酸耐腐蚀性，连续不断地将电解液从储罐底部泵送至电堆，在电极表面反应完毕后，再通过上部管路流回储罐，形成左右对称的两套封闭式液体循环回路。</li>
+        </ul>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>核心组件名称</th>
+                <th>常用材料构成</th>
+                <th>核心功能与物理角色</th>
+                <th>网储工程设计关注点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>双极板 (Bipolar Plate)</strong></td>
+                <td>高纯石墨板或石墨/聚合物复合模压板</td>
+                <td>串联相邻单电池以传导电子，物理隔离相邻正负极电解液不发生直接混合</td>
+                <td>抗弯强度、极低的体电阻与接触电阻、在强酸及强氧化性环境下的抗腐蚀能力</td>
+              </tr>
+              <tr>
+                <td><strong>碳毡电极 (Electrode)</strong></td>
+                <td>聚丙烯腈基多孔碳毡</td>
+                <td>本身不参与化学反应，仅作为高导电性的多孔骨架，提供极高的比表面积供反应发生</td>
+                <td>表面亲水性修饰（引入羟基/羧基以提高活性）、孔隙率（平衡液阻与传质）</td>
+              </tr>
+              <tr>
+                <td><strong>离子交换膜 (Ion Membrane)</strong></td>
+                <td>全氟磺酸质子交换膜或非氟化阻性膜</td>
+                <td>物理隔离正负极活性离子以防直接相遇自放电；选择性通过氢离子以维持电荷平衡</td>
+                <td>质子传导率（影响电压效率）、钒离子阻隔性（影响库仑效率）、化学抗老化性能</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、电化学反应机理与反应过程详解</h2>
+        <p>液流电池能够储存和释放电能，其底层的微观机制完全建立在可逆的电化学氧化还原反应基础之上。我们将电子在化学反应中的失去与获得，分别称为氧化反应与还原反应。</p>
+        
+        <p>以目前在全球范围内技术最成熟、装机规模最大的全钒液流电池（All-Vanadium Redox Flow Battery，VRFB）为例，它最为精妙的设计在于：<strong>正极和负极均采用相同元素作为电化学活性物质</strong>，仅仅是通过利用钒元素在水溶液中拥有四种不同的稳定化合价态（正2价、正3价、正4价、正5价）来实现充放电。这种“同元素设计”完美避开了不同金属离子在穿过离子膜后造成不可逆交叉污染的行业痛点。</p>
+
+        <div class="callout callout-analogy">
+          <div class="callout-header"><span class="callout-icon">🔍</span>生活类比：账户资金划转与借贷平衡</div>
+          <div class="callout-body">
+            <p>我们可以把氧化还原反应中电子的运动，类比为两个关联账户之间的资金划转：</p>
+            <ul>
+              <li><strong>电子</strong>就是流动的“现金资金”；而<strong>质子</strong>则是银行后台用以对冲账户差额、维持会计借贷平衡的“结算积分”。</li>
+              <li>在放电过程中，负极储罐账户中的 2 价钒离子作为“富豪”，拥有富余的电子现金，它主动释放电子并升级为 3 价钒离子；电子现金通过外电路源源不断地流向正极，点亮了电网上的电灯。</li>
+              <li>在正极储罐账户中，处于 5 价高位的钒离子急需电子资金来平衡自身，当它吸纳了从负极流过来的电子后，身价便降为了 4 价钒离子。</li>
+              <li>然而，如果仅仅有电子的单向流动，负极侧会因为流失电子而积累正电荷，正极侧会因为吸收电子而积累负电荷，静电排斥力会瞬间锁死后续电子的转移。此时，离子交换膜发挥作用，允许质子从负极侧穿过隔墙进入正极侧，从而在后台完成了电中性的借贷平衡确认。这个过程在放电时自发发生，在充电时则通过外部电源强制逆向划转。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>为了让读者对这个微观过程建立精确的物理概念，我们给出全钒液流电池在充放电运行时的半反应方程式。在放电时，正极和负极电解液分别发生如下反应：</p>
+        
+        <p><strong>正极半反应（正极室内钒离子的价态转化）</strong>：</p>
+        $$VO_2^+ + 2H^+ + e^- \rightleftharpoons VO^{2+} + H_2O$$
+        <p>在放电过程中，从正极储罐泵送入电堆的5价钒离子（以黄色偏钒酸根离子形式存在）在多孔碳毡表面夺取一个电子，同时消耗两个氢离子（质子），还原成4价钒离子（以蓝色的超氧钒离子形式存在），并生成水。充电时，该反应逆向进行，蓝色电解液在外部电力驱动下被氧化为黄色。</p>
+
+        <p><strong>负极半反应（负极室内钒离子的价态转化）</strong>：</p>
+        $$V^{2+} \rightleftharpoons V^{3+} + e^-$$
+        <p>在放电过程中，从负极储罐引入的2价钒离子（呈紫色）在电堆负极碳毡表面释放一个电子，被氧化为3价钒离子（呈绿色）。充电时，该反应逆向进行，外部电源将电子强行灌入负极，使绿色电解液还原为紫色。</p>
+
+        <p>将上述正极和负极的半反应相加，我们就得到了全钒液流电池的<strong>全反应方程式</strong>：</p>
+        $$VO_2^+ + V^{2+} + 2H^+ \rightleftharpoons VO^{2+} + V^{3+} + H_2O$$
+        <p>这个化学方程式表明，电池反应在充放电循环中是不消耗钒元素的，只是钒离子在不同氧化态之间转换。由于正负电极电势的差值，全钒液流电池的单体理论标准开路电压为：</p>
+        $$U_{OCV}^0 \approx 1.26 \text{ V}$$
+        <p>这一数值在实际网储工程中具有极其重要的意义：因为水在酸性电解液中的理论分解电压为 1.23 V，这意味着液流电池的运行电压上限必须受到精细的控制（单电池电压一般控制在 1.55 V 以下，超过此阈值就会发生水的剧烈电解，在正极析出氧气，在负极析出氢气，不仅导致效率暴跌，还会带来安全隐患）。</p>
+
+        <!-- SVG System Schematic Diagram -->
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 350" width="100%" height="350" style="background-color: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px;">
+            <defs>
+              <!-- Arrow Marker -->
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+              <!-- Flow Marker -->
+              <marker id="flow-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <polygon points="0 0, 6 3, 0 6" fill="#1A5F96" />
+              </marker>
+            </defs>
+            
+            <!-- Title / Labels -->
+            <text x="400" y="30" font-family="'Inter', sans-serif" font-size="16" font-weight="bold" fill="#1A1A2E" text-anchor="middle">液流电池系统工作原理及电解液双循环示意图</text>
+            
+            <!-- Cell Stack Box (Center) -->
+            <rect x="340" y="70" width="120" height="180" rx="6" fill="#F8F9FA" stroke="#4A5568" stroke-width="2" />
+            <text x="400" y="95" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1A1A2E" text-anchor="middle">反应电堆 (Stack)</text>
+            
+            <!-- Membrane (Vertical dashed line in Center) -->
+            <line x1="400" y1="110" x2="400" y2="240" stroke="#F57C00" stroke-dasharray="5,5" stroke-width="3" />
+            <text x="400" y="248" font-family="sans-serif" font-size="11" fill="#F57C00" text-anchor="middle">离子交换膜</text>
+            
+            <!-- Negative Electrode (Left side of stack) -->
+            <rect x="350" y="110" width="40" height="120" rx="3" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" />
+            <text x="370" y="175" font-family="sans-serif" font-size="12" fill="#1A5F96" text-anchor="middle">负极</text>
+            
+            <!-- Positive Electrode (Right side of stack) -->
+            <rect x="410" y="110" width="40" height="120" rx="3" fill="#FFE8E8" stroke="#D32F2F" stroke-width="1.5" />
+            <text x="430" y="175" font-family="sans-serif" font-size="12" fill="#D32F2F" text-anchor="middle">正极</text>
+            
+            <!-- Negative Electrolyte Tank (Left) -->
+            <rect x="80" y="120" width="140" height="140" rx="8" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <text x="150" y="150" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1A5F96" text-anchor="middle">负极储罐 (Anolyte)</text>
+            <text x="150" y="180" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">放电: V²⁺ → V³⁺ + e⁻</text>
+            <text x="150" y="200" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">充电: V³⁺ + e⁻ → V²⁺</text>
+            
+            <!-- Positive Electrolyte Tank (Right) -->
+            <rect x="580" y="120" width="140" height="140" rx="8" fill="#FFE8E8" stroke="#D32F2F" stroke-width="2" />
+            <text x="650" y="150" font-family="sans-serif" font-size="13" font-weight="bold" fill="#D32F2F" text-anchor="middle">正极储罐 (Catholyte)</text>
+            <text x="650" y="180" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">放电: VO₂⁺ + 2H⁺ + e⁻ → VO²⁺</text>
+            <text x="650" y="200" font-family="sans-serif" font-size="11" fill="#4A5568" text-anchor="middle">充电: VO²⁺ + H₂O → VO₂⁺ + 2H⁺</text>
+            
+            <!-- Pumps -->
+            <!-- Left Pump -->
+            <circle cx="150" cy="300" r="15" fill="#F8F9FA" stroke="#1A5F96" stroke-width="1.5" />
+            <path d="M 145,295 L 155,305 M 155,295 L 145,305" stroke="#1A5F96" stroke-width="1.5" />
+            <text x="150" y="325" font-family="sans-serif" font-size="11" fill="#1A5F96" text-anchor="middle">负极循环泵</text>
+            
+            <!-- Right Pump -->
+            <circle cx="650" cy="300" r="15" fill="#F8F9FA" stroke="#D32F2F" stroke-width="1.5" />
+            <path d="M 645,295 L 655,305 M 655,295 L 645,305" stroke="#D32F2F" stroke-width="1.5" />
+            <text x="650" y="325" font-family="sans-serif" font-size="11" fill="#D32F2F" text-anchor="middle">正极循环泵</text>
+            
+            <!-- Pipelines & Flow Arrows -->
+            <!-- Left Negative Loop -->
+            <path d="M 150,260 L 150,285" stroke="#1A5F96" stroke-width="2" fill="none" />
+            <path d="M 165,300 L 280,300 L 280,210 L 350,210" stroke="#1A5F96" stroke-width="2" fill="none" marker-end="url(#flow-arrow)" />
+            <path d="M 350,130 L 260,130 L 260,100 L 150,100 L 150,120" stroke="#1A5F96" stroke-width="2" fill="none" marker-end="url(#flow-arrow)" />
+            
+            <!-- Right Positive Loop -->
+            <path d="M 650,260 L 650,285" stroke="#D32F2F" stroke-width="2" fill="none" />
+            <path d="M 635,300 L 520,300 L 520,210 L 450,210" stroke="#D32F2F" stroke-width="2" fill="none" marker-end="url(#flow-arrow)" />
+            <path d="M 450,130 L 540,130 L 540,100 L 650,100 L 650,120" stroke="#D32F2F" stroke-width="2" fill="none" marker-end="url(#flow-arrow)" />
+            
+            <!-- External Circuit (Load/Grid) -->
+            <path d="M 370,110 L 370,50 L 520,50 Q 530,50 530,45" stroke="#4A5568" stroke-width="2" fill="none" />
+            <path d="M 430,110 L 430,50 L 580,50 Q 570,50 570,45" stroke="#4A5568" stroke-width="2" fill="none" />
+            <circle cx="550" cy="45" r="20" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <text x="550" y="50" font-family="'Inter', sans-serif" font-size="12" font-weight="bold" fill="#1A5F96" text-anchor="middle">电网</text>
+            
+            <!-- Electron flow arrow -->
+            <path d="M 370,80 L 370,50 L 480,50" stroke="#F57C00" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)" />
+            <text x="420" y="42" font-family="'Inter', sans-serif" font-size="11" fill="#F57C00" text-anchor="middle">电子流 (放电 e⁻)</text>
+            
+            <!-- Proton flow in membrane -->
+            <path d="M 390,190 L 410,190" stroke="#F57C00" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)" />
+            <text x="400" y="210" font-family="'Inter', sans-serif" font-size="10" fill="#F57C00" text-anchor="middle">H⁺</text>
+          </svg>
+          <figcaption>图1：全钒液流电池系统工作原理及电解液双循环示意图</figcaption>
+        </figure>
+
+        <p>在更宏观的物理流动层面，电解液从储罐流入电堆内部时，会在双极板表面的流道中进行宏观对流。随后，活性离子在浓度梯度和压力的驱动下，向多孔碳毡的内部微孔发生微观扩散，并最终吸附在碳纤维表面的活性位点上。这种物理流动机制决定了液流电池的化学反应速率与电流密度的上限。如果循环泵的流速不够快，电极界面处的反应物消耗殆尽，就会发生浓差极化，导致电池电压急剧下跌甚至触发保护停机。</p>
+      </section>
+
+      <section>
+        <h2>三、功率与容量解耦机制的物理本质与数学表达</h2>
+        <p>在前两节对物理架构和电化学反应机理的阐述之上，我们现在可以深入到液流电池最具技术特征的机理——功率与容量解耦机制的物理本质和定量数学表达。理解这套数学关系，是每一个电力储能工程师在进行系统选型与造价概算时的基本功。</p>
+        
+        <p>在设计一个电化学储能电站时，系统的功率 $P$ 衡量的是电池在单位时间内能吞吐多少电能的能力；系统的能量 $E$（即储能容量）衡量的是电池能够持续供电时间的长短。我们将液流电池系统分成这两个独立的维度来进行数学解构：</p>
+
+        <p>在定量设计中，液流电池的系统额定输出功率 $P_{stack}$ 满足以下基础数学方程式：</p>
+        $$P_{stack} = N \cdot I \cdot V_{cell}$$
+        <p>式中，$N$ 为反应电堆内串联的单电池数量；$I$ 为流过电堆的输出电流（A）；$V_{cell}$ 为单电池在额定电流下的实际输出电压（V）。这个公式展示了功率维度的物理本质：<strong>液流电池的输出功率只与电堆的物理尺寸、串联电池数和内部电极反应活性面积直接相关，而与电解液的体积大小毫无关系。</strong></p>
+
+        <p>与此相对，系统的额定能量容量 $E_{capacity}$ 则满足以下法拉第电化学反应方程式：</p>
+        $$E_{capacity} = C_{active} \cdot V_{electrolyte} \cdot F \cdot U_{average}$$
+        <p>式中，$C_{active}$ 为电解液中电化学活性钒离子的有效溶解浓度（$\text{mol/L}$，通常商用系统控制在 $1.5 \sim 2.0 \text{ mol/L}$）；$V_{electrolyte}$ 为电解液的总体积（L）；$F$ 为法拉第常数（通常取恒定值 $96,485 \text{ C/mol}$）；$U_{average}$ 为平均工作电压（V）。这个公式清晰表明：<strong>液流电池的容量完全由电解液的化学配方浓度和电解液的物理储量体积决定，不受电堆大小的任何限制。</strong></p>
+
+        <p>这种纯粹的物理与化学维度的独立解耦，在国家鼓励建设长时储能的政策大背景下，带来了解耦设计的巨大工程价值。下表对比了 2 小时、4 小时和 8 小时储能时长下，液流电池与锂离子电池在电站建设成本构成上的结构性差异：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>储能系统类型</th>
+                <th>2小时系统（短时）</th>
+                <th>4小时系统（标准新型储能）</th>
+                <th>8小时系统（长时调峰）</th>
+                <th>扩容成本优势分析</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>锂离子电池系统</strong></td>
+                <td>电芯与模组占系统成本约 60%。BMS、PCS 等辅助设备占 40%。</td>
+                <td>电芯与模组的成本占比上升至约 75%。由于功率和容量绑定，系统成本与容量呈近似线性翻倍增长。</td>
+                <td>电芯与模组成本占比高达 85% 以上。需要重复购买 4 倍的电芯模组与温控消防设施，初始造价高昂。</td>
+                <td>劣势：扩容必须同比例扩建整套电芯，没有边际成本递减效应。</td>
+              </tr>
+              <tr>
+                <td><strong>全钒液流电池系统</strong></td>
+                <td>电堆占系统总成本 55% 以上。电解液占 30% 左右。初始度电单价偏高。</td>
+                <td>电堆成本占比稀释至约 40%，电解液成本占比上升至 45%。系统综合成本开始具备与锂电竞争的能力。</td>
+                <td>电堆成本占比被大幅稀释至 20% 以下，电解液和塑料罐成本占到 70% 以上。容量单价实现断崖式下跌。</td>
+                <td><strong>优势：扩容仅需追加采购电解液与塑料储罐，电堆等发电设备无需增加，边际扩容成本极低。</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>四、关键效率指标与多维度能量损耗路径</h2>
+        <p>在理解了电化学过程和设计方程式后，我们来探讨系统的能效控制。在电网实际运行中，液流电池的整站往返效率（Round-Trip Efficiency，RTE）直接决定了其经济可行性。在深入剖析整站效率之前，我们需要先理清电化学层面三大能效指标的定义与相互关联：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：能效关系式</h4>
+          <p>液流电池系统的能量效率（Energy Efficiency，EE），即往返效率（Round-Trip Efficiency，RTE），由其内部的库仑效率（Coulombic Efficiency，CE）与电压效率（Voltage Efficiency，VE）共同决定。其核心关系式为：</p>
+          $$\eta_{RTE} = \eta_{CE} \times \eta_{VE}$$
+          <p>在工程实际计算中，若要获得整站的综合效率，还必须扣除循环泵、冷却塔、电池管理系统与储能变流器（Power Conversion System，PCS）等辅助用电的寄生功耗损失（Parasitic Loss）：</p>
+          $$\eta_{system} = \frac{E_{discharge} - E_{aux, discharge}}{E_{charge} + E_{aux, charge}}$$
+          <p>这一能效关系式是液流电池系统能效管理和电化学控制算法的数学底座，直接决定了电站并网考核和商业化套利时的经济产出效率。</p>
+        </div>
+
+        <p>为了提高能量效率，我们必须精确掌握电解液在循环和反应过程中，能量是通过哪些具体的物理和化学途径发生退化与损耗的：</p>
+
+        <p><strong>1. 活性离子交叉污染（Active Species Crossover）</strong><br>
+        离子交换膜并不是完美的阻隔网，它在允许质子穿过的同时，正负极储罐中不同价态的钒离子（如 $V^{2+}$ 与 $VO_2^+$）也会在浓度梯度和电场力的驱动下，缓慢地透过离子膜扩散到对侧。一旦发生穿透，由于相遇产生的非自发电化学氧化还原反应，会直接在电堆内部释放出化学热能，导致原本应该流向外电路的电量被白白浪费，这在电池层面表现为<strong>库仑效率的下降</strong>。</p>
+
+        <p><strong>2. 旁路漏电与分流电流（Shunt Current）</strong><br>
+        液流电池的所有单电池反应室，为了实现电解液的同时泵送，都是通过共用的液体总管和细分支管连通在一起的。由于导电的硫酸活性电解液在这些通道中形成了贯穿整个电堆的电气网络，这就使得单电池之间存在着电位差。在这个电位差驱动下，一部分电流会在共用管道内的电解液中形成寄生环流。这部分环流不经过外部负荷，被称为分流电流。它不仅会导致<strong>自放电损失（拉低库仑效率）</strong>，还会因为局部电化学反应的电位畸变，加速极板和管网边缘处的<strong>电化学腐蚀与析氢老化</strong>。</p>
+
+        <p><strong>3. 电解液泵送损耗（Pump Loss）</strong><br>
+        由于液流电池中电解液的粘度较高，在连续通过碳毡微米级多孔骨架和弯折流道时会产生较大的流动阻力。循环泵为了克服这一阻力，必须消耗相当一部分由 PCS 输入的交流电力。这部分辅助寄生损耗直接从系统层面扣减了 RTE。</p>
+
+        <div class="callout callout-tips">
+          <div class="callout-header"><span class="callout-icon">💡</span>Tips：基于开路电压（OCV）的电解液荷电状态（SOC）在线监测</div>
+          <div class="callout-body">
+            <p>在传统的锂电池中，荷电状态（State of Charge，SOC）的估算是一大工程难点，往往需要通过极其复杂的安时积分与卡尔曼滤波算法来定量近似。但在液流电池中，由于电解液活性物质是完全均匀的液体，工程上可以通过在旁路设置一个微型的“开路电压测试池”（OCV Cell），测量没有电流通过时的平衡电压。</p>
+            <p>由于全钒电池的开路电压与反应物的浓度比值满足能斯特方程，这个开路电压与电解液的真实 SOC 呈现高度的一一对应线性关系。网储系统的 BMS 只需要读取该 OCV 电压值，就能实现对系统 SOC 的极高精度（误差 &lt; 1%）实时在线监测，彻底规避了锂电池 SOC 估算漂移的顽疾。</p>
+          </div>
+        </div>
+
+        <p>在多损耗并存的情况下，系统管理和管网设计的核心就在于如何在流阻泵功与电化学表现之间寻找一个最佳的博弈平衡点：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>损耗路径</th>
+                <th>微观物理/化学机制</th>
+                <th>受影响的效率指标</th>
+                <th>核心工程对策与优化思路</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>交叉污染 (Crossover)</strong></td>
+                <td>钒离子由于浓度差和电迁移穿过非完美质子膜，发生非自发自放电</td>
+                <td>主要拉低库仑效率</td>
+                <td>采用高选择性阻钒离子交换膜；通过将正负极电解液定期混合并物理再分配（再平衡）来消除容量漂移</td>
+              </tr>
+              <tr>
+                <td><strong>分流电流 (Shunt Current)</strong></td>
+                <td>单电池间电位差通过共同电解液管道通道形成寄生闭合漏电回路</td>
+                <td>拉低库仑效率，引起管道加速腐蚀</td>
+                <td>设计“细而长”的蛇形电解液引入支管（增大电阻）；限制单个电堆串联的电池节数（通常不超过 40 节）</td>
+              </tr>
+              <tr>
+                <td><strong>析氢/析氧反应 (Gas Evolution)</strong></td>
+                <td>局部电位超出水分解窗口，负极析氢导致 H⁺ 消耗，正极析氧导致碳毡氧化</td>
+                <td>降低库仑效率，导致电解液 pH 值失衡</td>
+                <td>在电堆控制策略中严格限制单体充电截止电压；电解液中添加析氢抑制剂；使用防爆排气安全阀</td>
+              </tr>
+              <tr>
+                <td><strong>泵送寄生功耗 (Pump Loss)</strong></td>
+                <td>循环泵驱动高粘度酸性液体克服管路流阻和碳毡多孔阻力消耗的电力</td>
+                <td>拉低系统的整站往返效率</td>
+                <td>能量管理系统（Energy Management System，EMS）采用动态流量调节算法：小电流时降低流量以减小泵功，大电流时增加流量以消除极化，选用变频离心泵</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>五、液流电池系统的热管理与老化衰减机制</h2>
+        <p>虽然液流电池被称为“高安全储能技术”，但其内部敏感的电化学平衡对温度极其挑剔。在网储系统日常充放电和极端天气运维中，热管理系统必须将电解液的温度严格控制在 <strong>10℃ 到 40℃ 之间</strong>。超出这个狭窄的温控窗口，就会诱发系统性灾难。</p>
+        
+        <p><strong>1. 高温下的“红色沉淀”灾难机制</strong><br>
+        当系统大功率充放电或外界环境温度过高，导致正极电解液温度超过 40℃ 并维持一定时间后，正极液中高度处于氧化态的5价钒离子（$VO_2^+$）会发生化学变性，脱水缩聚并析出偏钒酸及暗红色的<strong>五氧化二钒固体沉淀</strong>：</p>
+        $$2VO_2^+ + H_2O \rightarrow V_2O_5 \downarrow + 2H^+$$
+        <p>这个热沉淀化学反应是一个不可逆过程。析出的微小固体红色颗粒会随着管道循环进入电堆，像海砂一样牢牢淤积在多孔碳毡内部的纤维孔隙中，这不仅会造成活性钒源被永久性抽离导致<strong>电池容量的不可逆断崖式下跌</strong>，还会使得电堆内部的流动通道被彻底堵死，导致循环泵压力表迅速上升，严重时甚至胀裂电堆或烧毁循环泵电机。</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-header"><span class="callout-icon">⚠️</span>注意：温控失联时的五氧化二钒沉淀风险</div>
+          <div class="callout-body">
+            <p>液流电池电解液的温度控制是系统的生命线。当网储电站的空调系统或热交换器泵发生故障，导致正极电解液温度超过 40℃ 并维持数小时，5 价钒离子会发生不可逆的水解沉淀反应，析出呈暗红色的五氧化二钒固体颗粒。</p>
+            <p>这种颗粒会像结石一样牢牢附着在电极碳毡的微孔中，导致该区域电池内阻急剧上升、液体流通受阻，循环泵出口压力表会迅速“爆表”。如果不及时停机物理清洗并补充化学还原剂，整个电堆可能会因为流道堵塞引发局部过热、热烧毁甚至永久报废。</p>
+          </div>
+        </div>
+
+        <p><strong>2. 低温下的“结晶闭锁”机制</strong><br>
+        与高温相反，当冬季外界环境温度过低，导致电解液温度跌破 10℃ 后，负极中高浓度的 2 价和 3 价钒离子的溶解度会发生饱和跌落，进而析出呈绿色的<strong>七水合硫酸钒结晶沉淀</strong>。虽然这种结晶沉淀在温度回升后可以通过热泵加热缓慢重新溶解（属于可逆物理过程），但在低温结晶存在期间，同样会引发流道堵塞、泵压升高以及电池极化急剧增加的问题。</p>
+
+        <p>除了热管理敏感性外，液流电池的长期寿命衰减主要集中在以下三个关键微观部件上：</p>
+        <ul>
+          <li><strong>离子交换膜的化学降解与老化</strong>：由于正极电解液中的5价钒离子具有强氧化性，长期浸泡在强酸性电解液中的质子膜，其有机骨架上的活性基团会被氧化流失，导致质子传导电阻增大、机械拉伸强度下降，膜在水压下发生微观破损，从而使钒离子穿透自放电加剧。</li>
+          <li><strong>碳毡电极的电化学钝化与剥离</strong>：在高速酸性液体的冲刷以及高电位充放电氧化环境下，碳纤维表面的含氧活性官能团会逐渐脱落并碳化消失。这会导致电堆反应活化过电位明显抬升，表现为电压效率随着投运年份逐年走低。</li>
+          <li><strong>双极板的层间腐蚀与剥离</strong>：石墨/聚合物复合板在强酸下，聚合物基体长期氧化会导致石墨颗粒剥落，层间接触阻抗增大，降低系统能效。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>六、液流电池的网储工程设计与全生命周期经济性</h2>
+        <p>将上述复杂的电化学工作原理落地为实际的电网储能工程，必须结合中国的真实电力系统建设和政策环境来进行综合考量。在近年来的储能技术竞争大潮中，液流电池系统之所以能在锂电池的强势包围中拼杀出独特的生态位，主要源于中国电网对储能系统日益严苛的安全和时长诉求。</p>
+
+        <p><strong>1. 中国产业政策的宏观驱动力与工程定位</strong><br>
+        2022 年国家能源局印发的《防止电力生产事故的二十五项重点要求（2022年版）》中，明确提出“中大型电化学储能电站不得选用三元锂电池、钠硫电池，不宜选用梯次利用动力电池”。这实际上是将安全提到了第一优先级。液流电池因为电解液中70%以上是水，没有燃爆风险，天然符合该项高标准防事故要求。</p>
+
+        <p>随着各地新能源并网比例的不断攀升，电网的消纳瓶颈逐渐从日内的瞬时波动平滑转变为连续数小时的夜间供电缺口。为此，山东、内蒙古、辽宁、甘肃等多地能源局陆续修改了配储导向，鼓励建设 4 小时、甚至 6~8 小时的<strong>长时储能（Long-Duration Energy Storage，LDES）</strong>示范电站。这一变化使得功率与容量解耦的液流电池优势被放大。</p>
 
         <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+          <div class="callout-header"><span class="callout-icon">🏗️</span>中国真实案例：大连百兆瓦级全钒液流电池储能调峰电站</div>
+          <div class="callout-body">
+            <p>作为中国乃至全球化学长时储能的里程碑，大连百兆瓦级全钒液流电池储能调峰电站（一期项目规模为 100MW/400MWh）采用中国完全自主研发的全钒液流电池技术。电站共建设有 716 个电堆模块和庞大的储罐区，通过 10kV 升压变压器并入大连南部电网。</p>
+            <p>该项目在实际运行中展示了极高的调峰和黑启动能力。根据辽宁省电力科学研究院的实测数据，该电站在全系统满载运行时，往返效率保持在 70% 左右。更具吸引力的是其全生命周期经济模式：该项目设计寿命为 20 年，可进行超过 15,000 次深度充放电循环。根据全寿命周期测算，虽然初始建设成本是同容量磷酸铁锂电池的近 3 倍，但由于免去了运行中途电芯整站更换的巨额二次投入，并在退役后能够回收 95% 以上的电解液钒金属残值，其全生命周期度电成本（Levelized Cost of Storage，LCOS）预计可拉平甚至低于传统锂电池。该示范工程的落地极大地打消了国内大型网储投资方对液流电池技术可行性与安全性的疑虑，直接推动了国家能源局关于长时储能相关政策的加速出台。</p>
+          </div>
+        </div>
+
+        <p><strong>2. 全生命周期度电成本的深度计算逻辑与残值回收机制</strong><br>
+        在进行商业化网储电站的经济性评估时，如果我们只盯着初始建设成本，全钒液流电池较高的初始单价会令人望而却步。但如果引入全生命周期度电成本的模型进行深度核算，账目就会发生根本性的逆转：</p>
+        
+        <p>首先，全钒液流电池的物理寿命极长，支持超过 15,000 ~ 20,000 次的 100% 深度充放电循环，在 20 年的电网全寿命周期服役内，<strong>电堆几乎不需要整体更换，电解液也完全没有化学衰减</strong>。而锂电池的循环寿命通常在 5000 ~ 6000 次左右，在每天一充一放的工况下服役 8~10 年后，就必须进行昂贵的整站电芯二次更换，这不仅带来了巨大的二次设备采购成本，还产生了退役锂电池无害化处置的额外费用。</p>
+        
+        <p>其次，液流电池具有独特的<strong>极高残值回收特性</strong>。由于钒离子是以稳定的溶解态存放在密封储罐中的，退役后电解液中的钒金属并没有发生晶格坍塌等不可逆物理磨损。在电站退役时，我们可以通过简单的物理过滤和化学重整沉淀，将电解液中 95% 以上的金属钒进行 100% 回收，重新制备成新的电解液卖给下一个储能项目，或者直接作为昂贵的合金添加剂出售给钢铁制备企业。因为活性钒原料占到了液流电池系统初期总造价的 60% 以上，这笔巨额的退役残值回收款能够极大地冲抵初期的投资额度，使液流电池在 4 小时以上的长时储能工况下，全生命周期度电成本表现出极强的竞争力，是未来高比例可再生能源电网建设中不可或缺的时间转移压舱石。</p>
+
+        <div class="callout callout-extension">
+          <div class="callout-header"><span class="callout-icon">🔭</span>深入探索：非水系液流电池与有机液流电池的前沿动态</div>
+          <div class="callout-body">
+            <p>虽然目前商业化最为成熟的是以水为溶剂的无机金属（如全钒、铁铬）液流电池，但科研界和产业前沿正在积极探索另外两个极具潜力的方向：</p>
+            <ul>
+              <li><strong>非水系液流电池（Non-Aqueous Flow Batteries）</strong>：使用有机溶剂代替水。由于有机溶剂的电化学稳定窗口远超水的分解电压（1.23 V），其单体电池工作电压可提升至 2.0 V 甚至 3.0 V 以上，从而成倍提高液流电池的能量密度，克服水系液流电池体积庞大的缺点。但目前受制于有机溶剂易燃性、电导率低和膜材料成本昂贵等问题，仍处于研究阶段。</li>
+              <li><strong>水系有机液流电池（Aqueous Organic Flow Batteries）</strong>：使用廉价且来源广泛的有机小分子（如醌类、吩嗪类衍生物）作为活性电对，替代昂贵的金属钒。这一路线理论上可实现“零钒”依赖，大幅降低材料成本，且可以通过分子设计定制电化学性能，是目前长时储能领域最具颠覆性的远期竞争技术之一。</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -113,9 +457,11 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>功率与容量独立解耦</strong>：液流电池将反应场所（电堆）与储能介质（电解液）物理分离。系统的输出功率完全取决于电堆的尺寸与数量，储能容量完全取决于电解液的体积与浓度。这使其非常适合 4 小时以上的长时储能场景，扩容的边际成本极低。</li>
+        <li><strong>同元素可逆氧化还原</strong>：以全钒液流电池为例，它巧妙利用了钒离子的 4 种价态变化来实现储能。正极半反应为 4 价与 5 价钒离子间的转换，负极半反应为 2 价与 3价钒离子间的转换。由于采用同种元素，即使活性物质穿过离子交换膜，也只引发暂时性容量漂移，而不会发生不可逆的材料污染。</li>
+        <li><strong>多维度能量损耗路径</strong>：液流电池层面的能量效率由库仑效率与电压效率共同决定。主要的能量损耗路径包括活性离子跨膜交叉污染、公共管道极板带来的分流电流漏电损耗、循环泵的泵功损耗以及析氢析氧副反应。工程上可通过管路几何优化、动态流量控制等策略将这些损耗降到最低。</li>
+        <li><strong>热管理严苛控制窗口</strong>：出于电解液物理化学特性的限制，液流电池的工作温度必须严格控制在 10℃–40℃ 之间。温度超过 40℃ 会引发正极 5 价钒离子的不可逆水解，析出五氧化二钒红色固体沉淀堵塞管路；温度低于 10℃ 会导致负极钒盐结晶析出。</li>
+        <li><strong>卓越的 LCOS 与高回收价值</strong>：虽然初始建设成本偏高，但液流电池凭借 15,000 次以上的超长循环寿命（中途无需更换电堆）以及退役后钒电解液接近 95% 以上的高残值回收价值，其全生命周期度电成本在长时储能应用场景下相比锂电池具有极其显著的经济优势。</li>
       </ul>
     </section>
 
@@ -125,16 +471,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 液流电池与传统静态电池（如锂离子电池）在结构设计上的本质区别是什么？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 液流电池使用液态活性物质进行电化学反应，而锂电池绝不能包含液态电解质。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 液流电池的能量存储介质与电化学反应场所是物理分离的，而传统电池则是合二为一的。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 液流电池只能进行单向放电，无法实现逆向充电。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 液流电池的电极材料本身在充放电过程中直接参与相变，而锂电池电极不参与。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：物理分离（电堆与储罐）是液流电池的最本质特征，从而实现了功率和容量的完全解耦。驳斥其他选项：A选项错误，锂离子电池中也使用液态电解液用于传导锂离子；C选项错误，液流电池是二次电池，可以通过外加电压实现可逆的充放电反应；D选项错误，液流电池的电极通常是碳毡，只提供反应表面而不发生相变或直接参与化学反应。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在全钒液流电池（VRFB）放电过程中，正极和负极反应液中钒离子的价态是如何变化的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 正极由5价（$VO_2^+$）还原为4价（$VO^{2+}$），负极由2价（$V^{2+}$）氧化为3价（$V^{3+}$）。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 正极由4价（$VO^{2+}$）氧化为5价（$VO_2^+$），负极由3价（$V^{3+}$）还原为2价（$V^{2+}$）。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 正极由2价（$V^{2+}$）氧化为3价（$V^{3+}$），负极由5价（$VO_2^+$）还原为4价（$VO^{2+}$）。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 正极由3价（$V^{3+}$）还原为2价（$V^{2+}$），负极由4价（$VO^{2+}$）氧化为5价（$VO_2^+$）。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：放电是自发的电化学反应，负极释放电子（氧化反应，化合价升高，2价变3价），电子经外部电路到达正极，正极吸收电子（还原反应，化合价降低，5价变4价）。驳斥其他选项：B是充电过程的化学反应变化；C和D混淆了正负极的活动离子种类，全钒电池的正极活性物质为4价和5价钒离子，负极活性物质为2价和3价钒离子。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在全钒液流电池中，离子交换膜的最核心功能是什么？它为什么会带来容量衰减？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 阻止所有正负极化学离子的穿透，通过电子流动维持电化学反应。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 选择性通过特定离子以维持电荷平衡，但由于膜的不完美性，活性离子会发生“交叉污染”从而导致自放电和容量衰减。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 充当催化剂以加速电位变化，但由于膜表面活性位点逐渐被酸液腐蚀导致容量衰减。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 储存多余的正极钒离子以调节系统酸碱平衡，但由于吸附饱和后活性离子浓度下降导致容量衰减。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：质子交换膜的核心作用是允许质子（$H^+$）自由穿过以维持电荷和化学平衡，同时物理隔离正负极电解液。然而，由于膜孔径和选择性限制，正负极的钒离子会缓慢穿透膜（Crossover，交叉污染），在另一侧发生负极钒离子的交叉污染反应，造成不可逆或可逆的自放电损失。驳斥：A中膜不能阻挡所有离子，且电子不能在膜内部流动；C中膜没有催化功能；D中膜不是用来储存活性离子的。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 液流电池在运行时，即使没有外部负载，正负极之间的公共电解液管路中也会产生自放电，这种现象在工程上被称为“分流电流”（Shunt Current）。以下关于分流电流的叙述，错误的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 分流电流是由电堆中各单电池之间的电势差通过共用电解液通道形成的寄生回路引起的。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 增大电解液管路的通道阻抗（例如使用更长更细的支管）可以有效减小分流电流。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 分流电流不仅会导致系统的库仑效率下降，还可能在某些管道汇合处加速电极或管路的电化学腐蚀。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 分流电流是液流电池完全无法避免的，因此在设计电堆时电解液分配总管越粗、阻电越小越有利于提高系统能效。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：本题主要考查对液流电池内部旁路漏电（分流电流）物理机制与工程设计的理解。分流电流确实无法完全消除，但是可以通过优化管路设计来将其降到极低。总管越粗，电阻越小，虽然流阻降下来了，但意味着各个电池之间的旁路导电性增强，会导致分流电流剧烈增加，反而严重拉低库仑效率。因此，电堆管路设计需要在流动阻力（泵功损耗）和分流电流损耗之间进行权衡。驳斥：ABC是正确叙述，A给出了物理本质，B给出了优化手段，C指出了分流电流在热和电化学腐蚀方面的危害。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在网储系统运行中，全钒液流电池的热管理系统（TMS）必须将电解液温度控制在合理的区间内（通常为 10℃–40℃）。如果电解液温度长期超过 40℃，最可能导致什么工程事故？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 正极 5 价钒离子会发生热沉淀反应，析出五氧化二钒沉淀，堵塞流道并造成不可逆的容量丧失。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 负极 2 价钒离子会剧烈水解产生氢气，导致储罐气压骤增并发生物理爆炸。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 离子膜在高温下彻底熔化，正负极电解液瞬间大面积混合，发生剧烈的强酸中和放热。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 钒离子活性因高温而彻底丧失，电池开路电压骤降至零，系统无法输出功率。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：A</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查液流电池温度窗口限制与热析出机理。全钒液流电池正极的5价钒离子在高温下是不稳定的，极易发生缩聚反应析出偏钒酸或五氧化二钒红色沉淀，这种沉淀不仅占用了活性钒元素导致容量下降，还会堵塞多孔碳毡电极的微孔和管路，导致泵压增大甚至管路胀裂。驳斥其他选项：B选项负极在高温下析氢非常微弱，且2价钒离子不发生此类水解；C选项商用质子膜如 Nafion 的变形温度远高于40℃，不会在此温度熔化；D选项高温提高反应速率而非使活性丧失，开路电压也不会降为零。</p>
         </div>
       </div>
 
@@ -159,7 +565,11 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="05_1_1_储能技术分类.html">LEVEL_05 › 储能技术分类框架</a></li>
+        <li><a href="05_2_1_磷酸铁锂vs三元.html">LEVEL_05 › 磷酸铁锂vs三元：全面对比</a></li>
+        <li><a href="05_3_2_全钒液流电池.html">LEVEL_05 › 全钒液流详解</a></li>
+        <li><a href="05_3_3_其他液流路线.html">LEVEL_05 › 锌溴/铁铬等新兴路线</a></li>
+        <li><a href="05_3_4_大连液流电站案例.html">LEVEL_05 › 大连100MW液流电站案例</a></li>
       </ul>
     </section>
 
@@ -172,7 +582,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
