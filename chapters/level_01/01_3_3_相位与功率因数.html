@@ -133,40 +133,42 @@
 
         <p>为了直观掌握这三种基本元件的物理本质，我们通过表 1-1 进行横向对比：</p>
 
-        <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem;">
-          <thead>
-            <tr style="background-color: var(--color-primary-light); color: var(--color-primary-dark);">
-              <th style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">元件类型</th>
-              <th style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">物理特性大白话</th>
-              <th style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">相位关系 ($\varphi = \varphi_u - \varphi_i$)</th>
-              <th style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">能量转换行为</th>
-              <th style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">典型现实设备</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding: 10px; border: 1px solid var(--color-border); text-align: center;"><strong>纯电阻 (R)</strong></td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">即时响应，给电压立刻出电流</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">$\varphi = 0^\circ$ (同相)</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">单向发热消耗电能</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">电热丝、白炽灯、负载电阻箱</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid var(--color-border);"><strong>纯电感 (L)</strong></td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">电磁惯性，阻碍电流快速变化</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">$\varphi = +90^\circ$ (电流滞后)</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">在磁场中交替储能与释放</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">变压器、电动机绕组、滤波电感</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid var(--color-border);"><strong>纯电容 (C)</strong></td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">电荷积聚，先有流动后建电压</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border); text-align: center;">$\varphi = -90^\circ$ (电流超前)</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">在电场中交替储能与释放</td>
-              <td style="padding: 10px; border: 1px solid var(--color-border);">电力电容器、长途输电线路高压电缆</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>元件类型</th>
+                <th>物理特性大白话</th>
+                <th>相位关系 ($\varphi = \varphi_u - \varphi_i$)</th>
+                <th>能量转换行为</th>
+                <th>典型现实设备</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>纯电阻 (R)</strong></td>
+                <td>即时响应，给电压立刻出电流</td>
+                <td>$\varphi = 0^\circ$ (同相)</td>
+                <td>单向发热消耗电能</td>
+                <td>电热丝、白炽灯、负载电阻箱</td>
+              </tr>
+              <tr>
+                <td><strong>纯电感 (L)</strong></td>
+                <td>电磁惯性，阻碍电流快速变化</td>
+                <td>$\varphi = +90^\circ$ (电流滞后)</td>
+                <td>在磁场中交替储能与释放</td>
+                <td>变压器、电动机绕组、滤波电感</td>
+              </tr>
+              <tr>
+                <td><strong>纯电容 (C)</strong></td>
+                <td>电荷积聚，先有流动后建电压</td>
+                <td>$\varphi = -90^\circ$ (电流超前)</td>
+                <td>在电场中交替储能与释放</td>
+                <td>电力电容器、长途输电线路高压电缆</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="callout callout-tips">
           <span class="callout-icon">💡</span>
@@ -425,8 +427,8 @@
         <div class="quiz-answer" id="q1-answer" style="display:none">
           <p>✅ <strong>正确答案：B</strong></p>
           <p>📖 <strong>解析</strong>：根据相位差定义公式 $\varphi = \varphi_u - \varphi_i = 30^\circ - (-30^\circ) = +60^\circ$。由于 $\varphi > 0$，说明电压相位超前于电流相位（即电流滞后于电压 60°），因此该电路整体呈现感性负载特征。<br>
-          • 选项 A 误将相位差算为 $30^\circ - 30^\circ = 0^\circ$；<br>
-          • 选项 C 误把符号颠倒计算为 $-60^\circ$；<br>
+          • 选项 A 误将相位差推导为 $30^\circ - 30^\circ = 0^\circ$；<br>
+          • 选项 C 误把符号颠倒推导为 $-60^\circ$；<br>
           • 选项 D 忽略了电流的初相位 $-30^\circ$。</p>
         </div>
       </div>
@@ -447,7 +449,7 @@
           • 当 $\cos\varphi_2 = 0.60$ 时，最大有功功率 $P_2 = 1000 \text{ kVA} \times 0.60 = 600 \text{ kW}$；<br>
           • 有功功率减少量 $\Delta P = P_1 - P_2 = 950 - 600 = 350 \text{ kW}$。<br>
           这表明低功率因数极大地浪费了变压器的有效容量。<br>
-          • 选项 A 错误地用 $0.95 - 0.80$ 计算；选项 B 与 D 计算数值不匹配。</p>
+          • 选项 A 错误地用 $0.95 - 0.80$ 计算；选项 B 与 D 推导数值不匹配。</p>
         </div>
       </div>
 
