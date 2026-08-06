@@ -57,55 +57,440 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">06_6_5</span>
-        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="reading-time">⏱ 约35分钟</span>
         <span class="difficulty">🟢 入门</span>
       </div>
       <h1>100MW/200MWh设计案例</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">通过解构百兆瓦级储能电站的直流侧、交流侧、高压并网与控制通信设计，透彻理解大型电网侧储能系统的集成逻辑与实战算例。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>核心目标一</strong>：掌握大型共享储能电站的政策定位、商业运作模式与整体系统拓扑架构。</li>
+        <li><strong>核心目标二</strong>：深刻理解直流侧从单体电芯、电池模组、电池簇到集装箱系统的逐级串并联设计计算与液冷循环系统设计。</li>
+        <li><strong>核心目标三</strong>：辨析集中式与组串式储能变流器（Power Conversion System，PCS）在1500V系统中的技术异同与选型依据，理解双分裂变压器的低压阻抗解耦原理。</li>
+        <li><strong>核心目标四</strong>：掌握35kV集电线路划分、110kV主变与气体绝缘金属封闭开关设备（Gas Insulated Switchgear，GIS）选型，以及直挂式静态无功发生器（Static Var Generator，SVG）的配置依据。</li>
+        <li><strong>核心目标五</strong>：剖析电池管理系统（Battery Management System，BMS）与能量管理系统（Energy Management System，EMS）及PCS的三级控制架构，掌握调频与自动发电控制（Automatic Generation Control，AGC）毫秒级功率响应的通信时延分配与下垂控制机理。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：用电高峰期的特高压断线危机</h2>
+      <p>2026年7月23日14时15分，华北某省电网正处于夏季用电大负荷的极限时刻。突然，一回送电功率高达4000MW的特高压直流输电线路因高空雷击发生瞬时双极闭锁，输送通道瞬间被阻断。对于电网而言，这就相当于一条正在全速输水的主水管突然破裂，瞬间缺失了巨大的水源，全网频率在短短数秒内从标称的50.00Hz急剧下跌至49.82Hz。这已逼近电网安全运行的红线，随时可能引发电网大规模频率崩溃和拉闸限电。</p>
+      <p>就在这生死关头，山西某独立储能站的自动发电控制（AGC）系统与一次调频保护装置几乎同时接到了动作指令。仅仅180毫秒后，位于该电站的100MW/200MWh独立共享储能电站瞬间发出巨大的低鸣，布置在站内的数十台储能变流器和数十万节大容量电芯以全功率（100MW）反向注入电网，如同一块坚不可摧的刹车片，死死遏制住了电网频率的急速下滑势头，并在3分钟内将频率拉回了安全区间。本节我们将以座标准的100MW/200MWh独立共享储能电站为例，全方位拆解其背后的工程设计精髓。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、百兆瓦级储能电站的系统定位与技术架构</h2>
+        <p>百兆瓦级储能电站是目前我国电网侧储能的主力军。一个额定功率为100MW、额定能量为200MWh的储能系统，其技术本质是一个直接接入高压输电网的双向电能缓冲器。它就像一个超级充电宝，不仅能存储海量电能，更要求具备极高的安全防护能力、毫秒级的功率响应速度以及超长的系统寿命。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：超大型水力调蓄工程</strong>
+            <p>将电网中的电能流动物化为由无数小河流汇聚而成的灌溉网络。单户屋顶光伏就像每家每户的蓄水桶，能解决自家院子的浇灌。而100MW/200MWh储能电站则相当于一个建在主干河道上的大型中枢水闸水库。当上游突发暴雨（新能源发电骤增导致电网无法承载）时，水闸瞬间提起阻挡洪峰，将大量水流有序引入库区暂存；当大旱来临、下游支流干涸（工厂居民用电负荷高峰、其他发电机组跳闸）时，水闸轰然开启，向下游输送稳定、巨大的流量。这种大型中枢水闸，其库容量（MWh）和泄洪速率（MW）都需要精确的结构化设计，否则水闸本身就会在水流冲击下崩溃。</p>
+          </div>
+        </div>
+
+        <h3>1.1 政策定位与商业模式</h3>
+        <p>在我国，100MW/200MWh储能电站多作为<b>独立储能电站</b>（Independent Energy Storage）或<b>共享储能电站</b>（Shared Energy Storage）运营。根据国家发展改革委、国家能源局发布的《关于加快推动新型储能发展的指导意见》（发改能源〔2021〕1051号），独立储能电站被赋予了独立的市场主体地位。其主要商业模式由以下三部分组成：</p>
+        <ul>
+          <li><b>容量租赁</b>：新能源开发商（如风电场、光伏电站）为满足政策要求的配储比例（如10%~20%，持续2小时），向储能电站租赁其额定容量，按年支付容量租赁费（如150~250元/kW·年），这构成了储能电站稳定的现金流边界。</li>
+          <li><b>现货电力交易（削峰填谷）</b>：在现货市场（如山东、山西、甘肃等省份）中，储能电站在电价低谷时段（如午间光伏发电大发时）买入低价电进行充电，在电价高峰时段（如早晚负荷高峰）将电能放回电网卖出高价电，通过电价剪刀差实现“低吸高抛”的峰谷套利。</li>
+          <li><b>辅助服务收益</b>：参与一次调频、二次调频（AGC）及无功补偿等电网辅助服务，按动作里程或可用容量获取电网拨付的辅助服务补偿资金。</li>
+        </ul>
+
+        <h3>1.2 系统的四大组成板块</h3>
+        <p>要构建一个完整的100MW/200MWh储能电站，系统由下至上包含四个核心技术板块：</p>
+        <p><b>1. 直流侧电池系统（Battery Energy Storage System，BESS）</b>：是能量存储的实体。它由基础电芯（Cell）通过串联提升电压、并联增大容量，封装在液冷电池模组（Pack）和电池簇（Cluster）中，最终集中于几十个防雨防爆的集装箱电池舱内，配合电池管理系统（BMS）进行状态监测与均衡控制。</p>
+        <p><b>2. 交流侧变流升压系统</b>：主要由储能变流器（PCS）和升压变压器组成。PCS负责将直流侧的1500V直流电逆变为交流低压电（如0.69kV），或将交流电整流为直流电；升压变压器将低压交流电升压至35kV，通过集电线路汇入站内高压母线。</p>
+        <p><b>3. 高压变电与并网系统</b>：包括升压变电站、主变压器（通常为110kV或220kV）、高压开关柜（GIS配电室）、无功补偿装置（SVG）及送出线路，负责将电站电能安全送出并入公共电网。</p>
+        <p><b>4. 控制与通信系统</b>：由能量管理系统（EMS）、站控SCADA、调度远动装置和工业级光纤环网构成，负责协调站内所有设备的闭环功率分配，并与电网公司调度中心进行实时通信。</p>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 360" width="100%" height="360" style="background-color: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px;">
+            <!-- 定向箭头标记 -->
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#1A5F96" />
+              </marker>
+            </defs>
+            
+            <!-- 直流侧电池集装箱 -->
+            <rect x="20" y="30" width="120" height="80" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <text x="80" y="65" text-anchor="middle" font-size="14" font-weight="600" fill="#1A1A2E">电池舱</text>
+            <text x="80" y="85" text-anchor="middle" font-size="12" fill="#718096">1500V 直流 (DC)</text>
+            
+            <!-- 集中式 PCS -->
+            <rect x="220" y="30" width="120" height="80" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <text x="280" y="65" text-anchor="middle" font-size="14" font-weight="600" fill="#1A1A2E">储能变流器 (PCS)</text>
+            <text x="280" y="85" text-anchor="middle" font-size="12" fill="#718096">DC/AC 0.69kV</text>
+
+            <!-- 连接线 1 -->
+            <line x1="140" y1="70" x2="210" y2="70" stroke="#F57C00" stroke-width="3" marker-end="url(#arrowhead)" />
+            <text x="175" y="60" text-anchor="middle" font-size="12" fill="#F57C00" font-weight="bold">DC</text>
+            
+            <!-- 35kV 变流升压变压器 -->
+            <circle cx="440" cy="50" r="30" fill="none" stroke="#1A5F96" stroke-width="2" />
+            <circle cx="440" cy="90" r="30" fill="none" stroke="#1A5F96" stroke-width="2" />
+            <text x="440" y="140" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">双分裂箱变</text>
+            <text x="440" y="158" text-anchor="middle" font-size="12" fill="#718096">0.69kV/35kV</text>
+
+            <!-- 连接线 2 -->
+            <line x1="340" y1="70" x2="400" y2="70" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)" />
+            <text x="370" y="60" text-anchor="middle" font-size="12" fill="#4A5568">AC 0.69kV</text>
+
+            <!-- 35kV 汇流母线 -->
+            <line x1="530" y1="70" x2="530" y2="280" stroke="#4A5568" stroke-width="4" />
+            <text x="545" y="100" font-size="13" font-weight="bold" fill="#1A1A2E">35kV 汇流母线</text>
+            
+            <!-- 变压器到母线 -->
+            <line x1="480" y1="70" x2="520" y2="70" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)" />
+
+            <!-- SVG 无功补偿 -->
+            <rect x="380" y="220" width="110" height="60" rx="6" fill="#F8F9FA" stroke="#4A5568" stroke-width="1.5" />
+            <text x="435" y="245" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">SVG 无功补偿</text>
+            <text x="435" y="263" text-anchor="middle" font-size="11" fill="#718096">±25MVar 链式</text>
+            <line x1="490" y1="250" x2="525" y2="250" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)" />
+
+            <!-- 110kV 主变压器 -->
+            <rect x="610" y="110" width="100" height="70" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2" />
+            <text x="660" y="140" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A2E">主变压器</text>
+            <text x="660" y="158" text-anchor="middle" font-size="11" fill="#718096">35kV/110kV 100MVA</text>
+            <line x1="535" y1="145" x2="600" y2="145" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)" />
+
+            <!-- 110kV GIS 开关设备 & 送出 -->
+            <rect x="610" y="220" width="100" height="50" rx="6" fill="#F8F9FA" stroke="#4A5568" stroke-width="1.5" />
+            <text x="660" y="245" text-anchor="middle" font-size="12" font-weight="600" fill="#1A1A2E">110kV GIS 配电</text>
+            <line x1="660" y1="180" x2="660" y2="210" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)" />
+
+            <!-- 并网送出线 -->
+            <line x1="710" y1="245" x2="770" y2="245" stroke="#F57C00" stroke-width="3" marker-end="url(#arrowhead)" />
+            <text x="740" y="235" text-anchor="middle" font-size="11" fill="#F57C00" font-weight="bold">110kV 并网</text>
+          </svg>
+          <figcaption>图 1：100MW/200MWh 大型储能电站电气系统全景主接线拓扑示意图</figcaption>
+        </figure>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>中国真实案例：山东三峡能源庆云储能电站</strong>
+            <p>作为国内首批百兆瓦级电网侧共享储能示范项目之一，该电站首期建设规模为100MW/200MWh，全站共配置了31套储能电池舱和31套PCS变流升压一体舱。该项目通过租赁容量服务给周边的风电、光伏电站，同时在山东省电力现货交易市场进行竞价上网交易，利用日内的电价尖风和谷谷深度开展套利，是我国大型集中式独立储能电站商业化落地的典型标杆。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、直流侧设计：从单体电芯到百兆瓦级能量系统的积木集成</h2>
+        <p>对于储能系统而言，直流侧的核心目标是<b>聚沙成塔</b>。单体电芯的电压和容量极小，为了向交流侧提供高电压（如1500V直流电压）并保证充放电容量，必须通过科学的多级串并联将数十万节电芯有机集成在一起。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>生活类比：万人合唱团的音量与节拍控制</strong>
+            <p>把一节3.2V 280Ah的单体电芯比作一名合唱队员，他的音量（电压）和肺活量（容量）是有限的。为了产生能震撼全场的声音（高电压、大电流），我们不能让几万名团员杂乱无章地吼叫，而必须进行“编制”。我们将16名团员编为一个“声部”（电池模组Pack，由1P16S构成，即16个电芯串联），声音强度（电压）提升16倍；再把24个“声部”排成一个“大合唱队列”（电池簇Cluster，由24个Pack串联，即384个电芯串联），电压达到1200V以上。最后，多个大合唱队列在一个巨大的音乐厅（20尺电池集装箱，通常包含8-10个电池簇）里共同发声。如果某个声部有人跑调或肺活量不足（电芯一致性差、落后单体），就会影响整个合唱的效果，这就需要“指挥家”（电池管理系统BMS）对每个队员的呼吸节奏进行精细化微调与限制，甚至在队员身体不适时（热失控前兆）立即发出警报并拉下隔离开关将其“劝退”以保护整个合唱团。</p>
           </div>
         </div>
+
+        <h3>2.1 直流串并联计算与系统集成算例</h3>
+        <p>目前大型电站的主流电芯选用磷酸铁锂（LFP）电芯，其单体标称电压为3.2V，放电截止电压通常为2.5V，充电截止电压为3.65V。市场上普遍使用280Ah和314Ah两种主流规格。以<b>3.35MWh液冷电池舱</b>（基于280Ah电芯）为例，其层级化系统集成的数学计算过程如下：</p>
+
+        <div class="key-concept">
+          <h4>📌 直流侧集成级联公式</h4>
+          <p>直流侧系统的级联计算遵循串联升压、并联增流的物理规律，主要公式如下：</p>
+          <ul>
+            <li>电池模组标称电压：$V_{pack} = N_{s\_pack} \cdot V_{cell}$
+              <br><small>（其中 $N_{s\_pack}$ 为模组内电芯串联数，$V_{cell}$ 为单体电芯标称电压）</small>
+            </li>
+            <li>电池簇标称电压：$V_{cluster} = N_{s\_cluster} \cdot V_{pack}$
+              <br><small>（其中 $N_{s\_cluster}$ 为一簇内串联的模组总数）</small>
+            </li>
+            <li>单舱电池系统总电量（MWh）：$E_{container} = \frac{V_{cluster} \cdot C_{cell} \cdot N_{p\_container}}{1,000,000}$
+              <br><small>（其中 $C_{cell}$ 为电芯容量（Ah），$N_{p\_container}$ 为舱内并联的电池簇数）</small>
+            </li>
+          </ul>
+        </div>
+
+        <p><b>1. 电池模组（Pack）设计</b>：为了物理组装和结构强度的优化，首先将电芯组合成电池模组。工程上多采用<b>1P52S</b>方案，即52个280Ah单体电芯全部串联，无并联。
+          $$\text{模组标称电压} = 3.2\text{ V} \times 52 = 166.4\text{ V}$$
+          $$\text{模组额定电量} = 166.4\text{ V} \times 280\text{ Ah} = 46.592\text{ kWh}$$
+        </p>
+        <p><b>2. 电池簇（Cluster）设计</b>：为达到PCS直流侧1500V的高压输入要求，通常在一个冷轧双面钣金柜内将8个Pack进行串联（即<b>1P416S</b>）。
+          $$\text{电池簇标称电压} = 166.4\text{ V} \times 8 = 1331.2\text{ V}$$
+          $$\text{电池簇上限充电电压} = 3.65\text{ V} \times 416 = 1518.4\text{ V}$$
+          $$\text{电池簇下限放电电压} = 2.5\text{ V} \times 416 = 1040\text{ V}$$
+          $$\text{电池簇额定能量} = 1331.2\text{ V} \times 280\text{ Ah} = 372.736\text{ kWh}$$
+        </p>
+        <p><b>3. 电池舱（Container）设计</b>：将9个电池簇并联汇流安装在一个20英尺标准集装箱内。
+          $$\text{单舱额定能量} = 372.736\text{ kWh} \times 9 = 3354.624\text{ kWh} \approx 3.35\text{ MWh}$$
+        </p>
+        <p><b>4. 百兆瓦全站规模计算</b>：对于100MW/200MWh的电站，为了保证至少200MWh的可用放电电量，所需的3.35MWh电池集装箱数量为：
+          $$\text{电池舱数量} = 200\text{ MWh} \div 3.3546\text{ MWh} = 59.62\text{ 套}$$
+          工程中一般取整配置为<b>60套电池舱</b>，全站额定直流容量为 $60 \times 3.3546\text{ MWh} = 201.276\text{ MWh}$。
+        </p>
+
+        <p>随着大容量电芯的技术革新，目前新项目多采用314Ah电芯进行集成，可在不改变集装箱体积的前提下，将单舱容量提升至5.0MWh级别（1P416S，12簇并联），使100MW/200MWh全站集装箱数量由60套缩减至40套，大幅节省现场占地面积与电缆接线工作量。以下为两种技术方案的性能对比表：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>电芯方案与参数对比</th>
+                <th>经典 280Ah 方案（3.35MWh舱）</th>
+                <th>新一代 314Ah 方案（5.0MWh舱）</th>
+                <th>工程设计影响评估</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>单体电芯容量/能量</b></td>
+                <td>280Ah / 896Wh</td>
+                <td>314Ah / 1004.8Wh</td>
+                <td>电芯能量密度提升约12.1%</td>
+              </tr>
+              <tr>
+                <td><b>单簇拓扑与标称电压</b></td>
+                <td>1P416S / 1331.2V</td>
+                <td>1P416S / 1331.2V</td>
+                <td>电压等级一致，保证PCS变流效率无波动</td>
+              </tr>
+              <tr>
+                <td><b>电池舱并联簇数</b></td>
+                <td>9簇并联</td>
+                <td>12簇并联</td>
+                <td>利用液冷管路集流，增加并联分路数</td>
+              </tr>
+              <tr>
+                <td><b>单舱额定能量</b></td>
+                <td>3.35MWh</td>
+                <td>5.01MWh</td>
+                <td>单箱集装箱能量提升49.5%</td>
+              </tr>
+              <tr>
+                <td><b>100MW/200MWh所需舱数</b></td>
+                <td>60套</td>
+                <td>40套</td>
+                <td>减少33.3%的电池土建基础，大幅缩减工期</td>
+              </tr>
+              <tr>
+                <td><b>全站交直流接线接点</b></td>
+                <td>约1200个直流动力接头</td>
+                <td>约800个直流动力接头</td>
+                <td>大幅降低施工质量隐患及高压接触电阻故障率</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.2 液冷热管理系统深度设计</h3>
+        <p>锂离子电池对温度极其敏感，工作温度区间为20~35℃，当电芯温差超过5℃时，其循环衰减寿命将急剧分裂，产生严重的“木桶效应”。传统的风冷系统利用风扇和集装箱内空气通道换热，空气的对流换热系数极低（一般仅为10~50 W/(m²·K)），且存在风道风阻大、死区多等问题。在百兆瓦级储能电站中，<b>液冷热管理系统</b>（Liquid Cooling System）已经成为绝对的主流方案。液冷通过防冻冷却液的循环流动，其换热系数高达1000~3000 W/(m²·K)，是风冷的数十倍。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>冷却介质物理特性与配比</strong>
+            <p>液冷系统中常用的冷却液是50%的工业级去离子水与50%的乙二醇（Ethylene Glycol）的混合溶液。乙二醇的主要功能是防冻（使混合液冰点降低至-35℃以下）和防腐蚀，同时具备一定的防火性能。但在运行维护中，冷却液易吸收空气中的水分，需每两年对pH值、防冻冰点进行检测，以防酸性冷却液腐蚀铝质水冷管路引起绝缘降低。</p>
+          </div>
+        </div>
+
+        <p>以200MWh的储能系统在0.5C（2小时充放电率）满载充放电为例，由于电芯内阻（包括活性物质极化电阻、电解液欧姆电阻和接触电阻）的发热效应，电池在放电时的发热功率约占输出功率的3%~5%。全站放电时的平均发热功率计算如下：</p>
+        <p>$$\text{发热功率 } P_{heat} = 100\text{ MW} \times 4\% = 4\text{ MW}$$</p>
+        <p>这意味着每套3.35MWh电池舱在充放电时，需要其自带的液冷冷源主机输出至少66kW的净冷量。在液冷水力管路设计中，为保证各电池模组换热平衡，必须严格执行<b>“逆向对称同程流道设计（Reversed-Return Loop）”</b>。水泵排出的冷流在主管路和电池模组支管路内流动时，必须确保流经每个Pack的整体程长和压降完全相等。这能使每个模组的冷液流速基本等同，从而将全舱电芯的最高温差限制在3℃以内，极大提升了站内电池系统的SOC一致性。</p>
+
+        <h3>2.3 三级直流电气保护设计</h3>
+        <p>当直流侧发生电池短路时，由于没有交流电的自然电压过零点，空气电弧很难熄灭，因此系统设计了严格的三级过流保护：</p>
+        <p><b>一、电池Pack级（模组级）保护</b>：在每一个电池模组的内部出线端串接一个直流熔断器（Fuse，额定电流350A）。当Pack内部电芯突发短路导致浪涌电流升至额定值的5倍以上时，熔断器在毫秒级内熔断发热灭弧，将短路局限在单Pack内。</p>
+        <p><b>二、电池簇级（Cluster）保护</b>：每个电池簇的配电控制柜（BCU，又称高压控制箱）内，配置一台直流断路器（直流工作电压1500V，极限短路分断电流可达100kA）和一台直流接触器。BMS检测到过流、逆向充电电流或绝缘故障时，主控微处理器触发跳闸信号，通过分励脱扣器强行断开直流断路器，实现负荷电流的毫秒级快速切断。</p>
+        <p><b>三、电池舱级（总出线端）保护</b>：在集装箱直流合并总输出端口，配置电动直流断路器和手动高压隔离开关。在电站日常运营或维护检修时，提供具有安全视窗的可见物理断开点，确保运维人员安全。</p>
+      </section>
+
+      <section>
+        <h2>三、交流侧设计：集中式与组串式变流升压系统的工程选型</h2>
+        <p>交流侧设计的核心是完成直流电（DC）与电网交流电（AC）的高效双向变换，并由箱式变压器一次升压至35kV级别。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：双向外汇兑换所与汇率换算器</strong>
+            <p>电网运行的是交流电（AC），像是在国内流通的“人民币”（有波动的周期性正弦波）；电池储存的是直流电（DC），像是在特定区域流通的“外币黄金”（平稳不变的单向流动）。这两者之间是无法直接交易的。储能变流器（PCS）就是电站里的“双向外汇兑换所”。当充电时，它买入人民币（交流电），兑换成黄金（直流电）存入国库（电池舱）；当放电时，它融出黄金，兑换回人民币注入流通市场。更重要的是，这个兑换所不仅要兑换数量，还要控制兑换的速度（功率控制）和兑换时的面额损耗（转换效率）。在100MW级的电站中，变频逆变的过程会产生大量的“服务费损耗”（开关损耗和磁滞损耗），因此兑换所的“效率”（高达99%的逆变效率）和“反应速度”（毫秒级的换向响应）是评判其优劣的核心指标。</p>
+          </div>
+        </div>
+
+        <h3>3.1 集中式 PCS 与组串式 PCS 路线比拼</h3>
+        <p>在100MW/200MWh的工程设计中，PCS主要存在两种主流的集成技术路线：</p>
+        <p><b>方案一：集中式PCS方案（目前电网侧主力）</b><br>
+        在这种拓扑下，通常将两个3.35MWh的电池舱直流输出在直流配电柜内进行硬件级汇流，然后接入一台功率为3.15MW的集中式PCS（内含2台1.575MW逆变单元）。该方案架构高度集成，每套子系统仅需一台大PCS。但其主要缺陷在于：由于多簇电池直接并联接入一条直流母线，各簇电池由于温差、内阻及自放电率的微小差异，会导致开路电压（OCV）不同，在直流母线上形成“簇间环流”。这不仅白白消耗能量，还使整体容量受到表现最差的“短板电池簇”限制，系统可放电量因木桶效应产生3%~5%的折扣。
+        </p>
+        <p><b>方案二：组串式PCS方案（先进集成路线）</b><br>
+        该方案主张“一簇一管理”。即每个电池簇单独接一台容量约为100kW~200kW的微型组串式PCS。所有组串式PCSels交流侧汇集到35kV箱变的低压侧并网。由于直流侧完全没有电池簇之间的并联，因此彻底消除了簇间并联环流；BMS和EMS可以根据每个电池簇的实时状态调整其各自的充放电倍率，最大化榨干电芯的电量潜力，使电站全生命周期放电电量提升3%以上。然而，该方案的初始建造成本会高出15%左右，且功率器件和传感器节点数量呈几何级数增加，系统故障排查难度有所上升。
+        </p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>对比指标</th>
+                <th>集中式 PCS（3.15MW 一体机）</th>
+                <th>组串式 PCS（百瓦级模块化）</th>
+                <th>高压直挂级 PCS（中高压直挂）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>拓扑架构</b></td>
+                <td>多电池簇直流并联接入大逆变器</td>
+                <td>“一簇一管理”，单簇接入单台小PCS</td>
+                <td>多个PCS模块串联直接输出6/10/35kV</td>
+              </tr>
+              <tr>
+                <td><b>初始投资成本 (CapEx)</b></td>
+                <td>低（基准 1.0）</td>
+                <td>较高（约为 1.15 ~ 1.20）</td>
+                <td>高（约为 1.30 ~ 1.45）</td>
+              </tr>
+              <tr>
+                <td><b>系统放电效率</b></td>
+                <td>一般（因直流并联存在3%左右损失）</td>
+                <td>高（无直流环流损失，充放电彻底解耦）</td>
+                <td>极高（省去35kV升压变压器，系统效率高1.5%）</td>
+              </tr>
+              <tr>
+                <td><b>运维复杂程度</b></td>
+                <td>低（备件集中，维护点少）</td>
+                <td>中（设备数量多，备件及更换频繁）</td>
+                <td>高（高压带电维护，需专业高级人员）</td>
+              </tr>
+              <tr>
+                <td><b>并网控制复杂度</b></td>
+                <td>低（单站并网接口少，控制时延短）</td>
+                <td>高（需成百上千个PCS的高频协调与锁相）</td>
+                <td>中（高压阶梯控制，技术门槛极高）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.2 变流升压一体舱设计与双分裂变压器</h3>
+        <p>为加速工程现场安装、减少土地平整和土建工作，本案例交流侧设计采用<b>3.15MW/6.7MWh变流升压一体舱（PCS Container & Transformer）</b>。全站100MW共配置30套该一体舱（实际按3.33MW/6.7MWh过载配置，以富余变电容量）。一体舱为一个20尺标准集装箱，内部防火隔开为两个独立舱室：<b>PCS室</b>和<b>变压器室</b>。</p>
+        <p>PCS室内含两台1.575MW的集中式变流器、交流汇流柜以及水冷循环控制柜。而变压器室则安装有一台额定容量为3150kVA（3.15MVA）的<b>三相双分裂无载调压箱式变压器</b>（电压比为 $35\text{ kV} / 0.69\text{ kV} - 0.69\text{ kV}$，接线组别为 Dy11-d0）。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>双分裂变压器的电磁保护价值</strong>
+            <p>双分裂变压器的低压侧设有两个电磁高度隔离的分裂绕组，分别引出连接到两台PCS变流器。其在设计上的核心指标是<b>分裂系数（Split Coefficient，一般在3~4之间）</b>。极高的分裂系数意味着低压侧两端存在很大的解耦抗阻。这能起到两个关键作用：一是当一侧逆变电路故障时，由于绕组间互感小，故障造成的短路电流不会大幅传导并破坏另一侧正常工作的PCS；二是由于绕组解耦，两台PCS在开关调制中产生的高频载波特征谐波（如5次、7次谐波）能在低压绕组间相互抵消阻碍，从而净化了送向35kV网架的波形质量，避免电网侧触发谐波超限告警而解列跳闸。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>四、高压送出与并网系统：集电线路、主变及无功补偿设计</h2>
+        <p>百兆瓦级储能电站的并网系统是电站与主网连接的“主动脉”。全站30套变流升压单元通过集电回路汇合，最后经升压站的110kV主变压器和气体绝缘金属封闭开关设备（GIS）送出。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：中央货运站与立交输电网</strong>
+            <p>如果把电芯和变流一体机比作各个小型工业车间的生产线，那么站内的集电线路就是连接各车间的专用货运公路，主接线母线就是大型物流汇聚场。35kV变压器和110kV主变压器就相当于“阶梯式出城高架桥”，将低压重载货车提升到宽阔的高压双向快速路（高电压小电流），最后通过主干道并网送出。如果出城高架桥的承载能力不足（变压器额定容量选型偏小），或者高架路段缺乏无功补偿发生器（相当于交通导流板），货运车队（电能流）就会在汇聚点发生严重的拥堵发热，甚至导致整个中央货运站因熔断跳闸而陷入瘫痪。</p>
+          </div>
+        </div>
+
+        <h3>4.1 35kV集电线路与电缆容量校核</h3>
+        <p>设计方案中，站内30台3.15MW变流升压一体舱分为<b>4条35kV集电线路回路</b>（分别命名为集I线、集II线、集III线、集IV线）。每条集电线路串联挂接7~8台变流升压单元，单条回路输送的最大有功功率约：
+          $$P_{loop} = 8 \times 3.15\text{ MW} = 25.2\text{ MW}$$
+          设定运行功率因数为电网最严苛的 $\cos\phi = 0.95$，单条集电线路的最大持续运行电流为：
+          $$I_{max} = \frac{P_{loop}}{\sqrt{3} \cdot U_{N} \cdot \cos\phi} = \frac{25.2 \times 10^6\text{ W}}{1.732 \times 35 \times 10^3\text{ V} \times 0.95} \approx 437.5\text{ A}$$
+          电缆选用<b>YJV22-26/35kV-3x300mm²</b>铜芯交联聚乙烯绝缘钢带铠装电力电缆。经电气选型校验，300mm²铜芯电缆在直埋敷设（土壤温度25℃，热阻系数 1.2 K·m/W）下的安全载流量约为 480A。考虑到夏季极端气温和地埋散热环境的系数修正（降低10%），其实际载流量仍能达到约 432A，满足持续满载运行要求，且留有充足的安全备用裕度。</p>
+
+        <h3>4.2 110kV升压变电站与GIS配电设计</h3>
+        <p>储能站内建设一座110kV综合升压站。主要电气主接线采用如下配置：</p>
+        <p><b>1. 110kV主变压器选型</b>：配置一台额定容量为<b>100MVA</b>（或120MVA，考虑SVG过载无功）的<b>三相双绕组有载调压电力变压器</b>（型号为 SZ11-100000/110），有载调压范围为 $110 \pm 8 \times 1.25\%\text{ kV}$，接线组别为 YNd11。有载调压能保证储能系统在重载充电（拉低站内电压）或满功率放电（抬高并网点电压）时，通过自动调整主变变比，维持站内35kV母线电压的稳定性。</p>
+        <p><b>2. GIS配电装置</b>：由于110kV敞开式户外配电装置（AIS）占地面积过大，且储能电站通常建在重污染、高沙尘或工业园等恶劣环境中，本案例选用<b>110kV气体绝缘金属封闭开关设备（GIS）</b>。GIS将断路器、隔离开关、电流/电压互感器等密封于充滿绝缘介质 SF6（六氟化硫）气体的铝制金属管道中。其相比AIS不仅可以节省80%以上的占地空间，更能彻底避免鸟害、沙尘、重雾霾造成的户外单相接地或短路跳闸事故。</p>
+
+        <h3>4.3 SVG无功补偿系统配置依据</h3>
+        <p>大型储能电站并网标准（如 GB 38755-2020《电力系统安全稳定导则》）要求：新能源或储能电站并网点（110kV侧）的功率因数必须在0.95（超前）至0.95（滞后）之间调节。虽然PCS逆变器具备无功功率的四象限调节能力，但在储能系统处于待机不充电也不放电（如白天阳光暴晒且无调度指令）时，站内的35kV升压变压器和长距离电缆仍表现为较强的感性及容性阻抗，这会导致无功电能倒送入主电网并遭受巨额罚款。为此，本站设计在35kV母线上并联配置一套<b>±25MVar链式直挂型静态无功发生器（SVG）</b>。当并网点电度表检测到功率因数偏离时，SVG在10毫秒内迅速调整其逆变桥相位，产生等量的相反无功进行抵消，保证并网点电能功率因数恒定稳定在0.98以上。</p>
+      </section>
+
+      <section>
+        <h2>五、控制与通信网络：BMS-PCS-EMS 的协同与毫秒级响应链条</h2>
+        <p>在突发电网频率跌落等极限场景下，100MW储能电站需要在极短时间内实现全站的协同控制。控制通信网络是实现这一瞬时反应的“神经网络”。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>百兆瓦级储能电站控制响应指标</strong>
+            <p>中国国家电网目前对并网储能一次调频的技术规范要求：一次调频的触发死区为 ±0.03Hz~±0.05Hz，全站的<b>有功响应时间（Response Time）必须小于200ms</b>，<b>有功功率建立时间（Settling Time）必须小于1.5s</b>。为了满足这一门槛，传统的轮询通信链条必须被抛弃，转而采用以太网GOOSE/SV以及锁相环自主触发相结合的机制。</p>
+          </div>
+        </div>
+
+        <h3>5.1 站级三层通信网络拓扑</h3>
+        <p>为了达到毫秒级的指令传输，电站构建了三层通信系统拓扑：</p>
+        <p><b>第一层：设备层（BMS低层与PCS控制器）</b><br>
+        各电芯采集板（LECU）通过菊花链（Daisy Chain）高频采集电芯电压与温度，发送至电池簇控制模块（BCMU）。BCMU在本地进行微秒级过流熔断算法监测，再利用CAN或RS485总线，将数据打包发送至集装箱总控模块（BAMU）。
+        </p>
+        <p><b>第二层：间隔层（BAMS总控与PCS一体机）</b><br>
+        各电池舱BAMU、各PCS一体机控制器通过双路多模光纤自愈环网（环网收敛时间 $\le 50\text{ ms}$）连接到综合楼控制室。通信协议采用基于TCP的 Modbus TCP 或专门用于快速变电控制的 IEC 61850 GOOSE/SV 报文。
+        </p>
+        <p><b>第三层：站控层（EMS与SCADA）</b><br>
+        部署在综合控制室，通过站控双冗余以太网，与省调/地调调度自动化系统进行数据交互。通信协议采用 IEC 60870-5-104 高压远动规约。
+        </p>
+
+        <h3>5.2 200ms 瞬时 AGC/一次调频功率响应时延拆解</h3>
+        <p>当省调下发 100MW AGC 出力指令时，系统的 200ms 动作链条在时间刻度上是这样被精确分配的：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>动作节点阶段</th>
+                <th>时延区间</th>
+                <th>控制行为与物理过程</th>
+                <th>核心通信协议/机制</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>1. 信号接收与解包</b></td>
+                <td>0 ~ 20ms</td>
+                <td>省调调度主站发出AGC功率指令，电站通信网关机通过远动光纤接收，解析协议并打包成以太网包传至EMS。</td>
+                <td>IEC 60870-5-104 规约</td>
+              </tr>
+              <tr>
+                <td><b>2. EMS分配与下发</b></td>
+                <td>20 ~ 70ms</td>
+                <td>EMS接收到100MW指令后，运行下垂动态分配算法，根据全站60套电池舱的实时SOC、SOH（健康度）以及当前温度状态，计算出每台PCS应出有功，通过35kV站控光纤环网下发。</td>
+                <td>Modbus TCP 广播报文</td>
+              </tr>
+              <tr>
+                <td><b>3. PCS指令响应</b></td>
+                <td>70 ~ 120ms</td>
+                <td>PCS板载高频 DSP 接收指令，完成控制闭环计算，调整逆变器内部绝缘栅双极型晶体管（IGBT）的 PWM 开关触发相位。</td>
+                <td>DSP 高速内部总线</td>
+              </tr>
+              <tr>
+                <td><b>4. 功率建立与并网</b></td>
+                <td>120 ~ 170ms</td>
+                <td>交流侧储能滤波器电感电流开始拉升，35kV升压变压器建立电磁场，并在110kV并网点建立高达100MW的并网有功电流。</td>
+                <td>物理电磁转换</td>
+              </tr>
+              <tr>
+                <td><b>5. 反馈修正与稳定</b></td>
+                <td>170 ~ 200ms</td>
+                <td>110kV侧的快速测控装置实时采集电能有功输出，将实际出力反馈给EMS，完成闭环校核，全站有功功率输出拉升稳定。</td>
+                <td>GOOSE 闭环回路</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>一次调频在动作逻辑上与AGC不同，其<b>下垂控制（Droop Control）</b>是由PCS的内部逆变控制器自主执行，不经过慢速的EMS集中控制，其数学模型表示如下：</p>
+        <p>$$\Delta P = - K_{f} \cdot \Delta f$$</p>
+        <p>式中：$\Delta P$ 为PCS输出的有功功率调整量；$\Delta f$ 为实时采集的并网点电网频率偏离值（实际频率减去标称频率50Hz）；$K_{f}$ 为调频下垂斜率系数。PCS通过内部集成的高精度锁相环（PLL）直接采集110kV并网母线的电压正弦波，每10ms对波形频率进行一次采样计算。一旦发现频率超出设定死区，PCS跳过EMS，瞬间自主调整IGBT导通角，使响应时间从AGC的180ms骤降至70ms以内，瞬间为大电网提供急需的频率支撑惯性。</p>
       </section>
     </main>
 
@@ -113,9 +498,11 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>共享储能与市场收益</strong>：100MW/200MWh独立共享储能电站是我国电网侧的重要主力。其商业收益主要来自容量租赁、现货套利（削峰填谷）以及辅助服务补偿。</li>
+        <li><strong>直流侧积木集成</strong>：直流系统基于3.2V的LFP电芯，通过“1P52S模组 - 1P416S电池簇 - 9簇并联集装箱”的级联方式，聚沙成塔集成为标称1331.2V、额定3.35MWh的直流侧电池系统。</li>
+        <li><strong>温控与电气防护</strong>：引入乙二醇同程液冷系统，可将全舱温差限制在3℃以内，延缓电池衰减。三级直流保护设计（Pack熔断器 - 簇级断路器 - 舱级隔离开关）保障了直流系统在极高短路电流下的分断灭弧安全。</li>
+        <li><strong>交流变流与并网</strong>：交流侧利用变流升压一体舱实现集成，双分裂箱变通过低压两绕组的高解耦设计限流谐波。升压站则以35kV集电线路分4路并入100MVA双绕组有载调压主变，利用直挂型SVG维持并网功率因数。</li>
+        <li><strong>毫秒级控制响应</strong>：控制网络由设备层、间隔层与站控层构成，通过双冗余以太网环网传输。通过PCS自主执行一次调频下垂控制（Droop Control），调频功率响应可控制在100ms以内，全站有功功率建立响应小于200ms。</li>
       </ul>
     </section>
 
@@ -125,16 +512,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在 100MW/200MWh 的独立储能电站直流侧设计中，为什么要优先采用“液冷热管理系统”而非传统的“风冷系统”？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 液冷系统的初始建造成本更低，结构更简单。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 液冷能通过高效的液体介质流动将全舱电芯最高温差控制在 3℃ 以内，减缓电池老化差异，抑制系统“木桶效应”。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 液冷系统不需要使用乙二醇等化学冷却介质，因而不会产生环境污染或泄露短路风险。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 只有液冷系统能够兼容 1500V 的直流电压系统，风冷系统只能运行在 1000V 直流系统下。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查直流侧热管理系统的工程设计价值。液冷系统的初始成本和结构复杂度都要高于风冷系统（所以A错）；液冷系统正是使用乙二醇与去离子水混合液作为介质，存在渗漏防护设计要求（所以C错）；系统电压等级（1000V或1500V）是由电芯串联数决定的，与热管理介质无直接技术绑定（所以D错）。在大容量（MWh级）储能集装箱中，电芯由于充放电温升差异会导致容量和寿命的“木桶效应”，液冷能够将电芯最高温差控制在 3℃ 以内，是延长电池寿命、提高整站效率的核心手段，故B正确。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在变流升压一体舱（PCS 升压一体机）的设计中，采用双分裂变压器（低压侧双绕组）的主要工程目的什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 将高压侧的 35kV 交流电直接降压为 110V 直流电，为 BMS 系统供电。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 允许两个 PCS 的直流侧在变压器低压端直接并联，以增加系统的直流充电电流。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 使两个集中式 PCS 对应的低压绕组之间高度解耦，滤除高频谐波，并在一侧发生短路故障时限制短路电流。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 提高变压器的温升耐受极限，使其能够在无冷却风扇的状态下满载工作。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查变流升压系统中双分裂变压器的工程原理。双分裂变压器的低压侧有两个互不连接、参数相同的分裂绕组（通常为 630V 或 690V），高压侧为 35kV 绕组。它的核心作用是实现两个 PCS 之间的电气解耦。因为两个低压分裂绕组之间的阻抗非常大，当其中一台 PCS 发生直流短路或逆变故障时，短路电流被限制在局部，不会通过电磁耦合波及另一台正常运行的 PCS 侧（所以B错）。同时分裂变压器也具备滤除开关高频谐波和限制交流侧短路电流的能力（故C正确）。它不能提供 110V 直流电（所以A错），也并不影响变压器自身的散热要求（所以D错）。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 某 100MW/200MWh 储能电站在不进行充放电（处于热备用待机状态）时，为什么其并网点（110kV 侧）仍然可能产生无功倒送并被电网考核？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 即使不充放电，电池舱内部的锂电芯也会自发向交流侧电网逆变输送无功功率。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 站内 35kV 变压器的电磁激磁电流表现为感性无功，而数十公里长的 35kV 高压电缆的对地电容表现为容性无功，这会导致并网点功率因数偏移。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 站内的 EMS 控制系统在不充放电时会强行断开所有断路器，导致线路产生电抗共振。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 这是因为电网调度的 AGC 系统在储能待机时会自动接管主变压器，用于调节周边新能源电站的出力。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查电气系统中的无功波动与 SVG 的配置目的。储能电站在不充放电时，电芯与 PCS 的 IGBT 均不触发，不会向交流侧逆变无功（所以A错）。但在此时，站内的 35kV 变压器（激磁阻抗消耗感性无功）和 35kV 集电线路（高压交联电缆的对地电容产生容性无功）仍然与电网相连，这些电气元件在空载或轻载状态下会产生容性或感性无功倒送，导致并网点功率因数严重偏离 1.0 的规范要求，从而引发电网考核处罚，因此必须配置 SVG 进行实时动态无功补偿（故B正确）。在待机状态下，主断路器仍是合闸状态（所以C错），调度 AGC系统只下发功率指令，不接管主变本身（所以D错）。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在 100MW 储能电站的一次调频动作中，为什么下垂控制（Droop Control）要由 PCS 直接执行，而不通过 EMS 集中计算分配？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. EMS 系统无法采集并网点的频率数据，只有 PCS 能够利用锁相环（PLL）采集。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 一次调频要求响应时间在 100ms 以内，EMS 到 PCS 的站级通信时延加上算法计算时间过长，无法满足电网对频率紧急支撑的速度要求。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. PCS 在执行下垂控制时可以强行忽略电池 BMS 的过流警告，从而提供更大的超负荷调频电流。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 只有 PCS 内部的逆变桥堆具备进行电压变频调节的能力，EMS 控制柜只支持处理直流电压。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查储能电站一次调频的毫秒级响应机制。一次调频是保障大电网频率安全的“第一道防线”，国家电网要求其在收到扰动后毫秒级动作（通常响应时间 ≤ 100ms，功率建立时间 ≤ 200ms）。由于传统的 EMS-BMS 站级通信链条（包括工业以太网环网的时延、Modbus 轮询和算法计算）通常需要 100ms 以上，如果调频指令经 EMS 下发，极易造成响应超时。因此，PCS 基于自身板载的锁相环（PLL）直接采集并网点电压波形并自主判断频率偏差，瞬间（数十毫秒内）调整 PWM 输出，从而省去了通信链条（故B正确）。EMS 也可以通过站内测控单元获取频率（所以A错）；PCS 调频绝不能忽略 BMS 安全警告，否则会引起电池损毁或热失控（所以C错）；EMS 作为能量管理计算机，本身不参与高压交直流转换（所以D选项的描述是错的）。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在 100MW/200MWh 的独立储能电站集电线路设计中，如果将 30 套 3.15MW 的变流升压一体机分配到 4 条 35kV 集电线路回路，单条回路的负荷输送设计需要考虑的核心工程约束是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 必须保证单条回路的负荷容量超过主变压器的额定容量，以便在主变故障时进行跨路输电。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 单条集电线路上所有变流一体机的最大总输出功率不能超过该回路 35kV 电缆在夏季地埋状态下的安全载流量。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 每条回路上的电池舱总能量必须完全一致，否则由于能量不平衡会导致 35kV 母线发生谐振。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 回路上的 PCS 控制器必须采用不同的锁相角，以防在 35kV 母线上产生电压相位叠加烧毁电缆。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查集电线路与电缆容量选型的工程约束。单条 35kV 回路输送的功率约为 25MW 左右，这部分功率全部通过该回路的 35kV 交联电缆传输。电缆的选型必须保证在极限出力（储能全功率充放电）以及夏季极端气温、地埋散热差的情况下，其安全载流量仍高于最大运行电流，否则电缆会过热烧毁（故B正确）。主变压器额定容量通常在 100MVA 左右，单条集电线路仅为 25MVA，不可能且不需要超过主变容量（所以A错）；不同回路间的能量不平衡并不会引起 35kV 母线电压谐振（母线电压由主网和变压器决定，所以C错）；站内所有并网逆变器的锁相角必须与电网电压相位严格同步（即锁相角一致），如果采用不同相位会导致逆变器短路或严重环流故障（所以D错）。</p>
         </div>
       </div>
 
@@ -159,7 +606,11 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="06_6_1_需求分析方法.html">06_6_1 需求分析方法</a> — 储能系统前期规划与建设依据。</li>
+        <li><a href="06_6_2_容量配置方法.html">06_6_2 容量配置方法</a> — 计算最佳充放电倍率与容量配比。</li>
+        <li><a href="06_6_3_设备选型要点.html">06_6_3 设备选型要点</a> — 储能电站关键大件的质量筛选与性能指标。</li>
+        <li><a href="06_6_4_主接线与系统设计.html">06_6_4 主接线与系统设计</a> — 主接线图物理细节与电气一次图绘制规范。</li>
+        <li><a href="06_7_1_热失控机理.html">06_7_1 热失控机理：三个阶段</a> — 直流侧安全热蔓延核心物理过程。</li>
       </ul>
     </section>
 
@@ -172,7 +623,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
