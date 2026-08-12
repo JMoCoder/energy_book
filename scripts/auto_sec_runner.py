@@ -208,6 +208,15 @@ def main():
         if target_sec_id:
             break
 
+        stop_file = ROOT_DIR / "STOP"
+        if stop_file.exists():
+            try:
+                stop_file.unlink()
+            except Exception:
+                pass
+            print("\n🛑 [优雅停机] 检测到 STOP 停机信号文件，当前章节已发布，流水线已安全停机！")
+            break
+
         if completed_count < max_secs:
             print(f"\n🎉 已完成 {completed_count}/{max_secs} 节！等待 3 秒后启动下一个全新智能体...\n")
             time.sleep(3)
