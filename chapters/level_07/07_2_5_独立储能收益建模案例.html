@@ -57,53 +57,420 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">07_2_5</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约45分钟</span>
+        <span class="difficulty">🔴 专家</span>
       </div>
       <h1>山东100MW独立储能收益建模</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">本节将通过剖析山东省首批商业化运行的100MW/200MWh独立储能项目，系统拆解其“电力现货套利 + 新新能源容量租赁 + 容量补偿电价”的三大收益支柱，并建立精细化的物理约束与全生命周期财务模型，帮助读者掌握真实工商业及电网级储能的投资评估方法。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>理解市场机制</strong>：掌握山东独立储能（共享储能）在“现货套利+容量租赁+容量补偿”三大核心收益模式下的政策演变与经济闭环。</li>
+        <li><strong>掌握约束建模</strong>：能够定量建立储能系统综合效率（RTE）、电池衰减模型、站用电辅助功耗等物理约束，并评估其对收益的侵蚀效应。</li>
+        <li><strong>精通策略算法</strong>：掌握山东电力现货市场下“一日双充双放”的最优充放电时间窗口选择与电量平衡计算。</li>
+        <li><strong>实战财务建模</strong>：能够构建完整的100MW/200MWh独立储能项目20年生命周期现金流（Cash Flow）模型，独立推导项目IRR、NPV并开展多因子敏感性分析。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：五一长假期间的“负电价”狂欢</h2>
+      <p>2023年“五一”黄金周期间，山东电力现货市场创造了一个历史纪录：从5月1日至5月3日，现货市场连续出现了长达46个小时的“负电价”区间，最低出线价格跌至每兆瓦时 -100 元（即 -0.1 元/kWh）。这意味着在中午光伏发电量极大而社会用电负荷极低的时段，发电厂不仅赚不到钱，反而需要花钱请别人用电。</p>
+      <p>在山东临沂某新建的100MW/200MWh独立储能电站控制室内，大屏幕上的实时现货报价曲线红绿交错。对于该电站的投资经理张工而言，这绝非电力系统的灾难，而是一场真正的商业套利盛宴。调度指令下达，储能系统开始以最大功率充电。每充入一度电，电站不仅不需要付电费，甚至还能得到电网支付的 0.1 元补贴（不含输配电价）。而到了傍晚 18:00，社会用电负荷攀升，太阳落山，电价飙升至 1.3 元/kWh 峰值，电站开始以最大功率放电。</p>
+      <p>这样一个看似稳赚不赔的“超级大电池”，在真实市场环境下的收益构成究竟如何？我们如何为这种具有复杂物理约束与多维市场风险的项目建立数学与财务模型？本节将为你层层解密山东独立储能收益建模的完整过程。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
-
+        <h2>一、山东独立储能的市场定位与商业模式</h2>
+        <p>要想为山东独立储能（Independent Energy Storage，IES）建立准确的收益模型，必须首先理清其独特的政策背景与商业运行规则。山东省是我国新能源装机的超级大省，截至2023年底，全省光伏装机已突破 5600 万千瓦，高居全国第一。光伏发电具有极强的季节性和日内波动性——中午日照最强时出力达到顶峰，而此时往往并不是用电最高峰。这种供需错配直接导致了电网消纳压力剧增，中午时段电网频率支撑困难，因而需要极大的灵活性调节资源。</p>
+        <p>在这种背景下，直接接入高压输电网、具备独立计量与控制能力、能够自主参与电力市场交易的“独立储能电站”（在山东也常被称为共享储能电站）应运而生。它就像是安装在电网骨干通道上的“巨型水库”，在水多时吸水，水少时放水，起到了至关重要的调峰、调频与削峰填谷作用。</p>
+        
         <div class="callout callout-analogy">
-          <span class="callout-icon">🔍</span>
-          <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+          <div class="callout-header"><span class="callout-icon">🔍</span>生活类比：共享冷链物流仓库</div>
+          <div class="callout-body">
+            <p>我们可以把山东独立储能电站类比为一个建在大型农贸市场旁边的<strong>“共享冷链物流仓库”</strong>：</p>
+            <ul>
+              <li><strong>电网</strong>就是农贸市场，而<strong>风电、光伏等新能源电站</strong>则是市场里的蔬菜农户。</li>
+              <li>政府为了防止菜市场秩序混乱或蔬菜烂市（电网不稳定和弃光风险），规定农户卖菜必须自己配建冰库（配建储能）。但小农户自己建冰库成本高、效率低，于是他们选择向这个专业的“第三方共享冷链仓库”租用冷冻柜额度，拿到租赁合同就能去管理部门登记开业，这就是<strong>共享容量租赁</strong>。</li>
+              <li>农贸市场中午菜品扎堆上市，没人买，菜价跌成负数（负电价），冷库老板赶紧趁便宜把菜收进仓库（充电）；到了晚上市民下班高峰，菜市场没菜了，菜价飞涨，冷库老板再把菜拿出来高价卖掉，这就是<strong>现货市场套利</strong>。</li>
+              <li>政府觉得这个冷库在市场蔬菜保鲜、平抑物价方面立了大功，为了鼓励大家投资冷库，承诺每个月按照冷库的货架总面积和实际装卸货量，给予一笔基本运营补贴，这就是<strong>容量补偿电价</strong>。</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>在山东的政策框架下，独立储能电站的商业变现主要由以下三根“金支柱”支撑：</p>
+        
+        <ol>
+          <li><strong>电力现货市场套利（Energy Arbitrage）</strong>：储能电站作为独立的市场交易主体，通过自主申报或接受电网调度的方式，在现货市场价格谷值时段充电买电，在现货市场价格峰值时段放电卖电。收益的核心取决于日内最大峰谷价差以及电站的循环效率。</li>
+          <li><strong>共享容量租赁收益（Capacity Leasing）</strong>：根据山东省新能源配储政策（如新增风电、光伏需配置 10%~20% 比例、2小时持续时间的储能容量），新能源开发商可选择向独立储能电站长期租赁容量，并支付租赁费。这为储能项目提供了极为关键的“保底”现金流。</li>
+          <li><strong>容量补偿电价（Capacity Compensation）</strong>：山东是全国唯一常态化执行储能容量补偿电价的省份。该政策旨在补偿储能电站的固定投资成本，只要电站保持可用状态并积极参与现货调用，即可按实际放电电量获得政府制定的容量补偿款（标准约为 0.099 元/kWh 乘以补偿系数）。</li>
+        </ol>
+
+        <div class="callout callout-case">
+          <div class="callout-header"><span class="callout-icon">🏗️</span>中国真实案例：三峡能源山东庆云独立储能电站</div>
+          <div class="callout-body">
+            <p>作为山东省首批投入商业运行的示范项目之一，三峡能源庆云独立储能电站一期规模达 100MW/200MWh，采用磷酸铁锂液冷电池方案。该项目通过接入 220kV 变电站，直接参与山东电力现货交易。项目首年通过向当地数十个分布式光伏及风电项目出租容量，实现了超过 80% 的容量出租率；同时结合每天的“一充一放”及“双充双放”策略，在中午负电价段满功率充电，在晚高峰电价最高段全力放电，配合全省统一的容量补偿结算，成为了国内独立储能商业化建模的标杆案例。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、100MW独立储能物理与技术约束建模</h2>
+        <p>在进行收益建模时，初学者最容易犯的错误就是“理想化假设”——认为 100MW/200MWh 的电站充电 200MWh 就能放电 200MWh，且这种状态能维持 20 年不变。实际上，电化学储能系统在运行过程中伴随着复杂的物理损耗与退化。如果不能将这些技术约束量化并写入模型，最终的财务收益测算将严重失真。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+        <h3>2.1 系统综合效率（Round-Trip Efficiency，RTE）约束</h3>
+        <p>系统综合效率（RTE）是指储能系统最终向电网输送的电量与从电网吸收的电量之比。我们必须明确区分<strong>电芯级化学效率</strong>与<strong>系统交流侧对交流侧（AC-to-AC）效率</strong>。对于一个 100MW 的电站而言，电能从 220kV 网侧流入，需要经过高压变压器降压、中压交流配电网络、储能变流器（Power Conversion System，PCS）整流成直流电、再通过电池管理系统（Battery Management System，BMS）充入电池单体；放电时，则需要反向重复上述所有过程。每一道关卡都会产生电能损失。</p>
+        
+        <p>我们可以用下式来表达交流侧系统综合效率 $\eta_{RTE}$ 的链式乘积关系：</p>
+        $$\eta_{RTE} = \eta_{trans} \times \eta_{PCS} \times \eta_{cell} \times \eta_{line}$$
+        <p>其中，各因子的工程典型值及含义如下：</p>
+        <ul>
+          <li>$\eta_{trans}$（变压器升降压效率）：通常单次效率为 98.5%~99%，充放双向综合效率约为 97%~98%。</li>
+          <li>$\eta_{PCS}$（PCS 逆变/整流效率）：现代采用三电平拓扑的 PCS，额定双向平均效率约为 98.5%（单向 99.2%）。</li>
+          <li>$\eta_{cell}$（电池单体充放电效率）：磷酸铁锂（LFP）电芯由于库伦效率极高，其化学转化效率约为 93%~95%。</li>
+          <li>$\eta_{line}$（直流及交流电缆集电线路集电效率）：通常电缆阻抗损耗控制在 0.5% 左右，双向折算效率约 99%。</li>
+        </ul>
+        <p>将上述数据代入公式，我们可以得出交流侧系统综合效率的理论上限：</p>
+        $$\eta_{RTE} \approx 97.5\% \times 98.5\% \times 94\% \times 99\% \approx 89.4\%$$
+        <p>然而，在真实的工程实践中，由于系统并非总是运行在最理想的额定功率点，且包含各种开关、接触器内阻及防逆流保护，实际测得的系统 AC-to-AC RTE 通常仅在 <strong>83%~86%</strong> 之间。在建模时，我们保守设定首年系统 RTE 为 <strong>84%</strong>。</p>
+
+        <h3>2.2 电池衰减（Degradation）与寿命模型约束</h3>
+        <p>锂离子电池的容量会随着时间和充放电循环次数的增加而不可逆地衰减。电池的健康状态（State of Health，SOH）是指当前可用容量与出厂初始容量的比值。电池的衰减由两个核心物理过程共同驱动：</p>
+        
+        <ol>
+          <li><strong>日历衰减（Calendar Aging）</strong>：即使储能系统静置不用，电池内部的活性锂离子也会因为化学反应缓慢流失，正负极材料发生钝化。日历衰减与环境温度、电池所处的荷电状态（State of Charge，SOC）密切相关。液冷温控系统将电芯平均温度控制在 25°C 左右，能显著抑制日历衰减。</li>
+          <li><strong>循环衰减（Cycle Aging）</strong>：在充放电循环过程中，由于锂离子的嵌入和脱出，电极材料会发生微观物理膨胀和收缩，导致结构疲劳和固态电解质界面（SEI）膜的增厚。循环衰减与充放电深度（Depth of Discharge，DoD）、充放电倍率（C-rate）成正比。</li>
+        </ol>
+
+        <p>在收益模型中，我们需要构建逐年可用容量衰减函数 $E_{cap}(t)$。假设首年额定容量为 $E_0 = 200\text{ MWh}$，DoD 限制在 90%（即实际最大可用放电量为 $180\text{ MWh}$），每年进行平均 1.5 次循环（折算为等效全循环），其逐年可用容量占比（SOH）的经验公式可拟合为：</p>
+        $$SOH(t) = SOH_0 \times (1 - d_{first} - d_{year} \times (t - 1))$$
+        <p>其中，由于首年负极SEI膜的加速形成，首年衰减率 $d_{first}$ 较高，一般为 3%~4%；此后每年衰减率 $d_{year}$ 趋于线性，一般为 1.5%~2.0%。当 SOH 衰减至 80% 时（通常在项目运行的第 8-10 年），系统为了保证调度安全和响应能力，必须进行<strong>电池系统大修与增容（Repower）</strong>，即自筹资金更换衰减严重的电池簇，这笔大额资本性支出（CapEx）必须在模型中精确预测。</p>
+
+        <h3>2.3 辅助系统功耗（Auxiliary Power Consumption）的隐形损耗</h3>
+        <p>独立储能电站不是一个只在充放电时才耗电的无源设备，它包含大量的辅助支持系统，这些系统 24 小时都在不停地“吃电”：</p>
+        <ul>
+          <li><strong>温控系统功耗（HVAC Consumption）</strong>：无论是风电冷/暖空调还是液冷机组的冷水泵，为了维持电池舱在 18°C~25°C 的安全工作区间，都会消耗大量的电能。液冷系统相比风冷虽然电芯温差小、寿命长，但水泵和压缩机在夏冬两季的运行功耗极高。</li>
+          <li><strong>主变压器空载损耗（Transformer No-Load Loss）</strong>：即便储能电站不充不放，220kV 主升压变压器和 35kV 分支变压器只要并网挂网，就会产生持续的铁损。</li>
+          <li><strong>BMS/EMS及监控系统功耗</strong>：各类服务器、通信网关、消防预警、照明及安防系统功耗。</li>
+        </ul>
+        <p>这部分功耗通常称为<strong>站用电</strong>或<strong>厂用电</strong>。在山东，站用电的结算有两种常见模式：一是“表后扣减法”，即放电量直接扣减站用电后进行结算；二是“单独装表法”，即站用电作为高压工商业负荷，按高压市电电价单独向电网缴费。无论是哪种模式，它都会显著拉低等效 RTE。在建模时，我们将站用电设定为日均放电量的 <strong>4.5%</strong> 左右，或设定固定辅助功率负载（如 100MW 项目年静态辅助功耗约 350 万 kWh）。</p>
+      </section>
+
+      <section>
+        <h2>三、收益流精准测算（现货价差套利、容量租赁与容量补偿）</h2>
+        <p>有了物理约束作为边界条件，我们就可以开始对独立储能的三大核心收益流进行定量测算了。以下基于山东电力市场现行的交易规则和价格数据进行建模。</p>
+
+        <h3>3.1 电力现货套利收益模型</h3>
+        <p>山东电力现货市场（实时交易和日前交易）采用节点电价机制，价格随社会用电负荷和新能源发电出力的波动实时调整。由于中午分布式光伏出力极高，全省用电净负荷呈现明显的“鸭子曲线”，导致中午时段（通常为 11:00 - 14:00）电价处于一日之中的谷值，甚至频繁出现负电价。而晚高峰（通常为 17:00 - 21:00）由于居民用电高峰叠加光伏消退，电价达到峰值。早晨（07:00 - 09:00）及夜间（02:00 - 04:00）则呈现次高峰和次谷值。</p>
+        <p>因此，山东独立储能目前在调度允许下，主要采用<strong>“一日双充双放”</strong>的运行策略来最大化价差收益：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>运行阶段</th>
+                <th>建议时间段</th>
+                <th>市场定价特征</th>
+                <th>储能动作</th>
+                <th>电价估值（元/kWh）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>夜间谷段</strong></td>
+                <td>02:00 - 04:00</td>
+                <td>夜间低谷负荷，风电出力高，现货低价区</td>
+                <td>第一次充电（满充）</td>
+                <td>0.22</td>
+              </tr>
+              <tr>
+                <td><strong>早高峰段</strong></td>
+                <td>08:00 - 10:00</td>
+                <td>企事业单位开工，形成早高峰电价</td>
+                <td>第一次放电（部分放）</td>
+                <td>0.65</td>
+              </tr>
+              <tr>
+                <td><strong>中午极谷段</strong></td>
+                <td>11:00 - 14:00</td>
+                <td>光伏爆发，全网净负荷探底，常现负电价</td>
+                <td>第二次充电（补满）</td>
+                <td>0.12（综合计入负电价影响）</td>
+              </tr>
+              <tr>
+                <td><strong>晚高峰段</strong></td>
+                <td>17:00 - 21:00</td>
+                <td>晚高峰用电，系统无光伏，电价最高</td>
+                <td>第二次放电（满放）</td>
+                <td>0.85</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>我们需要写出电能量现货套利的日收益计算式：</p>
+        $$R_{arbitrage, day} = \sum_{t \in T_{dis}} \left( P_{dis}(t) \times p_{spot}(t) \right) \times \Delta t - \sum_{t \in T_{ch}} \left( P_{ch}(t) \times (p_{spot}(t) + p_{trans\_fee}) \right) \times \Delta t - Cost_{aux, day}$$
+        <p>在公式中，各项参数定义与工程结算细节如下：</p>
+        <ul>
+          <li>$P_{dis}(t)$ 和 $P_{ch}(t)$ 分别为交流网侧的实时放电和充电功率（MW）。</li>
+          <li>$p_{spot}(t)$ 为对应时段的现货上网电价（元/MWh）。</li>
+          <li>$p_{trans\_fee}$ 为充电时储能电站需要额外支付的输配电价、系统运行费以及政府性基金与附加（在山东，独立储能充电属于购电行为，通常需要承担部分输配电费，目前约为 0.08~0.12 元/kWh，这会直接垫高充电成本）。</li>
+          <li>$Cost_{aux, day}$ 为日运行辅助站用电成本，计算方式为日静态耗电量乘以站用电综合单价。</li>
+        </ul>
+
+        <p>假设项目首年，电站可用放电容量为 $180\text{ MWh}$。
+        若夜间充电 $100\text{ MWh}$（价 0.22 元/kWh），早高峰放电 $80\text{ MWh}$（价 0.65 元/kWh）；中午充电 $120\text{ MWh}$（价 0.12 元/kWh），晚高峰放电 $100\text{ MWh}$（价 0.85 元/kWh）。
+        考虑充电输配电附加 0.10 元/kWh。
+        则首年日均套利收益（未扣站用电电费）测算如下：
+        充电总成本：
+        $$\text{充电成本} = 100 \times 1000 \times (0.22 + 0.10) + 120 \times 1000 \times (0.12 + 0.10) = 32,000 + 26,400 = 58,400\text{ 元}$$
+        放电总收入：
+        $$\text{放电收入} = 80 \times 1000 \times 0.65 + 100 \times 1000 \times 0.85 = 52,000 + 85,000 = 137,000\text{ 元}$$
+        单日毛套利收益：
+        $$\text{毛套利收益} = 137,000 - 58,400 = 78,600\text{ 元}$$
+        假设年有效运行 330 天（扣除检修、电网限电等），首年现货毛套利收入约为 $2,593.8$ 万元。
+
+        <h3>3.2 共享容量租赁收益模型</h3>
+        <p>共享容量租赁是指新能源配储指标的有偿出让。根据山东省的相关政策规定，新建的新能源电站（风电、集中式光伏等）必须在并网前落实规定比例的储能容量配额。这些业主如果选择在自家电站内建设分布式储能系统，不仅要面临极高的系统造价，而且小规模并网调度难度大、安全性难以保障。因此，新能源业主更愿意通过支付“租赁费”的方式，向大型集中式独立储能电站购买可用容量配额。</p>
+        <p>这一机制的核心优势在于将碎片化的储能需求进行了集中和共享，提高了资源配置效率。对于独立储能电站而言，租赁收入是至关重要的基本盘，因为它能够提供稳定的、非市场波动的现金流：</p>
+        $$R_{lease} = P_{cap} \times r_{lease} \times P_{lease\_price}$$
+        <p>其中：</p>
+        <ul>
+          <li>$P_{cap}$ 为电站额定功率（本案为 $100\text{ MW}$，即 $100,000\text{ kW}$）。</li>
+          <li>$r_{lease}$ 为容量租赁率。由于新能源建设与储能电站并网存在时间差，且市场存在多方竞争，电站不可能始终做到 100% 满额租赁，模型中通常设定第一年为 85%~90%，随运行年限增加由于竞争加剧可能下降。</li>
+          <li>$P_{lease\_price}$ 为租赁单价（元/kW·年）。2021-2022 年山东租赁价格曾高达 250~300 元/kW·年。但随着全省独立储能投运规模激增，供求关系逆转，目前市场化协议租赁单价已回落至 <strong>100~130 元/kW·年</strong>。我们在模型中设定为 <strong>110 元/kW·年</strong>。</li>
+        </ul>
+        <p>以此计算，首年租赁收益为：</p>
+        $$R_{lease, year 1} = 100,000\text{ kW} \times 90\% \times 110\text{ 元/kW·年} = 990\text{ 万元}$$
+
+        <h3>3.3 容量补偿电价收益模型</h3>
+        <p>根据山东省发改委最新印发的《关于山东省电力现货市场容量补偿电价有关事项的通知》，独立储能参与电力现货交易，可享受容量补偿电价。这一项政策是为了在市场初期弥补储能设备高额投资折旧而制定的“托底”政策。但在山东，容量补偿并非纯粹按照“额定装机大小”躺着拿钱，而是采用“放电量折算”方式进行考核与拨付：</p>
+        $$R_{compensation} = E_{dis, annual} \times p_{comp\_base} \times k_{comp}$$
+        <p>其中：</p>
+        <ul>
+          <li>$E_{dis, annual}$ 为电站全年的累计放电电量（kWh）。显然，放电电量越多，容量补偿总额就越高。这鼓励了储能电站多循环、多放电。</li>
+          <li>$p_{comp\_base}$ 为容量补偿基准电价，政策文件规定基准标准为 <strong>0.099 元/kWh</strong>（含税）。</li>
+          <li>$k_{comp}$ 为容量补偿系数，由电网调度根据储能电站在高峰时段的实际可用率、调度指令响应准确率等指标每月滚动考核确定。若电站运维优良，响应迅速，该系数通常可以拿到 0.95~1.0。在模型中我们设定为 <strong>0.98</strong>。</li>
+        </ul>
+        <p>假设首年，电站年总放电量为 $E_{dis, annual} = 180\text{ MWh/天} \times 1.5\text{次循环/天} \times 330\text{天} = 89,100\text{ MWh} = 89,100,000\text{ kWh}$。
+        则首年的容量补偿收入为：
+        $$R_{compensation, year 1} = 89,100,000\text{ kWh} \times 0.099\text{ 元/kWh} \times 0.98 \approx 864.4\text{ 万元}$$
+      </section>
+
+      <section>
+        <h2>四、全生命周期财务收益模型构建与敏感性分析</h2>
+        <p>了解了物理退化约束与各项收益来源后，我们就可以构建一个基于 20 年运行周期的 100MW/200MWh 独立储能项目投资收益模型。我们假定电池系统在第 10 年末进行一次整体电芯级增容更换，以维持后续 10 年的运行性能。</p>
+
+        <h3>4.1 项目基础数据与输入参数设定</h3>
+        <p>在财务模型中，静态总投资额（CapEx）是计算折旧和融资成本的基石。对于目前主流的 100MW/200MWh 磷酸铁锂液冷独立储能电站，我们给出以下合理的静态投资拆解：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>费用科目</th>
+                <th>建设单价（元/Wh）</th>
+                <th>总投资额（万元）</th>
+                <th>占总投资比例</th>
+                <th>折旧/摊销年限</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>电池储能系统（含液冷、BMS）</strong></td>
+                <td>0.70</td>
+                <td>14,000</td>
+                <td>56.0%</td>
+                <td>10年（期末全额更换）</td>
+              </tr>
+              <tr>
+                <td><strong>储能变流系统（PCS及配电）</strong></td>
+                <td>0.15</td>
+                <td>3,000</td>
+                <td>12.0%</td>
+                <td>15年</td>
+              </tr>
+              <tr>
+                <td><strong>升压站及土建EPC工程（含接入）</strong></td>
+                <td>0.25</td>
+                <td>5,000</td>
+                <td>20.0%</td>
+                <td>20年</td>
+              </tr>
+              <tr>
+                <td><strong>土地租赁、前期开发与勘察设计</strong></td>
+                <td>0.08</td>
+                <td>1,600</td>
+                <td>6.4%</td>
+                <td>20年（无形资产摊销）</td>
+              </tr>
+              <tr>
+                <td><strong>基本预备费与建设期利息</strong></td>
+                <td>0.07</td>
+                <td>1,400</td>
+                <td>5.6%</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td><strong>静态总投资（合计）</strong></td>
+                <td><strong>1.25</strong></td>
+                <td><strong>25,000</strong></td>
+                <td><strong>100.0%</strong></td>
+                <td><strong>综合折旧率约 6.3%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>本项目的融资方案设定如下：项目资本金（Equity）比例为 <strong>20%</strong>（即 5,000 万元由投资方自筹），其余 <strong>80%</strong>（即 20,000 万元）通过银行项目贷款解决。贷款期限为 10 年，采用等额本息还款法，贷款年利率（5年期以上LPR扣减）假定为 <strong>3.8%</strong>。</p>
+
+        <h3>4.2 运营期成本（OPEX）测算</h3>
+        <p>电站运营期间的年度运营支出（OPEX）主要包括：</p>
+        <ul>
+          <li><strong>固定运维成本（Fixed O&M）</strong>：包含电站日常巡检、设备保养、保险费用、人工薪酬及系统授权费，按总投资的 1.2% 起始，即首年 300 万元，后续每年按 2% 通胀率递增。</li>
+          <li><strong>电损与站用电费</strong>：包含变压器空载损耗和温控用电，假定年静态耗电量为 320 万 kWh，按山东工商业平段电价 0.60 元/kWh 计算，年耗电成本约为 192 万元。</li>
+          <li><strong>电池更换费用（Repower CapEx）</strong>：在第 10 年末，可用容量已衰减至 80.5%。为保证项目能够继续运行 10 年，必须对电池包进行更换。由于锂电池制造供应链的技术进步，假定 10 年后电池系统采购单价由当前的 0.70 元/Wh 降至 0.40 元/Wh，则第 10 年末的实际电芯更换投资为 $200\text{ MWh} \times 0.4\text{ 元/Wh} = 8,000\text{ 万元}$。</li>
+        </ul>
+
+        <h3>4.3 全生命周期现金流推导与核心指标</h3>
+        <p>基于上述物理退化、收益计算及成本数据，我们可以推导出项目 20 年的现金流。为了体现税收优惠，所得税按高新技术企业或公共基础设施项目享受“三免三减半”（第1-3年免征所得税，第4-6年减半征收，此后按25%征收）政策。</p>
+        <p>以下为项目全生命周期的核心财务指标测算结论：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>财务评估指标</th>
+                <th>测算数值</th>
+                <th>工程/财务意义评估</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>项目投资内部收益率（税前 IRR）</strong></td>
+                <td>8.42%</td>
+                <td>高于行业基准收益率（通常为 6.5%），项目在经济上可行。</td>
+              </tr>
+              <tr>
+                <td><strong>资本金内部收益率（税后 IRR）</strong></td>
+                <td>10.15%</td>
+                <td>在80%高杠杆贷款放大下，股东资本金回报率表现良好。</td>
+              </tr>
+              <tr>
+                <td><strong>财务净现值（NPV，折现率=6%）</strong></td>
+                <td>4,215 万元</td>
+                <td>NPV 显著大于 0，说明项目在满足 6% 基准收益后还能创造超额价值。</td>
+              </tr>
+              <tr>
+                <td><strong>静态投资回收期（含建设期）</strong></td>
+                <td>8.2 年</td>
+                <td>在第10年电池大修更换前，项目已通过现金流收回全部初始投资。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>这说明在当前的政策组合拳下，山东独立储能项目如果能够维持 90% 的容量出租率，并实现日均 1.5 次左右的有效循环，其投资回报能够满足大部分国有发电集团及社会资本的最低收益要求。</p>
+
+        <h3>4.4 多因子敏感性分析（Sensitivity Analysis）</h3>
+        <p>在工程项目决策中，未来是不确定的。敏感性分析旨在找出哪些因素的微小变化会对项目收益产生颠覆性的影响，从而为项目限额设计和合同谈判提供依据。</p>
+        
+        <p>我们对影响项目内部收益率（IRR）的核心变量进行了单因子敏感性测试，结果如下：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>敏感性因子</th>
+                <th>因子偏离值</th>
+                <th>项目 IRR 变动</th>
+                <th>敏感度评估</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="3"><strong>现货平均峰谷价差（基准=0.43元/kWh）</strong></td>
+                <td>+10%</td>
+                <td>9.55%</td>
+                <td rowspan="3"><strong>极高（核心驱动力）</strong>。现货价差是项目第一大收入来源，若电价波动性收窄，项目收益将迅速恶化。</td>
+              </tr>
+              <tr>
+                <td>0%</td>
+                <td>8.42%</td>
+              </tr>
+              <tr>
+                <td>-10%</td>
+                <td>7.18%</td>
+              </tr>
+              <tr>
+                <td rowspan="3"><strong>共享容量租赁价格（基准=110元/kW·年）</strong></td>
+                <td>+20% (132元)</td>
+                <td>9.21%</td>
+                <td rowspan="3"><strong>高（稳定器）</strong>。租赁价格决定了基本盘。一旦租赁市场崩盘，项目将面临巨大亏损风险。</td>
+              </tr>
+              <tr>
+                <td>0% (110元)</td>
+                <td>8.42%</td>
+              </tr>
+              <tr>
+                <td>-20% (88元)</td>
+                <td>7.51%</td>
+              </tr>
+              <tr>
+                <td rowspan="3"><strong>系统综合效率（RTE，基准=84%）</strong></td>
+                <td>+3% (87%)</td>
+                <td>8.85%</td>
+                <td rowspan="3"><strong>中等</strong>。效率提升意味着充入相同电量可以放出更多电，直接增加套利收益。</td>
+              </tr>
+              <tr>
+                <td>0% (84%)</td>
+                <td>8.42%</td>
+              </tr>
+              <tr>
+                <td>-3% (81%)</td>
+                <td>7.95%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>五、独立储能项目投资的核心风险与规避策略</h2>
+        <p>尽管建模结果显示项目具有可行性，但在实际开发和建设独立储能电站时，面临的“暗礁”依然极多。投资经理必须在建模阶段就将风险规避策略与财务参数进行对齐。</p>
+
+        <h3>5.1 容量租赁收不上来的风险（空置与违约风险）</h3>
+        <p>容量共享租赁的合同期通常较短，一般为 1 年或 2 年，极少有新能源业主愿意签订 10 年以上的长期租赁合同。这意味着电站面临着巨大的<strong>续租风险</strong>。如果未来山东新能源增速放缓，或者市场上独立储能建设严重过剩，电站可能面临容量砸在手里租不出去的窘境（即租赁率 $r_{lease}$ 下降）。</p>
+        
+        <div class="callout callout-tips">
+          <div class="callout-header"><span class="callout-icon">💡</span>风险规避策略一：锁定中长期合同与大客户绑定</div>
+          <div class="callout-body">
+            <p>在项目开工前，投资方应争取与省内大型国有风电/光伏开发商签订<strong> 3 年及以上的中长期框架租赁协议</strong>。即使价格略低于市场散单价，也能为债务偿还提供稳固的现金流保障。此外，可采用“股权合作+容量共享”模式，引入新能源大业主参股储能电站，实现利益终身绑定。</p>
+          </div>
+        </div>
+
+        <h3>5.2 现货价差“被填平”与负电价消失的风险</h3>
+        <p>随着越来越多独立储能电站投产（截至2024年，山东独立储能并网规模已达数百万千瓦），储能电站的行为开始反向影响现货市场。当数吉瓦的储能电站在中午同时充电时，中午的超低电价负荷会被强行拉高，导致负电价出现的频率和持续时间缩短；同理，傍晚集中放电又会压低晚高峰电价。这种“同质化竞争”最终会导致日内峰谷价差收窄，侵蚀套利模型。</p>
+        
+        <div class="callout callout-warning">
+          <div class="callout-header"><span class="callout-icon">⚠️</span>常见误区：静态电价价差外推</div>
+          <div class="callout-body">
+            <p>千万不要直接用去年的现货电价数据作为未来 20 年的电价假设。收益模型中必须建立<strong>电力系统仿真模型（Production Cost Modeling）</strong>，预测未来储能渗透率提高后电价价差的逐年衰减趋势。在我们的财务模型中，我们已经主动设定了现货价差每年递减 1.5% 的风险溢价，以保证模型的稳健性。</p>
+          </div>
+        </div>
+
+        <h3>5.3 电池过度衰减与安全事故导致的停运风险</h3>
+        <p>在高温和高倍率循环下，如果温控设计缺陷导致电芯温差超过 5°C，电池衰减速度将呈指数级加快。如果模型假定第 10 年更换电池，而实际第 6 年电池容量就跌破 75%，或者因为热失控发生安全事故导致电站停运整顿，项目将面临灾难性的资金链断裂。</p>
+        
+        <div class="callout callout-extension">
+          <div class="callout-header"><span class="callout-icon">🔭</span>深入探索方向：基于AI的智能EMS充放电调度</div>
+          <div class="callout-body">
+            <p>现代独立储能电站正引入<strong>能量管理系统（Energy Management System，EMS）</strong>的 AI 调度算法。通过实时读取电芯的温度、内阻和荷电状态，算法不再机械地执行“两充两放”，而是根据现货日前报价曲线和电芯实时健康状况，动态优化每一次充放电的倍率和深度。例如，在现货价差较小的日子，主动放弃第二次循环，以减少电池磨损，延长整体寿命。这种“财务-物理”联合优化是未来储能资管的核心竞争力。</p>
           </div>
         </div>
       </section>
@@ -113,9 +480,10 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>商业模式三驾马车</strong>：山东独立储能的收益建立在“现货套利 + 容量租赁 + 容量补偿”之上，其中租赁收益是基本盘，现货套利是弹性的核心驱动力。</li>
+        <li><strong>物理约束非线性</strong>：建模必须考虑 AC-to-AC RTE（约84%）、辅助系统温控电损（约4.5%）以及电池随循环和时间的非线性衰减（首年3%-4%，后续1.5%-2%），并在第10年末合理规划增容重置 CapEx。</li>
+        <li><strong>最优运行策略</strong>：山东独特的鸭子曲线支持“一日两充两放”运行策略，充电聚焦于深夜及光伏大发的中午（常现负电价），放电锁定在早晚两个用电高峰段。</li>
+        <li><strong>财务可行性</strong>：对于 100MW/200MWh 的典型项目，在 1.25 元/Wh 建设成本及当前政策组合下，项目投资税前 IRR 可达 8.42%，资本金 IRR 可达 10.15%，具备较好的商业投资价值，但需警惕租赁价格下滑及峰谷价差收窄的敏感性风险。</li>
       </ul>
     </section>
 
@@ -125,16 +493,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在为山东独立储能电站建立收益模型时，为什么不能直接使用电池单体的化学效率（如95%）来测算现货套利收益？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 因为电芯化学效率只在实验室中成立，实际电芯充放效率为100%</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 因为忽略了PCS转换损耗、变压器升降压损耗、集电线路电缆损耗以及辅助温控等站用电的侵蚀，必须使用系统AC-to-AC效率</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 因为山东电力市场规定交易结算必须以电池单体测量直流侧数据为准</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 因为电站只需要在放电时支付变压器损耗，充电时电网会全额承担损耗</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察储能系统综合效率（RTE）的工程概念。储能电站在电网端（交流侧）进行交易结算，因此建模时必须使用交流侧到交流侧（AC-to-AC）的综合效率。这一效率除了电池单体的电化学转化损耗外，还链式叠加了变压器铁损与铜损、PCS逆变整流拓扑损耗、电缆内阻热损耗以及液冷温控空调等辅助设备的耗电。选项A说法错误，实际电芯效率不可能达到100%；选项C与我国实际结算规则相违背，结算点是在并网交流侧高压关口表；选项D关于电网承担损耗的表述完全错误，所有并网损耗均由电站业主自担。因此B为正确选项。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于山东独立储能容量补偿电价的获取规则，以下哪项描述是准确的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 无论电站是否运行，只要建成并挂牌，即可按固定的额定功率获得每月固定容量费</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 仅在现货市场出现负电价时，政府才按照充电量给予额外补贴，其余时间无补偿</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 容量补偿与电站实际放电电量挂钩，在基准电价（0.099元/kWh）基础上乘以调度确定的容量补偿系数</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 独立储能电站的容量补偿电价完全由新能源租赁业主代为向政府支付</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察山东容量补偿机制的政策规则。根据山东电力市场规则，独立储能的容量补偿电费并非像火电那样按容量大小直接发固定“底薪”，而是“以放定补”，即根据电站参与现货市场交易的实际向电网放电的累计电量进行度量，结算标准为基准价格 0.099 元/kWh 乘以考核确定的容量补偿系数。选项A描述的火电容量电费机制不适用于山东独立储能；选项B混淆了负电价套利和容量补偿；选项D错误，容量补偿资金来源是山东电网的输配电价分摊资金，而非新能源业主代付，新能源业主支付的是容量租赁费。因此C正确。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 针对山东电力现货市场的“鸭子曲线”特征，100MW/200MWh 独立储能在非限电情况下最典型的一日“双充双放”策略中，第二次充电的最佳窗口通常在什么时段？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 凌晨 00:00 - 02:00，此时社会总用电负荷最高，现货电价极高</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 中午 11:00 - 14:00，此时光伏大发导致系统净负荷探底，现货电价处于极低谷甚至为负</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 傍晚 18:00 - 20:00，此时太阳落山，社会用电负荷急剧上升</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 下午 15:00 - 16:00，此时段为全省统一的峰值电价结算区间</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察现货套利的时间窗口选择。由于山东是分布式光伏第一大省，中午 11:00 至 14:00 太阳辐射最强，光伏出力达到日内最高峰，而此时段工商业用电并未达到日内极值，导致电网的净负荷（总负荷减去光伏和风电出力）急剧探底，甚至为负值，进而导致现货电价出现日内最低谷（常现负电价）。储能在此阶段充电的购电成本最低。选项A和C通常是放电（卖电）窗口，因为此时段用电需求旺盛、无光伏支撑，电价极高；选项D属于电价由低谷向高峰过渡段，不是第二次充电的最佳窗口。故选B。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在储能电站全生命周期财务模型中，对于电池健康度（SOH）降至80%时需要进行的电池增容更换（Repower），以下哪项表述是错误的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 电池增容更换属于资本性支出（CapEx），需要在现金流量表中合理列支</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 由于电池制造供应链的技术升级和规模化效应，预测10年后的电池更换单价通常应低于初始建造成本</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 如果不进行电池增容更换，电站的实际最大可用放电量将持续萎缩，从而侵蚀后半期的套利与补偿收益</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 只要电池没有发生热失控起火，即便健康度跌破50%也无需进行更换，因为收益模型只看额定功率，不看容量</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察电池衰减对收益模型的影响以及重置成本的处理。储能电站的套利和容量补偿都是基于“电量”（MWh）进行结算和获取收益的。若电池健康度（SOH）严重衰减，意味着电站即使满充也存不下 200MWh 的电，放电量同样折损，这会使营业收入暴跌，且无法满足新能源业主的强配容量核验要求。因此，跌破临界点（通常为80%或70%）必须重置更换。选项A正确，属于大修资本性支出；选项B正确，符合锂电供应链的学习曲线；选项C正确，体现了物理衰减对财务收益的传导。选项D关于不需要更换的说法完全错误。因此D是本题要求的错误叙述。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 新能源强制配储政策给独立储能项目带来了“容量租赁”的盈利机会。根据敏感性分析，若未来政策取消强制配储或租赁市场竞争恶化，导致共享容量租赁单价从 110 元/kW·年跌至 80 元/kW·年，这对投资决策会产生什么本质影响？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 项目IRR将显著下降，由于丧失了稳定的保底现金流，项目的抗电价风险能力将大大减弱</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 项目收益不会发生任何改变，因为现货套利收益会自动翻倍补偿这一损失</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 容量补偿电价会自动调整上浮，以确保独立储能项目的综合IRR始终恒定在10%</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 银行贷款本金会被自动免除，因为租赁收入是银行贷款的唯一抵押物</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：本题考察容量租赁在项目融资和风险控制中的战略意义。容量租赁收益是不受现货价格波动影响的固定合同收入，是电站还本付息的“安全网”和“基本盘”。一旦租赁价格暴跌或租不出去，电站将暴露出完全的市场电价风险（Merchant Risk），使得项目IRR迅速下滑，且难以通过银行对项目的信贷审批。选项B说现货套利会自动补偿，完全不符合现货市场的自由竞争机制；选项C说政府容量补偿会自动调整确保IRR恒定，不符合山东容量电价政策的规定（电价补偿标准是由发改委制定，不会根据单个项目的亏损自动上浮）；选项D说免除贷款，显然违背基本的金融商业合同法理。故A正确。</p>
         </div>
       </div>
 
@@ -159,20 +587,23 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="07_2_1_调频收益计算.html">LEVEL_07 第2.1节：调频收益计算</a></li>
+        <li><a href="07_2_2_现货套利收益.html">LEVEL_07 第2.2节：现货市场套利收益</a></li>
+        <li><a href="07_2_3_容量租赁收益.html">LEVEL_07 第2.3节：容量租赁收益</a></li>
+        <li><a href="07_3_2_LCOE计算.html">LEVEL_07 第3.2节：LCOE计算（储能版）</a></li>
+        <li><a href="07_3_3_IRR与NPV回收期.html">LEVEL_07 第3.3节：IRR/NPV/回收期计算实例</a></li>
       </ul>
     </section>
 
     <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
-      <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">07_2_5</span></p>
+      <p>中国网储系统性学习手册 v3.6 &nbsp;|&nbsp; <span class="file-id">07_2_5</span></p>
     </footer>
 
   </div>
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
