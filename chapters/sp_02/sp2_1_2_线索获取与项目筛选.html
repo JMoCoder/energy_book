@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>线索获取与项目筛选标准 — 项目开发前期 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析线索获取与项目筛选标准的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析电网侧独立储能及配套储能项目前期的线索获取渠道与项目初步筛选标准。详尽分析土地规划红线、变电站间隔与网架接入容量、电网消纳空间以及商业模式与现货收益测算等边界指标体系，构建工程实战中的Go/No-Go决策树与一票否决门禁。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,55 +57,342 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp2_1_2</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>线索获取与项目筛选标准</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">如何在一张图纸、一份规划中淘出真正具备投资价值的网储金矿？本节为您解构项目开发前期的资源初筛、网架核查与刚性决策门禁。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>追踪项目多源线索</strong>：能够系统梳理独立共享储能、配套储能及火储联调的线索来源渠道，掌握追踪省级指标分配的黄金时间窗口。</li>
+        <li><strong>识别土地与物理红线</strong>：掌握国土空间规划“三区三线”基本农田、生态保护红线等刚性约束，学会评估地形坡度与重特大件设备的运输通路。</li>
+        <li><strong>核排查电网接入条件</strong>：深刻理解变电站出线间隔、送出线路经济性、短路电流约束与反向消纳空间对独立储能接入的限制机制。</li>
+        <li><strong>建立Go/No-Go决策模型</strong>：学会使用定量评估模型与一票否决指标体系，在投建前期对储能项目进行多维度财务及政策压力测试，避免盲目跟风。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：一份耗资数百万却成废纸的“备案证”</h2>
+      <p>2025年6月，华中某民营新能源开发公司的项目总监李总神色凝重。就在前一天，省电力公司正式退回了他们申报的“100MW/200MWh独立储能电站接入系统设计报告”。这意味着，该项目在电网接网环节被正式否决。而在过去的三个月里，为了抢占指标，李总的团队已经在当地发改局拿到了项目备案证，与村民签署了地块租赁协议，甚至向设计院支付了首笔测绘勘察费，累计支出已超百万元。</p>
+      <p>问题究竟出在哪里？电网给出的退回意见只有冷冰冰的两条：第一，拟连入的110kV双庙变电站内无可用的出线间隔，且无扩建土地；第二，该变电站上游主变常年处于重载断面限制状态，无反向消纳空间。这意味着，即使该项目强行建起来，也将面临严重的限电断流风险，或者需要自费新建一条长达18公里的高压线路接往另一个变电站，而那条线路高昂的征地和架设成本将直接把项目的全投资收益率拖入负值。</p>
+      <p>这并非个案。在中国网储产业狂飙突进的背景下，许多投资方被“高额容量租赁费”和“现货市场套利”的蓝图所吸引，在项目初期缺乏对土地、网架以及政策收益的系统性筛选，盲目跟风拿备案、圈地，最终在接网或报建审批时撞得头破血流。项目前期开发绝非“只要拿到备案证就能建”，而是一场极度依赖专业边界指标核查的精细战役。本节我们将深入探讨网储项目的“线索获取”与“多维筛选标准”，为您提供一套经过工程实战检验的Go/No-Go决策方法论。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+
+      <!-- 一、网储项目线索的多源渠道与分类获取机制 -->
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、网储项目线索的多源渠道与分类获取机制</h2>
+        <p>在新型电力系统建设的浪潮中，储能项目的线索绝非凭空产生，而是紧密依附于国家能源政策、电网网架规划以及新能源装机增速的。了解项目线索的源头并分类进行追踪，是前期开发的首要任务。</p>
+        
+        <h3>1.1 独立共享储能（电网侧）线索的获取逻辑</h3>
+        <p>电网侧独立储能（通常也称共享储能）是指具备独立法人资格、直接接入输电网并参与电力市场交易的储能系统。这类项目的线索主要来源于以下三个渠道：</p>
+        <ol>
+          <li><strong>省级发改委/能源局的年度建设规划与试点示范清单</strong>：这是最权威的“正规军”线索。例如，山东、宁夏、甘肃等新型储能发展大省，每年都会定期公布《新型储能试点示范项目清单》或《年度新型储能建设指标分配方案》。只有被纳入国家或省级规划库的项目，才能在后续的电网接网审批和并网调度中获得优先支持。</li>
+          <li><strong>新能源消纳压力与刚性配储政策</strong>：中国大多数风电、光伏集中开发的省份均出台了“强制配储能”政策（配置比例通常为装机容量的10%-20%，时长为2-4小时）。新能源开发商（如三峡集团、中广核等）为了降低自身的CAPEX与运维精力，倾向于通过“以租代建”的方式向第三方的独立共享储能电站租赁容量。因此，追踪风光开发指标的公示信息，便能直接顺藤摸瓜锁定容量租赁的市场需求线索。</li>
+          <li><strong>电网变电站的重载告警与调频辅助服务规划</strong>：在一些电网末端或重负荷中心，变电站主变压器常面临过载风险，或当地由于高比例风光接入导致电网频率稳定度变差。电网公司（如国家电网、南方电网）规划部门会提出在特定变电站周边布局储能的设想，以起到“虚拟电厂”或“电网稳定器”的作用。</li>
+        </ol>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：淘金热中的“探矿与选矿”</strong>
+            <p>获取网储项目线索并进行筛选的过程，极像在一场席卷全国的淘金热中淘金：</p>
+            <ul>
+              <li><strong>获取线索（探矿）</strong>：听闻某地发现了金沙的传言（地方政府发布了配储规划），或者得知有大批淘金客急需购买淘金工具（新能源电站急需租赁储能容量）。开发人员需要四处打听，拿到初步的“矿产分布图”（政府示范项目清单）。</li>
+              <li><strong>项目初筛（选矿）</strong>：拿到矿产分布图并不等于能发财。你必须实地考察：金矿所处地块是否属于自然保护区（土地红线核查）？通往矿山的道路是否能开进大型挖掘机（大件运输通路核查）？周边是否有足够的水源和电力用于洗矿（变电站间隔与接入容量核查）？如果这些条件不满足，哪怕该矿点金沙含量再高（政策补贴再丰厚），也只能放弃，否则就是无底洞般的亏损。</li>
+            </ul>
           </div>
         </div>
-      </section>
 
-      <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h3>1.2 配套储能与用户侧储能线索的来源</h3>
+        <p>除了庞大的独立共享储能，配套储能与用户侧/火储联调项目同样是市场的重要组成部分，其线索来源有着不同的利益驱动机制：</p>
+        <ul>
+          <li><strong>新能源场站配套储能线索</strong>：这类线索多为新能源电站自建自用，伴随着风电场或光伏电站的核准一同批复。开发团队主要通过内部协同（若自身是大型发电集团的开发主体）或与风光开发商进行EPC商务对接获取。</li>
+          <li><strong>火电联合调频（火储联调）线索</strong>：我国老旧煤电机组在应对电网频繁的调频指令时，存在响应迟缓（秒级延迟）和调节精度低的缺陷，面临昂贵的“辅助服务考核罚款”。通过在火电厂发电机组母线旁并联建设一套容量约为火电机组容量3%~5%的储能系统，能够利用储能的毫秒级高频响应速度，协助机组拿到丰厚的“双细则”调频补偿金。开发团队需要重点公关老旧火电厂的机组改造规划。</li>
+          <li><strong>用户侧工商业储能线索</strong>：完全由大工业用户的“经济账”驱动。线索获取需要依托大工业企业的用电账单诊断。凡是属于水泥、化工、钢铁、电子芯片等用电量巨大、负荷曲线平稳，且所处省份“峰谷分时电价差”常年大于0.7元/kWh的工业园区和企业，都是优质的用户侧储能线索。</li>
+        </ul>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>储能分类</th>
+                <th>最核心线索源</th>
+                <th>核心驱动要素</th>
+                <th>主要商业决策点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>电网侧独立共享储能</strong></td>
+                <td>发改委规划库、电网示范清单、省调接入规划</td>
+                <td>容量租赁、现货市场套利、电网系统消纳需求</td>
+                <td>变电站间隔物理可用性、容量租赁市场的饱和度</td>
+              </tr>
+              <tr>
+                <td><strong>电源侧配套储能</strong></td>
+                <td>新能源场站核准文件、并网配储硬性要求</td>
+                <td>满足并网政策指标、减少弃电考核</td>
+                <td>全套设备初装CAPEX控制、与发电机组的联合控制协同</td>
+              </tr>
+              <tr>
+                <td><strong>火电联合调频储能</strong></td>
+                <td>火电厂厂内改造规划、电厂辅助服务考核账单</td>
+                <td>赚取电网调频里程补偿、减少两个细则罚款</td>
+                <td>调频补偿电价政策稳定性、火电机组剩余寿命期</td>
+              </tr>
+              <tr>
+                <td><strong>用户侧工商业储能</strong></td>
+                <td>大工业企业电费单、高耗能产业园区用电负荷曲线</td>
+                <td>最大峰谷差价套利、基本电费降容量/需量管理</td>
+                <td>两充两放分时电价区间、企业用电主体持续经营能力</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1.3 追踪政策与指标分配的关键时间窗口</h3>
+        <p>在实际操作中，项目开发人员必须对政策的“时间窗口”具有极强的敏感度。各省能源主管部门通常遵循“一季申报、二季评审、三季下达、四季开工”的行政节奏。如果错过了每年的申报截止日，即使拿到地块，项目也无法列入本年度的并网消纳盘子。因此，开发团队必须建立周级别的省级政策跟踪台账，重点追踪发改委关于“新型储能示范项目申报”的通知，在通知下发后的15-30天黄金窗口期内完成申报材料的编制与递交。</p>
 
         <div class="callout callout-case">
           <span class="callout-icon">🏗️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>实例：湖南省发改委2024年示范项目申报与线索抢占实战</strong>
+            <p>2024年初，湖南省发改委发布《关于做好2024年新型储能试点示范项目申报工作的通知》，明确提出本年度全省新增独立储能并网指标不超过1.5GW，且要求申报项目必须满足“接入变电站已落实、土地性质已初审、具备年底前投产能力”三大硬性条件。某头部储能投资商在政策发布前半个月，便通过非正式渠道预判了这一动向，提前与衡阳、邵阳等地的110kV变电站周边的地主签署了排他性租赁协议，并在指标下发的第一天便完成了所有要件的呈报，最终成功抢占了2个100MW的宝贵试点示范指标。而另一家后知后觉的开发商，在通知下发后才开始找地，因土地报审盖章耗时过长，最终与本年度指标失之交臂。</p>
           </div>
         </div>
+      </section>
+
+      <!-- 二、项目筛选边界指标体系之一：土地与物理边界红线 -->
+      <section>
+        <h2>二、项目筛选边界指标体系之一：土地与物理边界红线</h2>
+        <p>获取线索后，开发团队必须第一时间对项目地块进行物理合规性筛选。在我国当前的国土空间资源管理体制下，土地性质合规是项目能否落地的“一票否决”项。</p>
+        
+        <h3>2.1 国土空间规划“三区三线”刚性红线</h3>
+        <p>我国国土空间规划推行“三区三线”制度。储能电站本质上属于三类工业用地或建设用地，绝对不能随意选择地块。在筛选地块时，开发人员必须将选址坐标输入地理信息系统（GIS）中，与自然资源局的“国土空间规划一图通”进行比对，严禁触碰以下两条红线：</p>
+        <ol>
+          <li><strong>永久基本农田（Permanent Basic Farmland）</strong>：永久基本农田是国家法定的粮食安全底线，实行最严格的“一票否决制”。任何非农建设（包括储能电站集装箱、升压站、办公区等）一律不得占用。即使通过各种渠道拿到了地方的临时同意手续，在国家卫片执法检查（利用卫星遥感监测土地违法利用）时也会被抓取，面临强制拆除和刑事责任。</li>
+          <li><strong>生态保护红线（Ecological Redlines）</strong>：包括自然保护区、国家森林公园、重要水源地、地质遗迹保护区等。储能电站内部充斥着化学电芯，存在潜在的爆燃和化学物质泄漏风险，因此被严格禁止划入生态红线内。即使是连接电站到变电站的输电线路铁塔，在跨越生态红线时也必须取得极其复杂的部级行政许可。</li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>注意：“基本农田”与“一般农用地”的本质区别与转换卡点</strong>
+            <p>在土地核查中，很多初学者容易混淆“基本农田”和“一般农用地”。虽然两者在地面上看起来都是耕地，但“永久基本农田”是绝不可改变性质的钢性红线；而“一般农用地”（如荒草地、旱地、坑塘水面等）在满足国土空间规划调整条件的前提下，可以通过办理“农转用（农用地转为建设用地）”审批手续并补缴足额的耕地占用税及占补平衡指标费用，转化为储能电站可用的建设用地。然而，农转用审批一般由省人民政府甚至国务院授权部门批准，报批周期长达6-9个月，必须在开发进度表中留足充裕的时间弹性，切忌认为“付了租金就能开工”。</p>
+          </div>
+        </div>
+
+        <h3>2.2 林地、草地与土地类别的分类审核</h3>
+        <p>除了农用地，网储项目选址还经常涉及到林地与草地。开发地块若属于林地，需要依据《森林法》向县/市级林业部门申请使用林地审核同意书，并落实“林地定额指标”：</p>
+        <ul>
+          <li><strong>林地级别排查</strong>：林地分为一级（如国防林、名胜古迹林，绝对禁止占用）、二级、三级和四级。储能项目建设只能占用三级及以下的林地。</li>
+          <li><strong>植被恢复费与林木采伐证</strong>：占用林地需按照每平方米数十元至上百元的标准缴纳“森林植被恢复费”，并办理“林木采伐许可证”。若地块上树木茂密，采伐指标批复往往受到年度生态控制指标的限制，可能导致开工时间大幅拖延。</li>
+        </ul>
+
+        <h3>2.3 地形地貌与外部运输条件</h3>
+        <p>地块的物理地形和外部交通，直接决定了项目的土建成本和设备进场的可行性：</p>
+        <ol>
+          <li><strong>地形坡度与地质条件</strong>：储能集装箱舱单体重量大，且液冷系统对平整度要求达到毫米级，以防管道内部出现气堵或受力不均导致防冻液泄漏。因此，拟选地块坡度原则上应小于15度。若坡度过大，必须进行大面积的阶梯状削坡、挡土墙砌筑和打桩基，这将使基础土建成本从普通的5万元/MWh飙升至20万元/MWh以上。此外，必须避开泥石流、滑坡易发区和采空区（特别是山西、矿区周边的沉陷区）。</li>
+          <li><strong>大件运输路径（Logistics Boundaries）</strong>：这是极易被忽略的“隐形杀手”。一个100MW独立储能电站通常需要1台重达60-80吨的110kV三相双绕组升压主变压器，而主流的液冷电池集装箱（如5MWh大舱）总重也高达35-45吨，需要超长超重平板卡车运送。在筛选项目时，开发团队必须亲自沿着主干道至拟选地块进行“大件运输路测”，排查沿途桥梁的承重极限（低于30吨的桥梁无法通过）、限高龙门架（净高需大于4.5米）、道路转弯半径（半径小于15米时超长平板车无法过弯）。</li>
+        </ol>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>Tips：利用“大件运输路排查清单”防范交通卡脖子</strong>
+            <p>在考察地块时，开发经理必须携带拉尺和桥梁荷载记录本。重点关注：① 乡村进场道路上是否有村民自建的过街牌坊或跨街电线，净空高度是否低于4.8米；② 沿途是否有跨越灌溉渠的“空心板桥”或“石拱桥”，必须前往当地交通局查询其设计荷载标准（是否达到公路-I级或公路-II级）；③ 泥泞路段在雨季是否有塌方和打滑风险，若需要EPC方自费加宽加固道路，需在可研评估中列支“交通便道改造专项概算”。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 三、项目筛选边界指标体系之二：电网接入与消纳容量核排查 -->
+      <section>
+        <h2>三、项目筛选边界指标体系之二：电网接入与消纳容量核排查</h2>
+        <p>如果说土地是项目赖以立足的“皮”，那么电网接网就是项目能够吸纳财富的“毛”。“皮之不存，毛将焉附”，在电网侧储能开发中，电网接入条件的排查重要性甚至超过了土地本身。</p>
+        
+        <h3>3.1 接入点选择与送出工程经济性评估</h3>
+        <p>独立储能电站必须将电能输送至周边的电网变电站才能参与市场。接入电压等级通常由储能项目的装机容量（有功功率）大小决定。根据中国国家电网《新型储能并网技术规范》，通常的匹配关系和送出工程造价如下表所示：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>储能装机功率（P）</th>
+                <th>推荐接入电压等级</th>
+                <th>并网接入形式</th>
+                <th>送出工程平均造价（架空/地埋）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>$P < 6\text{ MW}$</td>
+                <td>$10\text{ kV}$</td>
+                <td>专线或分支并入用户侧配网</td>
+                <td>架空约 40-60 万/km，地埋约 100 万/km</td>
+              </tr>
+              <tr>
+                <td>$6\text{ MW} \le P < 50\text{ MW}$</td>
+                <td>$35\text{ kV}$</td>
+                <td>单回专线接入公用变电站 35kV 低压侧</td>
+                <td>架空约 60-90 万/km，地埋约 150 万/km</td>
+              </tr>
+              <tr>
+                <td>$50\text{ MW} \le P < 150\text{ MW}$</td>
+                <td>$110\text{ kV}$</td>
+                <td>单回专线接入 110kV 变电站高压侧</td>
+                <td>架空约 100-150 万/km，地埋约 220-300 万/km</td>
+              </tr>
+              <tr>
+                <td>$P \ge 150\text{ MW}$</td>
+                <td>$220\text{ kV}$（或 $330\text{ kV}$）</td>
+                <td>直连 220kV/330kV 汇集站或枢纽变电站</td>
+                <td>架空约 180-250 万/km，地埋约 350-500 万/km</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>由于送出工程（从储能升压站到电网并网点变电站的输电线路及间隔建设）通常由储能投资商自费建设并无偿移交给电网公司（即“自建自投，移交电网”模式），<strong>送出线路的距离（Distance to Substation）</strong>是决定项目死活的关键经济指标。若一个100MW的储能项目距离变电站达15公里，仅架空输电线路建设费及沿途的占地、砍树、跨越铁路/高速公路补偿费就可能突破3000万元，占到项目总CAPEX的15%以上，导致财务测算直接亮起红灯。</p>
+
+        <h3>3.2 变电站物理间隔与扩建可能性</h3>
+        <p>在确定了目标接入变电站后，开发团队必须派技术人员前往变电站现场并联系当地供电公司规划部，排查变电站内是否有可用的<strong>出线间隔（Feeder Bay）</strong>：</p>
+        <ul>
+          <li><strong>间隔的本质</strong>：变电站内配有断路器、隔离开关、电流/电压互感器等二次保护装置的物理机位。一条高压送出线路必须占用一个出线间隔。</li>
+          <li><strong>扩建可能性评估</strong>：如果变电站内空余间隔为零，必须查看变电站规划图纸，确认站内是否预留了“扩建间隔场地”。如果变电站围墙外无地可扩，或者变电站采用的是极其紧凑、无预留设计的气体绝缘金属封闭开关设备（Gas Insulated Switchgear，GIS），则意味着项目无法并网。如果允许扩建，开发商需自费承担扩建间隔的全部设备费用（110kV间隔通常需150-250万元，220kV间隔需350-500万元）。</li>
+        </ul>
+
+        <h3>3.3 电网消纳空间与短路电流约束</h3>
+        <p>随着大量新能源和储能并网，电力系统正面临两个深层次的技术瓶颈，这也构成了项目筛选的隐形门禁：</p>
+        <ol>
+          <li><strong>短路电流超标限制（Short-circuit Current Limitation）</strong>：当电网发生短路故障时，并网的所有发电机和储能逆变器都会向故障点瞬间输出电流，以维持电压。每个变电站的断路器都有额定的最大短路电流开断能力（通常为40kA或50kA）。如果该区域内火电、新能源和储能密集，导致变电站计算出的最大短路电流接近或超出断路器设计极限，电网为了系统安全，会实施“接入锁死”，直接一票否决新项目的接网申请，除非投资方掏出巨资更换变电站的所有断路器及相关变电设备。</li>
+          <li><strong>变电站主变压器反向消纳空间与断面限制（Upstream Transformer Saturation & Congestion）</strong>：独立储能在现货放电时，电能会先注入变电站。如果变电站下接的本地区负荷极小，这股庞大的放电功率就必须通过变电站的主变压器“向上升压”反送到上级高压环网中（即反向送电）。电网调度部门通常规定，变电站反向送电的总功率不得超过主变压器额定容量的30%~50%。如果该变电站已经接了大量分布式光伏和风电，主变反向消纳空间已经被占满，那么储能电站在放电时就会面临严厉的“弃电调度限制”（即限电考核，Curtailment），导致原本规划的一天两充两放，实际只能放出一半的电，经济收益暴跌。</li>
+        </ol>
+
+        <div class="key-concept">
+          <h4>📌 核心公式：电网接网经济性指数（Grid Interconnection Feasibility Index，GIFI）</h4>
+          <p>在项目筛选前期，为了对多个线索地块的接网成本进行快速横向比选，工程开发上常用“接网经济性指数（GIFI）”进行定量评估：</p>
+          $$GIFI = \frac{P_{\text{capacity}}}{L_{\text{distance}} \times C_{\text{line}} + N_{\text{bays}} \times C_{\text{bay}}}$$
+          <p>其中：</p>
+          <ul>
+            <li>$P_{\text{capacity}}$ 表示储能站的设计装机功率，单位为兆瓦（MW）；</li>
+            <li>$L_{\text{distance}}$ 表示从储能升压站到并网点变电站的输电线路路径长度，单位为千米（km）；</li>
+            <li>$C_{\text{line}}$ 表示该电压等级下，单千米送出线路的平均综合建造成本，单位为万元/km；</li>
+            <li>$N_{\text{bays}}$ 表示项目需要占用或扩建的变电站出线间隔数量，通常为 1（单回线并网）；</li>
+            <li>$C_{\text{bay}}$ 表示目标变电站内单个出线间隔的建设或改造扩建成本，单位为万元。</li>
+          </ul>
+          <p><strong>指标判定基准与工程决策导向</strong>：</p>
+          <ul>
+            <li>当 $\text{GIFI} \ge 0.5\text{ MW/万元}$ 时：说明接网工程造价低、性价比高，属于优质项目线索（Go）；</li>
+            <li>当 $0.2 \le \text{GIFI} < 0.5\text{ MW/万元}$ 时：说明送出成本偏高，需进行细致的现场踏勘与线路路由优化，谨慎推进可研测算；</li>
+            <li>当 $\text{GIFI} < 0.2\text{ MW/万元}$ 时：意味着每兆瓦装机所需要承担的送出成本过于昂贵。除非有极高额的省财政一次性并网补贴，否则该项目应果断判定为“No-Go”，直接予以筛除。</li>
+          </ul>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：短路电流超标的深层机理与柔性并网技术</strong>
+            <p>储能系统采用基于电力电子器件的储能变流器（PCS）与电网相连。相比于传统拥有巨大旋转金属惯性的火电机组（其短路电流贡献可达额定电流的5-7倍），逆变器PCS通过软件控制算法限流，其输出的短路电流量一般被限制在额定电流的1.1-1.5倍。尽管如此，当百兆瓦级的独立储能电站并网时，在交流侧瞬态故障发生后的前几个周波内，依然会贡献可观的短路冲击电流。目前，电科院规划研究人员正在积极推广构网型储能（Grid-forming Energy Storage）和虚拟同步发电机（VSG）控制技术，试图通过智能阻抗调节算法，在提供系统所需电压支撑的同时，压低瞬态短路电流峰值，从而为短路电流接近饱和的枢纽变电站提供新型并网解决方案。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 四、项目筛选边界指标体系之三：商业模式、收益边界与 Go/No-Go 决策树 -->
+      <section>
+        <h2>四、项目筛选边界指标体系之三：商业模式、收益边界与 Go/No-Go 决策树</h2>
+        <p>通过了土地红线和接网条件的物理筛选后，项目能否最终立项，最终还要回归到商业模式的闭环和经济收益的底线上。这就需要开发团队构建严谨的Go/No-Go决策模型。</p>
+        
+        <h3>4.1 商业模式可行性初筛</h3>
+        <p>中国电网侧独立储能目前形成了“容量租赁 + 现货市场套利 + 辅助服务”的三重收益架构。在筛选项目时，必须对这三大收益的保障度进行全面扫描：</p>
+        <ol>
+          <li><strong>容量租赁市场饱和度（Capacity Leasing Market）</strong>：这是项目最稳定的“现金流压舱石”。开发团队需要核实目标省份的新能源配储政策是否属于“强配”且“允许共享租赁”；同时，调研周边30公里范围内在建和已核准的风电、光伏电站总容量。如果周边新能源配储需求仅有100MW，而本地区已备案并在建的独立储能电站总规模已达500MW，意味着租赁市场严重供过于求，租赁价格将发生恶性踩踏（如从120元/kW·年跌至30元/kW·年），项目第一还款来源直接崩溃。</li>
+          <li><strong>辅助服务获取概率（Ancillary Services）</strong>：考察该省是否拥有成熟的一次调频、二次调频（AGC）或黑启动辅助服务市场，以及储能参与这些服务的频次和补偿单价。以华中电力市场为例，独立储能参与一次调频可以按调频里程获得补偿，这是非常可观的超额收益源。</li>
+        </ol>
+
+        <h3>4.2 电价政策与套利天花板核算</h3>
+        <p>现货套利空间完全取决于该省**电力现货市场（Electricity Spot Market）**的波动性：</p>
+        <ul>
+          <li><strong>峰谷电价差初筛线</strong>：根据液冷磷酸铁锂系统85%的系统效率（RTE），若要实现基础的充放电套利保本，日前现货市场的平均峰谷电价差必须常年维持在 0.5 元/kWh 以上（若考虑资金利息与电池折旧，则需大于 0.65 元/kWh）。开发商应调取目标省份近两年的电力交易日前与实时现货结算电价曲线，核算剔除节假日后的有效平均电价差。</li>
+          <li><strong>循环次数的调度保障</strong>：现货套利必须依赖实际运行。必须查阅省电网调度规程，确认独立储能是否享有“每日至少一充一放”或“两充两放”的调度权利。如果调度部门因为输电断面限制，在电价谷期限制储能充电，或在峰期限制放电，即使理论价差再高，无法完成循环也无法变现。</li>
+        </ul>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实例：山西现货市场“两充两放”与高频调频收益实测</strong>
+            <p>山西省是我国煤电与新能源双高渗透的典型省份，其电力现货市场波动极大。2025年，某大唐集团建设的100MW/200MWh独立储能电站投运。该电站接入220kV变电站，凭借优秀的接入网架，在日前交易中实现了“两充两放”：中午利用光伏大发、现货电价触底（均价约0.08元/kWh）时完成第一次充电，傍晚用电高峰电价拉升至0.85元/kWh时放电；凌晨利用风电出力高峰（电价约0.15元/kWh）完成第二次充电，早晨8点用电早高峰电价升至0.78元/kWh时放电。AC-to-AC效率稳定在86.5%。该电站不仅依靠峰谷套利日均收益超7.8万元，还因具备高精度构网型PCS，参与了华北调频辅助服务，额外获得了年化约400万元的调频补偿。综合测算下，项目资本金内部收益率（Equity IRR）达到了9.4%，成为省内的标杆示范项目。</p>
+          </div>
+        </div>
+
+        <h3>4.3 决策树模型与一票否决（No-Go）红线清单</h3>
+        <p>为了让前期的项目筛选工作规范化，避免人为拍脑袋决策，投资企业通常采用如下的“四级Go/No-Go决策树”模型。只有四个关卡全部点亮“绿灯”，项目方可获得集团立项预算：</p>
+
+        <figure class="svg-figure">
+          <svg width="100%" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#FAFAFA" rx="10" stroke="#CBD5E0" stroke-width="1"/>
+            
+            <!-- 关卡1：政策与合规 -->
+            <rect x="20" y="30" width="150" height="50" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="5"/>
+            <text x="95" y="52" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#1A5F96" text-anchor="middle">第一关：规划与政策</text>
+            <text x="95" y="70" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#4A5568" text-anchor="middle">省规划/示范项目库</text>
+
+            <!-- 关卡2：土地红线 -->
+            <rect x="220" y="30" width="150" height="50" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="5"/>
+            <text x="295" y="52" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#1A5F96" text-anchor="middle">第二关：土地红线</text>
+            <text x="295" y="70" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#4A5568" text-anchor="middle">非基本农田/非生态红线</text>
+
+            <!-- 关卡3：接入容量 -->
+            <rect x="420" y="30" width="150" height="50" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="5"/>
+            <text x="495" y="52" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#1A5F96" text-anchor="middle">第三关：变电站接入</text>
+            <text x="495" y="70" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#4A5568" text-anchor="middle">有空余间隔/可扩建场地</text>
+
+            <!-- 关卡4：经济收益 -->
+            <rect x="620" y="30" width="150" height="50" fill="#E8F2FF" stroke="#1A5F96" stroke-width="1.5" rx="5"/>
+            <text x="695" y="52" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#1A5F96" text-anchor="middle">第四关：财务闭环</text>
+            <text x="695" y="70" font-family="Noto Sans SC, sans-serif" font-size="10" fill="#4A5568" text-anchor="middle">资本金 IRR ≥ 8% (国企)</text>
+
+            <!-- 否决路径 (红线) -->
+            <path d="M 95 80 L 95 160 L 320 160" stroke="#F57C00" stroke-width="1.5" fill="none" stroke-dasharray="2 2" marker-end="url(#arrow-gray)"/>
+            <path d="M 295 80 L 295 160 L 320 160" stroke="#F57C00" stroke-width="1.5" fill="none" stroke-dasharray="2 2" marker-end="url(#arrow-gray)"/>
+            <path d="M 495 80 L 495 160 L 320 160" stroke="#F57C00" stroke-width="1.5" fill="none" stroke-dasharray="2 2" marker-end="url(#arrow-gray)"/>
+            <path d="M 695 80 L 695 160 L 480 160" stroke="#F57C00" stroke-width="1.5" fill="none" stroke-dasharray="2 2" marker-end="url(#arrow-gray)"/>
+
+            <rect x="330" y="135" width="140" height="50" fill="#FFF3E0" stroke="#F57C00" stroke-width="1.5" rx="5"/>
+            <text x="400" y="157" font-family="Noto Sans SC, sans-serif" font-size="13" font-weight="700" fill="#F57C00" text-anchor="middle">一票否决：No-Go</text>
+            <text x="400" y="174" font-family="Noto Sans SC, sans-serif" font-size="9" fill="#4A5568" text-anchor="middle">项目终止/筛除</text>
+
+            <!-- 成功路径 -->
+            <path d="M 170 55 L 220 55" stroke="#2E7D32" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+            <path d="M 370 55 L 420 55" stroke="#2E7D32" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+            <path d="M 570 55 L 620 55" stroke="#2E7D32" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+            <path d="M 770 55 L 790 55 L 790 230 L 400 230 L 400 238" stroke="#2E7D32" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+            <rect x="330" y="240" width="140" height="32" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5" rx="5"/>
+            <text x="400" y="260" font-family="Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#2E7D32" text-anchor="middle">立项通过：Go</text>
+            
+            <text x="180" y="47" font-family="Noto Sans SC, sans-serif" font-size="9" fill="#2E7D32" text-anchor="middle">已纳入</text>
+            <text x="385" y="47" font-family="Noto Sans SC, sans-serif" font-size="9" fill="#2E7D32" text-anchor="middle">符合</text>
+            <text x="585" y="47" font-family="Noto Sans SC, sans-serif" font-size="9" fill="#2E7D32" text-anchor="middle">物理可用</text>
+          </svg>
+          <figcaption>图2：独立储能项目开发前期四级筛选 Go / No-Go 决策树模型</figcaption>
+        </figure>
+
+        <p>在工程实践中，开发团队应当将以下<strong>“一票否决（No-Go）硬红线”</strong>牢记于心，一旦触碰，应立即停止推进项目，以防前期开发资金的无效耗费：</p>
+        <ol>
+          <li><strong>土地刚性违规</strong>：选址占用永久基本农田或生态保护红线，且地方规划局明确表示无法调出“永久基本农田规划盘子”。</li>
+          <li><strong>接网物理断绝</strong>：拟接入的变电站内无可用的出线间隔，且电网公司规划明确由于周边围墙限制或电力排规划限制，不允许进行任何间隔扩建。或者，周边15公里内无任何可用的变电站接网点。</li>
+          <li><strong>电网断面严重限电</strong>：目标变电站上游220kV或110kV主变长期重载（反向容量使用率已达100%），且省调明确表态该区域储能放电的年限电率（Curtailment Rate）将超过30%。</li>
+          <li><strong>收益模式彻底缺失</strong>：所在省份发改委未出台独立储能参与电力现货市场交易的相关实施细则，且省内无任何新能源强制配储指标政策（意味着容量无法出租，现货无法套利，项目零收益）。</li>
+          <li><strong>财务收益穿底</strong>：在针对该省历史现货电价进行最悲观情景压力测试下（如容量出租率仅为50%，现货峰谷电价差收窄20%），项目全投资税后内部收益率（Project IRR）低于4.5%，无法覆盖商业银行贷款的本息偿还要求。</li>
+        </ol>
       </section>
     </main>
 
@@ -113,9 +400,10 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>线索分类获取</strong>：项目线索依附于省级示范规划、风光强配配额及火电厂调频考核，开发人员必须紧盯每年一季度的省级储能示范项目申报窗口，抢占指标。</li>
+        <li><strong>土地物理筛选是底线</strong>：永久基本农田与生态保护红线是一票否决的硬红线，绝对不可触碰。坡度大于15度或外部大件运输通道限重、限宽不足将导致CAPEX大幅飙升。</li>
+        <li><strong>接网间隔与容量是生命线</strong>：送出线路的距离直接决定了外线工程造价。变电站无可空余间隔且无法扩建、或者变电站上游断面过负荷及短路电流超标，都会直接在接网环节宣告项目“夭折”。</li>
+        <li><strong>构建刚性Go/No-Go决策树</strong>：依靠“接网经济性指数（GIFI）”和“资本金/全投资IRR”等定量指标对项目进行压力测试，坚决执行一票否决红线清单，保障投资安全。</li>
       </ul>
     </section>
 
@@ -125,16 +413,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在网储项目地块的物理和土地边界初筛中，以下关于土地性质的表述哪一项是完全正确的？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 永久基本农田如果处于荒废无种植状态，在补缴森林植被恢复费后可以用于储能站土建</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 生态保护红线区域内的林地，只需经地方县林业局批准并交纳耕地占用税即可开工</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 一般农用地在符合国土空间规划调整的前提下，需通过办理“农转用”审批方可用于建设</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 只要取得了市发改局的企业投资项目备案证明，地块的国土“三区三线”红线即自动失效</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项C表述完全正确。一般农用地（如一般耕地、林地、草地等）并不属于无法占用的“永久基本农田”，在满足当地规划调整的前提下，可以通过办理农用地转用（农转用）报批手续，将其合法转为储能建设用地。而选项A中“永久基本农田”属于国家红线，无论是否荒废都绝不能占用；选项B中“生态保护红线”实行极其严格的限制进入政策，不可能仅凭县林业局和税费缴纳就允许建设高危储能设施；选项D中发改备案证只是项目的准入起点，绝不具备免除或废除自然资源部门“三区三线”国土空间规划硬约束的效力。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 某100MW/200MWh的独立共享储能电站拟接入周边的变电站。在排查接网条件时，以下哪一种情况不会导致电网公司直接否决接入或项目被投资方判定为No-Go？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 目标变电站为气体绝缘封闭（GIS）设计，且站内及周边无空余间隔或间隔扩建空间</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 变电站上游主网断面的短路电流分析值已经达到断路器的额定断开极限值</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 送出线路距离长达 3 公里，且全部采用架空线路在平原区敷设送出</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 变电站上游主变反向送电容量已被完全占满，且调度明确年限电率将达 30% 以上</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项C是正确选项，因为它不会导致项目被否决。平原地区3公里的架空送出线路建造成本约为300万-450万元，对于投资额达数亿元的100MW储能项目而言，这是一项非常合理的送出工程概算，接网经济性指数GIFI良好，属于典型的“Go”项目。而选项A无可空间隔且无法扩建，在物理上彻底阻断了接入可能；选项B短路电流超标属于电力系统刚性技术安全红线，电网将直接关闭新接入窗口；选项D限电率超30%意味着电站充放电循环受到严重限制，无法完成正常的现货套利循环，将直接导致财务模型崩溃，属于No-Go红线。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 关于接网经济性指数（GIFI）在项目筛选中的应用，以下说法错误的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. GIFI 的分子是储能的设计装机功率，分母则是输电线路造价与间隔造价之和</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 当 GIFI 指数小于 0.2 MW/万元时，项目的外线送出成本占装机容量的比例偏高</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 若接入变电站无可空余间隔，必须扩建 1 个 220kV 间隔，则分母中的间隔成本会大幅增加</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 该指数越高，说明单位装机容量所承担的接网投资越昂贵，项目经济可行性越差</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：选项D说法错误，符合题意。接网经济性指数GIFI的定义是装机功率与送出投资总额的比率。公式为：$\text{GIFI} = P / (L \times C_{\text{line}} + N \times C_{\text{bay}})$。因此，指数的值越高，分母（投资额）相对于分子（装机容量）就越小，表示单位装机容量分摊的接网投资越便宜，项目的接网性价比和经济可行性越好，而不是越差。选项A正确描述了分子分母构成；选项B指出GIFI低于0.2说明造价偏高，符合判定基准；选项C扩建220kV高压间隔由于设备昂贵（350万-500万），会直接拉高分母，符合公式逻辑。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 从大件运输路测和地形地貌筛选的角度看，以下哪一项被视为储能电站地块初筛时的严重隐患？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 地块整体坡度为 5 度，需要进行常规的平整场地和排水沟建设</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 乡村进场通路上有一座混凝土桥梁，其设计荷载等级为公路-I级</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 进场道路宽度为 6.5 米，沿途弯道半径最大处达到了 30 米</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 地块位于采空区沉陷带边缘，且进场道路上有一座老旧限重 10 吨的石拱桥</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：D</strong></p>
+          <p>📖 <strong>解析</strong>：选项D描述的情况包含严重工程隐患。储能集装箱单体重量常达35-45吨，主升压变压器常超50吨。进场道路上老旧石拱桥限重10吨，属于严重的物理阻断障碍，平板货车根本无法通行，除非投资方重新建桥或修便道，大幅增加投资。此外，采空区沉陷带地基极不稳定，容易发生电池仓基础开裂、电线弯曲拉断甚至箱体倾覆风险，是极其危险的地质隐患。而选项A坡度5度非常平缓；选项B公路-I级是国家标准重载道路；选项C宽度6.5米、弯道半径30米非常宽敞，超长平板货车可轻松通行。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 关于独立共享储能电站容量租赁与收益的筛选，以下关于商业模式闭环的说法错误的是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 容量租赁费是目前项目稳定回收初装 CAPEX 的核心压舱石</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 即使周边有大量风光配储指标，若本省允许新能源企业免除配储考核，则租赁需求可能挂空</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 如果本省没有推出电力现货市场，仅靠调频辅助服务也能轻松实现 15% 以上的项目资本金 IRR</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 租赁市场的供需饱和度调查，应当覆盖周边 30 公里内所有已备案在建的独立储能电站规模</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项C表述错误，符合题意。独立储能项目的投资额巨大，在缺乏电力现货峰谷套利市场的情况下，单纯依靠调频辅助服务（其收入具有高度不确定性和政策变动风险）很难支撑项目庞大的还本付息需求，更不可能实现“15%以上”的项目资本金IRR。事实上，在无现货和强配租赁支撑的省份，储能项目多面临亏损，无法实现商业闭环。选项A正确，租赁费收入通常是稳定的合同收入，是银行项目贷款审批的第一还款来源；选项B正确，若配储考核不严，新能源厂站为了省钱将拒绝租赁；选项D正确，开发团队必须进行详尽的供需饱和度核排查，规避恶性价格战。</p>
         </div>
       </div>
 
@@ -159,7 +507,10 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="sp2_1_1_全流程总览.html">→ sp2_1_1 全流程总览：八大阶段与关键决策节点</a>（了解前期开发在线索获取之后所处的全流程阶段定位）</li>
+        <li><a href="sp2_1_3_可行性论证.html">→ sp2_1_3 可行性论证：技术经济一体化分析</a>（深入学习筛选出线索后，如何编制详细可研并开展敏感性计算）</li>
+        <li><a href="sp2_1_4_备案与核准.html">→ sp2_1_4 备案与核准：各省审批流程详解</a>（学习如何办理发改备案及向省电力公司呈报接网申请的工程实务）</li>
+        <li><a href="sp2_2_4_典型项目全流程复盘.html">→ sp2_2_4 典型案例：某100MW独立储能项目全流程复盘</a>（对照一个真实网储项目的投建时间轴，复盘前期筛选与后期运营的偏差）</li>
       </ul>
     </section>
 
