@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>现货套利实战：报价策略·价格预测·执行偏差 — 储能参与市场与套利策略 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析现货套利实战：报价策略·价格预测·执行偏差的核心物理原理、工程应用与实战案例。">
+  <title>现货套利实战：报价策略·价格预测·执行偏差 — 储能参与 market 与套利策略 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电力现货市场下独立储能电站的套利实战策略，涵盖节点边际电价（LMP）出清机理、日前与实时价格预测算法、阶梯报价曲线（P-Q曲线）设计、日前-实时双结算机制下的执行偏差计算与偏差规避优化方案。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -57,53 +57,317 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp3_2_2</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约40分钟</span>
+        <span class="difficulty">🔴 专家</span>
       </div>
       <h1>现货套利实战：报价策略·价格预测·执行偏差</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">现货套利是独立储能的终极博弈。如何利用价格预测与精细化报价曲线，在波诡云谲的实时市场中斩获高额收益，并妥善应对“执行偏差”带来的惩罚？本节将为您拆解全套实战策略。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>掌握现货套利机理</strong>：理解从传统“分时电价固定套利”到现货市场“基于节点边际电价（LMP）动态套利”的本质跨越。</li>
+        <li><strong>建立价格预测知识体系</strong>：掌握日前与实时价格预测的核心输入变量、算法框架，以及预测误差对收益的传递路径。</li>
+        <li><strong>熟练设计现货报价策略</strong>：理解“报量不报价”与“报量报价”的区别，掌握基于电池寿命衰减成本与机会成本构建报价曲线的方法。</li>
+        <li><strong>深度剖析执行偏差与双结算机制</strong>：掌握日前出清、实时偏差结算的双轨结算逻辑，明晰考核电量与不平衡资金的分摊机制。</li>
+        <li><strong>掌握偏差规避与滚动优化实战技能</strong>：学习如何通过实时SOC闭环反馈、日内滚动申报及温控功率协同，降低执行偏差带来的经济损失。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：谁偷走了独立储能电站的套利利润？</h2>
+      <p>2024年8月的一个炎热下午，中国北方某省电力现货交易大厅内，某100兆瓦/200兆瓦时（MW/MWh）独立储能电站的交易团队正盯着屏幕上的出清数据。日前现货市场中，他们根据价格预测模型，在18:00至19:00这一用电高峰时段，以800元/兆瓦时（MWh）的价格出清了100兆瓦（MW）的放电计划。这意味着，只要按计划放电，他们就能在这一小时内大体锁定8万元的电费电能收益。</p>
+      <p>然而，次日实时运行阶段，突发状况打破了平静：由于局地强对流天气导致该区域光伏出力骤降，而电网侧某关键输电通道发生突发性热过载，调度系统紧急调用了该电站的AGC（自动发电控制）指令。同时，储能电站集装箱内部由于高负荷连续充放电积热严重，液冷机组温控保护触发，导致PCS（储能变流器）被迫自动降容运行。最终，电站在该时段实际仅放出了40兆瓦时的电量，产生了高达60兆瓦时的“负执行偏差”。</p>
+      <p>更糟糕的是，此时实时市场价格因为供需紧张已经飙升至1,200元/兆瓦时。根据日前-实时双结算机制，该电站不仅无法拿到全额日前收益，反而必须在实时市场以1,200元/兆瓦时的高昂价格，强行“买回”这笔高达60兆瓦时的未履约缺额。仅这一个小时的执行偏差，就让电站直接损失了数万元。这残酷的交易场景揭示了现货套利的实战真谛：在电力现货市场中，没有躺赚的差价，只有在报价策略、价格预测与偏差控制之间如履薄冰的系统性博弈。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、电力现货市场与储能套利机理：从分时电价到实时波动的跨越</h2>
+        <p>传统储能电站的盈利模式高度依赖各省发改委定期发布的政府指导“分时电价”（Time-of-Use Price，TOU）。在这种机制下，每天的峰谷时段和电价差是完全固定、静态的，电站只需按照既定的时间表，在深夜低谷期充电、白天高峰期放电即可。这就像是按照固定的公共汽车时刻表出行，虽然安全，但上限极低，且无法响应电力系统的实时供需紧缺。电力现货市场（Electricity Spot Market）的引入，彻底重塑了电能的价值发现机制。</p>
+        <p>电力现货市场通常由日前市场（Day-Ahead Market）和实时市场（Real-Time Market）组成。在现货市场中，电价不再是平坦的台阶，而是每15分钟甚至每5分钟波动一次的动态曲线。这种高频波动的背后，是由全网物理拓扑结构和发用电供需平衡决定的“节点边际电价”（Locational Marginal Pricing，LMP）。</p>
+        
+        <div class="key-concept">
+          <h4>📌 核心概念：节点边际电价（LMP）</h4>
+          <p>节点边际电价是指在系统当前运行状态下，在某一特定电网节点上增加单位负荷（如1 MWh）所引起的系统最小发电总成本的变化量。其数学表达式为：</p>
+          $$LMP_i = P_{\text{energy}} + P_{\text{congestion}, i} + P_{\text{loss}, i}$$
+          <p>其中， 各项物理意义与工程价值如下：</p>
+          <ul>
+            <li><strong>系统电能价格（$P_{\text{energy}}$）</strong>：代表在无输电阻塞和线损状态下，系统为满足新增单位负荷所需支付的边际发电机组报价。全网各节点的这一数值在同一时刻是完全相同的。</li>
+            <li><strong>阻塞价格（$P_{\text{congestion}, i}$）</strong>：反映了由于输电线路容量极限限制，低成本电力无法输送到该节点，从而不得不调用本地高成本机组来平衡负荷而产生的额外边际成本。这是不同节点电价产生剧烈差异（空间价差）的根本原因。</li>
+            <li><strong>线损价格（$P_{\text{loss}, i}$）</strong>：反映了在该节点增加负荷引起的全网传输线损变化对发电机组运行总成本的影响。</li>
+          </ul>
+        </div>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：机票价格的动态变动与机场拥堵费</strong>
+            <p>想象你想买一张从A城飞往B城的机票。在平时淡季，航空公司统一按标准舱位价格售票——这对应“系统电能价格”。但如果B城恰逢举办大型国际会议，飞往B城的空域发生严重流量控制（阻塞），机场跑道无法降落更多飞机，航空公司只能改用更昂贵的小型客机或从外地调配发电机组顶替——这增加的成本就是“阻塞价格”。对于旅客而言，去往不同目的地的机票价格瞬息万变，且各航线价差悬殊。储能电站在节点网络中的充放电，就像是在这套动态机票系统里当“黄牛”，利用不同终点站的拥堵电价差来倒买倒卖电量。</p>
+          </div>
+        </div>
+
+        <p>现货套利的机理正是建立在时间与空间双重维度的动态波荡之上。随着以光伏和风电为代表的波动性可再生能源装机规模爆发式增长，现货市场呈现出更加剧烈的“负电价（Negative Electricity Price）”和“鸭子曲线（Duck Curve）”特征。独立储能电站通过在日前或实时市场中申报报价，在极低或负电价区间充电，在系统极度紧缺的高电价区间放电，从而获取高额的现货价差收益。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实例：山东电力现货市场的“负电价狂欢”与“鸭子曲线”</strong>
+            <p>作为中国首批电力现货试点省份，山东省拥有规模庞大的分布式光伏装机。在春季或秋季的晴朗中午，分布式光伏大发导致电网净负荷急剧下探，系统供大于求。为引导发电侧减出力、鼓励用户侧多消纳，山东日前现货市场曾多次出现连续十几个小时甚至二十几小时的负电价，最低出清价格触及日前现货市场价格下限（-80元/MWh）。在此期间，独立储能电站充电不仅不需要支付电费，还能因为协助系统消纳新能源而获得每度电约8分钱的“消纳红利”。随后在晚高峰（18:00-21:00）光伏退坡、负荷上升时，电价回弹至600-800元/MWh，储能电站满功率放电。通过这种“反向套利”，储能电站单日毛价差空间可超过800元/MWh（即每度电0.8元价差），经济效益显著。</p>
+          </div>
+        </div>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 350" width="100%" height="300" style="background-color: #fafafa; border-radius: 8px;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+            </defs>
+            <text x="400" y="30" text-anchor="middle" font-weight="bold" font-size="16" fill="#1A1A2E">图1：输电断面阻塞与节点边际电价（LMP）分布原理</text>
+            
+            <!-- Send Node A -->
+            <rect x="120" y="100" width="180" height="90" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="210" y="125" text-anchor="middle" font-weight="bold" font-size="14" fill="#1A5F96">送端节点 A (富余电源区)</text>
+            <text x="210" y="150" text-anchor="middle" font-size="12" fill="#4A5568">风光发电大发，外送通道受阻</text>
+            <text x="210" y="175" text-anchor="middle" font-weight="bold" font-size="14" fill="#F57C00">LMP: 80 元/MWh</text>
+            
+            <!-- Receive Node B -->
+            <rect x="500" y="100" width="180" height="90" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="590" y="125" text-anchor="middle" font-weight="bold" font-size="14" fill="#F57C00">受端节点 B (负荷中心区)</text>
+            <text x="590" y="150" text-anchor="middle" font-size="12" fill="#4A5568">本地负荷高企，必须启动高成本电源</text>
+            <text x="590" y="175" text-anchor="middle" font-weight="bold" font-size="14" fill="#1A5F96">LMP: 680 元/MWh</text>
+            
+            <!-- Transmission Line with Congestion Symbol -->
+            <line x1="300" y1="145" x2="500" y2="145" stroke="#4A5568" stroke-width="4" stroke-dasharray="8 4"/>
+            <path d="M 390,145 L 410,130 L 410,160 Z" fill="#F57C00" />
+            <text x="400" y="90" text-anchor="middle" font-size="12" fill="#E53E3E" font-weight="bold">⚠️ 输电断面发生物理阻塞 (限额 200MW)</text>
+            <text x="400" y="180" text-anchor="middle" font-size="12" fill="#4A5568">低成本新能源无法自由跨区输送</text>
+            
+            <!-- Storage Station Node A -->
+            <rect x="110" y="230" width="200" height="50" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1"/>
+            <text x="210" y="250" text-anchor="middle" font-size="12" fill="#2E7D32">储能电站A：可在低价区充电</text>
+            <text x="210" y="270" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E7D32">享受低迷的网侧充电电价</text>
+
+            <!-- Storage Station Node B -->
+            <rect x="490" y="230" width="200" height="50" rx="4" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1"/>
+            <text x="590" y="250" text-anchor="middle" font-size="12" fill="#2E7D32">储能电站B：可在高价区放电</text>
+            <text x="590" y="270" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E7D32">高昂出清价放大放电毛利</text>
+          </svg>
+          <figcaption>图1：电网物理阻塞导致空间节点边际电价（LMP）剧烈分化及储能电站差异化套利</figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>二、电力现货价格预测技术与方法：寻找波动的“气象预报”</h2>
+        <p>在现货套利中，如果没有高精度的价格预测，储能交易团队的每一次报价都无异于盲人摸象。价格预测系统是储能智能管理的核心中枢，能够预先判定未来电价的谷值、峰值及其出现的时间窗口，从而合理分配电池有限的循环次数。</p>
+        
+        <h3>2.1 日前预测与实时滚动预测的定位差异</h3>
+        <p>现货价格预测通常在两个主要时间尺度上展开。<strong>日前价格预测（Day-Ahead Price Forecasting）</strong>需要预测未来运行日前一天（通常为T-1日）的24小时（共96个15分钟时段）的价格曲线。日前预测的精度直接决定了次日大宗电量的日前出清结果。而<strong>实时价格预测（Real-Time Price Forecasting）</strong>则通常采用滚动优化的方式，在运行日当天以15分钟或5分钟为周期，滚动预测未来2小时内的电价。实时预测能够及时反映云量突变、风力骤减、线路突发故障等日内突发性外部变化，指导交易员及时调整实时运行姿态。</p>
+
+        <h3>2.2 价格预测系统的核心输入数据流</h3>
+        <p>电力价格的波动性由复杂的物理电网运行边界所决定，因此预测模型的输入变量具有极高维度，主要包括以下三类：</p>
+        <ul>
+          <li><strong>高精度气象数据（Numerical Weather Prediction，NWP）</strong>：光照辐射度、环境温度、局地风速和降水概率。其中温度直接决定了居民制冷/采暖负荷的强弱，光照和风速则直接主导着光伏与风电的发电曲线。</li>
+          <li><strong>电网边界条件与检修计划</strong>：全网总负荷日前预测值、新能源日前出力预测、火电机组的开机和停检计划、变电站关键输电断面的通道剩余限额等物理约束。</li>
+          <li><strong>市场交易与历史关联指标</strong>：秦皇岛港5500大卡动力煤指数、天然气现货供给价等一次能源燃料成本数据；以及历史同期、上周同期的出清价，用以捕捉市场各交易主体的心理博弈特征。</li>
+        </ul>
+
+        <h3>2.3 主流价格预测算法框架与精度衡量</h3>
+        <p>目前业界的价格预测算法分为三代：第一代是基于经典统计学的多元线性回归、时间序列分析（如ARIMA、GARCH）模型，这类模型对平稳价格区间的拟合效果好，但对价格尖峰（Price Spike）无能为力；第二代是基于机器学习的模型（如XGBoost、LightGBM、随机森林），由于能高效处理高维的非线性特征，目前已成为日前现货预测的主力；第三代则是基于深度神经网络（如长短期记忆网络 LSTM、Transformer 架构），能够挖掘多节点间长期的时序依赖关系。</p>
+        <p>在模型精度的量化衡量中，若电网中出现了逼近于零甚至为负的极低出清电价，传统的平均绝对百分比误差（MAPE）公式会因为分母为零或极小而产生数学上的数值发散，导致指标失效。因此，在储能现货实战中，评估团队必须统一采用<strong>加权平均绝对百分比误差（Weighted Mean Absolute Percentage Error，WMAPE）</strong>来科学评判价格预测的精度：</p>
+        $$WMAPE = \frac{\sum_{t=1}^{n}|P_{\text{actual}, t} - P_{\text{forecast}, t}|}{\sum_{t=1}^{n}P_{\text{actual}, t}}$$
+        <p>公式中，$P_{\text{actual}, t}$ 为实时实际发生的出清价格，$P_{\text{forecast}, t}$ 为模型预测价格。WMAPE 通过以全天实际出清电价的总和作为分母进行加权归一化，物理上解决了低谷电价接近零时的数学发散问题，使得预测误差能够直接对应套利收益的财务偏差。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：打车软件的动态加价预测</strong>
+            <p>去往市中心的打车价格并不是固定的，而是由软件平台的实时算法根据供需调配。当你预测下班高峰期打车会翻倍加价时，你会选择提前1小时出发，或者延后2小时等加价消失——这相当于“日前规划”。但如果在你准备打车的前15分钟，突降暴雨（相当于新能源骤减），实时打车需求瞬间暴涨，打车价格也会滚动飙升。如果你在电价暴涨时硬着头皮出行，你的打车费会远远超出预期。现货实时价格预测，就像是在大雨来临前，根据雨云雷达和周围人群的动作，预判打车价格将要翻几倍，进而指导你做出最合理的出行决策。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>交易要点：预测误差的“非对称损失”机制</strong>
+            <p>对于储能电站而言，高估高峰电价和低估高峰电价的后果具有强烈的非对称性。若预测高峰价格为600元/MWh而实际是800元/MWh（低估），储能仅仅是错失了部分更优的充放电收益；但如果预测高峰电价为800元/MWh而实际只有300元/MWh（高估），储能电站会按照预测的计划强制指令放电，而在扣除电池循环损耗折旧及充电电费后，这笔充放电将造成实质性的净资产亏损。因此，预测模型不能追求简单的均误差最小，而必须在目标损失函数中对高估尖峰价格行为施加更高的惩罚权重，以此保护储能的生命资产。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>三、日前与日内报价策略：如何在多空博弈中“落子”</h2>
+        <p>在电力现货交易中，储能电站并不直接申报确定的一张“发电运行计划表”，而是向交易系统申报一条“价格-功率”（P-Q）的梯形申报曲线。日前市场采用统一边际出清机制（Market Clearing），系统调度平台在平衡全网负荷和输电限额时，会将所有发电主体的申报曲线从低到高排列，将负荷侧申报曲线从高到低排列，交叉点即为统一出清价格。低于该价格的发电报价均被出清，按照出清电价进行结算。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+        <h3>3.1 “报量不报价”与“报量报价”的博弈取舍</h3>
+        <p>储能电站在现货交易中主要有两种常规报价形式。第一种是<strong>“报量不报价”</strong>（在我国部分省份也称为接受出清价格，以日前价格接受者 Price-Taker 的身份入市），此时储能将充放电的报价设定为市场的最低下限或最高上限，其目的仅仅是为了确保电量能够被绝对调度出清，常用于深夜极低谷充电以锁定低价。第二种则是<strong>“报量报价”</strong>，储能按照电池衰减寿命折旧成本和系统效率损耗，设置不同功率区间所对应的报价底线，由系统在满足成本条件时被动出清。</p>
+
+        <h3>3.2 储能放电综合边际成本的量化估演</h3>
+        <p>储能放电的每一次循环都伴随着折旧和损耗，这意味着储能的充放电并非“无本万利”，必须建立明确的边际成本报价底线。我们构建其最基础的放电边际价格模型：</p>
+        $$P_{\text{dis, min}} = \frac{P_{\text{ch}}}{\eta} + C_{\text{deg}} + C_{\text{om}}$$
+        <p>对该模型中各项参数的工程含义与核算过程解析如下：</p>
+        <ul>
+          <li><strong>综合充放电效率折算成本（$\frac{P_{\text{ch}}}{\eta}$）</strong>：由于电池存在能量转换效率限制（即电池的 RTE，符号为 $\eta$），储能充入1度电往往只能放出0.85度电左右。若网侧充电时的电价为 $P_{\text{ch}}$，则这部分电量在放电侧的有效电费成本就被等比例放大了。</li>
+          <li><strong>电池寿命衰减折旧成本（$C_{\text{deg}}$）</strong>：每充放电一次，锂电池的活性锂离子都会发生不可逆衰减。我们将电池系统总造价（以 $C_{\text{sys}}$ 表示）平摊到其在设定放电深度（$DOD$）下的设计循环寿命次数（以 $N$ 表示）中，得出单度电的物理折耗。</li>
+          <li><strong>可变运维成本（$C_{\text{om}}$）</strong>：包含液冷循环的自耗电电费、辅助温控的能耗以及电站基础检修的分摊。</li>
+        </ul>
+        <p>我们以国内某 100MW/200MWh 的磷酸铁锂独立储能电站为例进行实测核算。假设该储能电站的电池系统综合初装造价为 $C_{\text{sys}} = 850,000$ 元/MWh（即每千瓦时0.85元），电池在 $DOD = 90\%$ 下的理论循环寿命为 $N = 6,000$ 次，综合效率 $\eta = 85\%$。则每次循环下电池的折旧衰减成本为：</p>
+        $$C_{\text{deg}} = \frac{C_{\text{sys}}}{N \cdot DOD} = \frac{850,000}{6,000 \cdot 0.9} \approx 157.4 \text{ 元/MWh} = 0.1574 \text{ 元/kWh}$$
+        <p>当该储能电站在深夜现货市场中以 $P_{\text{ch}} = 200$ 元/MWh 的谷值价格充电时，若设定可变运维成本 $C_{\text{om}} = 20$ 元/MWh，则该储能电站在高峰放电时所允许接受的<strong>绝对边际成本底线</strong>为：</p>
+        $$P_{\text{dis, min}} = \frac{200}{0.85} + 157.4 + 20 \approx 235.3 + 157.4 + 20 = 412.7 \text{ 元/MWh} = 0.4127 \text{ 元/kWh}$$
+        <p>该测算数值说明，如果日前高峰出清价格低于 412.7 元/MWh，储能电站放电不仅无法盈利，反而无法回收电池的循环损耗和转换电费。因此，交易员在日前市场申报 24 小时出清阶梯曲线时，其放电的最低一档价格设定绝不能低于该边际成本，通常会预留部分毛利溢价，将第一档起报价格设定在 430 元/MWh 左右，随后根据可放电容量分段抬升报价，以捕获更高的高峰超额出清收益。</p>
+      </section>
+
+      <section>
+        <h2>四、执行偏差与实时出清：理论收益与真金白银的“剪刀差”</h2>
+        <p>储能电站在日前交易中成功出清并锁定收益后，交易团队并不能高枕无忧。在实际运行中，由于种种客观限制，储能的实时实际出力通常与日前计划存在着或多或少的偏差，导致理论账面资产与最终到手的结算现金产生“剪刀差”。</p>
+        
+        <h3>4.1 执行偏差产生的原因</h3>
+        <p>引起储能执行偏差（Execution Deviation）的根源主要在于三类物理约束：首先是设备内部的物理受限，如连续大功率充放电导致电芯温度迅速积累，BMS（电池管理系统）为防止热失控，强行限制 PCS 的最大输出功率；其次是系统级的调度干预，当局部区域发生电网阻塞、断路器跳闸或频率波动时，省级调度中心会跨过日前出清合同，强行向储能发送修改出力的 AGC 调度指令；最后是储能自身 SOC（荷电状态）的估算精度产生漂移，导致日前编制的电量平衡在实时无法完全闭环。</p>
+
+        <h3>4.2 日前-实时双结算机制的财务结算模型</h3>
+        <p>我国电力现货市场普遍推行<strong>“日前出清、实时偏差结算”的双结算机制（Double Settlement System）</strong>。这一结算体系的本质是：日前出清量相当于一份确定了量与价的远期实物交割合同，实时阶段的任何计划背离，均被视为在实时市场中以实时价格进行的“二次买卖”。</p>
+        <p>电站全天在双结算机制下的总电能收益可表达为：</p>
+        $$W_{\text{total}} = \sum_{t=1}^{T} \left[ Q_{\text{DA}, t} \cdot P_{\text{DA}, t} + (Q_{\text{RT}, t} - Q_{\text{DA}, t}) \cdot P_{\text{RT}, t} \right]$$
+        <p>公式中：$Q_{\text{DA}, t}$ 代表在时段 $t$ 日前现货出清的计划电能（充电为负，放电为正）；$P_{\text{DA}, t}$ 代表日前出清价格；$Q_{\text{RT}, t}$ 代表实时实际发生的上网或消纳电能；$P_{\text{RT}, t}$ 则代表实时现货市场的出清电价。我们通过一个具体的交易实战场景来量化其运作逻辑。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>实战警示：日前放电计划未履行的“实时买回损失”</strong>
+            <p>日前市场中，储能交易团队预测19:00将有价格尖峰，成功申报并出清了10 MWh的放电计划，日前价格为 $P_{\text{DA}} = 800$ 元/MWh（计划收益8000元）。但到了实时运行阶段的19:00，电站突发网络通信延迟，实际出力为 $Q_{\text{RT}} = 0$ MWh，而此时实时电价因局地电网负荷陡增暴涨至 $P_{\text{RT}} = 1200$ 元/MWh。</p>
+            <p>在此一小时内，电站的偏差结算账单为：</p>
+            <ol>
+              <li>日前出清合同兑现：$10 \text{ MWh} \times 800 \text{ 元/MWh} = +8000$ 元；</li>
+              <li>实时偏差退补结算：$(0 - 10) \text{ MWh} \times 1200 \text{ 元/MWh} = -12000$ 元；</li>
+              <li>总计实际结算收益：$+8000 - 12000 = -4000$ 元。</li>
+            </ol>
+            <p>这意味着，该电站虽未消耗 any 能量，但因为日前承诺了发电，在实时运行中必须以 1200 元/MWh 的高昂代价从实时市场买回这 10 MWh 的履约短缺，不仅没赚到钱，反而净亏损 4000 元。这就证明，在日前市场过度激进地报满计划，一旦在实时阶段发生设备故障，将面临实时价格反向吞噬利润的巨大风险。</p>
+          </div>
+        </div>
+
+        <p>为了让读者直观理解日前市场与实时市场的运行机制差异，下表列出了两者的核心特征对比：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>比对维度</th>
+                <th>日前电力现货市场 (Day-Ahead)</th>
+                <th>实时电力现货市场 (Real-Time)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>交易与出清时间窗</strong></td>
+                <td>运行日前一天（如T-1日上午申报完毕）</td>
+                <td>运行日当天（滚动提前1-2小时进行出清）</td>
+              </tr>
+              <tr>
+                <td><strong>出清时间分辨率</strong></td>
+                <td>按小时或15分钟为步长（每日出清96点）</td>
+                <td>按5分钟或15分钟滚动出清，时间尺度极窄</td>
+              </tr>
+              <tr>
+                <td><strong>出清定价逻辑</strong></td>
+                <td>基于全网次日日前负荷预测与机组组合确定</td>
+                <td>基于实时物理电网安全约束与调度潮流确定</td>
+              </tr>
+              <tr>
+                <td><strong>结算基准电量</strong></td>
+                <td>日前出清量 $Q_{\text{DA}}$，作为财务避险的实体合同</td>
+                <td>实际执行量与日前出清量的差异量 $Q_{\text{RT}} - Q_{\text{DA}}$</td>
+              </tr>
+              <tr>
+                <td><strong>典型价格波动率</strong></td>
+                <td>波动中等，电价曲线较为平滑，无突发毛刺</td>
+                <td>波动极度剧烈，常因临时事故发生断崖式暴涨暴跌</td>
+              </tr>
+              <tr>
+                <td><strong>违约与分摊风险</strong></td>
+                <td>仅属于交易阶段，不涉及物理系统实时考核</td>
+                <td>承担执行偏差结算亏损，并分摊系统不平衡资金</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>五、偏差管理与实战避险：储能电站的“安全气囊”</h2>
+        <p>面对双结算机制带来的日前-实时偏差风险，优秀的储能运营商绝不会被动承受，而是通过先进的交易控制系统构建起多重“安全气囊”，主动防范并抵御风险。</p>
+
+        <h3>5.1 实时模型预测控制与闭环滚动优化</h3>
+        <p>储能电站在实际运行中，应建立基于模型预测控制（Model Predictive Control，MPC）的闭环滚动调度。实时滚动系统通常每15分钟启动一次，获取电池当前的实时精确SOC和温度。一旦发现实际SOC因历史功率偏差脱离了日前设定的参考轨迹，或者实时电价的演化方向与日前预测发生逆转，滚动优化算法将重新评估未来数个时段的电量价值，通过修改向调度申报的日内出清参数，使电池的实际SOC轨迹平稳回归至日前长周期优化的安全边界内。</p>
+
+        <figure class="svg-figure">
+          <svg viewBox="0 0 800 350" width="100%" height="300" style="background-color: #fafafa; border-radius: 8px;">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+              </marker>
+            </defs>
+            <text x="400" y="30" text-anchor="middle" font-weight="bold" font-size="16" fill="#1A1A2E">图2：日前计划出力与实时实际出力偏差及结算空间示意图</text>
+            
+            <!-- Axes -->
+            <line x1="80" y1="280" x2="720" y2="280" stroke="#4A5568" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="80" y1="280" x2="80" y2="60" stroke="#4A5568" stroke-width="2" marker-end="url(#arrow)"/>
+            <text x="730" y="285" font-size="12" fill="#4A5568">时间 (15分钟时段)</text>
+            <text x="40" y="55" font-size="12" fill="#4A5568">出力 (MW)</text>
+            
+            <!-- Day-Ahead cleared plan (Blue dashed line) -->
+            <path d="M 80,280 L 220,280 L 220,120 L 360,120 L 360,280 L 480,280 L 480,140 L 600,140 L 600,280 L 680,280" 
+                  fill="none" stroke="#1A5F96" stroke-width="3" stroke-dasharray="6 4"/>
+            <text x="490" y="125" fill="#1A5F96" font-size="12" font-weight="bold">日前出清计划 Q_DA</text>
+            
+            <!-- Real-Time actual (Orange solid line) -->
+            <path d="M 80,280 L 220,280 L 220,120 L 360,120 L 360,280 L 480,280 L 480,210 L 600,210 L 600,280 L 680,280" 
+                  fill="none" stroke="#F57C00" stroke-width="3"/>
+            <text x="510" y="235" fill="#F57C00" font-size="12" font-weight="bold">实时实际执行 Q_RT</text>
+            
+            <!-- Deviation shading between 480 and 600 (from 140 to 210) -->
+            <rect x="480" y="140" width="120" height="70" fill="#FFF3E0" opacity="0.6" stroke="#E53E3E" stroke-width="1" stroke-dasharray="2 2"/>
+            <text x="540" y="175" text-anchor="middle" font-size="12" fill="#E53E3E" font-weight="bold">⚠️ 执行偏差区</text>
+            <text x="540" y="195" text-anchor="middle" font-size="10" fill="#E53E3E">需在实时高价“买回”缺额</text>
+            
+            <!-- Labels on X-axis -->
+            <text x="220" y="300" text-anchor="middle" font-size="11" fill="#4A5568">08:00</text>
+            <text x="360" y="300" text-anchor="middle" font-size="11" fill="#4A5568">12:00</text>
+            <text x="480" y="300" text-anchor="middle" font-size="11" fill="#4A5568">16:00</text>
+            <text x="600" y="300" text-anchor="middle" font-size="11" fill="#4A5568">20:00</text>
+          </svg>
+          <figcaption>图2：日前出清电量与实时实际执行偏差示意图（当实时出力偏低时将面临偏差结算损失）</figcaption>
+        </figure>
+
+        <h3>5.2 预留SOC安全缓冲带与超前温控预冷</h3>
+        <p>为应对BMS安时积分产生的SOC漂移，电站在日前交易策略中不能把电池容量的上下限用得太满。通常会预留 5% - 10% 的安全缓冲带（Buffer Zone），日前充放电范围限定 in 10% - 90% SOC 之间，以此吸收实时的功率执行微小波动。同时，针对夏季高温导致的变流器和电池降容问题，运营团队必须构建温控协同。在预测的高峰放电时间段到来前半小时，提前远程强制启动冷水机组进行“电池预冷”，以此降低电池温升速率，确保在日前计划放电时设备不因温升触发限功率保护，杜绝执行偏差的物理产生。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>运营技巧：应对电池“SOC漂移”的实时校准策略</strong>
+            <p>电池的真实SOC是无法通过传感器直接测量的，只能通过测量电流并进行安时积分（Ampere-Hour Integration）来间接估演。如果电站连续数天都在进行局部、不彻底的充放电（如SOC在30%-70%之间循环），安时积分的漂移误差会累积到5%以上。为消除这一隐患，交易团队应当在日前预测价格触底的低谷时段，故意报出一笔“报量不报价”的满充或满放指令。此时电网出清会将储能推至物理极限状态，利用电压截点对BMS进行一次重置校准，恢复SOC的估算精度，防止其在后续的高额现货尖峰套利中因误判而引发偏差惩罚。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>安全防线：切勿为了追逐实时最高价格，而强行越过安全温控限制</strong>
+            <p>在实时市场电价飙升至上千元/MWh的极其罕见时刻，交易人员极易产生逐利心理，试图人为通过后台软件修改或规避BMS的安全温控功率降额警报，强行让电池在高温下满功率放电。这属于高危红线行为。锂电池在高温大倍率放电下，极易加速内部电化学材料的热老化，并在电极表面形成微短路，一旦热失控连锁反应被触发，将造成整个储能舱不可逆的毁灭性火灾事故。安全永远是获取套利收益的绝对底线。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>深入探索：虚拟电厂（VPP）架构下的分布式储能偏差互补平抑</strong>
+            <p>对于单个商用分布式储能电站而言，其预测能力弱、容量小，极易由于局部用电负荷的波动而产生执行偏差。在虚拟电厂（Virtual Power Plant，VPP）的先进管理框架下，成百上千个小容量分布式储能能够通过物联网平台统一聚合。在统一出清结算时，VPP中央调度控制台可以通过在不同储能设备之间进行微秒级的潮流互补——例如，当A企业储能因内部用电陡增无法履行日前放电合同，控制系统会瞬时指令同区域内处于闲置或有安全容量余量的B小区储能过发以对冲缺额。通过在“VPP大表”层面消除最终的执行偏差，所有参与储能可以共享由此免予考核所节省下来的巨大财务红利。</p>
           </div>
         </div>
       </section>
@@ -113,9 +377,11 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>节点价格的本质</strong>：现货套利突破了传统固定分时电价的静态模式，通过跟踪时空双重维度高频波动的节点边际电价（LMP）进行动态套利。</li>
+        <li><strong>预测是出海之舵</strong>：日前和实时价格预测是现货套利的先决条件，使用 WMAPE 指标能够规避电价归零时的数学发散，且模型设计必须特别警惕价格高估带来的“非对称损失”。</li>
+        <li><strong>报价底线的构成</strong>：储能放电的报价底线并非零成本，而是由充电价折算成本、电池在指定放电深度下的循环寿命衰减折旧成本以及可变运维成本共同决定的综合边际价格。</li>
+        <li><strong>偏差的双刃剑效应</strong>：双结算机制决定了储能日前出清即是实物远期合同，实时的出力偏差将按照实时现货价进行强制多退少补结算，存在高额的“实时买回”亏损风险。</li>
+        <li><strong>主动防范偏差的方法</strong>：运营团队应运用实时模型预测控制进行滚动校准、日前规划中预留安全 SOC 缓冲带、并在负荷顶峰放电前半小时对电池实施超前温控预冷。</li>
       </ul>
     </section>
 
@@ -125,16 +391,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 关于节点边际电价（LMP）中“阻塞价格”的成因与物理本质，以下哪种说法是正确的？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 阻塞价格主要由送受电节点之间的线路物理阻抗大小直接决定，与当地的负荷无关。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 阻塞价格是由于输变电线路容量受阻，低成本的电力无法输送到该节点，导致不得不调用本地高成本电源产生的一种系统性溢价成本。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 阻塞价格是发电企业为了惩罚电网运行阻塞而向用户侧收取的额外行政性通道占用费。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 只要全网发电机组的总容量能够满足全网总负荷的需求，阻塞价格就会在全网范围内自动归零。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 准确反映了阻塞价格的成因。在节点网络中，若从送端到受端的输电断面限额受阻，即使送端有极其廉价的新能源，也无法输送到受端节点平衡负荷，受端节点只能就地调用成本更高的燃气或小火电顶峰。这种由物理通道容量受阻导致的本地边际成本增高，就是阻塞价格的来源。选项 A 错误，因为物理阻抗主要决定线损价格，而阻塞由线路功率限额 and 负荷分布共同引发；选项 C 错误，阻塞价格是一种由供需与物理约束出清核算出来的边际成本，而非行政收费；选项 D 错误，即使总装机容量充沛，若局部输电通道发生物理过载，局部依然会产生明显的电价分化。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 关于电池储能系统在日前现货报价中的“放电综合边际成本”，以下叙述最科学合理的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 储能本身具有绿色环保属性，其放电边际成本仅由深夜从电网充电的实际电费决定。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 储能放电成本由充电价格除以综合循环效率作为折电成本，加上电池在设定放电深度下的循环寿命寿命损耗折旧以及运维成本共同构成。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 当储能系统在现货市场以负电价充电时，由于获得了系统补贴，其放电综合边际成本也会等比例变为负数。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 储能折旧属于固定投资成本，日前报价时无需予以考虑，只需考虑当前的实时运维费用即可。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：选项 B 完整表达了储能放电成本的物理与经济来源。充放电综合效率会导致能量损失，所以充电价需除以综合效率进行等比例放大；同时，每次循环都会引发电池寿命衰减，这部分折旧是可变成本，报价中必须涵盖这部分循环损耗以及运维费用。选项 A 忽视了效率损失和电池磨损折旧；选项 C 错误，即便充电价格为负，由于电池循环折旧成本（通常每度电约 0.15 元）为正值且固定存在，放电边际成本也依然可能为正值；选项 D 错误，电池寿命折旧与循环次数挂钩，属于交易中的可变边际成本，若不予考虑会导致账面盈利而设备物理价值加速贬值的“隐性亏损”。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 电力现货市场实行双结算机制。若日前清算中储能电站出清了 10 MWh 的高峰放电量，但实时运行中电池由于超温降额而实际出力为零。在实时现货价格高于日前价格的场景下，该电站会有什么结算后果？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 实际出厂电量为零，因此该时段内不产生 any 结算电费，日前收益与实时偏差自动对冲抵消。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 由于是设备硬件故障等不可抗力导致，日前合同中约定的 10 MWh 收益依然能够足额拿到，且免于遭受任何考核惩罚。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 电站仍能拿到日前清算收益，但在实时偏差结算中必须以更高的实时价格买回这 10 MWh 的未履约电能，导致日前收益被全部侵蚀甚至亏损。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 该时段的实际结算仅按照日前出清价格结算其实际出力部分，即最终结算电费为零。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项 C 是日前-实时双结算机制的直接体现。在双结算下，日前出清量 Q_DA 在财务上是绑定的实体合同。实时阶段实际出力 Q_RT 偏离计划，其偏差量 (Q_RT - Q_DA) 需要在实时市场以实时电价 P_RT 进行二次交易。因为实际出力为0，偏差为 -10 MWh，而实时价格高于日前价格，电站相当于以更高价“买回”了未发的电量，从而产生财务净亏损。选项 A、B、D 均违背了双结算机制中日前计划为财务避险合同且必须“日前实时双轨结算、偏差二次退补”的规则，把现货结算误解为单轨的实际出厂物理电量结算。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在评估储能现货套利的价格预测精度时，以下关于预测误差评估以及损失特性的叙述中，正确的是哪一项？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 在现货价格出现负电价或极接近零的电价区间时，传统的 WMAPE 公式会产生分母发散问题，应当改为采用普通的 MAPE 指标进行评估。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 将高峰高电价预测偏低（如漏报了高峰）所带来的经济损失，通常与将平段低电价预测偏高（如误判了高峰并进行了放电）带来的直接亏损是完全对称的。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 储能预测电价误差具有非对称损失特性，由于电池存在变动寿命损耗成本，高估高峰价导致误动作产生的直接经济损失通常要高于低估高峰价产生的机会成本损失。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 预测精度的高低仅影响日前出清决策，在实时运行阶段中，滚动优化和 AGC 指令会自动消除预测误差对最终套利收益的一切负面财务影响。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项 C 准确描述了非对称损失机制 of 本质。由于储能充放电存在变动的寿命损耗和效率成本，一旦把无盈利价值的电价误预测为可以放电的超高峰电价并进行了实际充放电，就会产生实实在在的循环折耗与电费亏损；而低估高峰价（漏报）最多只是产生机会成本损失（即少赚了，但设备本身没有发生亏本磨损）。选项 A 错误，普通的 MAPE 才会因为实际电价接近零而导致分母趋近零发生数学发散，而 WMAPE 采用全天电价和作为分母，能够有效克服该发散问题；选项 B 错误，两者损失极不对称；选项 D 错误，由于日前与实时双结算机制，日前决策失准会留下偏差买回亏损的隐患，实时滚动只能有限修补，无法抹平财务亏损。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 为了平抑日前出清与实时执行之间的偏差并实现风险防范，以下关于储能电站运行调节策略的描述中，哪一项是错误的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 实时滚动优化通常需要每隔 15 分钟左右基于最新的短期价格预测和电站当前电池 SOC 及设备健康限制，滚动调整未来的出力申报。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 实时优化算法需要与温控系统紧密协同，在高峰顶峰放电时段到来前超前启动液冷预冷，能够有效防止电池在放电过程中因温升过快而触发 PCS 功率降容。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 为最大化日前市场的出清收益并确保全容量套利，日前计划的 SOC 上下限申报必须锁定为电池的理论物理极限范围（即 0% 至 100%）。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 为克服安时积分法累积的 SOC 估算漂移误差，可以利用现货低谷的超低电价阶段进行一次满充满放的校准，从而保护电芯并重置 BMS 积分器精度。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：选项 C 是错误的叙述，因此为正确答案。在日前策略中，若将日前计划直接锁定在 0% - 100% 物理极限，在实时运行中，稍有偏差就会使电池提前触发物理截止电压保护切除，造成严重的未履约偏差；所以合理的做法是预留 5% - 10% 的 SOC 安全缓冲带，日前范围限定在 10% - 90% SOC 之间。选项 A 是实时模型预测控制滚动调整的常规流程，叙述正确；选项 B 协同温控系统进行超前预冷，能物理上减少出力受限的发生概率，叙述正确；选项 D 利用低谷低电价完成满充以校准安时积分漂移，是保证 SOC 估算精度的行业通用做法，叙述正确。</p>
         </div>
       </div>
 
@@ -159,7 +485,10 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="sp3_1_3_日前市场机制.html">→ 日前市场机制：报价与出清流程</a></li>
+        <li><a href="sp3_1_4_实时日内市场.html">→ 实时日内市场：偏差调节与电能交割</a></li>
+        <li><a href="sp3_2_1_多市场叠加套利框架.html">→ 多市场叠加套利框架：收益叠加与策略协调</a></li>
+        <li><a href="sp3_2_6_交易策略回测与绩效评估.html">→ 交易策略回测与绩效评估：评估实战与核心指标</a></li>
       </ul>
     </section>
 
@@ -168,11 +497,13 @@
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp3_2_2</span></p>
     </footer>
 
-  </div>
+  </div><!-- /page-wrapper -->
 
-  <!-- 返回页首悬浮按钮 -->
-  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
+  <!-- 返回顶端悬浮按钮 -->
+  <button class="btn-back-top" id="btnBackTop"
+    onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶端">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
