@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+# -*- coding: utf-8 -*-
+import re
+from pathlib import Path
+
+html_content = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -437,3 +441,16 @@
   <script src="../../assets/js/quiz.js"></script>
 </body>
 </html>
+"""
+
+output_path = Path("/home/jiamoo/文档/code_projects/20260726-网储系统性学习手册/chapters/sp_02/sp2_2_1_EPC全流程.html")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+output_path.write_text(html_content, encoding="utf-8")
+
+main_match = re.search(r'<main[^>]*class=["\'].*?chapter-content.*?["\'][^>]*>(.*?)</main>', html_content, re.DOTALL)
+if main_match:
+    main_html = main_match.group(1)
+    chinese_chars = re.findall(r'[\u4e00-\u9fa5]', main_html)
+    print(f"Total Chinese characters in <main>: {len(chinese_chars)}")
+else:
+    print("Error: <main class='chapter-content'> not found!")
