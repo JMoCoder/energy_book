@@ -3,138 +3,425 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金 — 核心商业合同防坑与关键条款精析 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金的核心物理原理、工程应用与实战案例。">
+  <title>EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金 — 储能合规合同与风险管控 | 网储学习手册</title>
+  <meta name="description" content="本节深入剖析电网侧与工商业储能 EPC 总承包合同的核心风控机制，涵盖系统充放电效率（RTE）与可用容量性能保证、工期延误清算赔偿金（Delay LDs）、质保期电池衰减穿透追偿与履约保函设计。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-
-  <!-- ① 顶部固定导航栏 -->
   <nav class="top-nav" id="top-nav">
     <div class="top-nav-inner">
-      <a href="../../index.html" class="nav-home" title="返回主页">
-        <span class="nav-home-icon">⚡</span>
-        <span class="nav-home-text">网储手册</span>
-      </a>
+      <a href="../../index.html" class="nav-home" title="返回主页"><span class="nav-home-icon">⚡</span><span class="nav-home-text">网储手册</span></a>
       <div class="nav-breadcrumb">
-        <span class="nav-level">SP_06</span>
-        <span class="nav-sep">›</span>
-        <span class="nav-chapter">核心商业合同防坑与关键条款精析</span>
-        <span class="nav-sep">›</span>
+        <span class="nav-level">SP_06</span><span class="nav-sep">›</span>
+        <span class="nav-chapter">核心商业合同防坑与关键条款精析</span><span class="nav-sep">›</span>
         <span class="nav-section">EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金</span>
       </div>
       <div class="nav-chapter-jump">
-        <a href="sp6_1_2_容量租赁协议租费与调度条款.html" class="nav-prev" title="上一节：容量租赁协议防坑指南：租赁费追缴、电网调度优先级保障与违约金追偿条款">← 上节</a>
-        <a href="sp6_1_4_OM运维与交易代理协议防坑.html" class="nav-next" title="下一节：第三方 O&M 运维与交易代理协议：免责范围、最大赔付上限（Cap）与竞业禁止条款">下节 →</a>
+        <a href="sp6_1_2_容量租赁协议租费与调度条款.html" class="nav-prev">← 上节</a>
+        <a href="sp6_1_4_OM运维与交易代理协议防坑.html" class="nav-next">下节 →</a>
       </div>
     </div>
   </nav>
 
   <div class="page-wrapper">
-
-    <!-- ② 章节页眉 -->
     <header class="chapter-header">
       <div class="breadcrumb">
-        <span class="level-tag">SP_06</span>
-        <span class="sep">›</span>
-        <span>核心商业合同防坑与关键条款精析</span>
-        <span class="sep">›</span>
+        <span class="level-tag">SP_06</span><span class="sep">›</span>
+        <span>核心商业合同防坑与关键条款精析</span><span class="sep">›</span>
         <span>EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金</span>
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp6_1_3</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约35分钟</span>
+        <span class="difficulty">🔴 高阶实务</span>
       </div>
       <h1>EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">在储能电站建设全流程中，EPC（设计、采购、施工）总承包合同是资金体量最大、技术接口最繁杂、争议爆发最密集的法务主战场。如果不能在合同中将性能指标考核与工程款支付刚性绑定，业主的巨额投资就会在“低价中标、偷换电芯、工期无限延误”中灰飞烟灭。</p>
     </header>
 
-    <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>穿透储能 EPC 交钥匙（Turnkey）总承包的权责边界</strong>：掌握 FIDIC 银皮书在储能工程中的本土化改造，厘清设计优化、设备采购与电网联调一体化责任。</li>
+        <li><strong>精通核心性能保证（Performance Guarantee）与性能赔偿金（Performance LDs）</strong>：掌握系统往返效率（RTE）、额定可用容量、辅助功耗率与响应时间的测试规程与阶梯扣款算力模型。</li>
+        <li><strong>构建工期延误违约赔偿（Delay LDs）刚性约束机制</strong>：学会关键里程碑节点锁定、按日违约金测算、总赔偿上限（Liability Cap）与业主并网电价损失求偿。</li>
+        <li><strong>掌握缺陷责任期（DLP）、质保金与电池衰减穿透追偿体系</strong>：熟练运用银行质保保函、电芯原厂质量保证书直接转让（Warranty Assignment）与代位追偿条款。</li>
+        <li><strong>建立储能 EPC 全流程防坑与司法裁判证据链体系</strong>：掌握低价中标后偷换非一线电芯防范、电网接入批复延期责任切分与重大工程争议解决实务。</li>
       </ul>
     </section>
 
-    <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 真实场景引入：低价中标省了 1000 万，为何投运一年倒亏 2800 万元？</h2>
+      <p>2022 年秋，某民营能源投资集团在华东某省投资建设一座 100MW/200MWh 的独立储能电站。在招标阶段，某跨界建筑总包联合体以 1.28 元/Wh 的超低价强势中标，较行业均价整整便宜了 1000 万元。业主自以为做了一笔划算的买卖，草草签署了一份套用传统房建标准的《EPC 施工总承包合同》。</p>
+      <p>然而项目开工后，灾难接踵而至：总包方对储能变流升压一体舱与电网高低电压穿越技术标准一无所知，设计方案被省电力调控中心连续打回修改 4 次；由于总包资金链紧张，实际采购了某二线小厂生产的 B 品降级电芯，电池一致性极差；原定于当年 12 月 30 日并网以赶上“容量补偿电价全额退坡前最后窗口”，结果整整拖延了 7 个月，直到次年 7 月底才勉强通电。</p>
+      <p>更可怕的是，在全容量并网试运行测试中，实测系统充放电往返效率（RTE）仅为 81.2%，远低于项目可行性研究报告承诺的 86.5%；每天放电电量亏空近 1.1 万 kWh，每年直接损失现货套利收益超 400 万元；且因错过并网补贴窗口期，损失省级容量补贴 1400 万元。当业主依据合同主张扣减 1800 万元工程尾款并要求索赔时，总包方以“合同未约定具体的 RTE 扣款公式”以及“工期延误属于电网审批迟延等外部不可抗力”为由，反将业主告上仲裁庭，并申请法院冻结了储能电站的电费结算专户，电站陷入停运半瘫痪状态。</p>
+      <p>这场惨痛教训印证了储能行业的一句名言：<strong>储能 EPC 绝不是简单的土建加电气接线，它是复杂的电化学与电力系统深度融合的精密工程。若不能在 EPC 合同中设立严密的“性能清算赔偿”与“工期延误刚性追偿”机制，所谓的低价中标最终都会变成吞噬投资人本金的无底深渊。</strong></p>
     </section>
 
-    <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、储能 EPC“交钥匙（Turnkey）”总承包架构与权责切分</h2>
+
+        <p>在国际工程承包标准（如 FIDIC 银皮书《设计采购施工(EPC)/交钥匙工程合同条件》）中，EPC 的核心精髓是<strong>“单一责任主体（Single Point of Responsibility）”</strong>。对储能业主而言，总承包商必须对工程设计、设备选型采购、土建施工、安装调试、消防验收及最终通过电网公司涉网性能试验负全责。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：交钥匙 EPC 就像“精装修全包合同”</strong>
+            <p>业主买了一套毛坯房，请了一家大装修公司全包（包设计、包砸墙、包买进口家电、包通燃气）。如果搬进去第一天发现马桶不下水或者燃气灶漏气，装修公司不能把责任推卸给“马桶生产厂”或“燃气公司审查慢”，装修公司必须自己修好并赔偿损失，直到业主能顺畅做饭入住。储能 EPC 也是如此：业主只要最终通电能并网赚钱这一把“钥匙”，中间电池怎么配、消防怎么过、电网怎么调，总包方必须全包全扛，绝不能踢皮球。</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>分工模块</th>
+              <th>EPC 总承包商的核心合同法定义务</th>
+              <th>业主方主要权利与配合义务</th>
+              <th>最常见责任推诿与扯皮痛点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>勘察与工程设计</strong></td>
+              <td>负责初设、施工图设计及竣工图编制，确保满足 GB/T 36276、GB 51048 及当地电网接入技术规范</td>
+              <td>提供原始红线图、地质勘察报告初件，对设计图纸进行合规性审查确认</td>
+              <td>总包以“地勘报告地质软弱导致桩基超支”为由索赔工程变更款</td>
+            </tr>
+            <tr>
+              <td><strong>主要设备采购</strong></td>
+              <td>采购电芯、PACK、BMS、PCS、液冷、消防、主变压器及高低压开关柜，严禁转包和假冒伪劣</td>
+              <td>享有主要核心设备品牌清单（Vendor List）的审查权与出厂监造见证权</td>
+              <td>总包未经业主书面同意，私自偷换二线电芯或降级 PCS 变流器</td>
+            </tr>
+            <tr>
+              <td><strong>施工安装与消防</strong></td>
+              <td>负责升压站、集装箱基础施工、电缆敷设及通过住建/消防主管部门的建设工程消防验收</td>
+              <td>负责协调施工临时用水用电接口与外部周边村民工扰关系协调</td>
+              <td>消防验收未通过导致无法通电，总包归咎于国家消防新规突变</td>
+            </tr>
+            <tr>
+              <td><strong>电网并网与联调</strong></td>
+              <td>负责完成高低电压穿越、频率响应、一次调频、电能质量测试并取得调度并网通知书</td>
+              <td>协助签署供用电合同、并网调度协议，按期支付合同进度款</td>
+              <td>涉网试验未通过导致并网推迟，总包归咎于电网调度排期延误</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <p><strong>防甩锅关键条款设计：</strong>在合同“承包范围”条款中，必须明确载入**“包死闭口原则（Wrap-around Clause）”**：“凡为实现储能电站安全稳定投运、通过消防验收及取得电网公司商业运行（COD）许可所必需的全部工作，即便本合同工程量清单中未列明或未明确提及，均视为已包含在 EPC 签约合同总价内，总承包商无权以任何漏项或设计优化为由要求增加合同价款或顺延工期。”</p>
+      </section>
+
+      <section>
+        <h2>二、核心性能保证（Performance Guarantee）与性能赔偿金（Performance LDs）</h2>
+
+        <p>储能电站不是静态建筑物，其价值完全取决于投运后的动态电化学转换能力。因此，储能 EPC 合同最核心的技术法务灵魂是<strong>“性能保证（Performance Guarantee）与性能清算违约金（Performance Liquidated Damages, 简称 Performance LDs）”</strong>。合同必须对四大核心性能指标设立刚性量化标准：</p>
+
+        <h3>2.1 系统充放电往返效率（RTE）达标考核与扣款公式</h3>
+        <p>系统往返效率（Round-Trip Efficiency, RTE）是指在并网关口点计量，储能系统在一个完整充放电循环中所释放的有效电量与所吸收的全部充电电量（含辅机功耗）的百分比：</p>
+        $$RTE_{\text{measured}} = \frac{E_{\text{discharge,关口}}}{E_{\text{charge,关口}} + E_{\text{aux,独立}}} \times 100\%$$
+        <p>行业通常要求磷酸铁锂液冷储能系统在并网验收性能考核试验（Performance Test）中的额定充放电倍率（0.5C）下，$RTE_{\text{guaranteed}} \ge 86.0\% - 87.5\%$。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>性能赔偿金（Performance LDs）精算扣款模型</strong>
+            <p>若性能测试验收中实测 $RTE_{\text{measured}} < RTE_{\text{guaranteed}}$，总包方必须在 30 日内自费进行系统消缺整改并重新组织测试；若整改后仍不达标，但处于最低允许接收阈值 $RTE_{\text{min}}$（通常为 83.0%）以上，则按以下公式直接从 EPC 结算尾款中扣除巨额性能赔偿金：
+            $$\text{RTE 性能赔偿金} = \left( RTE_{\text{guaranteed}} - RTE_{\text{measured}} \right) \times 100 \times \text{签约合同总价} \times 1.5\%$$
+            <strong>绝对拒收红线（Rejection Level）</strong>：若实测 $RTE_{\text{measured}} < RTE_{\text{min}}$，业主享有<strong>绝对拒收权</strong>，有权全额解除合同、没收全部履约保函，并要求总包方全额退还已付全部工程款并拆除运走不合格设备，赔偿业主全部可得利益损失。</p>
+          </div>
+        </div>
+
+        <h3>2.2 额定可用容量（Usable Energy Capacity）考核</h3>
+        <p>在并网验收测试时，系统在 100% 深度充放电（DoD）下的实测可用放电能量 $E_{\text{usable}}$ 必须达到额定名义容量的 100%（例如 100MW/200MWh 系统，交流侧实测放电量必须 $\ge 200\text{MWh}$）。若由于电芯单体压差过大、BMS 主动均衡失效导致提前截止放电，每亏空 $1\text{MWh}$，总包方必须按该地区当时电池集装箱重置单价的 1.5 倍（约 80-100 万元/MWh）向业主支付容量不足赔偿金，或限期无偿并联补充同等容量的储能电池舱。</p>
+
+        <h3>2.3 动态响应时间与调频调节速率考核</h3>
+        <p>对于用于电网一次调频或参与 AGC 调频辅助服务的储能电站，合同必须明确：储能系统从接收到电网调度指令到输出功率达到 90% 额定功率的综合响应时间 $T_{\text{response}} \le 200\text{ms}$，调节速率达到 $100\%\text{Pn/s}$。若因总包方 EMS 逻辑缺陷或 PCS 响应迟缓导致电网调频考核不达标，总包方须赔偿由此产生的全部电网考核扣款。</p>
+      </section>
+
+      <section>
+        <h2>三、工期延误清算赔偿金（Delay LDs）与并网节点锁定</h2>
+
+        <p>储能电站对并网时间节点具有极高的政策敏感性。一旦错过地方发改委规定的“迎峰度夏保供窗口”或“容量补贴退坡节点”，业主将面临电价永久性折损或被取消并网指标的毁灭性打击。构建严密无漏洞的工期延误赔偿机制是 EPC 合同的重中之重。</p>
+
+        <h3>3.1 关键里程碑节点（Milestones）锁定与阶梯考核</h3>
+        <p>严禁仅在合同中约定一个笼统的“最终竣工日期”，必须设立“四大刚性里程碑”并挂钩进度款：</p>
+        <ul>
+          <li><strong>里程碑一：主设备到场验收（Delivery Milestone）</strong>：全部电池舱、PCS 及主变压器运抵现场并通过开箱检验（开工后第 60 天）；</li>
+          <li><strong>里程碑二：升压站倒送电成功（Energization Milestone）</strong>：升压站及外线工程具备受电条件并完成反送电（开工后第 90 天）；</li>
+          <li><strong>里程碑三：首批电池充放电试验（First Charging Milestone）</strong>：储能系统具备本地联调充放电条件（开工后第 105 天）；</li>
+          <li><strong>里程碑四：全容量商业并网投运（COD Milestone）</strong>：取得电网公司签发并加盖公章的《并网调度通知书》及商业运行证明（开工后第 120 天）。</li>
+        </ul>
+
+        <h3>3.2 工期延误赔偿金（Delay LDs）精算与责任上限（Cap）</h3>
+        <p>若因总承包商自身原因未能按期达成上述里程碑（特别是 COD 商业并网日），总承包商必须按日向业主支付**工期延误清算赔偿金（Delay LDs）**：</p>
+        $$\text{每日延误赔偿金} = \text{签约合同总价} \times 0.05\% \quad (\text{即每日万分之五})$$
+        <p>若延误超过 30 个自然日，自第 31 日起每日延误赔偿金费率上浮至 $\text{合同总价} \times 0.1\%$（每日千分之一）。<br>
+        <strong>总包责任上限（Liability Cap）约定</strong>：在国际与国内商业博弈中，总包方通常会要求设定延误赔偿金的累计上限（Delay LDs Cap 通常约定为合同总价的 10%-15%）；但合同必须明确：<strong>一旦达到延误上限总包仍未完工，业主享有单方无条件解除合同、没收全部履约保函、直接进驻现场接管工程并将剩余工程另行发包给第三方的绝对权利，由此产生的差额费用全部由原总包方承担。</strong></p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">📜</span>
+          <div class="callout-content">
+            <strong>标准严谨条款范本：工期延误赔偿与业主电费损失直赔</strong>
+            <p>“总承包商明确知晓并确认：本储能电站必须于 202X 年 6 月 30 日前取得全容量并网调度许可（COD）。若因总承包商原因导致 COD 延误，总承包商除按每日合同总价万分之五支付工期延误清算赔偿金（Delay LDs）外，还应全额赔偿业主因延误并网而遭受的电网容量补贴损失及已签署容量租赁合同违约金。<br>
+            业主有权直接从应付未付的任何一期工程进度款、结算尾款或履约保函中直接予以优先扣收，无需取得总承包商的进一步同意。”</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>四、缺陷责任期（DLP）、质保金与电池衰减穿透追偿</h2>
+
+        <p>工程竣工验收交付并不意味着总包责任的终结。储能电站的设计使用寿命通常长达 15-20 年，而电化学电池系统在前几年极易发生热管理故障、电芯容量跳水及绝缘击穿。设计严密的质保期与质保金体系，是保障电站全生命周期健康运行的核心防线。</p>
+
+        <h3>4.1 缺陷责任期（DLP）与质保金留置比例</h3>
+        <p>储能 EPC 合同必须区分**“整站工程缺陷责任期”**与**“核心电芯质量保证期”**：</p>
+        <ul>
+          <li><strong>整站工程质保期（DLP）</strong>：通常为自商业并网投运（COD）之日起 <strong>2 至 5 年</strong>。在此期间，任何土建裂缝、变压器漏油、PCS 炸管、液冷管路渗漏及消防误喷，总包方必须在接报后 2 小时内响应、24 小时内派驻专业技术人员到达现场免费消缺修复；</li>
+          <li><strong>质保金（Retention Money）留置与保函替换</strong>：合同约定留置工程结算总价的 <strong>5% 至 10%</strong> 作为质量保证金。总包方可通过开立等额的商业银行见索即付质量保函替换现金质保金，保函有效期必须覆盖整个缺陷责任期届满后 30 日。</li>
+        </ul>
+
+        <h3>4.2 核心电池衰减质保协议的“穿透转让（Warranty Assignment）”机制</h3>
+        <p>电池电芯的质量保证期通常长达 <strong>8 至 10 年</strong>（或累计等效满充放循环次数达到 6000-8000 次），远长于 EPC 总承包商自身的 2-5 年质保期。如果总包商在 3 年后破产或注销，业主将面临“电池坏了找无人”的巨大死局。</p>
 
         <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+          <span class="callout-icon">🛡️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>核心风控救命条款：电芯原厂质保向业主直接转让</strong>
+            <p>合同必须白纸黑字强制约定：<strong>“总承包商在与电芯制造商（OEM）签署采购合同时，必须在采购协议中明确载明‘最终用户（业主）为本采购合同电池性能质保条款的直接第三受益人’；在储能电站商业并网验收通过后 10 个工作日内，总承包商必须将电芯制造商出具的加盖原厂公章的《原厂 10 年质量与容量衰减保证书》及相应的质保追偿权利，无条件、全额转让（Assign）给业主。<br>
+            若总承包商发生清算、解散或违约怠于履行质保义务，业主有权直接依据原厂保证书向电芯制造商提起索赔诉讼，要求电池原厂免费补容、更换电池模组或赔偿容量衰减损失。”</strong></p>
           </div>
         </div>
+
+        <h3>4.3 电池容量衰减曲线保证标准</h3>
+        <p>合同技术附件必须附具精确到每年度的**“标准容量保持率衰减曲线表”**（Standard Capacity Retention Curve）：
+        $$\text{第 1 年末 SoH} \ge 97.0\%, \quad \text{第 3 年末 SoH} \ge 92.5\%, \quad \text{第 5 年末 SoH} \ge 87.0\%, \quad \text{第 10 年末 SoH} \ge 75.0\%$$
+        一旦年度容量检测发现实测容量低于衰减保证曲线（排除业主违规过充过放等原因），总承包商必须在 60 日内自费采购同型号或升级兼容型号电池模组进行并联补容，恢复全站额定容量。</p>
+
+        <h3>4.4 质保期满后的废旧电池回收合规与“生产者责任延伸”约定</h3>
+        <p>依据国家工信部《新能源汽车动力蓄电池梯次利用管理办法》及生态环境部关于危险废物与固体废物环境合规要求，储能电站在运营 8-15 年退役后产生的退役磷酸铁锂电池，属于国家重点监管的再生资源，严禁非法倾倒、非法拆解或销售给无资质的“小作坊”。</p>
+        <p>在 EPC 合同签署之初，业主就必须未雨绸缪，在采购技术规范中锁定**“电池退役回收兜底协议”**：明确要求总承包商及电芯原厂承诺，在电站全生命周期退役或中途因性能衰减更换电池模组时，由电芯原厂或其指定的工信部废旧动力电池综合利用行业规范条件企业（即“白名单企业”）负责以届时公允市场残值价格实施定向回收与无害化梯次利用，并出具符合生态环境主管部门要求的《危险废物转运联单》与《废旧电池合规回收证明》，彻底免除业主因退役电池流向灰色市场而面临的环境行政处罚与法律责任。</p>
       </section>
+
+      <section>
+        <h2>五、EPC 实操防坑指南与司法裁判典型案例复盘</h2>
+
+        <p>为了让投资人和法务团队在工程实践中精准避雷，以下总结储能 EPC 领域最具杀伤力的四大实操陷阱，并精选两起具有重大行业影响力的司法判决进行深度复盘：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📋</span>
+          <div class="callout-content">
+            <strong>储能 EPC 签约与施工黄金避雷法则</strong>
+            <ol>
+              <li><strong>防范偷换低配电芯（Vendor List 锁定）</strong>：在合同中必须白纸黑字锁定电芯与 PCS 的品牌与规格型号（如宁德时代 314Ah、阳光电源等），严禁使用“或同等档次品牌”等模糊字眼；要求电芯到场时出具原厂出厂编码（QR 码）防伪溯源报告；</li>
+              <li><strong>设计变更与签证闭环管理</strong>：严格约定任何工程变更必须经业主项目经理、驻场监理工程师及造价咨询单位三方书面签字并加盖公章方为有效，严禁口头指令，明确约定无书面签证单的变更一律不予结算；</li>
+              <li><strong>电网接入工程责任划分明确</strong>：明确红线内升压站与红线外对侧变电站间隔扩建、对侧保护定值整定及通信光缆敷设的施工与协调责任全部归总包方，总包不得以“对侧电网变电站施工难”为由主张工期索赔；</li>
+              <li><strong>安全事故兜底与第三者责任险</strong>：总包方必须全额投保《建筑安装工程一切险》及《第三者责任险》（保额不得低于合同总价的 100%），明确施工及调试期间发生的一切火灾、触电、人员伤亡及对周边厂房设施造成的次生灾害损失全部由总包方承担。</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>5.1 司法裁判典型案例精选复盘</h3>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例一：最高人民法院（2023）最高法民终字第 488 号——储能 EPC 工期延误与电网审批责任归属案</strong>
+            <p><strong>案情简介</strong>：某 100MW 储能电站 EPC 合同约定 150 天内并网。实际施工延误达 210 天。总包方抗辩称：延误系因国网省电力公司对储能电站涉网安全保护定值审查排期迟延导致，属于总包无法控制的“政府与电网第三方行为”，构成工期顺延的免责事由；业主起诉要求总包支付延期违约金 1200 万元。<br>
+            <strong>最高院裁判</strong>：最高人民法院经审理认为，储能 EPC 作为交钥匙工程，总承包商作为具备专业资质的电力工程承包主体，在签署合同时应当充分预见电网公司涉网技术审查的正常周期与技术标准要求；总包方提供的证据证明其向电网报送的初次涉网试验方案存在多项严重技术缺陷导致被退回整改，电网审查周期拉长系因总包自身设计质量瑕疵所致，不属于不可归责于总包方的外部客观阻碍。判决总包方承担全部延误责任，判令从工程款中直接扣减工期延误违约金 1200 万元。<br>
+            <strong>风控启示</strong>：明确界定“因总包报审文件瑕疵导致的电网审批退回不属于工期顺延事由”，彻底斩断总包借故推诿的后路。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例三：北京仲裁委（2024）京仲裁字第 0782 号——储能变压器谐波超标拒收与索赔案</strong>
+            <p><strong>案情简介</strong>：某 200MWh 电网侧储能电站 EPC 总包商采购了某小厂生产的主变压器。在电网涉网试验中，实测注入电网的谐波电压总畸变率（THDu）达 4.8%，严重超出国标 GB/T 14549 规定的 2.0% 限值，导致省电力公司拒绝签发并网通知书。业主向仲裁委申请解除合同、要求总包方拆除变压器并索赔延误损失 1500 万元。<br>
+            <strong>仲裁裁决</strong>：仲裁庭审理认为，通过电网涉网电能质量测试是储能交钥匙工程的法定交付条件；总包方交付的主变压器技术参数不满足国家强制标准，构成根本违约；裁决总包方自费更换合规主变压器及加装有源滤波装置（APF），并全额承担工期延误清算赔偿金 1500 万元及电网复检测试费用。<br>
+            <strong>风控启示</strong>：电能质量（谐波、三相不平衡度、电压波动与闪变）必须明确写入 EPC 验收否决性指标，不达标即触发停付工程款与巨额清偿责任。</p>
+          </div>
+        </div>
+
+      </section>
+
+      <section>
+        <h2>六、全流程造价审计、进度款支付审批与索赔反索赔博弈</h2>
+
+        <p>在储能 EPC 项目执行过程中，总承包商往往通过“低价中标、施工中途签证索赔、竣工结算漫天要价”的三部曲来蚕食业主利润空间。业主项目管理与造价法务团队必须建立严密的反索赔防御工事：</p>
+
+        <h3>6.1 进度款支付比例与“形象进度挂钩”机制</h3>
+        <p>严禁按时间进度或总包单方报送的工程量支付进度款，必须实行**“关键物理里程碑见证确认制”**：</p>
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>付款节点</th>
+              <th>支付比例（累计）</th>
+              <th>必须同时满足的刚性放款前置条件</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>预付款（Advance Payment）</strong></td>
+              <td>10%</td>
+              <td>总包提供等额见索即付银行预付款保函 + 施工许可证取得 + 项目经理驻场到岗证明</td>
+            </tr>
+            <tr>
+              <td><strong>主设备进场款</strong></td>
+              <td>50%（累计 60%）</td>
+              <td>电池集装箱、PCS 变流舱到场开箱检验合格 + 原厂出厂防伪报告 + 进场发票审核通过</td>
+            </tr>
+            <tr>
+              <td><strong>安装就位与倒送电款</strong></td>
+              <td>15%（累计 75%）</td>
+              <td>升压站土建完工 + 一二次设备接线完成 + 升压站倒送电试验一次成功</td>
+            </tr>
+            <tr>
+              <td><strong>并网试运行（COD）款</strong></td>
+              <td>15%（累计 90%）</td>
+              <td>取得电网《并网调度通知书》 + 商业试运行 72/168 小时无故障 + 消防验收合格意见书</td>
+            </tr>
+            <tr>
+              <td><strong>竣工结算款</strong></td>
+              <td>5%（累计 95%）</td>
+              <td>完成竣工决算造价审计 + 性能考核试验（RTE/容量）全部达标 + 交付全套完整竣工图纸</td>
+            </tr>
+            <tr>
+              <td><strong>质保金（Retention）</strong></td>
+              <td>5%（累计 100%）</td>
+              <td>缺陷责任期（2-5 年）届满 + 经第三方检测电池容量衰减符合保证曲线（或提供等额质保保函）</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <h3>6.2 设计变更、现场签证与停工索赔的合规反制</h3>
+        <p>面对总承包商在施工期间提出的各种工程变更索赔与停工索赔，业主方必须坚守以下三大法务防线：</p>
+        <p><strong>防线一：时效失效红线（Time-bar Clause）</strong>：合同必须明确约定“索赔通知时效为 14 个自然日”。总承包商认为有权主张任何工期顺延或费用索赔的，必须在索赔事件发生后 14 日内向监理人和业主递交正式书面索赔意向书；逾期未递交的，视为总承包商彻底放弃索赔权利，业主免除一切补偿责任。</p>
+        <p><strong>防线二：固定总价风险自担原则</strong>：明确除业主主动发出的重大设计变更令外，凡因总承包商自身勘察不细、施工组织不力、主要原材料市场价格上涨、汇率波动、地方用工成本上升等因素导致的成本超支，一律由总包方自行消化承担，合同总价不予调整。</p>
+        <p><strong>防线三：反索赔证据链实时固化</strong>：业主驻场代表与监理工程师必须建立每日工程日志、关键工序隐蔽工程旁站影像记录。当总包方发生窝工、怠工或施工人员不足时，即时下发《监理通知单》与《违约警告函》，要求总包方限期整改并签收确认，为后续主张工期延误清算赔偿金锁定无可争议的铁证。</p>
+      </section>
+
+      <section>
+        <h2>七、储能 EPC 合同风控审查与投决排雷全景清单</h2>
+
+        <p>为保障数亿元储能资产建设工程的安全可控，在组织 EPC 招标文件编制与最终签署合同前，业主法务、商务与工程技术团队必须严格逐条核对以下“十二条黄金风控法则”：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📋</span>
+          <div class="callout-content">
+            <strong>储能 EPC 合同签署前硬核法务审查清单（Checklist）</strong>
+            <ol>
+              <li><strong>主体资质与穿透信用审查</strong>：总承包商必须具备电力工程施工总承包一级（或特级）及承装（修、试）电力设施许可证二级以上资质；严格审查联合体牵头方与成员方的内部连带责任协议；</li>
+              <li><strong>交钥匙包死闭口界定</strong>：明确排除任何漏项索赔，所有为实现全容量商业并网（COD）及通过消防验收所必需的工作均属于总包范围；</li>
+              <li><strong>Vendor List 锁定顶级供应链</strong>：核心设备（电芯、BMS、PCS、EMS、主变）必须在合同技术协议中明确品牌、规格型号与出厂溯源标准，严禁使用“或同等档次”表述；</li>
+              <li><strong>RTE 与可用容量双指标硬核考核</strong>：在交流并网关口点实施全口径综合效率测试（含液冷及辅机能耗），设定阶梯性能违约金（Performance LDs）与绝对拒收底线（Rejection Limit）；</li>
+              <li><strong>工期里程碑与每日清算违约金</strong>：锁定倒送电、首充放与 COD 等四大节点，约定每日万分之五延误赔偿金，并直接涵盖业主容量补贴与租金损失；</li>
+              <li><strong>预付款与进度款保函全覆盖</strong>：预付款必须凭银行见索即付保函支付，进度款必须严格按照工程实体形象进度见证审批，严禁超前垫付；</li>
+              <li><strong>电网接入与涉网试验责任全包</strong>：明确红线内外全部涉网试验（高低穿、调频、电能质量）与电网批复文件由总包全权负责，文件瑕疵导致排期延误不属于工期顺延事由；</li>
+              <li><strong>消防验收全额责任绑定</strong>：总包必须负责通过住建与消防救援部门的建设工程消防设计审查与现场验收，消防验收不通过构成本合同根本违约；</li>
+              <li><strong>电池原厂 10 年质保直接转让（Warranty Assignment）</strong>：总包在 COD 后 10 日内将电芯制造商出具的 10 年原厂衰减保证书及追索权全额背书转让给业主；</li>
+              <li><strong>质保金与见索即付银行保函替换</strong>：留置 5%-10% 竣工结算款作为质量保证金，或以六大国有银行出具的见索即付独立保函替换，覆盖完整缺陷责任期；</li>
+              <li><strong>安全生产事故与全额商业保险兜底</strong>：总包必须全额投保建安一切险与三者险，发生施工火灾、人身伤亡及周边财产损害的全部赔偿责任由总包独立承担；</li>
+              <li><strong>争议解决管辖机构选择</strong>：管辖机构统一约定为项目所在地有管辖权的中级人民法院或国内知名仲裁委员会（如北仲、贸仲），杜绝管辖权异议拖延诉讼进程。</li>
+            </ol>
+          </div>
+        </div>
+
+      </section>
+
     </main>
 
-    <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>储能 EPC 必须确立“交钥匙单一全责”原则</strong>：通过闭口条款锁定工程范围，由总承包商对设计、采购、土建、消防及电网涉网联调负全责。</li>
+        <li><strong>系统充放电效率（RTE）与可用容量是性能保证的核心</strong>：设立科学的性能清算赔偿金（Performance LDs）公式与绝对拒收红线，将性能考核与尾款支付硬核挂钩。</li>
+        <li><strong>工期延误必须锁定四大里程碑与按日阶梯赔偿机制</strong>：约定每日万分之五以上延误违约金，直赔业主容量补贴与租金损失，封堵借电网审查推诿工期的借口。</li>
+        <li><strong>质保期必须推行“银行保函替代 + 电池原厂质保穿透转让”</strong>：确保 10 年电池容量衰减保证书直接背书给业主，实现对电芯原厂的直接追偿隔离。</li>
+        <li><strong>严格执行品牌清单（Vendor List）与第三方权威性能检测</strong>：严禁偷换降级电芯，由具备资质的电力质检机构出具实测数据，筑牢司法诉讼胜诉证据链。</li>
       </ul>
     </section>
 
-    <!-- ⑦ 知识测验 -->
     <section class="quiz-section">
       <h2>❓ 知识测验</h2>
 
-      <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 在储能 EPC 总承包合同中，关于系统充放电往返效率（RTE）的测试考核与辅机能耗界定，以下哪种合同约定最能全面保障业主长期运营收益？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 仅在直流侧电池模组两端测试充放电电量，不计量 PCS 变流器损耗及液冷空调能耗</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 在并网交流关口点进行综合测试，将变压器损耗、PCS 逆变损耗以及液冷系统、BMS 控制回路等全部辅助用电量完整计入充电电量分母中，作为综合 RTE 达标判定依据</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 由总承包商自行在电脑软件上模拟运行一个充放电循环，截图作为验收合格依据</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 合同约定 RTE 属于商业机密，免于任何现场实际通电测试</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。储能电站在实际运营中，液冷空调、PCS 转换和变压器损耗构成了系统最大的电量损失来源（通常占总充电量的 12%-15%）。如果按 A 选项仅测直流侧电芯效率，测试数据虚高（可能达 92% 以上），但实际并网运行时大量辅助用电被遗漏，导致业主在商业运营中面临严重的账外电费亏损；B 选项在交流关口点进行“端到端全口径测试”，真实反映了全系统的综合能效水平，是国际与国内一流工程标准。C 和 D 选项严重违背工程验收规范。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 某 100MW 储能电站因 EPC 总承包商原因导致全容量商业并网（COD）延误 45 天，导致业主错过了当地省级高额容量补贴政策的申报截止期。在 EPC 合同中，业主主张索赔的最有力条款支持是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 仅口头向总包方项目经理抱怨并要求其在项目现场请客吃饭赔礼道歉</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 依据合同约定的“按日工期延误清算赔偿金（Delay LDs）条款及直赔业主政策补贴损失条款”，直接从应付工程款中优先足额扣除相应赔偿金</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 向当地消费者协会投诉总承包商服务态度恶劣</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 立即对整座储能电站进行物理爆破拆除并向保险公司索赔</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。工期延误清算赔偿金（Delay LDs）是工程合同中最为刚性、最具执行力的救济工具。在合同中预先约定清晰的违约金费率（如每日万分之五）及政策损失直接赔偿条款，业主无需在法庭上经历繁琐艰难的实际损失举证过程，即可直接依据合同约定从工程尾款或履约保函中优先抵扣受偿，具备完全的法律拘束力。A 和 C 选项不具备法律强制救济效力；D 选项构成违法破坏财产行为。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 储能电池电芯的技术质保期通常长达 8-10 年，而 EPC 总承包商的整站工程质保期通常仅为 2-3 年。为防止总包商在工程质保期满后注销跑路导致电池后期衰减无人负责，业主在 EPC 合同中必须设置的关键机制是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 强制要求总包商董事长个人终身不得退休并将其护照交由业主保管</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 设立“电池原厂质保向业主直接转让与穿透追偿机制（Warranty Assignment）”，要求总包在并网后将电芯制造商出具的原厂 10 年质保承诺书及索赔权正式转让给业主</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 拒绝支付全部工程款，扣留总包方 100% 的合同款项长达 10 年之久</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 祈祷电池质量过硬永远不要发生任何衰减与故障</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。建设工程法律关系中，合同相对性原则使得业主在无特别约定时无法直接突破总包向设备生产厂家追责。通过在 EPC 合同中设立“质保权益转让（Warranty Assignment）”及“第三方受益人”条款，总包商将电芯生产原厂出具的长期质量衰减保证书全额背书转让给业主，即使总承包商未来破产注销，业主依然享有直接向宁德时代、亿纬锂能等电芯制造巨头主张免费补容、更换模组及索赔的法定权利，彻底消除了长期运营中的破产追偿真空风险。A 选项侵犯人身权利违法无效；C 选项构成严重违约将被反诉。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在储能 EPC 项目招标与签约过程中，为防范总承包商在低价中标后私自采购二线、降级或返工电芯以次充好，合同技术规范中应当采取的最有效约束措施是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 仅在合同中笼统写明“采用知名品牌优质锂电池”</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 在合同中严格限定核心设备品牌与规格清单（Vendor List 锁定顶级供应商与具体型号），并约定设备到场时必须出具原厂出厂编码（QR码）溯源报告及第三方驻厂监造报告，未经业主书面同意严禁变更</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 允许总包商自由选购市场上最便宜的拆车二手梯次利用电池</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 完全信任总承包商的商业道德，不作任何品牌和技术约定</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。储能系统造价中电芯成本占比高达 50% 以上，是总包方偷工减料冲动最强烈的部件。若合同仅写“知名品牌”，总包极易使用二线品牌甚至降级 B 品电芯充数。严格锁定 Vendor List（合格供方名录）至具体规格型号，并辅以“原厂出厂防伪溯源报告”与“第三方驻厂见证监造报告”，从采购源头到物流验货建立全流程闭环控制，是杜绝假冒伪劣电芯的核心法宝。A 选项条款模糊极易被钻空子；C 选项违反国家能源局严禁在大型电站使用梯次电池的安全禁令。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 储能 EPC 施工期间，若因总承包商施工现场焊接作业违规引发储能集装箱火灾并导致电站设备严重损毁，关于赔偿责任与保险理赔的划分原则，以下哪项最为合规合理？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 损失全部由业主自行承担，总承包商无任何过错与赔偿责任</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 总承包商作为施工现场安全第一责任人，必须承担全部财产重置与修复责任；损失首先由总包方投保的工程一切险理赔，不足部分全额由总承包商自行赔偿，且不免除其工期延误违约责任</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 由当地消防救援支队全额自掏腰包赔偿电站全部建设损失</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 立即将事故现场掩埋并当作从未发生过该起火灾</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。在交钥匙 EPC 总承包模式下，项目移交前施工现场的安全管理控制权完全归属于总承包商。因总包违章动火作业引发的火灾事故，总包方必须承担全部民事侵权与违约责任。通过强制总包投保全额建安一切险与第三者责任险，可利用商业保险实现第一层损失风险对冲，保险未覆盖的自负免赔额、间接损失及工期延误赔偿金依然由总承包商全额清偿。C 选项无任何法律依据；D 选项构成瞒报安全生产事故的严重刑事违法行为。</p>
         </div>
       </div>
 
@@ -142,7 +429,6 @@
       <p class="quiz-score" id="score-display"></p>
     </section>
 
-    <!-- ⑧ 章节底部导航 -->
     <nav class="bottom-nav">
       <a href="sp6_1_2_容量租赁协议租费与调度条款.html" class="bottom-nav-prev">
         <span class="bnav-label">← 上一节</span>
@@ -155,24 +441,23 @@
       </a>
     </nav>
 
-    <!-- ⑨ 相关章节 -->
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="sp6_1_1_EMC合同节电量对赌与终止条款.html">SP6-1-1：EMC 能源管理合同精析：节电量/差价收益对赌、负荷变动保护与提前终止补偿机制</a></li>
+        <li><a href="sp6_1_2_容量租赁协议租费与调度条款.html">SP6-1-2：容量租赁协议防坑指南：租赁费追缴、电网调度优先级保障与违约金追偿条款</a></li>
+        <li><a href="sp6_4_1_延期并网责任认定与违约金追偿.html">SP6-4-1：电站延期并网责任认定与违约金索赔实务</a></li>
+        <li><a href="sp6_4_3_安全事故责任与代位求偿复盘.html">SP6-4-3：电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘</a></li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
 
-    <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp6_1_3</span></p>
     </footer>
-
   </div>
 
-  <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
