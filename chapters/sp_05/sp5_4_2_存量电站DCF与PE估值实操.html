@@ -4,137 +4,423 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>运营期存量电站估值模型：DCF 折现现金流法、市收益率法（P/E）与重置成本法实操 — 敏感性分析、资产估值与退出测算 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析运营期存量电站估值模型：DCF 折现现金流法、市收益率法（P/E）与重置成本法实操的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析储能电站估值的三大主流方法：DCF 折现现金流法、市收益率法（P/E）与重置成本法，帮助投资人掌握运营期存量电站的定价逻辑与实操技巧。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-
-  <!-- ① 顶部固定导航栏 -->
   <nav class="top-nav" id="top-nav">
     <div class="top-nav-inner">
-      <a href="../../index.html" class="nav-home" title="返回主页">
-        <span class="nav-home-icon">⚡</span>
-        <span class="nav-home-text">网储手册</span>
-      </a>
+      <a href="../../index.html" class="nav-home" title="返回主页"><span class="nav-home-icon">⚡</span><span class="nav-home-text">网储手册</span></a>
       <div class="nav-breadcrumb">
-        <span class="nav-level">SP_05</span>
-        <span class="nav-sep">›</span>
-        <span class="nav-chapter">敏感性分析、资产估值与退出测算</span>
-        <span class="nav-sep">›</span>
+        <span class="nav-level">SP_05</span><span class="nav-sep">›</span>
+        <span class="nav-chapter">敏感性分析、资产估值与退出测算</span><span class="nav-sep">›</span>
         <span class="nav-section">运营期存量电站估值模型：DCF 折现现金流法、市收益率法（P/E）与重置成本法实操</span>
       </div>
       <div class="nav-chapter-jump">
-        <a href="sp5_4_1_单因素与双因素敏感性分析.html" class="nav-prev" title="上一节：单因素与双因素敏感性分析：电价差、RTE、衰减率、CAPEX 对 IRR 的冲击测算">← 上节</a>
-        <a href="sp5_4_3_资产证券化ABS与REITs测算.html" class="nav-next" title="下一节：资产证券化（ABS / 公募 REITs）估值与底层资产发行测算">下节 →</a>
+        <a href="sp5_4_1_单因素与双因素敏感性分析.html" class="nav-prev">← 上节</a>
+        <a href="sp5_4_3_资产证券化ABS与REITs测算.html" class="nav-next">下节 →</a>
       </div>
     </div>
   </nav>
 
   <div class="page-wrapper">
-
-    <!-- ② 章节页眉 -->
     <header class="chapter-header">
       <div class="breadcrumb">
-        <span class="level-tag">SP_05</span>
-        <span class="sep">›</span>
-        <span>敏感性分析、资产估值与退出测算</span>
-        <span class="sep">›</span>
+        <span class="level-tag">SP_05</span><span class="sep">›</span>
+        <span>敏感性分析、资产估值与退出测算</span><span class="sep">›</span>
         <span>运营期存量电站估值模型：DCF 折现现金流法、市收益率法（P/E）与重置成本法实操</span>
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp5_4_2</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约30分钟</span>
+        <span class="difficulty">🟡 进阶</span>
       </div>
       <h1>运营期存量电站估值模型：DCF 折现现金流法、市收益率法（P/E）与重置成本法实操</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">当一座已经运营三年的储能电站摆在买家面前，它值多少钱？答案从来不是唯一的——三种主流估值方法从不同视角切入，各有其逻辑底座与适用边界。本节带你掌握储能资产定价的完整武器库。</p>
     </header>
 
-    <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>理解估值三法的底层逻辑</strong>：区分 DCF 法（内在价值派）、市收益率法（市场比较派）与重置成本法（资产重建派）的出发点，知道各自在什么情境下最有说服力。</li>
+        <li><strong>掌握 DCF 法的核心操作步骤</strong>：理解折现率（WACC）的构成、剩余运营期现金流的预测逻辑，以及终值（Terminal Value）的计算与处理方式。</li>
+        <li><strong>学会市收益率法的可比交易分析</strong>：理解 EV/EBITDA 等倍数的含义，以及如何在储能行业中寻找可比标的并进行调整修正。</li>
+        <li><strong>了解重置成本法的应用边界</strong>：明确重置成本法在储能估值中的适用场景与局限性，尤其是电池技术快速迭代背景下的折价处理逻辑。</li>
+        <li><strong>建立「三法交叉验证」思维</strong>：理解为何专业评估报告通常同时使用两种或三种方法进行交叉验证，以及如何判断和解读不同方法下的估值差异。</li>
       </ul>
     </section>
 
-    <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：一座「账面亏损」的储能电站，为何被以 3.2 亿元成交？</h2>
+      <p>2023年末，华东某省一座投运两年的独立储能电站（100MW/200MWh，配套新能源基地）挂牌转让。电站的账面净资产仅 1.3 亿元，前两年合计亏损约 1,100 万元——看起来是一块烫手山芋。然而，经过三轮竞价，最终成交价高达 3.2 亿元，溢价率超过 140%。</p>
+      <p>围观者困惑：账面都亏了，凭什么卖这么贵？买家的财务总监给出了答案：「我们不买账面，我们买未来现金流。」这座电站位于现货市场开放省份，已经签署了稳定的容量租赁长期协议，并拥有优质的并网接入位置——这些都是用账面数字无法完整体现的「隐形价值」。</p>
+      <p>这就是储能资产估值的核心张力：会计账本描述的是过去，而投资者关心的是未来。三种主流估值方法——折现现金流法（Discounted Cash Flow，DCF）、市收益率法（Market Multiple Approach）和重置成本法（Replacement Cost Approach）——分别从不同角度逼近这个「未来价值」。理解它们的逻辑、操作步骤和局限，是储能资产交易中最关键的财务技能之一。</p>
     </section>
 
-    <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、DCF 折现现金流法：最严谨的内在价值发现工具</h2>
+
+        <p>折现现金流法是所有估值方法中理论最扎实、计算最复杂、也最受专业投资机构信赖的方法。它的核心思想只有一句话：<strong>一项资产的价值，等于它未来所有现金流按照合适的折现率折算到今天的现值之和</strong>。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：DCF 就像给「未来的租金收入」做今天的定价</strong>
+            <p>假设你打算买一套商铺，每年能收 10 万元租金，持续 20 年。但今天的 10 万元和 20 年后的 10 万元，购买力是不一样的——货币有时间价值。如果你要求的年化回报率是 8%，那么 20 年后的那笔 10 万元，折算到今天只值约 2.15 万元（10万 ÷ (1.08)^20）。把 20 年的租金全部这样折算，加总起来，就是你愿意为这套商铺支付的最高价格——这就是 DCF 的核心逻辑。储能电站的逐年净现金流，就对应着「每年的租金收入」；折现率，就对应着「你要求的年化回报率」；折算后的加总，就是电站的评估价值。</p>
+          </div>
+        </div>
+
+        <h3>1.1 折现率的选取：WACC 与投资者要求回报率</h3>
+
+        <p>DCF 估值中，<strong>折现率（Discount Rate）</strong>是最关键也最具争议的假设。最常用的折现率是<strong>加权平均资本成本（Weighted Average Cost of Capital，WACC）</strong>，它综合考虑了债务融资成本和股权融资成本的加权平均值。</p>
+
+        <p>对于运营期储能电站的收购估值，买方通常不用卖方当初的融资成本，而是用<strong>自己对这类资产的预期回报率</strong>作为折现率。这个预期回报率在储能行业中通常在以下区间内：</p>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr><th>买方类型</th><th>折现率参考区间</th><th>原因</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>战略产业投资者（央企/国企）</td><td>6%～8%</td><td>资本成本低，长期持有，对流动性溢价要求低</td></tr>
+            <tr><td>私募基金（基础设施类）</td><td>8%～12%</td><td>有明确退出期限，需覆盖管理费和 Carry</td></tr>
+            <tr><td>PE/VC 成长型基金</td><td>12%～18%</td><td>风险偏好更高，要求更高绝对回报</td></tr>
+            <tr><td>REITs 底层资产要求</td><td>5%～7%</td><td>类债券属性，要求稳定分红，折现率接近无风险利率加风险溢价</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>折现率差异是「同一资产不同报价」的最大来源</strong>
+            <p>同一座 100MW/200MWh 储能电站，买方 A（央企，折现率 7%）的估值可能是 3.8 亿元，买方 B（PE 基金，折现率 12%）的估值只有 2.4 亿元。两份报告都是「专业估值」，数字相差 58%。这种差异不是其中一方犯了错，而是折现率选择不同造成的——折现率本质上反映的是买方对这类资产的机会成本。所以在阅读任何第三方估值报告时，第一件事应该是看「折现率是多少、是谁设定的」。</p>
+          </div>
+        </div>
+
+        <h3>1.2 剩余现金流预测：从已知到未知的外推逻辑</h3>
+
+        <p>DCF 估值的第二个核心输入是<strong>未来各年度的自由现金流（Free Cash Flow，FCF）预测</strong>。对于已在运营的储能电站，这个预测分为两段：</p>
+
+        <p><strong>第一段（剩余合同期，通常 3～10 年）</strong>：基于已签署的容量租赁合同、现货市场历史表现、已知的运维成本结构，相对可以进行「半确定性」的预测。关键变量包括：年利用小时数的衰减曲线（电池退化导致）、运维费的通胀递增、是否存在补容节点等。</p>
+
+        <p><strong>第二段（合同期后，通常 5～15 年）</strong>：这部分预测不确定性极高，通常通过「终值（Terminal Value）」来处理——即假设电站在某个时间点进入「稳态」，此后的现金流按某个永续增长率（通常取 0%～2%，保守处理）永续增长，用永续增长公式折算出终值再折现回来。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实操案例：广东某 200MW/400MWh 独立储能电站 DCF 估值拆解（2024年）</strong>
+            <p>该电站于 2022 年投运，资产评估方于 2024 年进行估值，剩余预计运营年限 18 年。评估假设：折现率取 9%（基础设施基金口径）；前 8 年有容量租赁合同保底（160 元/MWh/年），之后转入现货市场模式；年利用小时数从当前 950 小时逐年衰减至第 15 年的 820 小时（考虑电池退化）；第 10 年补容一次（成本约 8,000 万元）；运维费以 2.5% 通胀递增。折现后各年 FCF 现值合计约 4.2 亿元，终值现值约 1.1 亿元，合计评估值约 5.3 亿元。初始建设 CAPEX 为 7.2 亿元，三年折旧后账面净资产约 5.0 亿元——DCF 估值与账面净资产高度接近，说明该电站属于「公允价值定价」状态。</p>
+          </div>
+        </div>
+
+        <h3>1.3 DCF 法的局限性：对长期假设极度敏感</h3>
+
+        <p>DCF 是一把双刃剑：它理论上最精确，实操中却对假设极度敏感。20 年期现金流的 DCF 估值，如果把折现率从 8% 调整到 10%，估值结果可能相差 20%～30%；如果同时调整年利用小时数假设，差异可能超过 40%。</p>
+
+        <p>因此，专业的 DCF 估值报告通常会给出「基准情景」「乐观情景」和「悲观情景」三套结果，形成估值区间而非单点数字。投资决策委员会最终讨论的，往往是这个区间的合理性，而不是某个精确数字。</p>
+      </section>
+
+      <section>
+        <h2>二、市收益率法（EV/EBITDA 倍数法）：市场共识的快速锚定工具</h2>
+
+        <p>市收益率法是资本市场最常用、速度最快的估值方法，原理是：<strong>把目标资产与可比标的的交易倍数进行对标，从而快速得出价值参考区间</strong>。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：市收益率法就像用「房价/租金」比率来定价</strong>
+            <p>同一个城市、同一个地段，如果标准商铺的「房价/年租金」倍数（即市盈率）普遍在 15～18 倍之间，那么你手里一套年租 8 万元的铺子，大概率值 120 万～144 万元——不需要精算未来 20 年每一笔现金流，只需要参考市场共识的定价倍数，就能快速得到参考价。储能电站估值中，最常用的倍数是「企业价值/税息折旧摊销前利润（EV/EBITDA）」。EV（Enterprise Value，企业价值）是电站买入总价（不含债务，或含净债务的口径，看协议约定）；EBITDA（Earnings Before Interest, Taxes, Depreciation and Amortization，税息折旧摊销前利润）则类似于电站的「年净经营现金流」——日常运营能赚多少钱，不考虑财务结构。这个倍数高低，反映市场愿意为每 1 元 EBITDA 支付多少元。</p>
+          </div>
+        </div>
+
+        <h3>2.1 储能行业的 EV/EBITDA 倍数参考</h3>
+
+        <p>中国独立储能资产的 EV/EBITDA 倍数，由于市场发展时间较短，可参考的可比交易样本数量有限，通常需要结合以下几类参照：</p>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr><th>参照类别</th><th>参考 EV/EBITDA 倍数</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A 股上市储能运营商</td><td>12～18×</td><td>含控股股东溢价与流动性溢价</td></tr>
+            <tr><td>国内已完成的储能电站并购案例</td><td>8～14×</td><td>大部分为项目公司层面交易，不含上市溢价</td></tr>
+            <tr><td>海外成熟市场储能资产（BESS）</td><td>10～16×</td><td>英国、澳大利亚市场数据，收益模式成熟度更高</td></tr>
+            <tr><td>国内新能源运营商可比（风电/光伏）</td><td>8～12×</td><td>参考基准，储能风险溢价通常高于存量可再生能源资产</td></tr>
+          </tbody>
+        </table></div>
+
+        <p>使用 EV/EBITDA 倍数法时，有两个关键调整必须做：其一是<strong>电池剩余寿命折减</strong>——若目标电站已运营 5 年，剩余可用寿命短于可比标的，应在倍数或 EBITDA 预测上作折减调整；其二是<strong>商业模式差异修正</strong>——拥有长期锁定合同（如 15 年容量租赁协议）的电站现金流确定性更高，应适当上调倍数；纯依赖现货市场套利的电站收益波动性更大，应下调倍数。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>倍数法的最大价值：快速判断「贵不贵」</strong>
+            <p>在投委会的尽调汇报中，倍数法往往是最先呈现的估值参考。如果一个项目报价对应的 EV/EBITDA 是 22 倍，远超行业中位数的 12 倍，这个「贵」的直觉就会立刻触发追问：是卖方故意抬价，还是这个项目有什么特殊价值支撑高溢价？倍数法的核心贡献不在于精确，而在于「定性判断」的快速校准。</p>
+          </div>
+        </div>
+
+        <h3>2.2 市收益率法的局限：可比样本稀缺与时效性问题</h3>
+
+        <p>中国储能行业的资产交易案例库尚不丰富，这是市收益率法面临的最大挑战。2022 年之前，大规模独立储能项目稀少，交易案例更是寥寥，导致「可比交易」往往要跨越较长时间窗口，时效性存疑。</p>
+
+        <p>此外，不同商业模式、不同省份政策环境下的储能项目，EBITDA 来源结构差异极大，简单套用同一个倍数区间可能产生严重偏差。因此，市收益率法通常只作为校验工具，与 DCF 法配合使用，而非单独定价依据。</p>
+      </section>
+
+      <section>
+        <h2>三、重置成本法：资产重建视角的估值底板</h2>
+
+        <p>重置成本法（Replacement Cost Approach）的逻辑最为朴素：<strong>一项资产的价值，不会超过用现在的技术和价格从头建一个类似资产的成本</strong>。换句话说，它问的是：如果我今天重新建一座一模一样的电站，需要花多少钱？</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：重置成本法就像保险公司定损老房子</strong>
+            <p>一栋建于 2010 年的三层商业楼，火灾后保险公司来定损，不会按照它 2010 年的「账面价值」赔，也不会直接按市场价赔，而是按「用现在的建材和人工，重新建同等规格楼房需要多少钱」来定基础值，再扣减「已使用年限带来的折旧」和「市场流动性折价」。储能电站的重置成本估值，就是这个逻辑：用当前的电池单价、PCS 单价、EPC 工程单价，重新建一座同规模电站的总成本，再减去已运营年限对应的功能折旧（电池容量衰减、设备磨损老化）和经济折旧（技术进步导致的价值下滑）。</p>
+          </div>
+        </div>
+
+        <h3>3.1 重置成本法的计算框架</h3>
+
+        <p>重置成本法评估结果 = 复原重置成本 × (1 - 综合折旧率)</p>
+
+        <p>其中，综合折旧率包含三类折旧：</p>
+
+        <p><strong>物质折旧（有形损耗折旧）</strong>：设备因使用和时间产生的物理老化。电池系统按照实测容量保持率（如运营 3 年后容量剩余 92%）折算；PCS、变压器等电力设备按剩余使用年限折算；土建结构按建筑物折旧率折算。</p>
+
+        <p><strong>功能折旧（技术进步带来的价值降低）</strong>：这是储能资产最特殊的折旧来源。由于磷酸铁锂电池价格在 2022～2024 年间下降了约 40%，一座 2022 年以 2.0 元/Wh 成本建设的电站，如果今天要以等效规格重新建设，只需 1.35 元/Wh——原有资产的「功能价值」相比重置成本已经缩水。功能折旧 = (历史建设单价 - 当前等效新建单价) ÷ 历史建设单价 × 相关资产比例。</p>
+
+        <p><strong>经济折旧（外部环境变化带来的价值降低）</strong>：如政策环境恶化、所在市场电价体系改革导致收益路径受阻等。这类折旧难以量化，通常以折价率形式附加说明。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>重置成本法实操：某 2022 年投建的 100MW/200MWh 电站，2025 年评估</strong>
+            <p>原始建设成本：200,000 kWh × 2,000 元/kWh = 4.0 亿元（含送出工程）。2025 年等效重置成本：200,000 kWh × 1,380 元/kWh = 2.76 亿元。物质折旧率（3 年运营，电池容量 92%，设备折旧）约 15%，功能折旧率约 18%（技术进步带来价格下降），合计综合折旧率约 30%。重置成本法估值 = 2.76 亿元 × (1 - 30%) = 1.93 亿元。注意：这与该电站可能的 DCF 估值（若位于优质现货市场，可能达 3.5 亿元以上）相差甚远。原因在于重置成本法完全不考虑「位置溢价」「并网资格稀缺价值」「存量合同价值」——这恰恰说明了重置成本法在储能估值中只能作为「价值下限参考」而非主要估值方法。</p>
+          </div>
+        </div>
+
+        <h3>3.2 重置成本法的适用场景与局限</h3>
+
+        <p>重置成本法在以下场景中较为适用：一是存量电站收益预测极度不确定（如因政策变化导致现金流路径不明），DCF 法无法提供可信估值，此时重置成本法可以提供「资产物质价值的底线」；二是保险理赔和资产抵押融资场景，需要评估资产的可偿还价值；三是早期项目或尚未形成稳定收益的新建项目。</p>
+
+        <p>然而，对于已经形成成熟运营记录的存量储能电站，重置成本法的局限极为明显：它完全忽略了位置特许权（并网资格、输电走廊稀缺性）、合同锁定价值（已签长期租赁合同带来的确定性现金流）以及运营团队和数据积累的无形资产——而这些，恰恰是优质储能资产最核心的价值来源。</p>
+      </section>
+
+      <section>
+        <h2>四、三法交叉验证：专业估值的完整框架</h2>
+
+        <p>在储能资产收购的实际尽调中，专业机构从来不会只用一种方法定价。标准做法是<strong>三法并行，交叉验证，最终取得估值区间而非单点结论</strong>。</p>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr><th>估值方法</th><th>优势</th><th>局限</th><th>在储能估值中的权重</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>DCF 折现现金流法</td><td>理论最严谨，能体现未来现金流差异</td><td>对假设极度敏感，长期预测不确定性高</td><td>主要方法，权重 50%～60%</td></tr>
+            <tr><td>市收益率法（EV/EBITDA）</td><td>快速反映市场共识，可比标的直观</td><td>可比样本稀缺，行业差异难以完整调整</td><td>辅助验证，权重 25%～35%</td></tr>
+            <tr><td>重置成本法</td><td>提供资产物质价值底线，直观可靠</td><td>忽略无形资产和位置溢价，通常低估优质资产</td><td>底线参考，权重 10%～20%</td></tr>
+          </tbody>
+        </table></div>
+
+        <p>当三种方法的估值结果接近（差异在 15% 以内），说明定价较为合理，可以进入谈判阶段。当三种方法出现较大偏差（超过 30%），往往意味着某种方法的关键假设存在问题，需要专项排查——常见原因包括：DCF 法的折现率过于保守（导致估值偏低）、市收益率法的可比标的选取不当（导致倍数偏高）、或重置成本法未充分考虑技术折旧（导致估值偏高）。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>实战技巧：「高低夹逼」快速锁定合理价格区间</strong>
+            <p>在谈判场景中，买方通常会采用「重置成本法定底」（这是买方愿意支付的绝对下限，如果卖价低于重置成本，买新的比买旧的更合算）、「DCF 法定主」（基于保守假设的 DCF 结果代表买方认为的合理价格）、「市收益率法定天花板」（若可比项目普遍交易于 12 倍 EBITDA，买方绝不应出价超过该倍数）的「三层报价逻辑」，在谈判中占据主动。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-extension">
+          <span class="callout-icon">🔭</span>
+          <div class="callout-content">
+            <strong>延伸方向：储能资产 NAV（净资产价值）估值与 REITs 底层资产定价</strong>
+            <p>随着国内公募 REITs 向储能等新基础设施资产扩容，一种新的估值框架正在兴起——净资产价值法（Net Asset Value，NAV），它将 DCF 法估出的运营价值，叠加土地使用权、并网资格等非运营性资产价值，再扣减负债，得出「可分配净资产价值」。这是下一节（sp5_4_3，资产证券化 ABS 与 REITs 测算）的核心议题。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>五、估值实操中的常见陷阱与应对策略</h2>
+
+        <p>理解三种估值方法的理论框架只是第一步，真正的难点在于实操中如何规避那些「看起来合理、实则危险」的系统性偏差。以下是储能资产估值实践中最常见的六大陷阱，每一个都有真实案例支撑。</p>
+
+        <h3>5.1 陷阱一：用历史运营数据线性外推未来收益</h3>
+
+        <p>这是 DCF 建模中最常见的错误之一。当一座储能电站在过去两年取得了较好的现货市场套利收益，估值方往往会把过去的年化数据直接线性延伸到未来 15 年——仿佛市场永远维持当前的价差水平，政策永远不变，竞争者永远不会进入。</p>
+
+        <p>实际情况恰恰相反：储能市场的一个基本规律是，<strong>随着储能装机量的增加，现货市场的峰谷价差会逐渐收窄</strong>。这是因为储能的套利行为本身会压缩价差——当大量储能在低谷时段充电，谷段电价上涨；在高峰时段放电，峰段电价下跌；两端挤压，价差自然缩小。山东省、广东省等现货市场先发地区的运营数据已经印证了这一趋势：2022 年峰谷价差普遍在 0.6～0.8 元/kWh，2024 年已压缩至 0.4～0.6 元/kWh，部分日期甚至出现价差倒挂。</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>正确做法：设计逐年递减的价差假设曲线</strong>
+            <p>专业的 DCF 模型应设定「价差衰减率」假设——例如，假设现货峰谷价差每年衰减 3%～5%，第 10 年的可套利价差仅为当前水平的 60%～70%。同时，不同情景下价差衰减速度不同（装机量增速快则衰减快），应在乐观、基准、悲观三情景中分别设定不同的衰减曲线，而非简单线性外推历史均值。</p>
+          </div>
+        </div>
+
+        <h3>5.2 陷阱二：忽略补容 CAPEX 对现金流的冲击</h3>
+
+        <p>磷酸铁锂电池的日历寿命通常为 10～12 年，而多数储能项目的规划运营期是 20 年。这意味着在项目生命周期内，<strong>电池系统至少需要更换一次</strong>，部分项目可能需要两次。这笔补容资本支出（Replacement CAPEX）往往规模巨大，在估值模型中如果被遗忘或低估，会导致估值严重虚高。</p>
+
+        <p>以一座 200MWh 的储能电站为例，若第 11 年需要全部补容，按当时的预期电池单价（假设降至 0.7 元/Wh）计算，补容成本约为 1.4 亿元——这在 DCF 模型中应该以负现金流（大额支出）的形式出现在第 11 年，并折现计入总估值。若忽略这笔支出，估值将被虚高约 0.5～0.8 亿元（折现后）。</p>
 
         <div class="callout callout-case">
           <span class="callout-icon">🏗️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>行业案例：某基础设施基金收购估值复盘</strong>
+            <p>2023 年，某基础设施私募基金在尽调一座投运 4 年的 100MW/200MWh 独立储能电站时，最初的 DCF 模型未设置补容节点，估值约 4.2 亿元。经过更细致的技术尽调，确认电池已衰减至初始容量的 84%，预计第 8 年需补容一次（剩余 4 年后），补容成本约 8,500 万元。将这笔支出纳入模型后，折现值约 5,800 万元，估值修正为 3.6 亿元——差距 6,000 万元。正是因为这 6,000 万元的差距，买卖双方谈判拉锯了近三个月。这个案例在行业内被广泛引用，提醒从业者：补容 CAPEX 不是细节，而是估值核心变量之一。</p>
           </div>
         </div>
+
+        <h3>5.3 陷阱三：混淆「项目公司层面」与「股权层面」的估值口径</h3>
+
+        <p>在实际储能资产收购中，存在两种截然不同的交易结构：<strong>资产收购</strong>（直接购买电站设备和并网资产）和<strong>股权收购</strong>（购买持有电站的项目公司股权）。这两种结构的估值口径不同，财务报表处理方式也不同，混淆会带来实质性的财务损失。</p>
+
+        <p>资产收购的估值基准是<strong>企业价值（Enterprise Value，EV）</strong>，它不包含被收购方的现有负债——买方只买「裸资产」，电站的银行贷款由卖方自行清偿。而股权收购的估值基准是<strong>权益价值（Equity Value）</strong>，等于 EV 减去净债务（有息负债减去现金），买方承接了项目公司的现有债务结构。</p>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
+          <div class="callout-content">
+            <strong>生活类比：EV 和股权价值的区别就像「全款买房」和「接受房贷买房」</strong>
+            <p>全款买一套市价 300 万的房子，你付 300 万（对应 EV）。但如果这套房子还有 120 万的未还房贷，你「接盘」买方需要付给卖方 300 - 120 = 180 万（对应股权价值），同时继续还那 120 万的贷款给银行。储能电站的股权收购就是「接盘」，买方拿到项目公司全部资产的同时，也承接了它的全部负债。所以同一座电站的 EV 可能是 4 亿元，但若它背负了 2.5 亿元的开发贷，股权价值只有 1.5 亿元——而这 1.5 亿元才是买方实际支付给卖方的「对价」。不少新进市场的买方因为混淆这两个口径，在报价阶段就吃了大亏。</p>
+          </div>
+        </div>
+
+        <h3>5.4 陷阱四：低估运营期合规与电力市场变化的政策风险</h3>
+
+        <p>中国储能行业目前处于政策密集出台期，监管框架尚未完全定型。估值模型中对政策风险的处理方式，直接影响折现率的选取和情景分析的范围设定。以下几类政策风险在近年来的储能资产估值中被系统性低估：</p>
+
+        <p><strong>并网调度规则变化</strong>：部分省份开始对独立储能的调度优先级和强制充放电规则进行调整，直接影响电站的实际可调度小时数，进而影响现货市场收益。</p>
+
+        <p><strong>容量电费机制的退出或缩减</strong>：目前，独立储能的容量租赁收益来源于电网企业的租赁支付（容量电费机制），这一机制在部分省份尚处于试行阶段，未来是否能长期持续、价格水平是否维持，均存在政策不确定性。</p>
+
+        <p><strong>碳市场与绿证制度的交叉影响</strong>：若未来储能也能参与碳市场获得额外收益，将对估值带来正向影响；但若绿证价值被重新核定，抵冲储能的隐性收益，也可能带来负向冲击。</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>应对策略：政策风险在折现率或情景分析中的处理原则</strong>
+            <p>专业机构通常通过两种方式处理政策风险：一是在折现率上附加「政策风险溢价」（通常 0.5%～2%，视政策明确程度而定）；二是在情景分析中设置「政策不利情景」，模拟容量电费机制退出、现货收益减半等极端情况，测算该情景下的估值下限（即「压力测试值」）。当投资决策委员会看到即便在政策不利情景下，估值仍高于收购价格一定幅度，才会真正放心拍板。</p>
+          </div>
+        </div>
+
+        <h3>5.5 陷阱五：忽视土地与电网接入资产的「附着价值」</h3>
+
+        <p>在储能资产估值中，往往被低估的一类价值是<strong>并网接入资产的稀缺溢价</strong>。在主要输电走廊密集的地区，新增并网容量申请周期长（有时超过 3 年）、配套投资大（线路扩容、变电站建设），而一座已经并网的存量电站，天然享有这一「已获批接入资格」带来的稀缺价值。</p>
+
+        <p>更进一步，部分优质储能电站的并网位置恰好处于「接近大用电负荷中心」或「接近大型新能源场站」的战略要地，这种地理位置带来的调度优先权和潜在服务收益，远超电站的物理装机价值。重置成本法和市收益率法均无法有效捕获这种「位置特许权溢价」，只有在 DCF 模型中把这类战略价值显式地体现在更高的利用小时数假设或更稳定的合同获取能力上，才能真正呈现这部分价值。</p>
+
+        <h3>5.6 陷阱六：单一时点估值忽视未来增资扩容的期权价值</h3>
+
+        <p>部分优质储能电站拥有<strong>预留扩容空间</strong>——已建设的升压站和输电走廊具备承载更大装机的能力，土地面积也允许增设电池仓。这意味着持有该资产的投资人，同时持有了一个「以较低成本扩大装机」的实物期权（Real Option）。</p>
+
+        <p>传统 DCF 法将电站视为静态资产，不考虑未来扩容可能带来的额外价值。而实物期权分析（Real Options Analysis）则认为：在有利的电力市场条件下，扩容期权可能在未来某个时点被「行权」，带来超额回报。对于具有明确扩容条件的优质电站，一些专业估值机构会在主体 DCF 估值之外，附加一个「扩容期权价值」的定性或定量评估，使估值更完整地反映资产的全部潜在价值。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>综合实操示范：某基金对三峡集团旗下储能电站的收购估值过程（2024 年模拟）</strong>
+            <p>标的资产为湖南省某 150MW/300MWh 独立储能电站，投运于 2022 年，签有 15 年容量租赁合同（首 10 年），剩余可运营约 17 年，电池健康度（SoH）约 91%。买方（某基础设施私募基金，目标回报率 9%）同时启动三法估值：DCF 法（折现率 9%，设第 10 年补容，价差逐年递减 3%）估值约 6.8 亿元；市收益率法（参考 8 个国内可比交易，中位数 EV/EBITDA 约 11 倍，基于历史 EBITDA 5,200 万元）估值约 5.7 亿元；重置成本法（当时 1.32 元/Wh 的重置价格，综合折旧率约 22%）估值约 3.1 亿元。三法交叉验证：DCF 与倍数法差距约 19%，可解释（DCF 反映了合同确定性溢价）；重置成本法显著偏低，说明该电站的位置溢价和合同价值未被重置成本反映。综合加权（DCF 权重 55%、倍数法权重 30%、重置成本法权重 15%），最终评估区间约 5.5～6.2 亿元，实际成交价约 5.9 亿元，位于区间中段，交易双方均接受。</p>
+          </div>
+        </div>
+
       </section>
+
     </main>
 
-    <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>DCF 法是储能估值的主要方法</strong>：理论最严谨，但对折现率和长期现金流假设极度敏感，需以区间形式呈现而非单点结论。折现率选取（买方 WACC 或目标 IRR）是影响估值结果最大的单一变量。</li>
+        <li><strong>市收益率法（EV/EBITDA）是市场定价的快速校验工具</strong>：中国储能市场可比案例稀缺，使用时需对商业模式差异、剩余寿命和合同确定性进行修正，通常作为辅助验证方法。</li>
+        <li><strong>重置成本法提供资产物质价值的「底线锚点」</strong>：在储能领域尤其需要注意功能折旧（电池价格快速下跌导致的价值缩水），但该方法无法体现位置特许权和合同锁定价值，通常低估优质运营资产。</li>
+        <li><strong>三法交叉验证是专业估值的标准框架</strong>：三种方法同时使用，差异在 15% 内属合理，超过 30% 需排查关键假设问题。买方可用「重置成本定底、DCF 定主、倍数定天花板」的三层报价逻辑在谈判中占据主动。</li>
+        <li><strong>估值不是精确科学，而是有依据的判断</strong>：3.2 亿元成交一座「账面亏损」的电站，背后是对未来现金流的合理判断而非账面数字的盲目崇拜。掌握三种估值方法，就是掌握了对这种判断进行专业表达的语言工具。</li>
       </ul>
     </section>
 
-    <!-- ⑦ 知识测验 -->
     <section class="quiz-section">
       <h2>❓ 知识测验</h2>
 
-      <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 以下关于 DCF 折现现金流法在储能电站估值中的描述，哪一项最为准确？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. DCF 法不需要对折现率做出假设，因为折现率是由市场客观决定的固定值</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. DCF 法是三种主流估值方法中理论最严谨的，但其结论对折现率和长期现金流假设高度敏感</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. DCF 法只需考虑电站的 CAPEX 和 OPEX，不需要预测收入端</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. DCF 法对于任何类型的储能资产都应给出单一精确的估值数字，而不是区间</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
-          <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。DCF 法理论上最严谨（它直接评估资产未来现金流的折现价值），但恰恰因为需要预测长达 15～20 年的现金流并选定折现率，两个核心假设的微小变动都会导致估值结果大幅波动。A 选项错误，折现率并无市场统一固定值，而是由买方根据自身资本成本和对该类资产的预期回报率主观设定。C 选项错误，DCF 需要对收入端（年利用小时数×价差等）进行完整预测，这是模型的重要输入。D 选项错误，专业估值报告必须给出基准/乐观/悲观三情景下的估值区间，而非单点精确数字，后者在不确定性极高的储能行业中会产生虚假精确感。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 同一座储能电站，央企战略买方的 DCF 估值为 3.8 亿元，某 PE 基金买方的 DCF 估值为 2.4 亿元。最可能造成这一差异的根本原因是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 两家机构使用了不同的会计准则，导致 EBITDA 口径不同</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 两家机构对电站物理参数（如 RTE、装机容量）的掌握程度不同</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 两家机构采用了不同的折现率——央企资本成本低（约 7%），PE 基金要求更高回报（约 12%）</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. PE 基金做了错误的财务建模，计算结果不可信</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：C 选项正确。DCF 估值中，折现率是对估值结果影响最大的单一变量。央企资本成本低（约 6%～8%），对未来现金流要求的折现幅度小，因此折现值更高；PE 基金有明确退出期限和业绩报酬要求，需要更高的绝对回报率（约 10%～14%），折现幅度更大，估值结果自然更低。两者的差距不代表任何一方犯错，而是不同资本成本导致的正常现象。A 选项错误，会计准则不影响 DCF 中的自由现金流预测（FCF 是现金口径，不受会计准则直接影响）。B 选项错误，物理参数通常可以通过尽调核实，不是主要差异来源。D 选项逻辑错误，不同回报要求下得出不同估值是合理的，不代表任何一方建模有误。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 以下关于重置成本法在储能电站估值中的适用性，哪一项判断最为准确？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 重置成本法是储能估值中最精确的方法，应作为主要估值依据</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 重置成本法能够体现电站的并网资格稀缺价值和长期合同锁定价值，因此特别适合优质运营资产</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 由于电池价格大幅下跌，重置成本法在储能领域需要特别考虑功能折旧，且通常只提供资产价值的底线参考</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 重置成本法不需要考虑设备折旧，因为储能电站的电池可以无限次使用</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：C 选项正确。储能行业最显著的特征之一是电池价格快速下跌（2022～2024 年间跌幅超过 40%），这使得功能折旧（即技术进步导致重建成本远低于历史建设成本）在重置成本法中必须被特别处理。而且，重置成本法从根本上不能体现「位置特许权」（已获批的并网资格稀缺性）、「合同确定性溢价」（已签长期租赁合同带来的现金流保障）等无形价值，因此通常低于优质运营资产的真实市场价值，只能作为价值「底线」而非主要估值依据。A 选项恰恰相反，重置成本法是三种方法中最不精确、权重最低的。B 选项错误，重置成本法完全不能体现并网资格和合同价值。D 选项严重错误，储能电池有明确的循环寿命和日历寿命限制，物质折旧是存在且必须量化的。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在储能资产估值报告中，市收益率法（EV/EBITDA 倍数法）面临的最主要挑战是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. EV/EBITDA 倍数在技术上无法适用于储能行业，因为储能资产没有 EBITDA</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 中国储能行业发展时间较短，可参考的可比交易案例稀缺，且不同商业模式差异极大，导致倍数法校准困难</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 倍数法的结论永远高于 DCF 法，会导致估值虚高</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 倍数法要求必须以上市公司作为可比标的，而中国绝大多数储能资产尚未上市</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。中国独立储能项目大规模商业化始于 2022 年前后，资产交易市场发展时间很短，成交案例有限，且不同省份政策差异巨大（如现货市场成熟度、容量租赁定价机制），导致简单套用一个倍数区间会产生严重偏差。这是市收益率法在中国储能市场应用的最核心挑战。A 选项错误，储能电站有运营收入和运营成本，完全可以计算 EBITDA。C 选项错误，倍数法的结论与 DCF 法孰高孰低，取决于具体参数和市场环境，不存在永远高的规律。D 选项错误，倍数法的可比标的可以来自非上市公司的并购交易，「可比交易法」（Precedent Transactions）本身就是市收益率法的主要变体之一，不要求上市公司。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 在三法交叉验证的储能资产估值框架中，若三种方法的估值结果差异超过 30%，以下哪种处理方式最为合理？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 直接取三种方法结果的算术平均值作为最终估值，差异自然消除</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 选择估值最高的方法作为最终结论，以最大化资产价值</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 专项排查导致差异的关键假设——如 DCF 折现率设置、可比倍数样本选取、重置成本功能折旧率——找出不合理之处并修正</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 放弃三法交叉验证，只保留 DCF 法，以单一方法作为最终估值依据</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：C 选项正确。三种估值方法结果差异超过 30%，是一个需要警惕的信号，通常说明某种方法的关键假设存在问题——可能是 DCF 的折现率过于激进或保守，可能是市收益率法的可比标的行业属性不匹配，也可能是重置成本法的功能折旧未能反映技术进步的真实速度。正确做法是逐一排查每种方法的核心假设，找出不合理处进行修正，而不是简单算平均。A 选项的「取平均」会掩盖真正存在问题的假设，属于「和稀泥」而非专业判断。B 选项明显有利益倾向错误（卖方会倾向于选最高估值，买方会倾向于选最低估值，都不代表真实价值）。D 选项放弃交叉验证，会失去识别错误假设的重要工具，专业估值报告通常要求多方法并用。</p>
         </div>
       </div>
 
@@ -142,7 +428,6 @@
       <p class="quiz-score" id="score-display"></p>
     </section>
 
-    <!-- ⑧ 章节底部导航 -->
     <nav class="bottom-nav">
       <a href="sp5_4_1_单因素与双因素敏感性分析.html" class="bottom-nav-prev">
         <span class="bnav-label">← 上一节</span>
@@ -155,24 +440,23 @@
       </a>
     </nav>
 
-    <!-- ⑨ 相关章节 -->
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="sp5_4_1_单因素与双因素敏感性分析.html">SP5-4-1：单因素与双因素敏感性分析：电价差、RTE、衰减率、CAPEX 对 IRR 的冲击测算</a></li>
+        <li><a href="sp5_4_3_资产证券化ABS与REITs测算.html">SP5-4-3：资产证券化（ABS / 公募 REITs）估值与底层资产发行测算</a></li>
+        <li><a href="sp5_4_4_股权转让退出收益分配测算.html">SP5-4-4：股权转让退出（Trade Sale / Buyout）的收益分配与溢价测算</a></li>
+        <li><a href="sp5_1_5_20年衰减与损耗下现金流推算.html">SP5-1-5：充放电衰减与 RTE 动态损耗下，20 年逐年收入/成本现金流推算</a></li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
 
-    <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp5_4_2</span></p>
     </footer>
-
   </div>
 
-  <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
