@@ -57,55 +57,542 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp5_3_4</span>
-        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="reading-time">⏱ 约35 minutes</span>
         <span class="difficulty">🟢 入门</span>
       </div>
       <h1>基金层关键指标测算：Fund IRR、MOIC（投资倍数）、DPI、TVPI 动态模型搭建</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">解构网储项目从资产端现金流到基金端收益指标的漏斗演化，掌握 Fund IRR、MOIC、DPI、TVPI 动态模型搭建的核心实务逻辑。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>理解漏斗损耗</strong>：掌握项目层内部收益率与基金层内部收益率之间的核心差异，明确管理费、运营成本及业绩报酬对收益率的挤压机制。</li>
+        <li><strong>辨析四大指标</strong>：深度理解基金层四大财务指标（Fund IRR、MOIC、DPI、TVPI）的定义、局限性及其在网储基金生命周期中的应用。</li>
+        <li><strong>构建动态模型</strong>：掌握在 Excel 或 Python 中基于非均匀日期现金流计算 XIRR 的动态建模技巧，学会设置电芯重置支出等行业特有调节滑块。</li>
+        <li><strong>把控中国实务</strong>：掌握并网拖延、容量租赁空仓风险、电力现货套利波动等中国网储特有风险在基金层测算模型中的量化处理。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：消逝在漏斗里的“纸面收益率”</h2>
+      <p>在中国某沿海省份，某知名储能产业基金（以下简称“该基金”）的投资总监李总正面临一次严峻的投委会质询。两年前，该基金向有限合伙人（Limited Partner，LP）发起了一笔 1.5 亿元人民币的资金召回，用于投资当地一个 100MW/200MWh 的独立储能电站项目。根据当时项目可研报告中的测算，该电站的资本金内部收益率（Equity IRR）高达 9.5%，在储能项目中堪称优质资产。为了这笔投资，李总在投委会上拍着胸脯保证这将为 LP 带来可观的回报。</p>
+      <p>然而，在今天的合伙人大会上，LP 代表抛出了一连串冰冷的数据：基金成立至今已满两年，LP 实缴的出资中，电站已并网运行 18 个月，但 LP 账上的实缴资本分红率（DPI）依然为零。不仅如此，由于地方升压站并网排队拖延，首期出资在基金账户上滞留了整整 9 个月才真正投向 SPV 层面；加之基金管理团队（普通合伙人，General Partner，GP）每年雷打不动地扣除 2% 的管理费，李总重新跑完模型后发现，LP 最终能拿到的基金净内部收益率（Net Fund IRR）已悄然下滑至 5.5% 左右。更糟糕的是，按照目前的电芯衰减速度，电站可能在第 6 年就需要额外追加数千万元进行电芯重置，这笔巨大的资本支出该如何列支？对基金层的 DPI 和投资倍数（MOIC）又将产生何种冲击？</p>
+      <p>这并非个案，而是中国网储项目从“资产开发层”走向“基金资管层”时普遍遭遇的财务摩擦。为什么项目层面的高收益率无法等同于LP口袋里的真金白银？我们又该如何搭建一套精准反映储能特性的基金层动态模型？本节将为您逐一解密。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、 基金层测算与项目层测算的本质区别</h2>
+        <p>在进行电网侧储能（简称网储）项目投资时，初学者往往容易犯一个根本性的错误：直接把储能电站的可研报告或项目投资模型中的收益率，作为基金投资人的最终收益率。实际上，从电站的充放电套利收益，到基金有限合伙人（LP）拿到手里的可分配现金，中间存在着多层财务“漏斗”与时间维度的错配。要厘清这两者的关系，必须先理解项目层、资本金层与基金层这三个层面的核心差异。</p>
+        
+        <h3>1.1 项目层内部收益率（Project IRR）的“理想国”</h3>
+        <p>项目层内部收益率（Project IRR，又称全投资内部收益率）是评估储能电站本身“物理盈利能力”的指标。它假设电站的所有建设资金全部为自筹资本金（无任何银行贷款等负债杠杆），现金流的流出仅为项目的总投资支出（Capital Expenditure，CAPEX），现金流的流入则为电站的净运营现金流（电费套利+容量租赁+辅助服务收益，扣除电站运维 OPEX、税费等）。</p>
+        <p>Project IRR 关注的是资产本身在不加任何财务杠杆的情况下，能产生多少回报。然而，在实际的商业运作中，极少有投资者会 100% 使用自有资金建设电站。这不仅降低了资金利用效率，也无法放大收益。因此，Project IRR 是一个相对偏向于理想物理资产评估的指标，它无法反映投资者的真实出资回报率。</p>
+
+        <h3>1.2 资本金内部收益率（Equity IRR）的“杠杆游戏”</h3>
+        <p>当投资者引入金融杠杆（如项目贷款）时，测算就进入了资本金层面。资本金内部收益率（Equity IRR）反映的是在扣除银行贷款本息偿还（Debt Service）之后，属于项目公司（通常为特殊目的载体 Special Purpose Vehicle，SPV）股东的内部收益率。</p>
+        <p>在中国，网储项目的资本金比例通常为 20%~30%，其余 70%~80% 资金来自于银行提供的绿色信贷（期限通常为 10~15 年，年利率在 3.2%~4.2% 之间）。由于储能项目的运营期收益率（折现率）通常高于银行贷款利率，通过这种财务杠杆，可以将原本 6% 左右的 Project IRR 放大到 8%~10% 的 Equity IRR。这也是项目开发商在向资方宣介项目时最常使用的指标。然而，对于通过私募基金投资网储项目的 LP 来说，即使是 Equity IRR，也依然处于“资产端”的范畴，尚未穿透到基金的“资管端”。</p>
+
+        <h3>1.3 基金层净收益率（Net Fund IRR）的“漏斗效应”</h3>
+        <p>基金内部收益率（Fund IRR）是站在私募基金（普通合伙人 GP 与有限合伙人 LP 共同构成的有限合伙企业）的视角来计算的。当一个储能产业合伙企业（基金）投资网储项目时，从 SPV 产生的可分配利润到 LP 最终到手的现金流，需要穿透以下四层财务漏斗：</p>
+        
+        <ul>
+          <li><strong>管理费（Management Fee）的持续流失</strong>：为了维持基金管理团队的日常运转、项目开发与尽职调查，基金每年通常需向 GP 支付相当于认缴或实缴资金总额 1.5%~2.0% 的管理费。这意味着，即使项目自身盈利良好，基金层面的现金流每年也会被管理费切走一部分，这会直接降低 LP 的收益。</li>
+          <li><strong>基金层面的运营费用（Fund Expenses）</strong>：除了管理费，基金还需要承担托管费（Custodian Fee）、年度审计费、法务合规费、税务筹划费以及合伙企业层面的流转税等。这些非直接投资于电站的摩擦成本，同样是由基金的总资金池来承担的。</li>
+          <li><strong>业绩报酬（Carried Interest，简称 Carry）的分配机制</strong>：这是基金层最核心的利益共享与分配机制。当基金投资的储能电站获得收益并返还给基金后，GP 并不能立刻拿走全部收益，而是需要满足门槛收益率（Hurdle Rate，通常为单利 6%~8%）。一旦 LP 收回了出资本金并拿到了门槛收益，超额利润的 20% 将作为业绩报酬分配给 GP，LP 仅能分得 80%。这一机制极大地改变了净收益的分配格局，使 LP 最终获得的 Net Fund IRR 显著低于项目公司的 Equity IRR。</li>
+          <li><strong>资金的时间错配与滞留（Time Drag）</strong>：项目层测算假定资本金是在项目建设起点一次性投入，并从第 1 年开始产生均匀收益。但在基金实务中，LP 的出资是根据“资金召回通知（Capital Call）”分批入账的。由于国内网储电站的并网审批、调度接入测试、消防验收等手续繁琐，经常出现资金到位后在基金账户“趴着”数月无法投出的情况。这种资金的低效滞留不产生运营收益，但在时间权重上却已经算作了 LP 的出资持有期，会严重拉低以时间复利计算的 IRR。</li>
+        </ul>
 
         <div class="callout callout-analogy">
-          <span class="callout-icon">🔍</span>
-          <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+          <div class="callout-header"><span class="callout-icon">🔍</span>生活类比：合伙开网约车公司的“利润层层剥离”</div>
+          <div class="callout-body">
+            <p>为了通俗地理解这一过程，我们可以类比几个朋友合伙成立一家网约车车队公司，并雇佣一个职业经理人来打理：</p>
+            <p><strong>项目层 IRR</strong>：相当于这辆新能源网约车在路上跑，每天拉客赚取车费，扣除电费后的收益率。这衡量的是“车本身的赚钱效率”。</p>
+            <p><strong>资本金 IRR</strong>：合伙人没有全额掏钱买车，而是付了 30% 首付，其余 70% 找银行做车贷。每天赚取的车费优先用来偿还银行月供，剩下的钱留在车队公司的账上。因为贷款利率很低，用杠杆买车让合伙人的本金增值效率变高了。</p>
+            <p><strong>基金层 Net IRR</strong>：合伙人（LP）把钱交给了队长（GP）。队长要扣取自己的“工资和出差补贴”（管理费），还要交财务代账费（托管及运营费）。车辆跑完车贷剩下的钱，也不能每天发给合伙人，而是积攒到年底才发（时间错配）。最后分红时，如果合伙人拿到了超过 6% 的利息，超额部分的 20% 还要作为“队长提成”（Carry）分给队长。合伙人一算账，自己最终塞进腰包的收益率，跟当初看车辆可研报告时的纸面收益相去甚远。这就是基金层指标测算的残酷现实。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、 基金层四大核心财务指标的深度解析</h2>
+        <p>在储能基金的投前评估、投中管理与投后退出中，GP 与 LP 双方都需要依赖一系列标准化的财务指标来进行沟通 and 决策。由于网储电站属于典型的“重资产、强现金流、低估值弹性”的类基础设施资产，其四大核心财务指标（DPI、MOIC、TVPI、Fund IRR）的表现特征与传统的互联网或高科技 VC（风险投资）基金有着截然不同的规律。</p>
+
+        <h3>2.1 实缴资本分红率（DPI）：衡量“落袋为安”的硬尺标</h3>
+        <p>实缴资本分红率（Distribution to Paid-In Capital，DPI）是指基金累计向投资人（LP）分配的红利金额与投资人累计实缴资本（Paid-In Capital）的比值。其核心定义式如下：</p>
+        
+        <div class="key-concept">
+          <h4>📌 核心概念：DPI 计算公式</h4>
+          $$DPI = \frac{\sum_{t=1}^{T} D_t}{\sum_{t=1}^{T} PI_t}$$
+          <p>其中，$D_t$ 为第 $t$ 期基金分配给 LP 的真金白银现金红利（Distributions），$PI_t$ 为第 $t$ 期 LP 累计向基金缴纳的实缴出资（Paid-In Capital，包括投资本金和管理费等出资）。</p>
+        </div>
+
+        <p>对于储能基金而言，DPI 是压倒一切的生命线。网储项目本质上是运营型资产，其盈利模式是通过每天持续不断的充放电价差套利、容量租赁来获取稳定的现金流。与那些依赖企业估值暴涨、通过下一轮融资或 IPO 实现股权溢价退出的 VC 基金不同，网储电站不需要等到最后一天整体转让，在运营的第一年就可以产生充沛的营业利润并向上传递。因此，网储基金具有非常突出的“早期高回款”特性。通常，一个设计良好的网储基金在第 3~4 年的 DPI 就可以达到 0.4~0.5 左右，LP 能在投资初期就收回大量本金，极大地降低了投资风险。</p>
+
+        <h3>2.2 投资倍数（MOIC）：资产层面的增值效率</h3>
+        <p>投资倍数（Multiple on Invested Capital，MOIC）是评估基金“投研和项目选择能力”的指标。它衡量的是投资到储能电站项目中的每一分钱，最终增值了多少倍。其计算方法为：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：MOIC 计算公式</h4>
+          $$MOIC = \frac{\sum_{t=1}^{T} D_t^{project} + NAV^{project}}{\sum_{t=1}^{T} IC_t}$$
+          <p>其中，$D_t^{project}$ 表示项目层累计向基金返还的本息和分红，$NAV^{project}$ 表示未退出项目的公允价值（通常为净资产价值 Net Asset Value，NAV），而分母 $IC_t$ 是基金“实际投资到项目中的资金”（Invested Capital），不包含基金管理费、托管费等运营摩擦成本。</p>
+        </div>
+
+        <p>MOIC 的局限性在于它忽略了时间价值。一个 1.5 倍 MOIC 的项目，如果用 3 年时间退出，其内部收益率极高；但如果是用 10 年时间才达到 1.5 倍，其年化收益率可能会低于银行理财。因此，在评估网储资产时，MOIC 通常作为一种辅助性的规模倍数指标，用以直观评估电站资产升值的绝对空间。</p>
+
+        <h3>2.3 投入资本总值倍数（TVPI）：账面价值的拼图</h3>
+        <p>投入资本总值倍数（Total Value to Paid-In Capital，TVPI）是站在 LP 视角的总回报倍数。它衡量的是 LP 掏出来的所有钱（包括投资本金和基金管理费等），在名义上增值了多少倍。TVPI 的定义式如下：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：TVPI 计算公式</h4>
+          $$TVPI = \frac{\sum_{t=1}^{T} D_t + NAV_{fund}}{\sum_{t=1}^{T} PI_t} = DPI + RVPI$$
+          <p>其中，$NAV_{fund}$ 为基金层面的未退出资产净值，而 $RVPI$（Residual Value to Paid-In Capital，剩余价值实缴资本倍数）代表未退出部分的账面价值占总实缴出资的比例。可以看出，TVPI 恰好等于已分配的 DPI 与未分配 of RVPI 之和。</p>
+        </div>
+
+        <p>在网储基金成立的早期和中期（例如第 1~4 年），由于大部分电站仍处于持有运营状态，基金的 TVPI 通常会显著高于 DPI。此时的 TVPI 很大程度上依赖于对未退出电站资产公允价值（NAV）的评估。网储电站的 NAV 评估需要使用收益法（DCF 现金流折现法）进行折现，而折现率的设定、未来电价差的预测、电池容量衰减曲线的假设都具有较强的主观性。如果这些假设过于乐观，模型中计算出的 TVPI 就会虚高。一旦项目在第 7 年整体出售时遭遇市场下行或设备老化严重折价，TVPI 将会发生剧烈缩水。因此，行业内常说：“DPI 是真金白银（Fact），TVPI 是账面名义（Opinion）”。</p>
+
+        <h3>2.4 基金内部收益率（Fund IRR）：时间价值的终极考量</h3>
+        <p>基金内部收益率（Fund IRR）是衡量基金整体资金使用效率的核心时间指标。根据是否扣除管理费和 Carry，可分为总内部收益率（Gross IRR）和净内部收益率（Net IRR）。对于 LP 而言，只有 Net Fund IRR 才是其最终评估投资组合回报的依据。其数学原理为求解使净现值等于零的折现率 $r$：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：Fund Net IRR 计算公式</h4>
+          $$\sum_{t=0}^{T} \frac{CF_t^{net}}{(1 + r)^t} = 0$$
+          <p>其中，$CF_t^{net}$ 为第 $t$ 期 LP 的净现金流（LP 实缴出资为负值，LP 获得分红与退出返还为正值）。求解出的 $r$ 即为基金净内部收益率（Net IRR）。</p>
+        </div>
+
+        <p>由于网储项目从建设到发电需要一定周期，且各期分红不均，Fund IRR 对于现金流的“时间点”极度敏感。如果项目前期有大额出资但分红滞后，IRR 会被迅速拉低，这要求模型搭建者必须建立以“具体天数”为基础的动态现金流模型。</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>财务指标</th>
+                <th>核心定义</th>
+                <th>分母基准</th>
+                <th>中国网储项目特征</th>
+                <th>主要局限性</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>DPI</strong></td>
+                <td>累计已分配现金 / 累计实缴资本</td>
+                <td>LP实缴资本（含费用）</td>
+                <td>前中期回款快，前4年通常可达0.3~0.5</td>
+                <td>不反映未退出资产的潜在价值</td>
+              </tr>
+              <tr>
+                <td><strong>MOIC</strong></td>
+                <td>（累计分配 + 剩余价值）/ 实际投资额</td>
+                <td>项目实际投资额（不含费用）</td>
+                <td>直观反映储能项目本身的物理增值倍数</td>
+                <td>忽略时间价值，无法衡量资金占用时长</td>
+              </tr>
+              <tr>
+                <td><strong>TVPI</strong></td>
+                <td>（累计分配 + 剩余NAV）/ 累计实缴资本</td>
+                <td>LP实缴资本（含费用）</td>
+                <td>前中期由于NAV占比较大，指标偏虚拟</td>
+                <td>NAV估值依赖假设，存在评估水分与变现风险</td>
+              </tr>
+              <tr>
+                <td><strong>Net Fund IRR</strong></td>
+                <td>LP实收净现金流的年化时间收益率</td>
+                <td>动态时间序列现金流</td>
+                <td>对并网延迟、重置资本支出时间极其敏感</td>
+                <td>容易受到再投资收益率假设的扭曲</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>三、 储能基金的现金流特征与动态模型逻辑结构</h2>
+        <p>要搭建一套符合网储行业实际运作规律的基金层财务动态模型，模型的设计者必须跳出纯金融的思维框架，深入理解储能系统的“物理本质”与“生命周期特性”。网储项目的独特性在于其高度复杂的现金流级联传递结构以及中后期的电池衰减与重置需求。</p>
+
+        <h3>3.1 基金募投管退与电站物理生命周期的时空交织</h3>
+        <p>一只典型的网储产业合伙基金的生命周期通常为“5+2”或“7+2”年（即 5~7 年投资与运营期，外加 2 年延长期/退出清算期）。而一个典型的磷酸铁锂储能电站的设计物理寿命为 10~15 年。这种时间跨度上的错配，意味着基金模型必须重点考虑两件事：一是基金运行期间电站的折旧与电池寿命衰减；二是基金到期日（例如第 7 年底），基金必须对尚未结束寿命的电站进行资产整体转让退出，即计算“退出残值（Terminal Value / Exit Proceeds）”。</p>
+
+        <h3>3.2 出资端（Capital Call）的动态分布与并网拖延</h3>
+        <p>网储电站的 CAPEX 通常包括设备购置费（电池舱、PCS、变压器等，占比约 60%~70%）、土建及安装工程费、电网接入系统建设费以及前期开发费用。在基金层面，这些资金不需要在基金成立第一天一次性全部划拨给项目公司，而是由 GP 根据以下物理工程节点，向 LP 发出多次 Capital Call：</p>
+        <ol>
+          <li><strong>首次出资（投前启动）</strong>：约占总额의 10%~20%，用于支付项目前期土地流转、合规报建及电池采购定金。</li>
+          <li><strong>二次出资（设备到货款）</strong>：约占 50%~60%，在电池舱、PCS 等核心设备运抵施工现场并完成初步验收时划拨。</li>
+          <li><strong>三次出资（安装调试款）</strong>：约占 20%，在现场安装完成、静态调试结束、准备并网测试时划拨。</li>
+          <li><strong>尾款（质保金及并网款）</strong>：约占 10%，在电站通过并网验收、正式投入商业运营后拨付。</li>
+        </ol>
+        <p>如果在首期出资被 Call 走后，项目遭遇地方升压站扩容受阻或电网并网通道排队，后续的出资就会被无限期搁置在基金托管账户中，无法转换为带息资产。这在财务模型中被称为“闲置资金拖累”（Cash Drag），会导致基金 IRR 出现明显的斜率下滑。</p>
+
+        <h3>3.3 运营收益的级联传递路径（The Distribution Waterfall）</h3>
+        <p>网储电站的日常运营收益，在向上传递至 LP 口袋的过程中，必须遵循严格的现金流级联扣减逻辑。在动态模型中，这表现为从最底层的“电站营业收入”到最顶层“LP 分红”的多步计算流程：</p>
+        
+        <figure class="svg-figure" style="text-align: center; margin: 2rem 0;">
+          <svg width="100%" height="240" viewBox="0 0 800 240" style="background: #FAFAFA; border: 1px solid #E2E8F0; border-radius: 8px;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#1A5F96"/>
+              </marker>
+            </defs>
+            <!-- 节点1 -->
+            <rect x="20" y="90" width="130" height="50" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="85" y="120" font-size="14" font-weight="600" fill="#1A1A2E" text-anchor="middle">电站营业收入</text>
+            <text x="85" y="135" font-size="11" fill="#718096" text-anchor="middle">（套利+租赁+辅助）</text>
+            <!-- 箭头1 -->
+            <line x1="150" y1="115" x2="190" y2="115" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- 节点2 -->
+            <rect x="200" y="90" width="130" height="50" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="265" y="112" font-size="14" font-weight="600" fill="#1A1A2E" text-anchor="middle">项目级净现金流</text>
+            <text x="265" y="132" font-size="11" fill="#718096" text-anchor="middle">扣除：OPEX、税费</text>
+            <!-- 箭头2 -->
+            <line x1="330" y1="115" x2="370" y2="115" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- 节点3 -->
+            <rect x="380" y="90" width="130" height="50" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="445" y="112" font-size="14" font-weight="600" fill="#1A1A2E" text-anchor="middle">SPV可分配利润</text>
+            <text x="445" y="132" font-size="11" fill="#718096" text-anchor="middle">扣除：项目贷本息</text>
+            <!-- 箭头3 -->
+            <line x1="510" y1="115" x2="550" y2="115" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- 节点4 -->
+            <rect x="560" y="90" width="100" height="50" rx="6" fill="#E8F2FF" stroke="#1A5F96" stroke-width="2"/>
+            <text x="610" y="112" font-size="14" font-weight="600" fill="#1A1A2E" text-anchor="middle">基金分配流</text>
+            <text x="610" y="132" font-size="11" fill="#718096" text-anchor="middle">扣除：基金费用</text>
+            <!-- 箭头4 -->
+            <line x1="660" y1="115" x2="690" y2="115" stroke="#1A5F96" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- 节点5 -->
+            <rect x="700" y="80" width="80" height="70" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+            <text x="740" y="105" font-size="14" font-weight="600" fill="#1A1A2E" text-anchor="middle">LP净分配</text>
+            <text x="740" y="125" font-size="12" fill="#F57C00" text-anchor="middle">GP Carry</text>
+            <text x="740" y="140" font-size="10" fill="#718096" text-anchor="middle">（水瀑布分配）</text>
+          </svg>
+          <figcaption>图1：储能电站至基金LP的现金流级联漏斗传递路径</figcaption>
+        </figure>
+
+        <h3>3.4 致命的“电芯重置（Battery Replacement）”及其模型处理</h3>
+        <p>网储电站的核心物理特性是电池的循环衰减。磷酸铁锂电池在每天“两充两放”的高强度运行下，即使电芯性能优异，其容量通常也会在 5~8 年后衰减到初始状态的 80% 以下。由于电网调度对调频、调峰响应容量有严格考核，一旦可用容量低于特定门槛，电站面临的细则考核罚款将呈指数级上升，且容量租赁费也会等比例被扣减。因此，在基金运行的中后期（通常为第 6 年），必须对电站进行电芯的大规模重置（Battery Replacement）。</p>
+        <p>电芯重置是一笔巨额支出（按目前市场价格，约为初始 CAPEX 的 25%~35%）。在基金层动态模型中，对此通常有三种不同的处理路径，它们对 DPI 和 Fund IRR 的冲击机制截然不同：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>处理路径</th>
+                <th>具体财务操作</th>
+                <th>对 DPI 的影响</th>
+                <th>对 Fund IRR 的影响</th>
+                <th>优缺点及适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>路径一：运营留存准备金</strong></td>
+                <td>从第 1 年起，每年从电站运营分红中计提 10%~15% 的资金作为“重置准备金”，锁在 SPV 账户上，不向基金分配。</td>
+                <td>显著降低前期 DPI，前 5 年 DPI 表现较差。</td>
+                <td>由于前期回款少，IRR 会被拉低，但在第 6 年没有大额负现金流。</td>
+                <td><strong>优点</strong>：无需 LP 二次出资，安全性高。<br><strong>缺点</strong>：账面资金闲置，拉低整体资金效率。</td>
+              </tr>
+              <tr>
+                <td><strong>路径二：LP 追加出资（Capital Call）</strong></td>
+                <td>运营期内赚取的现金全部全额分配给 LP 以抬高 DPI。到第 6 年重置时，GP 向 LP 发起追加出资通知。</td>
+                <td>前期 DPI 增速极快。但第 6 年追加出资会导致分母突增，DPI 被瞬间稀释。</td>
+                <td>前期 IRR 指标极高，但第 6 年的大额流出（负现金流）会拉低最终的终期 Net IRR。</td>
+                <td>适用于 LP 对早期流动性（DPI）有极高硬性要求的基金。但 LP 需要在后期保留出资头寸。</td>
+              </tr>
+              <tr>
+                <td><strong>路径三：SPV 层绿色再融资（Debt Refinancing）</strong></td>
+                <td>项目公司在第 6 年利用电站已有的还贷空间，向银行申请一笔“电芯重置专项贷”或利用绿色信贷循环额度支付。</td>
+                <td>对 DPI 没有直接的负面冲击，本金分母未增加。</td>
+                <td>最优方案。利用低息债务替代了高成本的股权资本，能有效维持甚至放大 Fund IRR。</td>
+                <td><strong>优点</strong>：杠杆优化效率最高。<br><strong>缺点</strong>：取决于 SPV 的资产负债率限制和银行对二手储能资产的信用评估。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
-          <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+          <div class="callout-header"><span class="callout-icon">🏗️</span>中国真实案例：山东某 100MW/200MWh 独立储能项目电池重置决策</div>
+          <div class="callout-body">
+            <p>在中国山东现货市场运行的某 100MW/200MWh 独立储能项目，由某地方能源产业基金投资。该电站由于频繁参与山东电力现货市场的深度套利，日均等效循环次数（EFC）达到了 1.8 次。模型预测其在第 5.5 年时，可用容量将衰减至 78%。</p>
+            <p>在基金测算模型中，GP 原本采用的是“路径二”（LP 追加出资 3500 万元）。然而，在第 5 年进行投后管理审查时，LP 明确表示拒绝追加出资。GP 最终被迫转而采用“路径三”，利用该项目前 5 年良好的还本付息记录与电网出具的容量租赁保障合同，向某国有银行申请了 3000 万元的“储能技改绿色专项贷”，期限 5 年，利率仅 3.15%。这一操作避免了向 LP 伸手要钱，确保了基金第 6 年的 DPI 没有发生倒退，最终使该基金的 Net IRR 维持在 6.8% 的基准线之上。这一案例表明，储能基金模型中必须为“债务再融资”预留动态开关。</p>
           </div>
         </div>
+      </section>
+
+      <section>
+        <h2>四、 实战演练：一步步搭建网储基金动态测算模型</h2>
+        <p>下面，我们将通过一个具体的中国网储电站投资案例，手把手教你如何使用 Excel 的公式逻辑和级联表格，一步步搭建一套基金层面的动态测算模型。</p>
+
+        <h3>4.1 模型输入假定（Input Assumptions）</h3>
+        <p>我们以位于中国华北某现货高价差省份的独立储能电站为例。具体的模型输入假定如下：</p>
+        
+        <ul>
+          <li><strong>项目物理规格</strong>：100MW / 200MWh 磷酸铁锂储能电站。</li>
+          <li><strong>项目总投资（CAPEX）</strong>：12,000 万元（合 0.6 元/Wh）。</li>
+          <li><strong>融资结构</strong>：银行项目贷款 70%（8,400 万元，年利率 3.8%，10年期等额本息还款），项目资本金（Equity）30%（3,600 万元）。</li>
+          <li><strong>运营期收益假定</strong>：
+            <ul>
+              <li><strong>放电电价差</strong>：日均“两充两放”等效差价为 0.45 元/kWh（已扣除充电损耗，按综合系统充放电效率 RTE = 85% 计算）。</li>
+              <li><strong>容量租赁收入</strong>：新能源电站租赁费 120 元/kW·年（前 5 年 100% 签约，第 6~7 年假设由于竞争加剧下滑至 80% 签约率）。</li>
+              <li><strong>电站运维 OPEX</strong>：固定运维 300 万元/年，电池折旧与损耗等变动运维按 0.02 元/kWh 提取。</li>
+            </ul>
+          </li>
+          <li><strong>电池重置（技改）</strong>：在第 6 年底需要进行一次电芯升级重置，总支出为 3,000 万元，资金来源假定为运营积累与 SPV 留存（不向 LP 发起追加出资）。</li>
+          <li><strong>基金结构参数</strong>：
+            <ul>
+              <li><strong>基金总规模（AUM）</strong>：4,000 万元。其中 3,600 万元一次性出资给 SPV 作为电站资本金，保留 400 万元用于支付基金前几年的管理费和运营费，不足部分从后续项目分红中扣减。</li>
+              <li><strong>基金管理费</strong>：每年收取基金总规模的 2.0%（即 80 万元/年，自第 1 年至第 7 年）。</li>
+              <li><strong>基金托管与审计费</strong>：固定为 20 万元/年。</li>
+              <li><strong>业绩分配（Carry Waterfall）</strong>：采用欧洲式整体分配逻辑（European Waterfall）。门槛收益率（Hurdle Rate）为单利 6.0%/年。分配顺序为：① 返还 LP 累计实缴资本（4000 万元）；② 支付 LP 累计 6% 的门槛收益；③ 达到门槛后，超额部分的 20% 分配给 GP（业绩报酬），80% 分配给 LP。</li>
+              <li><strong>退出安排</strong>：基金在第 7 年底届满，GP 将电站资产包整体打包转让，扣除 SPV 层面剩余项目贷余额后，预计资产公允价值（基金层收到的退出净对价 NAV）为 6,500 万元。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>4.2 级联现金流底表设计</h3>
+        <p>我们在动态模型中建立以下级联计算表格，以清晰展示资金从项目端到 LP 端的扣减流向。全部金额单位为：<strong>万元</strong>。</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>现金流科目（万元）</th>
+                <th>Year 0 (2026)</th>
+                <th>Year 1 (2027)</th>
+                <th>Year 2 (2028)</th>
+                <th>Year 3 (2029)</th>
+                <th>Year 4 (2030)</th>
+                <th>Year 5 (2031)</th>
+                <th>Year 6 (2032)</th>
+                <th>Year 7 (2033)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>一、项目层（SPV）运营现金流</strong></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>1. 充放电套利收入</td>
+                <td>-</td>
+                <td>2,240.0</td>
+                <td>2,240.0</td>
+                <td>2,240.0</td>
+                <td>2,240.0</td>
+                <td>2,240.0</td>
+                <td>2,100.0</td>
+                <td>2,100.0</td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>2. 容量租赁收入</td>
+                <td>-</td>
+                <td>1,200.0</td>
+                <td>1,200.0</td>
+                <td>1,200.0</td>
+                <td>1,200.0</td>
+                <td>1,200.0</td>
+                <td>960.0</td>
+                <td>960.0</td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>3. 电站日常 OPEX 与税费</td>
+                <td>-</td>
+                <td>-450.0</td>
+                <td>-450.0</td>
+                <td>-450.0</td>
+                <td>-450.0</td>
+                <td>-450.0</td>
+                <td>-420.0</td>
+                <td>-420.0</td>
+              </tr>
+              <tr style="font-weight: 500;">
+                <td>项目运营净现金流（CFADAR）</td>
+                <td>-12,000.0</td>
+                <td>2,990.0</td>
+                <td>2,990.0</td>
+                <td>2,990.0</td>
+                <td>2,990.0</td>
+                <td>2,990.0</td>
+                <td>2,640.0</td>
+                <td>2,640.0</td>
+              </tr>
+              <tr>
+                <td><strong>二、SPV 层杠杆与债务扣减</strong></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>4. 银行项目贷流入/(还本付息)</td>
+                <td>8,400.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+                <td>-1,022.0</td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>5. 电芯重置（技改）资本支出</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-3,000.0</td>
+                <td>-</td>
+              </tr>
+              <tr style="font-weight: 500; color: #1A5F96;">
+                <td>资本金可分配现金流（SPV Dividend）</td>
+                <td>-3,600.0</td>
+                <td>1,968.0</td>
+                <td>1,968.0</td>
+                <td>1,968.0</td>
+                <td>1,968.0</td>
+                <td>1,968.0</td>
+                <td>-1,382.0</td>
+                <td>1,618.0</td>
+              </tr>
+              <tr>
+                <td><strong>三、基金层（Fund Level）现金流</strong></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>6. LP 认缴与实缴出资（本金+费用）</td>
+                <td>-4,000.0</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>7. 基金管理费与托管运营费</td>
+                <td>-</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+                <td>-100.0</td>
+              </tr>
+              <tr style="background-color: #f9f9f9;">
+                <td>8. 基金持有的 SPV 退出分配（NAV）</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>6,500.0</td>
+              </tr>
+              <tr style="font-weight: 600; color: #2E7D32; background-color: #E8F5E9;">
+                <td>基金层可分配净现金流（Net Cash Flow）</td>
+                <td>-4,000.0</td>
+                <td>1,868.0</td>
+                <td>1,868.0</td>
+                <td>1,868.0</td>
+                <td>1,868.0</td>
+                <td>1,868.0</td>
+                <td>-1,482.0</td>
+                <td>8,018.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-tips">
+          <div class="callout-header"><span class="callout-icon">💡</span>数据勾稽关系自查</div>
+          <div class="callout-body">
+            <p>1. <strong>SPV层股利流</strong>：第 6 年由于电站需要扣除 3,000 万元的电芯重置款，导致当年项目公司的运营收益不足以弥补这笔大额资本性支出，因此第 6 年资本金现金流表现为 <strong>-1,382 万元</strong>（即 $1968 - 1022 - 3000 = -1382$，在此假设项目公司通过前几年的盈余公积和留存收益解决了部分资金，不足部分由基金以股东借款形式补足）。</p>
+            <p>2. <strong>基金层净流量</strong>：第 7 年由于电站资产在到期日实现整体打包转让，NAV 净回收 6,500 万元，加上电站第 7 年运营分红 1,618 万元，再扣减基金层费用 100 万元，使得第 7 年最终的可分配现金流高达 <strong>8,018 万元</strong>。</p>
+          </div>
+        </div>
+
+        <h3>4.3 模型计算指标的 Excel 公式嵌套</h3>
+        <p>基于上述基金层净现金流（第 6 行），我们需要计算最终的指标体系。请在你的 Excel 底表中嵌套以下公式逻辑：</p>
+
+        <h4>1. XIRR 函数的运用与底层数学原理</h4>
+        <p>在实际工程和金融实务中，LP 的实缴出资（Year 0）发生在特定的基金首期出资日（如 2026-03-01），而每年的运营分红派发时间取决于电网公司结算电费并向 SPV 拨付的进度，通常为每年的不规则日期（如 2027-04-15、2028-05-20 等）。如果我们直接使用 Excel 的标准 `=IRR()` 函数，它会假设现金流发生在每年完全相同的时间间隔点，这会导致时间复利计算偏离实际天数，从而产生最高可达 2% 左右的计算偏差。</p>
+        <p>因此，我们必须引入 <strong>XIRR</strong> 函数。XIRR 考虑了非均匀日期，其计算使以下公式中的净现值等于零：</p>
+
+        <div class="key-concept">
+          <h4>📌 核心概念：XIRR 的数学原理</h4>
+          $$\sum_{i=1}^{N} \frac{CF_i}{(1 + r)^{\frac{d_i - d_1}{365}}} = 0$$
+          <p>其中，$CF_i$ 是第 $i$ 次发生的现金流金额，$d_i$ 是第 $i$ 次现金流对应的实际日期戳（格式为 YYYY-MM-DD），$d_1$ 是首次现金流发生的日期（即 LP 首次出资日），$r$ 即为我们所求的具有日度精度精细折现的年化内部收益率（XIRR）。</p>
+          <p>在 Excel 中，其公式嵌套写为：<strong>`=XIRR(B28:J28, B3:J3)`</strong>（假设第 28 行为基金净现金流，第 3 行为对应的具体日期序列）。</p>
+        </div>
+
+        <h4>2. DPI、MOIC 与 TVPI 的动态公式嵌套</h4>
+        <p>在第 7 年底项目整体清算退出后，我们使用以下 Excel 公式计算各项倍数：</p>
+        <ul>
+          <li><strong>DPI 嵌套公式</strong>：在第 7 年底，LP 累计收到的分红总额为 $1868 \times 5 - 1482 + 8018 = 15,876$ 万元（在此简化了水瀑布 Carry 的分配步骤，假定未达到 Hurdle 之前的原始分配）。DPI 公式写为：<strong>`=SUMIFS(基金分配行, 基金分配行, ">0") / SUMIFS(基金出资行, 基金出资行, "<0")`</strong>。本案中，最终 DPI 达到 <strong>3.97 倍</strong>，说明 LP 获得了丰厚的现金回报。</li>
+          <li><strong>TVPI 嵌套公式</strong>：<strong>`=(SUM(所有正现金流) + 剩余NAV) / ABS(所有负现金流)`</strong>。当基金完成全部清算且 NAV 为 0 时，TVPI 在数值上与 DPI 完全相等。在本案例中，随着第 7 年底资产转让并完成分配，TVPI 最终收敛于 <strong>3.97 倍</strong>。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>五、 中国网储基金实务：关键风险点与模型优化策略</h2>
+        <p>财务模型是工程和政策的定量投射。一个优秀的网储基金模型，电网侧储能的投资绝不能仅仅是 Excel 单元格中的数字游戏，而必须将中国储能政策演化、电力现货市场波动以及电站物理衰减等实务风险动态转化为模型中的“应激参数”。</p>
+
+        <h3>5.1 并网拖延与资金滞留的“时间杀伤力”</h3>
+        <p>在中国网储项目的投资实务中，并网时间节点具有极高的不确定性。由于地方电网变电站间隔受限、消纳空间不足，或者是地方能源局对项目配储比例的要求变化，储能电站从 EPC 完工到正式并网发电，经常发生 3~9 个月的非预期拖延。而在这期间，LP 的出资往往已经通过 Capital Call 划拨到了基金账户，导致资金大量滞留。这一现象在模型中对 IRR 指标具有极强的杀伤力。</p>
+        
+        <div class="callout callout-warning">
+          <div class="callout-header"><span class="callout-icon">⚠️</span>警惕并网拖延对 Net IRR 的毁灭性稀释</div>
+          <div class="callout-body">
+            <p>在上述案例中，如果电站的并网日期由原定的 Year 0 底延迟 9 个月（即 Year 1 的 9 月底才并网），而 LP 的首期 4,000 万元出资已于 Year 0 的 1 月 1 日划拨。在财务模型中，这意味着 Year 1 的电费收入和租赁收入将直接打 2.5 折（当年仅剩 3 个月运营期）。</p>
+            <p>重新运行 XIRR 公式，LP 最终获得的 Net Fund IRR 将从原本的 <strong>9.8% 暴跌至 6.2%</strong>。这种“时间惩罚”是因为 IRR 极其看重资金的时间价值，前期长时间的负现金流加上回款时间向后平移，会在复利公式的指数分母上施加沉重打击。因此，GP 在设计模型时，必须设置“并网延迟月数”这一敏感性滑块，作为项目投前对赌的核心条款。</p>
+          </div>
+        </div>
+
+        <h3>5.2 容量租赁的“空仓期”与违约率滑块</h3>
+        <p>目前，除山东、山西等少数省份建立了容量补偿机制外，大部分省份的独立储能电站仍极度依赖与新能源发电企业（如风电场、光伏电站）签订容量租赁协议来获取固定收益（占比可达 30%~50%）。然而，根据中国储能行业近年来的运行实务，容量租赁合同多为一年一签，长期限的容量租赁协议极难签署。</p>
+        <p>这给基金模型带来了巨大的不稳定因素：</p>
+        <ul>
+          <li><strong>签约率波动</strong>：模型通常乐观假设电站 100% 能满额租赁出去。但实际上，随着区域内新建储能电站规模爆发，容量供过于求，电站可能面临“空仓期”（如当年仅有 70% 的容量签订了合同）。</li>
+          <li><strong>价格下调风险</strong>：租赁单价可能从早期的 150 元/kW·年迅速下滑至 80 元/kW·年。</li>
+        </ul>
+        <p>因此，在动态模型中，必须加入<strong>“容量租赁签约率滑块”</strong>（0%~100%）与<strong>“租赁单价衰减率”</strong>。一旦签约率下滑 20%，SPV 的现金流可能会被挤压到无法覆盖银行项目贷月供的边缘，从而触发项目违约，导致基金层的红利派发完全中断。</p>
+
+        <h3>5.3 现货套利价差收窄与双重细则考核的缓冲垫</h3>
+        <p>在电力现货市场下（如山东、山西、广东、甘肃），电站的充放电收益完全取决于日前或实时电力市场的峰谷价差。中国电力市场的现货价差受到气象条件（如新能源大发时段的负电价）、煤炭价格以及电网调度策略的强烈扰动，极具波动性。另外，西北、华北等区域的“两个细则”（《并网运行管理实施细则》和《电力辅助服务管理实施细则》）对储能电站的响应时间、充放电深度及AGC（自动发电控制）响应精度有严格考核。如果电站因为 BMS 采集故障或电池一致性变差导致响应偏差，每个月将面临数万至数十万元的考核罚款扣减。</p>
+        <p>为了应对这些工程实务，在搭建模型时必须采取以下优化策略：</p>
+        <ol>
+          <li><strong>引入“安全裕度”（Safety Margin）</strong>：在运营收入的基准假定上，统一打 8.5~9.0 折，用于平抑现货市场的价差波动。</li>
+          <li><strong>设定“两个细则扣减滑块”</strong>：在 OPEX 部分专门列支一笔“细则考核准备金”，将物理资产端的性能风险足额量化为财务端的现金流流出。</li>
+        </ol>
       </section>
     </main>
 
@@ -113,9 +600,10 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>漏斗效应是收益率缩水的根源</strong>：储能电站的项目层 Project IRR 或资本金 Equity IRR 仅能代表资产端的盈利能力，在向基金层 LP Net IRR 转化时，会受到管理费、运营杂费、GP Carry 水瀑布分配以及资金闲置等多重财务摩擦的损耗。</li>
+        <li><strong>四大指标需多维辨析</strong>：DPI 衡量已收回的现金（Fact），是 LP 最为看重的安全底线；TVPI 包含了未退出电站的账面估值（NAV），在中前期具有虚拟属性；MOIC 聚焦项目层面的绝对增值倍数，而 Fund Net IRR 则兼顾了时间价值，对出资与回款节点极其敏感。</li>
+        <li><strong>电芯重置必须妥善处理</strong>：针对 5~8 年后电芯衰减的技改需求，模型设计者应对比“运营留存”、“LP追加”和“债务再融资”三条路径。实务中应优先利用低息绿色信贷进行 SPV 层再融资，以保护基金的 DPI 与 IRR 指标不发生滑坡。</li>
+        <li><strong>实务风险需在模型中量化</strong>：并网审批拖延、容量租赁空仓风险、电力现货价差收窄等中国网储特有风险，必须作为动态滑块引入模型，并通过打折计提安全裕度，确保基金层测算具有足够的弹性和容错空间。</li>
       </ul>
     </section>
 
@@ -125,16 +613,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 关于项目层内部收益率（Project IRR）、资本金内部收益率（Equity IRR）与基金净内部收益率（Net Fund IRR）的关系，以下说法正确的是？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 只要储能电站的运营状况符合预期，基金有限合伙人（LP）获得的 Net Fund IRR 就会与项目可研报告中的 Project IRR 完全相等。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 由于管理费、托管运营费以及普通合伙人（GP）业绩报酬的扣减，加上资金召回与分红分配的时间错配，LP 获得的 Net Fund IRR 通常会显著低于项目层的 Equity IRR。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 引入银行贷款项目杠杆后，资本金 Equity IRR 必定会放大项目层收益，因此基金层的 Net Fund IRR 绝不可能低于原始的 Project IRR。</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 基金管理费属于合伙企业内部的资金往来，在计算基金 Net Fund IRR 的现金流底表时，不需要将其作为 LP 的流出或项目利润的扣减项。</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：本题旨在考察基金层与项目层测算的本质区别。选项 B 正确指出了基金层收益率所经历的“漏斗损耗”与“时间错配”，这是导致 Net Fund IRR 缩水的最核心因素。选项 A 忽略了管理费和业绩报酬的扣减以及时间滞后的影响，是错误的；选项 C 忽略了当管理费极高或资金严重滞留时，即使有贷款杠杆放大，Net Fund IRR 依然可能低于 Project IRR；选项 D 错误，管理费是基金层面的直接现金流流出，必须在计算 Net Fund IRR 时予以扣减，否则将无法真实反映 LP 的投资收益。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 在评估一个运行至第 5 年的网储产业投资基金时，LP 发现该基金的 DPI 仅为 0.2，但 TVPI 达到了 1.6。对此，以下哪种财务分析和推断是最合理的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 该基金投资极具成效，因为 1.6 倍的 TVPI 说明 LP 已经收回了 1.6 倍的真金白银。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 基金运作出现了重大亏损，因为 DPI 远低于 1.0 的盈亏平衡点，账面价值 TVPI 是没有意义的虚假指标。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 基金大部分资产仍以未退出的储能电站形式存在（剩余净资产价值 NAV 较大），虽账面估值表现优异，但已变现现金回流较少，LP 面临较大的后期电站资产变现与退出风险。</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 该指标组合是不合逻辑的，因为 TVPI 必须在数值上恒等于 DPI，模型计算必然存在公式嵌套错误。</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察 DPI 与 TVPI 指标的辨析。由 $TVPI = DPI + RVPI$ 可知，TVPI 包含了已分配的现金分红和未分配的资产净值（NAV）。DPI 为 0.2，说明 LP 只拿回了 20% 的现金本金；而 TVPI 为 1.6，说明剩余 1.4 倍的财富都处于未退出的账面状态（RVPI = 1.4）。这表明基金资产增值良好，但流动性极低，LP 面临电站最终能否按账面估值变现退出的风险，因此选项 C 正确。选项 A 混淆了已分配现金和账面名义价值；选项 B 全盘否定了 TVPI 的参考价值，过于绝对；选项 D 错误，只有在基金全部资产完成退出清算且 NAV 归零后，TVPI 才会等于 DPI。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 某网储产业合伙基金在第 6 年需要对旗下独立储能电站进行大规模的电芯重置（Battery Replacement）。如果普通合伙人（GP）选择向有限合伙人（LP）发起追加出资通知（Capital Call）来筹集这笔技改资金，在财务模型中，这一操作对基金财务指标的最直接影响是？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 会直接增加基金分母端的实缴出资（Paid-In Capital）总额，在回款金额不变的情况下会瞬间拉低已实现的 DPI 指标。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 会增加实际投资额（Invested Capital），从而使得以项目投资额为分母的 MOIC 得到拉升。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 只要第 6 年的追加出资能让电站后续发电收益增加，就绝不会对基金层面的 Net Fund IRR 产生任何拉低影响。</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 追加出资会增加基金层面的流动资金，在财务做账上可以计入为基金当期的运营收益分红。</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：本题考查电芯重置在基金财务模型中的处理及其指标冲击。GP 向 LP 追加出资相当于发起了新的 Capital Call，这会直接增加 LP 的累计实缴资本（Paid-In Capital，即 DPI 的分母）。在累计分红（分子）不变的前提下，分母增大必然导致 DPI 指标瞬间被稀释并下滑，因此选项 A 正确。选项 B 错误，因为分子（资产价值）如果不按比例同步增加，追加投资只会拉低项目的 MOIC，而非拉升；选项 C 错误，由于第 6 年发生了大额负现金流出，且距离 Year 0 较远，根据时间价值，这一流出会对最终的 Net Fund IRR 造成明显的拉低效应；选项 D 混淆了出资与分红的定义，追加出资是 LP 向基金的流入，属于基金的负债/实缴资本增加，不能算作收益分红。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在搭建中国独立储能项目基金层动态财务模型时，GP 在计算 Fund IRR 时通常必须使用 Excel 中的 XIRR 函数，而不是普通的 IRR 函数，其底层核心原因是什么？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. XIRR 函数内部自带了国家发改委关于绿色电力基金的税收优惠折减系数，能自动修正税后收益。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 普通 IRR 函数只支持计算正现金流，而储能电站中途会因为电芯重置产生负现金流，只有 XIRR 才能支持中途出现负值。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 基金的资金召回（Capital Call）和分红分配（Distribution）的时间戳往往是不规则的日期。普通 IRR 默认现金流间隔均匀（如整年），会导致严重的计算时间偏差，而 XIRR 则是以实际天数为折现权重。</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. XIRR 函数能自动剔除 GP 提取的业绩报酬（Carry），直接计算出属于 LP 的净收益率，而普通 IRR 无法区分 GP 和 LP。</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考察 XIRR 与普通 IRR 函数的本质差异与选用原则。在基金运营实务中，资金召回和利润分红的日期通常是不规则的（如发生于 3月15日、11月20日等），而非整年。普通 IRR 默认时间间隔完全均匀，在计算此类非均匀现金流时，会产生极大的时间复利误差；XIRR 函数通过输入对应的具体日期序列，以天数（$d_i - d_1$）占一年的比例为权重进行精确折现，能真实反映资金的时间价值，因而选项 C 正确。选项 A 纯属凭空编造；选项 B 错误，普通 IRR 同样支持中途出现负值；选项 D 错误，XIRR 本身仅为数学求解函数，无法自动区分或剔除 Carry，Carry 的扣减必须通过在现金流底表中编写分配公式逻辑来实现。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 中国网储电站的“容量租赁”收入通常占到基金总收入的 30%~50%。在模型搭建中，评估该收入对基金收益分配（Waterfall）的影响时，以下哪项叙述是错误的？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 容量租赁多采用“一年一签”模式，在模型中如果假设 10 年 100% 满额签约且价格恒定，将严重低估基金后期的现金流空仓风险。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 一旦发生容量租赁违约或签约率下滑，项目 SPV 的净现金流可能无法覆盖银行项目贷款，这会阻断资金向基金层派发股利，直接影响 DPI 的增速。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 只要新能源发电企业违约，储能电站的物理容量就无法上网，从而导致电站的充放电套利收益也同步降为零。</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 在基金模型优化策略中，应该对容量租赁单价 and 签约率设置敏感性滑块，并计提一定的“安全裕度”以平抑收益风险。</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：本题考查容量租赁收入对基金模型的影响与辨析。选项 C 叙述错误，容量租赁的物理实质是新能源发电企业向储能电站购买“配额指标”以满足自身的强配要求，这属于商业合同层面的权益划分；即使租赁合同违约，储能电站本身的物理接入依然存在，电站仍然可以自主参与电力现货市场的充放电价差套利，这两者在物理和商业逻辑上是解耦的。选项 A 正确地指出了中国目前容量租赁“一年一签”带来的续签和价格波动风险；选项 B 准确阐述了租赁收入下降如何通过杠杆债偿挤压股利分红，进而拖累基金 DPI；选项 D 是模型优化的常规且正确的风控手段。</p>
         </div>
       </div>
 
@@ -159,6 +707,8 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="sp5_3_3_美式与欧式Carry水瀑布分配.html">→ 业绩报酬（Carry）提成计算：美式 Waterfall（逐个项目分配）vs 欧洲式 Waterfall（整体基金分配）</a></li>
+        <li><a href="sp5_4_1_单因素与双因素敏感性分析.html">→ 单因素与双因素敏感性分析：电价差、RTE、衰减率、CAPEX 对 IRR 的冲击测算</a></li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
@@ -172,7 +722,6 @@
 
   <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
