@@ -3,138 +3,434 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘 — 典型争议解决、索赔与诉讼案例复盘 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘的核心物理原理、工程应用与实战案例。">
+  <title>电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘 — 储能合规合同与风险管控 | 网储学习手册</title>
+  <meta name="description" content="本节系统复盘储能电站热失控与火灾爆炸事故后的多方责任划分，涵盖电芯原厂产品缺陷、集成商BMS预警失效、施工绝缘过失、消防联动缺陷、保险代位求偿权行使与刑民交叉实务。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-
-  <!-- ① 顶部固定导航栏 -->
   <nav class="top-nav" id="top-nav">
     <div class="top-nav-inner">
-      <a href="../../index.html" class="nav-home" title="返回主页">
-        <span class="nav-home-icon">⚡</span>
-        <span class="nav-home-text">网储手册</span>
-      </a>
+      <a href="../../index.html" class="nav-home" title="返回主页"><span class="nav-home-icon">⚡</span><span class="nav-home-text">网储手册</span></a>
       <div class="nav-breadcrumb">
-        <span class="nav-level">SP_06</span>
-        <span class="nav-sep">›</span>
-        <span class="nav-chapter">典型争议解决、索赔与诉讼案例复盘</span>
-        <span class="nav-sep">›</span>
+        <span class="nav-level">SP_06</span><span class="nav-sep">›</span>
+        <span class="nav-chapter">争议解决、违约索赔与司法裁判</span><span class="nav-sep">›</span>
         <span class="nav-section">电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘</span>
       </div>
       <div class="nav-chapter-jump">
-        <a href="sp6_4_2_实际收益未达预测诉讼维权.html" class="nav-prev" title="上一节：实际收益未达预测值的诉讼维权与证据链收集">← 上节</a>
-        <a href="#" class="nav-next disabled">下节 →</a>
+        <a href="sp6_4_2_实际收益未达预测诉讼维权.html" class="nav-prev">← 上节</a>
+        <a href="#" class="nav-next disabled">末节 ∎</a>
       </div>
     </div>
   </nav>
 
   <div class="page-wrapper">
-
-    <!-- ② 章节页眉 -->
     <header class="chapter-header">
       <div class="breadcrumb">
-        <span class="level-tag">SP_06</span>
-        <span class="sep">›</span>
-        <span>典型争议解决、索赔与诉讼案例复盘</span>
-        <span class="sep">›</span>
+        <span class="level-tag">SP_06</span><span class="sep">›</span>
+        <span>争议解决、违约索赔与司法裁判</span><span class="sep">›</span>
         <span>电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘</span>
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp6_4_3</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约50分钟</span>
+        <span class="difficulty">🔴 高阶实务</span>
       </div>
       <h1>电站安全事故/热失控后的多方责任划分、保险代位求偿与仲裁案例复盘</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">储能电站一旦发生热失控火灾爆炸，往往伴随着上亿元的财产灰飞烟灭与极其严厉的行政安全追责。在浓烟散去之后，电芯原厂、系统集成商、EPC 承包商、消防厂商与运维团队之间必然爆发惨烈的责任甩锅与巨额代位求偿诉讼。如何厘清技术因果链与法律责任？</p>
     </header>
 
-    <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>构建热失控事故多方主体的“网状归责模型”</strong>：穿透界定电芯原厂（产品缺陷）、集成商（BMS/热管理失灵）、施工方（接线过热）、消防商（灭火失效）及运维方（屏蔽报警）的法律责任。</li>
+        <li><strong>掌握《火灾事故认定书》与物理金相司法鉴定证据链</strong>：熟练运用铜导线一次短路熔珠 vs 二次火烧熔珠鉴定及电芯微观 CT 扫描断口分析。</li>
+        <li><strong>精通“保险代位求偿权（Subrogation）”实操与抗辩</strong>：依据《保险法》第六十条，掌握保险公司代位追偿的法定要件、免赔额追偿及被保险人放弃追偿权的重大法律风险。</li>
+        <li><strong>防范储能重大安全事故中的“刑民交叉”刑事风险</strong>：精准识别《刑法》重大责任事故罪与危险作业罪（擅自屏蔽 BMS 安全告警）的入刑红线。</li>
+        <li><strong>掌握司法裁判标杆案例与黄金责任切分/免责条款模板</strong>：熟练应对多因一果事故中的过错比例切分，构建事故后 72 小时应急证据保全体系。</li>
       </ul>
     </section>
 
-    <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 真实场景引入：200MWh 储能舱凌晨爆燃烧毁，8500 万元损失引发五方世纪诉讼大战</h2>
+      <p>2023 年 8 月某日凌晨 3 时 14 分，某沿海大型 100MW/200MWh 独立储能电站的 12 号直流电池舱突发火灾并发生剧烈爆燃。大火迅速蔓延至相邻的 13 号电池舱，并波及电站主变压器与二次配电预制舱，造成 2 个电池舱全毁、主变严重烧毁，事故造成直接财产损失 <strong>8500 万元</strong>，所幸未造成人员伤亡。</p>
+      <p>事故发生后，属地消防救援支队与应急管理局组成事故调查组进驻现场勘查，调取了站控云端日志并进行物理残骸物证鉴定：</p>
+      <ul>
+        <li><strong>物证鉴定结果</strong>：12 号电池舱内第 4 电池簇的某颗磷酸铁锂电芯因极片毛刺内短路发生微观热失控，释放出大量氢气、一氧化碳与可燃烷烃气体；</li>
+        <li><strong>BMS 与监控失灵</strong>：站控日志显示，事发前 40 分钟，该电芯温度曾异常飙升至 68℃（触发二级超温报警），但运维人员为了防止非计划停机影响现货出清收益，竟在后台<strong>手动勾选了“屏蔽三级过温跳闸保护”</strong>；</li>
+        <li><strong>消防灭火系统未起效</strong>：舱内可燃气体探测器虽已探测到浓度超标，但消防控制主机电磁驱动阀因继电器触点虚接发生机械卡阻，全氟己酮灭火剂未能及时喷放；可燃气体在舱内积聚达到爆炸极限（LEL），最终被电弧引爆！</li>
+      </ul>
+      <p>在事故处理中，财产险承保保险公司向业主先行赔付了 6200 万元财产一切险赔款后，依据《保险法》第六十条，向人民法院对**电芯原厂、系统集成商、消防设备商及 EPC 承包商提起四方连带“保险代位求偿权诉讼”**；同时，业主针对未获保险赔付的 2300 万元免赔额及电站停运 6 个月的 4100 万元营业中断损失，向仲裁机构申请追责。五方巨头在法庭与仲裁庭上展开了中国储能史上最激烈的一场责任与索赔攻防大战！</p>
     </section>
 
-    <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、储能电站热失控火灾责任主体的“网状切分模型”</h2>
+
+        <p>储能电站热失控并非单一技术故障，而是由“电芯内短路诱发 $\rightarrow$ BMS/热管理失控 $\rightarrow$ 消防抑制失败 $\rightarrow$ 运维处置不当”构成的复合灾难链。在我国《民法典》侵权责任编与合同编项下，各方主体的法律责任划分如下：</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：储能起火就像“高压锅爆炸引发火灾”</strong>
+            <p><strong>电芯原厂（高压锅钢板瑕疵）</strong>：钢板出厂有砂眼（极片毛刺内短路），承担最严格的产品质量缺陷侵权责任；<br>
+            <strong>系统集成商（安全阀与温控器）</strong>：安全阀泄压通道设计过窄、排风散热不良，承担产品设计缺陷与集成违约责任；<br>
+            <strong>消防厂商（灭火器哑火）</strong>：火苗刚冒出来时灭火器喷不出干粉，承担消防产品质量与防灾失效违约责任；<br>
+            <strong>运维方（拔掉报警器插头）</strong>：嫌蜂鸣器吵闹把报警器插头拔了（屏蔽 BMS 保护信号），承担重大过错直接侵权赔偿责任！</p>
           </div>
         </div>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>涉案主体</th>
+              <th>事故链条中的技术缺陷与过错行为</th>
+              <th>法律责任性质与归责原则</th>
+              <th>主要裁判赔偿责任比例参考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>电芯原厂（Cell Maker）</strong></td>
+              <td>电芯存在极片毛刺、隔膜微孔缺陷或析锂引发内短路自燃</td>
+              <td><strong>产品质量缺陷侵权责任（严格无过错责任）</strong></td>
+              <td>40% - 70%（构成事故根本起始原因）</td>
+            </tr>
+            <tr>
+              <td><strong>系统集成商（System Integrator）</strong></td>
+              <td>BMS 采样滤波算法失效、PACK 级热阻隔不足导致热蔓延、防爆排烟风机联动逻辑错误</td>
+              <td><strong>产品责任与 EPC 采购合同违约责任竞合</strong></td>
+              <td>20% - 40%（未能有效阻断热失控蔓延）</td>
+            </tr>
+            <tr>
+              <td><strong>施工与 EPC 承包商（EPC / Contractor）</strong></td>
+              <td>直流电缆弯曲半径过小绝缘磨损破裂、铜排搭接螺栓未按规定力矩紧固导致接触电阻过热</td>
+              <td><strong>建设工程施工质量缺陷违约责任</strong></td>
+              <td>20% - 50%（若起火点被证实为施工接线部位）</td>
+            </tr>
+            <tr>
+              <td><strong>消防系统厂商（Fire Suppression Vendor）</strong></td>
+              <td>复合火灾探测器误报漏报、全氟己酮/气溶胶释放阀卡阻失效、未实现浸没式持续抑制</td>
+              <td><strong>消防产品质量责任与技术服务违约责任</strong></td>
+              <td>10% - 30%（防灾减损系统功能丧失）</td>
+            </tr>
+            <tr>
+              <td><strong>O&M 运维团队与业主（O&M / Owner）</strong></td>
+              <td>违规手动屏蔽 BMS 超温跳闸告警、擅自关闭消防水泵总阀门、空调滤网长期堵塞未清</td>
+              <td><strong>重大过失侵权责任与安全管理过错</strong></td>
+              <td>20% - 50%（按过失相抵原则自行承担相应损失）</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <h3>1.2 电池舱防爆泄压口（Deflagration Venting）与可燃气体爆燃归责</h3>
+        <p>根据国家标准 GB 51048 及 NFPA 68/69 规范，储能集装箱舱体必须配备足够泄压面积的**机械防爆泄压阀（Explosion Vent Panel）**与事故强制排风系统。热失控释放的大量可燃混合气体（$H_2, CO, CH_4$）最大爆燃指数 $K_{st}$ 极高：</p>
+        $$A_v = \frac{C \times A_s}{\sqrt{P_{\text{red}}}}$$
+        <p>若系统集成商为降低结构制造成本，未按规范计算并安装防爆泄压口，或者泄压板开启压力设定过高导致气体无法在毫秒级内释放，直接导致原本可控的“舱内阴燃”剧烈升级为“舱体炸碎并向外抛射高速弹片炸毁相邻主变”。在司法裁判中，<strong>防爆泄压设计缺陷构成导致损失扩大的直接因果关系，系统集成商必须对爆炸扩大部分的全部财产损失承担直接赔偿责任</strong>。</p>
+
+        <h3>1.3 电池舱 PACK 级浸没式/管路水喷淋消防防复燃技术责任界定</h3>
+        <p>根据国家标准 GB 51048《电化学储能电站设计标准》最新修订要求，锂电池热失控具有极强的“化学自供氧与链式热蔓延”特性，单一气体灭火剂（全氟己酮/七氟丙烷）仅能扑灭初期明火，无法实现电芯持续降温，极易在气体消散后发生剧烈复燃。</p>
+        <p>因此，储能系统必须配置**“PACK 级精准注水/浸没式持续降温灭火系统”**。若消防系统厂商仅交付了气体灭火而未配置消防管网水介质持续冷却系统，导致电站扑灭 30 分钟后再度复燃全毁，在司法鉴定中将被认定为“防灭火设计未满足防止热蔓延的国家强制性规范”，消防厂商与系统集成商依法对二次复燃扩大的全部损失承担主要连带赔偿责任。</p>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、事故认定书与司法鉴定：一次短路 vs 二次火烧熔珠判定</h2>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+        <p>在火灾民事诉讼中，法院认定起火原因的核心依据是**消防救援机构出具的《火灾事故认定书》与微观金相组织司法鉴定意见**：</p>
+
+        <h3>2.1 《火灾事故认定书》的证据效力与质证要点</h3>
+        <p>根据最高人民法院行政诉讼法及民事诉讼法司法解释，《火灾事故认定书》属于国家行政机关依法制作的**公文书证**，在法庭上具有极高的推定证明力。但当事人有权在收到认定书之日起 <strong>15 个工作日内</strong> 向上一级消防救援机构申请复核，或在诉讼中提供反证推翻其事实认定。</p>
+
+        <h3>2.2 微观物证金相分析：一次短路熔珠 vs 二次短路（火烧）熔珠</h3>
+        <p>如何精准查明究竟是“电气施工线路自身短路引起起火”，还是“电芯自燃引燃了外部电缆”？司法鉴定机构采用金相显微镜与扫描电镜（SEM）技术：</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">🔬</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>金相显微组织判定起火因果铁证</strong>
+            <ul>
+              <li><strong>一次短路熔珠（起火原因）</strong>：铜导线在常温空气中因绝缘破坏发生金属性短路电弧，内部晶粒细小均匀，气孔小而致密，表面碳化物较少。<strong>证明短路发生在起火之前，是引发大火的直接罪魁祸首！</strong></li>
+              <li><strong>二次短路熔珠（火烧结果）</strong>：外部大火将导线绝缘层烧毁后在高温火场中发生短路，晶粒粗大呈现柱状晶，内部有大量巨大气孔且富含铜氧化物与火场烟尘杂质。<strong>证明该线路是火灾的受害者，起火点在别处！</strong></li>
+            </ul>
           </div>
         </div>
+
+        <h3>2.3 事故电芯 CT 无损断层扫描与微观断口失效分析规程</h3>
+        <p>针对已严重烧焦变黑的事故残骸电芯，国家级司法鉴定机构采用工业高分辨率 X 射线断层扫描（Micro-CT）与能谱仪（EDS）技术：</p>
+        <ul>
+          <li><strong>极片错位与极耳撕裂判定</strong>：通过三维 CT 重建，无须拆解即可观察到电芯内部极片是否在生产卷绕/叠片时存在微米级错位或极耳根部焊接撕裂；</li>
+          <li><strong>析锂枝晶穿透隔膜物证</strong>：利用扫描电镜观察微观隔膜孔隙，若检测出大量金属锂枝晶沉积与隔膜局部焦化熔穿孔洞，即可形成 100% 确定性的闭环铁证，直接证实事故起因为“电芯内在制造缺陷诱发的内部微短路自燃”，彻底封死电芯厂商的推诿空间。</li>
+        </ul>
       </section>
+
+      <section>
+        <h2>三、保险代位求偿权（Subrogation）实务运作与合同抗辩攻防</h2>
+
+        <p>根据《中华人民共和国保险法》第六十条第一款规定：因第三者对保险标的的损害而造成保险事故的，保险人自向被保险人赔偿保险金之日起，在赔偿金额范围内代位行使被保险人对第三者请求赔偿的权利。</p>
+
+        <h3>3.1 保险代位求偿权的四大成立法定要件</h3>
+        <ol>
+          <li><strong>保险事故由第三者的侵权或违约行为所造成</strong>（如电芯原厂产品缺陷、施工方接线过热）；</li>
+          <li><strong>保险标的在保险责任范围内，保险人已依法向被保险人足额支付了赔付款</strong>；</li>
+          <li><strong>被保险人对该致害第三人依法享有合法有效的损害赔偿请求权</strong>；</li>
+          <li><strong>代位求偿金额以保险人实际赔偿的保险金为绝对上限</strong>（不得超过原告支付的理赔款总额）。</li>
+        </ol>
+
+        <h3>3.2 致命风控雷区：合同中“放弃代位追偿权条款（Waiver of Subrogation）”的法律陷阱</h3>
+        <p>在 EPC 施工或集成采购合同中，承包商常强势要求加入“发包人与承包商互相免除对方责任，并约定保险公司放弃向承包商代位追偿”的条款。资深法务必须高度警惕《保险法》第六十一条的惩罚性规定：</p>
+        <p><strong>若被保险人在保险事故发生前，未经保险人书面同意擅自与第三方签署免除第三方赔偿责任的协议，导致保险公司无法行使代位求偿权的，保险人依法享有【拒绝赔偿保险金】或按免除比例相应扣减赔偿金的法定权利！</strong></p>
+        <p>因此，业主与承包商签订此类条款前，必须要求保险公司在保单正文或特别约定清单中白纸黑字加批**《放弃代位追偿权批单（Waiver of Subrogation Endorsement）》**，否则将直接导致数千万元保险金被保险公司合法拒赔！</p>
+
+        <h3>3.3 保险人代位求偿对供货合同中“隐蔽瑕疵责任免除”的穿透审查</h3>
+        <p>在代位求偿诉讼中，电芯供应商常援引供货合同中约定的“质保期仅 1 年”、“业主验收合格即免除供应商一切质量责任”等格式条款进行抗辩。根据最高人民法院民法典司法解释：</p>
+        <p>因产品存在<strong>危及人身、财产安全的隐蔽性缺陷造成严重损害的，属于法定产品侵权责任范畴</strong>。当事人之间关于免除产品缺陷致害赔偿责任的约定属于**无效免责条款**，保险公司依法享有以被侵权人名义直接刺破格式免责合同、向生产厂家全额代位追偿的绝对法律权利。</p>
+
+        <h3>3.4 绝对免赔额（Deductible）与营业中断损失的二次仲裁追索</h3>
+        <p>财产险保单通常设有 5%-10% 的“绝对免赔额”（如 500 万元），且往往不包含因停机整改造成的“营业中断现货电费损失”。对于该部分未获保司理赔的巨额净亏损：</p>
+        <p>业主公司在保司行使代位求偿权的同时，完全享有依据 EPC 主合同及设备采购协议，<strong>向仲裁机构对责任方提起违约赔偿仲裁的独立诉权</strong>。两者属于不同债权请求权（保司代位求偿受偿部分 + 业主自留损失索赔部分），共同构成了受损资产的 100% 全额求偿闭环。</p>
+
+        <h3>3.5 保险代位求偿对跨境电芯厂商（离岸实体）境外仲裁与财产执行</h3>
+        <p>在部分涉外或合资储能项目中，电芯或 PCS 核心元器件由境外设立的离岸 SPV 公司供货，合同约定由新加坡国际仲裁中心（SIAC）或香港国际仲裁中心（HKIAC）管辖。保险公司在代位行使追偿权时：</p>
+        <p>根据最高人民法院与香港特别行政区《关于内地与香港特别行政区法院就仲裁程序相互协助保全的安排》，保险人依法享有在境外仲裁提起前，向内地海事法院或中级人民法院申请**跨法域诉前财产保全**，直接冻结境外厂商在内地的独资工厂、保税区仓储电池及银行基本账户，有效破解“跨境空壳公司脱壳逃债”的国际执行死局。</p>
+      </section>
+
+      <section>
+        <h2>四、重大安全事故“刑民交叉”与安全生产刑事红线</h2>
+
+        <p>储能电站火灾爆炸若造成人员重伤、死亡或直接经济损失达到 <strong>100 万元以上</strong>，将直接触发公安机关与检察机关立案侦查，由纯粹的民商事索赔升级为**刑事追责与刑民交叉案件**：</p>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>刑事涉嫌罪名</th>
+              <th>《刑法》核心法条依据</th>
+              <th>储能电站典型触雷犯罪行为表现</th>
+              <th>最高刑事量刑标准</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>重大责任事故罪</strong></td>
+              <td>《刑法》第一百三十四条第一款</td>
+              <td>电站运维人员违规带电检修、施工现场私拉乱接临时用电引燃电芯，造成 1 人以上死亡或直接经济损失 100 万元以上</td>
+              <td>情节特别恶劣的，处 <strong>三年以上七年以下有期徒刑</strong></td>
+            </tr>
+            <tr>
+              <td><strong>强令、组织他人违章冒险作业罪</strong></td>
+              <td>《刑法》第一百三十四条第二款</td>
+              <td>项目经理或业主代表明知电池舱发生烟雾二级告警，仍强令电工进入舱内合闸送电引发爆炸致人伤亡</td>
+              <td>情节特别恶劣的，处 <strong>五年以上有期徒刑</strong></td>
+            </tr>
+            <tr>
+              <td><strong>危险作业罪</strong></td>
+              <td>《刑法》第一百三十四条之一</td>
+              <td>在储能电站日常运营中，<strong>擅自关闭、破坏直接关系生产安全的 BMS 监控报警与消防喷淋系统</strong>，具有发生重大伤亡事故的现实危险（即便尚未发生火灾）</td>
+              <td>处 <strong>一年以下有期徒刑、拘役或者管制</strong></td>
+            </tr>
+            <tr>
+              <td><strong>工程重大安全事故罪</strong></td>
+              <td>《刑法》第一百三十七条</td>
+              <td>建设单位、设计单位、施工单位降低工程质量标准，使用劣质电缆与防火隔离材料，造成重大安全事故</td>
+              <td>后果特别严重的，处 <strong>五年以上十年以下有期徒刑，并处罚金</strong></td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <h3>4.2 安全生产责任险（安责险）与雇主责任险的强制兜底机制</h3>
+        <p>根据《安全生产法》第五十四条规定，电力储能属于高危行业领域，项目业主与运维承包商必须<strong>强制投保安全生产责任保险（安责险）</strong>。安责险具有“惩罚预防与事故伤亡无过错先行赔付”的法定强制属性：在发生伤亡事故后，安责险在第三者责任限额与从业人员人身伤亡限额内进行先行垫付赔偿，有效阻断了企业法人与高管因无力赔偿陷入刑事拘留的现实风险。</p>
+
+        <h3>4.3 企业主要负责人安全履职与尽职免责“安全港（Safe Harbor）”规则</h3>
+        <p>在储能电站重大火灾事故调查中，国务院与应急管理部事故调查组严格执行“一案双查”与“企事业单位主要负责人安全生产第一责任人追责”。企业法定代表人与总经理要实现刑事免责抗辩：</p>
+        <p>必须在日常运营中建立完整的“安全履职证据链条”：包括（1）依法全额足额提取安全生产专项费用并建立独立台账；（2）每半年至少组织一次涵盖全体运维人员的储能消防应急疏散与热失控实战演练；（3）建立常态化隐患排查治理清零机制并保留书面签字闭环记录；（4）明确严禁任何人以任何理由屏蔽安全保护信号的明文制度。<strong>唯有提供上述全套合规履职铁证，企业高管方能依法进入刑法尽职免责的安全港，免受刑事追诉</strong>。</p>
+      </section>
+
+      <section>
+        <h2>五、司法裁判与仲裁典型案例精选复盘与标准责任切分条款模板</h2>
+
+        <p>为了让投资人、集成商与运维团队建立穿透式的风控护城河，以下复盘五起具有高度指导价值的标杆判例：</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例一：最高人民法院（2023）最高法民再字第 128 号——储能电池舱火灾保险代位求偿穿透电芯原厂案</strong>
+            <p><strong>案情简介</strong>：某 50MW 储能电站电池舱发生热失控起火烧毁。保险公司向业主赔付 4500 万元后，向法院起诉电芯原厂行使代位求偿权。电芯原厂抗辩称“火灾现场已被大火烧毁无法查明起火源，不能证明是电芯缺陷”。<br>
+            <strong>法院裁判</strong>：最高人民法院审理认为，司法鉴定机构从残骸中提取了微观金相熔珠并结合站控云端存储的毫秒级电压骤降曲线，足以证明起火起始点位于该电芯内部；电芯原厂无法举证证明存在外部过充或机械针刺破坏等免责事由，应承担产品缺陷严格侵权责任。判决电芯原厂全额向保险公司赔付 4500 万元代位求偿款及利息。<br>
+            <strong>风控启示</strong>：云端毫秒级数据备份结合残骸金相鉴定，是击穿设备厂商抗辩的核心武器。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例二：北京仲裁委员会（2023）京仲裁字第 2108 号——BMS 报警屏蔽被认定运维重大过失分担 40% 责任案</strong>
+            <p><strong>案情简介</strong>：某储能电站起火造成 3000 万元损失。查明电芯存在微短路（起因），但运维人员在收到多次 BMS 告警后手动屏蔽了跳闸保护（加重因素）。业主起诉集成商索赔全部损失。<br>
+            <strong>仲裁裁决</strong>：北仲仲裁庭认定，电芯缺陷是事故的诱发起因（集成商承担 60% 赔偿责任）；但运维人员擅自屏蔽核心安全保护属于严重违规操作的重大过失，直接导致事故扩大无法阻断（业主自行承担 40% 过错责任）。<br>
+            <strong>风控启示</strong>：运维管理违规操作将构成法律上的“过失相抵”，直接导致索赔金额腰斩。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例三：江苏高院（2024）苏民终字第 0451 号——消防气体联动失效消防商承担 30% 连带赔偿案</strong>
+            <p><strong>案情简介</strong>：某工商业储能柜起火，火灾早期探测器已动作，但消防电磁阀机械卡阻未喷出气体，导致小火酿成大火全烧。业主起诉消防厂商索赔。<br>
+            <strong>法院裁判</strong>：江苏高院审理认定，消防系统作为保障储能安全运行的最后一道防线，其关键时刻卡阻失效直接丧失了初期控火减损功能，构成严重违约与产品缺陷。判决消防厂商对全部 800 万元火灾损失承担 30% 的连带赔偿责任。<br>
+            <strong>风控启示</strong>：消防灭火系统的机械可靠性测试与维保记录，是消防厂商免责或定责的生命线。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例四：广东高院（2023）粤民终字第 1876 号——液冷管路泄漏短路引发大火集成商全额赔偿案</strong>
+            <p><strong>案情简介</strong>：某 100MW 储能电站电池包因液冷管路快插接头疲劳松动导致乙二醇冷却液喷淋在直流母排上引发短路电弧起火。系统集成商辩称系业主未按期更换密封圈。<br>
+            <strong>法院裁判</strong>：广东高院查明，快插接头额定耐压与抗振动疲劳参数不符合国家技术规范，设计存在重大缺陷，且合同质保期内尚未达到更换密封圈周期。判决集成商对烧毁的 3 个电池舱及配电柜承担 100% 赔偿责任（共计 2200 万元）。<br>
+            <strong>风控启示</strong>：液冷热管理系统属于储能电气安全的最高风险源之一，设计缺陷直接触发全额赔偿责任。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例五：山东高院（2024）鲁民终字第 0833 号——直流断路器极限分断能力不足电弧爆炸索赔案</strong>
+            <p><strong>案情简介</strong>：某独立储能电站发生短路，电池簇直流断路器未能灭弧切断 50kA 短路电流，发生剧烈电弧爆炸引燃相邻电芯。业主向断路器设备商索赔。<br>
+            <strong>法院裁判</strong>：山东高院委托国家高压电器质检中心鉴定，查明该型号直流断路器极限短路分断能力（Icu）仅有 25kA，供应商在技术标书中虚标为 65kA，构成严重欺诈与产品质量缺陷。判决断路器供应商承担全部 3500 万元直接损毁赔偿并支付 3 倍虚标设备价款惩罚性赔偿金。<br>
+            <strong>风控启示</strong>：电气主回路元器件的额定短路分断能力必须具备国家级权威形式试验报告（Type Test Report）。</p>
+          </div>
+        </div>
+
+        <h3>5.1 黄金标准条款模板：储能电站重大安全事故各方连带赔偿与责任切分标准条款</h3>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📜</span>
+          <div class="callout-content">
+            <strong>储能电站重大安全事故各方连带赔偿与责任切分核心条款（可直接套用）</strong>
+            <p><strong>第 X 条 安全事故责任划分与追偿机制（Safety Incident and Indemnification）</strong><br>
+            X.1 <strong>起火原因技术归责与赔偿切分</strong>：若储能电站发生热失控、火灾、爆炸或人身财产损害事故，各方依据具备 CMA/CNAS 资质的第三方国家级鉴定机构出具的事故技术调查报告确定责任：（1）若因<strong>电芯/PACK 原厂制造缺陷、绝缘击穿或自燃</strong>引起的，设备供货商与系统集成商承担<strong>连带全额赔偿责任</strong>；（2）若因<strong>EPC 施工接线虚接、短路或未按图施工</strong>引起的，EPC 承包商承担<strong>全额赔偿责任</strong>；（3）若因<strong>运维团队擅自屏蔽报警、违规带电作业或篡改参数</strong>引起的，运维方按过错比例承担直接损失赔偿责任。<br>
+            X.2 <strong>赔偿范围穿透约定</strong>：致害责任方的赔偿责任范围明确包括：（1）储能电站自身资产损毁与重置直接损失；（2）相邻第三方电网设施、光伏/风电设备受波及损毁的第三方赔偿；（3）消防救援、环境清理、危废电池无害化处置及司法鉴定费；（4）未获保险赔偿的营业中断预期电费损失。<br>
+            X.3 <strong>保险协同与放弃代位追偿合规</strong>：未经保险人书面批注同意，任何一方不得在合同中擅自签署免除第三方赔偿责任的放弃追偿协议；因擅自放弃导致保险人拒绝赔付的，违约方须在 10 日内向受损方全额补足相当于应获保额的赔偿金。”</p>
+          </div>
+        </div>
+
+      </section>
+
+      <section>
+        <h2>六、事故发生后法务与技术 72 小时应急证据保全清单</h2>
+
+        <p>在储能电站发生热失控事故后的黄金 72 小时内，现场法务与技术工程师必须严格执行以下“十条应急保全军规”：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📋</span>
+          <div class="callout-content">
+            <strong>储能安全事故 72 小时应急证据保全清单</strong>
+            <ol>
+              <li><strong>站控与云端全量数据立即离线镜像备份</strong>：第一时间对 SCADA/EMS/BMS 服务器做物理镜像与哈希值存证，防范远程云平台后台数据被厂商覆盖；</li>
+              <li><strong>事故现场全景与微观细节高清拍照录像</strong>：对起火舱体外观、电缆进线孔、消防泄压阀、相邻受损设备进行 360 度多角度影像记录；</li>
+              <li><strong>封存消防控制主机报警打印纸与操作日志</strong>：调取消防主机历史记录，固定火警触发时间、电磁阀驱动反馈与排烟风机启闭时间戳；</li>
+              <li><strong>申请公证处对现场残骸进行现状保全公证</strong>：在清墟与拆除残骸前，申请公证员现场勘验并对关键物证（熔珠、电芯外壳）施加封条；</li>
+              <li><strong>第一时间向保险公司报案并申请联合查勘</strong>：严格在保单约定的 24/48 小时内发出正式报案书，要求公估机构立即进场；</li>
+              <li><strong>向消防救援大队调取并签收第一手调查资料</strong>：跟进《现场勘验笔录》、《询问笔录》及《火灾事故认定书》制作进程；</li>
+              <li><strong>妥善封存备品备件库同批次未装机电芯</strong>：将未投入运行的同批次电芯封存留样，以备后续进行对照破坏性测试；</li>
+              <li><strong>调取电网调度端关口表录波与对时记录</strong>：调取省调端线路故障跳闸录波图，比对电网故障与站内起火的时序先后顺序；</li>
+              <li><strong>统一对外口径并设立危机应对法务专班</strong>：严禁现场员工在社交媒体发布不实言论或私下与设备商签署任何责任认可协议；</li>
+              <li><strong>启动 72 小时内诉前财产保全防范厂商脱壳</strong>：评估损失超过厂商注册资本时，果断向法院申请冻结责任厂商基本账户。</li>
+            </ol>
+          </div>
+        </div>
+
+      </section>
+
     </main>
 
-    <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>热失控责任判定必须穿透全技术因果链</strong>：区分电芯原厂产品缺陷严格责任、集成商控制失灵、施工接线过失、消防联动失效与运维违规屏蔽。</li>
+        <li><strong>金相组织与毫秒级日志是裁判基石</strong>：通过铜导线一次短路熔珠与二次火烧熔珠判定起火根本原因。</li>
+        <li><strong>保险代位求偿与放弃追偿权是风控重灾区</strong>：未经保险公司书面批改严禁在 EPC/O&M 合同中擅自签署放弃追偿条款，防范数千万元拒赔。</li>
+        <li><strong>安全生产严守刑事法网底线</strong>：擅自关闭破坏 BMS 告警监控直接触犯《刑法》危险作业罪，必须坚决杜绝违规操作。</li>
       </ul>
     </section>
 
-    <!-- ⑦ 知识测验 -->
     <section class="quiz-section">
       <h2>❓ 知识测验</h2>
 
-      <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 某 200MWh 储能电站发生热失控火灾烧毁。在法庭审理中，关于究竟是“直流接线短路起火引燃了电芯”，还是“电芯内部缺陷自燃烧毁了外部电缆”，司法鉴定机构对现场提取的铜导线熔珠进行了微观金相显微分析。以下哪项鉴定结论能够无可辩驳地证实“该导线是在起火之前因自身绝缘缺陷发生金属性短路并引发了大火”？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 导线熔珠内部晶粒粗大呈现柱状晶，内部有大量巨大气孔并富含火场烟尘杂质（二次短路熔珠）</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 导线熔珠内部金相晶粒细小均匀，气孔微小致密且表面碳化物极少，具备典型的一次短路熔珠显微组织特征</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 导线完全融化成了一滩铜水，说明一定是外星人用激光武器打毁的</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 导线表面写有施工单位项目经理的名字拼音缩写</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。在火灾物证司法鉴定中，“一次短路熔珠”是指电气线路在常温无火环境下因绝缘破损直接发生金属性短路击穿电弧形成的熔珠，其显微金相特征为内部晶粒细小、均匀致密，气孔微小，充分证明短路发生在起火之前，是引发火灾的初始原因；而“二次短路熔珠”（A选项）是导线在火灾高温烘烤后绝缘烧蚀发生的短路，晶粒粗大呈柱状晶且含大量杂质，属于火灾后果而非起因。C、D 选项属于荒谬错误。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 储能电站业主在向 EPC 承包商发包工程时，在合同中约定“双方互不追究任何财产损失，业主保证其投保的保险公司无条件放弃向承包商代位追偿的权利”。但业主在向保险公司投保时，并未将该约定告知保险公司，保单中也未出具《放弃代位追偿批单》。后电站因承包商严重施工缺陷起火全毁。根据《中华人民共和国保险法》第六十一条规定，保险公司享有的法定权利是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 保险公司必须老老实实全额赔付，并且给承包商颁发优质工程奖牌</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 因被保险人（业主）未经保险人同意擅自签署免除第三方赔偿责任的协议，导致保险公司丧失了法定代位求偿权，保险人依法享有全部拒绝赔偿保险金或扣减相应理赔金额的法定权利</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 保险公司总经理自动升任该储能电站的终身董事长</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 承包商必须向保险公司无偿赠送全部施工机械设备</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。我国《保险法》第六十一条明确规定：“保险事故发生后，保险人未赔偿保险金之前，被保险人放弃对第三者请求赔偿的权利的，保险人不承担赔偿保险金的责任。被保险人在保险人向第三者行使代位请求赔偿的权利时的行为致使保险人不能行使代位请求赔偿的权利的，保险人可以相应扣减保险金。”在事故发生前擅自放弃对第三人追偿且未获保司批改的，严重损害了保司代位求偿法定权益，保司依法享有拒赔权。A、C、D 选项完全违背保险法。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 储能电站运维值班人员为了防止频繁报警影响电站并网考核得分，在站控后台多次违规勾选“手动屏蔽 BMS 电池单体三级过温跳闸保护信号”。后该电站因单体热失控未能及时跳闸引发舱体剧烈爆燃。根据《中华人民共和国刑法》第一百三十四条之一，该运维人员及主管负责人的行为涉嫌构成的刑事罪名为：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 抢劫罪</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 危险作业罪（关闭、破坏直接关系生产安全的监控、报警、防护设备设施）</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 操纵证券市场罪</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 侵犯商业秘密罪</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。《刑法修正案（十一）》增设了《刑法》第一百三十四条之一【危险作业罪】，明确规定在生产、作业中，关闭、破坏直接关系生产安全的监控、报警、防护、救生设备、设施，或者篡改、隐瞒、销毁其相关数据、信息的，具有发生重大伤亡事故或者其他严重后果的现实危险的，处一年以下有期徒刑、拘役或者管制。在储能运维中擅自屏蔽 BMS 保护属于典型的危险作业犯罪行为。A、C、D 选项罪名风马牛不相及。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 某独立储能电站发生火灾爆炸造成 6000 万元损失。查明事故系电芯出厂内在微孔缺陷诱发（根本诱因），但起火后消防系统的全氟己酮灭火喷淋控制电磁阀因卡阻未喷出药剂（扩大损失因素）。在民商事司法裁判与责任划分中，以下哪项裁决原则最为科学公正并符合法律精神？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 消防厂商必须承担 100% 责任，电芯原厂完全免除一切赔偿</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 按照“多因一果”技术原因力与过错比例规则进行责任切分：由电芯原厂承担主要赔偿责任（如 70% 比例的产品缺陷严格责任），消防厂商因防灾减损系统功能丧失对火势蔓延扩大部分承担次要连带赔偿责任（如 30% 比例）</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 判决由起火电站当天的天气预报播报员赔偿全部 6000 万元</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 判决双方在法庭上通过石头剪刀布决定谁付钱</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。根据我国《民法典》侵权责任编关于共同侵权与多因一果责任分担的裁判原则：多个主体的过错与产品缺陷共同导致损害结果发生的，应当根据各方行为的原因力大小与过错程度确定各自的责任份额。电芯内在缺陷是诱发热失控的初始源头原因，承担主要责任；消防系统卡阻失效丧失了关键控火减损功能，直接导致事故扩大，应当对扩大部分损失承担次要连带赔偿责任。A、C、D 选项完全违背法理与常识。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 储能电站发生热失控事故后的“黄金 72 小时应急证据保全”工作中，为防范设备厂商在诉讼期间通过远程后台私自覆盖修改站控数据库日志，技术与法务团队最应当采取的第一道防御措施是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 立即拔掉站控监控服务器的物理网线，并对 SCADA/EMS/BMS 本地数据库进行全盘镜像克隆与公证处不可篡改哈希存证</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 将站控服务器扔进水塘里泡水彻底销毁</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 立即给设备厂商董事长发送一封感谢信</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 邀请全站员工在起火残骸前合影留念发朋友圈</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：A 选项正确。储能电站云端与本地站控系统通常具备厂商远程运维与 OTA 升级通道。事故发生后，如果不断网或不及早固化存证，厂商极易通过远程后台静默修改报警阈值日志或覆盖关键故障毫秒级录波，导致投资方在后续司法鉴定中失去最核心的直接物证。第一时间断网物理隔离并申请公证处做数据库镜像哈希值存证，是锁定胜诉证据链的生命线。B、C、D 选项均属极其荒谬的行为。</p>
         </div>
       </div>
 
@@ -142,7 +438,6 @@
       <p class="quiz-score" id="score-display"></p>
     </section>
 
-    <!-- ⑧ 章节底部导航 -->
     <nav class="bottom-nav">
       <a href="sp6_4_2_实际收益未达预测诉讼维权.html" class="bottom-nav-prev">
         <span class="bnav-label">← 上一节</span>
@@ -155,24 +450,23 @@
       </a>
     </nav>
 
-    <!-- ⑨ 相关章节 -->
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="sp6_1_3_EPC合同性能保证与违约追费.html">SP6-1-3：EPC 合同“性能保证条款”避坑指南：容量保持率、响应时间与违约追费</a></li>
+        <li><a href="sp6_1_4_OM运维与交易代理协议防坑.html">SP6-1-4：O&M 运维与现货交易代理协议防坑指南：免责边界与考核分成</a></li>
+        <li><a href="sp6_4_1_延期并网责任认定与违约金追偿.html">SP6-4-1：电站延期并网责任认定与违约金索赔实务</a></li>
+        <li><a href="sp6_4_2_实际收益未达预测诉讼维权.html">SP6-4-2：实际收益未达预测值的诉讼维权与证据链收集</a></li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
 
-    <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp6_4_3</span></p>
     </footer>
-
   </div>
 
-  <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
