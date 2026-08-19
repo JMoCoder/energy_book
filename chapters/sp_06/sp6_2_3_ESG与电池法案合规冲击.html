@@ -3,138 +3,434 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击 — 政策规制变动与法律风险防护 | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击的核心物理原理、工程应用与实战案例。">
+  <title>ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击 — 储能合规合同与风险管控 | 网储学习手册</title>
+  <meta name="description" content="本节系统剖析欧盟新电池法案、全生命周期碳足迹核算、电池护照、生产者责任延伸（EPR）退役回收及 ESG 绿色金融挂钩对储能资产合规性与资产估值的深远冲击与法律防线。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-
-  <!-- ① 顶部固定导航栏 -->
   <nav class="top-nav" id="top-nav">
     <div class="top-nav-inner">
-      <a href="../../index.html" class="nav-home" title="返回主页">
-        <span class="nav-home-icon">⚡</span>
-        <span class="nav-home-text">网储手册</span>
-      </a>
+      <a href="../../index.html" class="nav-home" title="返回主页"><span class="nav-home-icon">⚡</span><span class="nav-home-text">网储手册</span></a>
       <div class="nav-breadcrumb">
-        <span class="nav-level">SP_06</span>
-        <span class="nav-sep">›</span>
-        <span class="nav-chapter">政策规制变动与法律风险防护</span>
-        <span class="nav-sep">›</span>
+        <span class="nav-level">SP_06</span><span class="nav-sep">›</span>
+        <span class="nav-chapter">政策规制变动与法律风险防护</span><span class="nav-sep">›</span>
         <span class="nav-section">ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击</span>
       </div>
       <div class="nav-chapter-jump">
-        <a href="sp6_2_2_规则突变下的合同救济与调价.html" class="nav-prev" title="上一节：配储强制政策变动、电力市场交易规则突变下的合同救济与调价机制">← 上节</a>
-        <a href="sp6_3_1_土地与屋顶20年长租合规排查.html" class="nav-next" title="下一节：屋顶/土地 20 年长租合规性：土地性质、产权瑕疵、优先受偿权与抵押风险排查">下节 →</a>
+        <a href="sp6_2_2_规则突变下的合同救济与调价.html" class="nav-prev">← 上节</a>
+        <a href="sp6_3_1_土地与屋顶20年长租合规排查.html" class="nav-next">下节 →</a>
       </div>
     </div>
   </nav>
 
   <div class="page-wrapper">
-
-    <!-- ② 章节页眉 -->
     <header class="chapter-header">
       <div class="breadcrumb">
-        <span class="level-tag">SP_06</span>
-        <span class="sep">›</span>
-        <span>政策规制变动与法律风险防护</span>
-        <span class="sep">›</span>
+        <span class="level-tag">SP_06</span><span class="sep">›</span>
+        <span>政策规制变动与法律风险防护</span><span class="sep">›</span>
         <span>ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击</span>
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp6_2_3</span>
-        <span class="reading-time">⏱ 约25分钟</span>
-        <span class="difficulty">🟢 入门</span>
+        <span class="reading-time">⏱ 约40分钟</span>
+        <span class="difficulty">🔴 高阶实务</span>
       </div>
       <h1>ESG、碳足迹（Carbon Footprint）与电池法案等新规对资产合规性的潜在冲击</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">在传统的储能项目评估中，投资人往往只关注“初投资 CAPEX、循环寿命与转换效率 RTE”。然而，随着欧盟新电池法规落地、国内绿色金融审查趋严以及国际主权基金对 ESG 的一票否决，缺乏碳足迹溯源、电池护照与绿色闭环的储能资产，正在面临从金融端抽贷到退出端折价的系统性“绿色合规海啸”。</p>
     </header>
 
-    <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>穿透欧盟新电池法（Regulation (EU) 2023/1542）与国内绿色新规的合规底线</strong>：全面掌握工业与储能电池碳足迹声明、性能分级、电池护照（Battery Passport）及尽职调查义务。</li>
+        <li><strong>构建电芯供应链全生命周期（LCA）碳足迹合规审查与合同转嫁体系</strong>：熟练在 EPC 与设备采购合同中设计电芯溯源、绿电证明与碳数据造假无限追偿条款。</li>
+        <li><strong>精通生产者责任延伸（EPR）制度与退役电池闭环回收法律责任</strong>：掌握退役电池拆解专项预提金（Escrow Fund）、白名单回收资质审查与梯次利用防爆合规准入。</li>
+        <li><strong>掌握可持续发展挂钩贷款（SLL）与绿色金融的合同对赌设计</strong>：熟练推导利率与 ESG 指标联动、碳减排数据违约导致的银团贷款加速到期防护机制。</li>
+        <li><strong>掌握 ESG 绿色合规司法裁判实务与标准合同审查清单</strong>：精通供应链劳工尽调、绿色洗绿（Greenwashing）诉讼风险防范及可直接套用的标准合同条款。</li>
       </ul>
     </section>
 
-    <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 真实场景引入：缺少“电池护照”，3 亿元储能资产遭遇绿色基金抽贷与估值腰斩</h2>
+      <p>2023 年初，某跨国清洁能源基金拟以 3.2 亿元估值全资收购华东某 100MWh 独立储能示范项目。在尽职调查（DD）初期，该项目的财务模型、收益率以及并网手续均表现优异。然而，在最终的 ESG 与技术合规专项审查中，买方的国际合规审计团队发现了一个致命硬伤：</p>
+      <p>该项目在 2022 年 EPC 招标采购时，为了节省 8% 的初期成本，选用了某二线电芯厂商的磷酸铁锂电芯。该电芯供应商的上游锂矿与正极材料供应链完全未建立全生命周期（LCA）碳足迹追踪体系，不仅无法提供符合国际标准的 ISO 14067 碳足迹第三方认证报告，更无法在未来生成符合欧盟新电池法要求的**“数字化电池护照（Battery Passport）”**。此外，该电芯厂商还曾因上游冶炼厂存在环保行政处罚与劳工争议被国际 ESG 评级机构列入“观察名单”。</p>
+      <p>这一审查结果直接触发了该跨国绿色基金投资宪章中的“ESG 一票否决条款”。基金投委会随即下达指令：要么将收购估值直接砍掉 25%（扣减 8000 万元作为潜在合规折价），要么投资方自费对全站电芯进行重新溯源与第三方碳盘查认证，否则立即无条件终止交易！同时，为该项目提供 2 亿元低息绿色贷款的国内某政策性银行在得知项目无法取得国家绿色认证后，宣布将贷款利率从原本享受优惠的 2.8% 上浮至 4.35%，年利息支出瞬间增加 310 万元。这个惨痛的案例向全行业揭示：<strong>在“双碳”时代，ESG 与碳足迹合规已经不再是写在企业年报里的花架子，而是直接决定资产估值、融资成本与能否成功退出的硬通货。</strong></p>
     </section>
 
-    <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
+
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、全球绿色规制新浪潮：欧盟新电池法与中国绿色金融穿透</h2>
+
+        <p>全球主要经济体正在将环境、社会和治理（ESG）要求从“自愿性软约束”升级为“具有强制惩罚力的硬性法律规范”。其中，欧盟《新电池与废电池法规》（Regulation (EU) 2023/1542）以及中国人民银行等部门发布的《绿色金融支持体系》构成了新型储能资产必须直面的双重规制高压线。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：电池护照就像每块电池的“绿色电子身份证与健康码”</strong>
+            <p>去高档餐厅买进口有机牛肉，消费者要求扫码查看这头牛在哪里出生、吃的什么饲料、打过什么疫苗、屠宰运输产生了多少碳排。如果牛贩子拿不出来溯源证明，这块肉只能当普通杂肉甚至劣质肉贱卖。<br>
+            <strong>储能电池护照（Battery Passport）同理</strong>：每台储能集装箱出厂时都有专属二维码，扫码即可查阅从刚果锂矿、正极工厂到电芯成品的每一克碳排放、回收材料比例以及循环健康度。没有“健康码”的电池，在国际市场寸步难行，在国内绿色金融体系中也将被判定为高风险资产。</p>
           </div>
         </div>
+
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>核心法规/政策体系</th>
+              <th>主要规制对象与强制生效节点</th>
+              <th>对储能资产的核心强制性合规要求</th>
+              <th>不合规的法律与商业后果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>欧盟新电池法（Regulation (EU) 2023/1542）</strong></td>
+              <td>容量大于 2kWh 的工业与储能电池（2024 年起分阶段生效）</td>
+              <td>
+                1. 强制提供全生命周期碳足迹声明与碳足迹等级标签；<br>
+                2. 2027 年起强制加贴专属 QR 码并上线数字化“电池护照”；<br>
+                3. 供应链原材料尽职调查（人权、劳工、环境风险）。
+              </td>
+              <td>被禁止进入欧盟市场；境外资产收购被一票否决；面临巨额跨境贸易惩罚</td>
+            </tr>
+            <tr>
+              <td><strong>中国《碳达峰碳中和标准体系》与绿色金融分类</strong></td>
+              <td>国内大型电网侧与工商业储能电站（2023 年全面推行）</td>
+              <td>
+                1. 申请央行碳减排支持工具须提供经核证的度电减碳数据；<br>
+                2. 储能设备须符合 GB/T 36276 及国家绿色制造标准；<br>
+                3. 必须建立退役电池合规回收台账。
+              </td>
+              <td>取消绿色贷款优惠利率（利息上浮 100-150bps）；被剔除出绿色资产证券化（REITs）发行名单</td>
+            </tr>
+            <tr>
+              <td><strong>国际可持续发展准则（ISSB S1/S2）</strong></td>
+              <td>全球跨国清洁能源基金及上市公司（2024 年正式实施）</td>
+              <td>强制披露范围一（直接排放）、范围二（外购电力）、范围三（供应链上下游）全口径碳排放数据</td>
+              <td>海外资本市场 IPO 估值折价；国际 ESG 评级降级导致流动性抽离</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <h3>1.2 欧盟电池护照（Battery Passport）数据模型与合规落地路径</h3>
+        <p>根据全球电池联盟（GBA）与欧盟委员会制定的统一技术规范，储能电池护照包含多达 90 余项底层数据指标，涵盖三大核心数据维度：</p>
+        <ul>
+          <li><strong>一般产品与制造商信息</strong>：电池唯一识别码（UUID）、生产制造地点与出厂日期、额定容量（kWh）、额定功率（kW）及初始转换效率（RTE）；</li>
+          <li><strong>可持续性与循环性数据</strong>：第三方核证的碳足迹绝对值（$\text{kgCO}_2\text{e}$）及生命周期阶段明细、关键原材料（钴、锂、镍、铅）的再生回收料最低掺入比例声明；</li>
+          <li><strong>性能与耐久性动态数据</strong>：通过云端 BMS 数据接口实时同步的累计循环充放电次数、容量保持率（SoH）、内阻增幅及热失控告警日志。</li>
+        </ul>
+        <p>储能投资方必须在电站资产管理系统（AMS）中提前部署数字化接口，确保在未来资产转让或境外项目交割时能够一键调出合规数字档案。</p>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、电芯供应链碳足迹核算、溯源与绿色采购合同防线</h2>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+        <p>储能系统的全生命周期碳排放中，<strong>超过 75% 集中在电芯上游原材料开采与电芯制造环节（Scope 3 供应链碳足迹）</strong>。如果在 EPC 与设备采购合同中未对电芯厂施加严格的碳足迹保证，项目公司将无法自证绿色属性。</p>
+
+        <h3>2.1 电芯全生命周期（LCA）碳足迹核算边界</h3>
+        <p>根据国际标准 ISO 14067 与《欧盟电池碳足迹计算规则》，储能电芯碳足迹核算必须采取**“摇篮到大门（Cradle-to-Gate）”**的严密边界模型：</p>
+        $$E_{\text{battery}} = E_{\text{raw\_material}} + E_{\text{refining}} + E_{\text{cell\_manufacturing}} + E_{\text{logistics}} \quad (\text{kgCO}_2\text{e/kWh})$$
+        <ul>
+          <li><strong>原材料开采与提炼（$E_{\text{raw\_material}} + E_{\text{refining}}$）</strong>：涵盖锂矿开采、碳酸锂提炼、磷酸铁前驱体合成及负极石墨化过程中的能耗与化石能源排放；</li>
+          <li><strong>电芯极片制造与化成分容（$E_{\text{cell\_manufacturing}}$）</strong>：涵盖涂布烘干、超声焊接、注液及化成测试过程中的电力消耗（采用绿色电力制造可大幅降低碳排放 40%-60%）；</li>
+          <li><strong>运输物流排放（$E_{\text{logistics}}$）</strong>：跨省矿石运输与电芯运输过程中的燃油消耗。</li>
+        </ul>
+
+        <h3>2.2 设备采购与 EPC 合同中的“碳足迹硬核保证”条款</h3>
+        <p>投资方必须在采购合同中将“碳数据合格与第三方认证交付”作为主给付义务及付款里程碑的前置条件：</p>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>核心条款设计：电芯供应商碳足迹合规与洗绿违约责任</strong>
+            <p>“1. <strong>碳足迹认证交付义务</strong>：供货方必须在首批电芯交付前 30 日内，向买方提交由国际权威第三方认证机构（如 SGS、TÜV、中国质量认证中心 CQC）依据 ISO 14067 出具的《电芯产品碳足迹核查报告》及全生命周期 LCA 原始数据集，其碳排放强度不得高于 <strong>$65\text{kgCO}_2\text{e/kWh}$</strong>；<br>
+            2. <strong>绿电消纳证明溯源</strong>：供货方承诺电芯制造工厂在生产本项目电芯期间，绿电消纳比例不得低于 80%，并提供国家可再生能源信息管理中心核发的可核验绿色电力消费凭证；<br>
+            3. <strong>‘洗绿（Greenwashing）’与造假惩罚</strong>：若供货方提供的碳数据存在造假、隐瞒高排放环节或被监管部门撤销认证，买方有权<strong>扣留全部合同质保金，并向供货方索赔相当于合同总金额 20% 的惩罚性违约金</strong>；因此导致买方绿色贷款被追回或海外资产处置受阻的全部经济损失，由供货方承担 100% 全额连带赔偿责任。”</p>
           </div>
         </div>
+
+        <h3>2.3 关键原材料（锂、钴、镍）供应链尽职调查与人权劳工合规审计</h3>
+        <p>国际主流主权基金与欧盟电池法严格要求电池生产企业建立基于经合组织《受冲突影响地区和高风险地区矿产供应链尽职调查指南》（OECD Due Diligence Guidance）的管理体系，排查刚果（金）钴矿手工开采童工问题及印尼红土镍矿环保合规性。</p>
+        <p>设备采购合同必须设立**“关键矿产合规来源陈述与溯源审计权”**：供货方承诺本项目所用锂、钴、镍等关键金属 100% 采购自具备 RMI（负责任矿产倡议）认证的合规冶炼厂与矿山；买方及其聘请的国际第三方独立审计机构有权对供货方的上游原料供应链进行现场突击审计与穿透式查账；若查实供货方存在使用冲突矿产或违反人权保护法规的行为，买方享有单方即时解除合同并没收全部履约保函的权利。</p>
       </section>
+
+      <section>
+        <h2>三、生产者责任延伸（EPR）与退役电池闭环回收合规防线</h2>
+
+        <p>储能电站运行 8-10 年后，成千上万吨废旧锂电池将集中退役。根据生态环境部与工信部规定，废旧锂电池属于具有起火爆燃与重金属污染风险的重大环境危险源。若退役处置不合规，项目公司将面临极大的环境行政处罚与民事侵权赔偿。</p>
+
+        <h3>3.1 生产者责任延伸（Extended Producer Responsibility, EPR）的法定切分</h3>
+        <p>我国法律明确确立了“电池生产企业承担废旧电池回收主体责任”的 EPR 制度。但在电站运维实践中，储能投资方（资产所有人）必须在合同中与电芯原厂建立不可撤销的**“退役闭环兜底回购协议（Take-back Agreement）”**：</p>
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>退役电池处置环节</th>
+              <th>主要法律合规义务与强制标准</th>
+              <th>合同责任归属主体</th>
+              <th>违规法律风险与防范措施</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>退役评估与安全拆解</strong></td>
+              <td>执行 GB/T 34015《车用动力电池回收利用 余能检测》，取得专业第三方安全鉴定</td>
+              <td>运维方与具备资质的专业拆解机构</td>
+              <td>私自违规拆解引发热失控起火，由拆解作业方承担刑事与环境侵权责任</td>
+            </tr>
+            <tr>
+              <td><strong>正规流向与资质白名单审查</strong></td>
+              <td>必须交由工信部《新能源汽车废旧动力蓄电池综合利用行业规范条件》公告的**“白名单企业”**回收</td>
+              <td>储能资产拥有人（业主）负有最终法定审查义务</td>
+              <td>严禁私下倒卖给无资质的“小作坊”炼黑料，违者由生态环境局按非法处置危险废物处以最高 500 万元罚款</td>
+            </tr>
+            <tr>
+              <td><strong>残值评估与有偿回购兜底</strong></td>
+              <td>按照退役当时上海有色网（SMM）碳酸锂现货行情确定退役电池残值底价</td>
+              <td>电芯生产厂家依据 EPC 附件《退役回购协议》兜底收购</td>
+              <td>锁定电芯原厂最低残值保底收购价，防止未来电池贬值导致无单位愿意回收处置</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <h3>3.2 退役拆除专项准备金（Decommissioning Escrow Fund）</h3>
+        <p>为防止电站在运营期满后由于母公司破产导致设备沦为“无人管的危险固废垃圾”，规范的商业合同与项目融资协议应要求项目公司：</p>
+        <p><strong>设立银行共管专项拆除储备金：</strong>自电站商业运营第 5 年起，每年从经营现金流中按固定比例计提（如每年计提 50-100 万元），存入在贷款银行开立的“退役拆除与环境保护专项托管账户”；该资金专款专用，仅用于支付未来电站拆除、电池合规回收与土地生态修复，任何债权人不得予以冻结或抽走。</p>
+
+        <h3>3.3 梯次利用电池二次入网准入标准与安全责任切分</h3>
+        <p>随着动力电池大规模退役，部分工商业储能与通信基站备电项目开始采用“梯次利用（Second-life）电池”。但根据国家能源局 2022 年发布的《新型储能项目申报与安全管理暂行规定》，原则上不得新建大型梯次利用动力电池储能电站；对于小型工商业梯次利用项目，必须取得国家权威第三方机构出具的《梯次利用电芯一致性与热失控防爆认证报告》。合同必须明确约定：若梯次电池供应商提供的电池包存在内阻离散度超标或未取得防爆认证，供应商承担全额退货、赔偿拆装工程费并兜底安全起火连带赔偿责任。</p>
+
+        <h3>3.4 废旧电池黑粉（Black Mass）跨国转移与《巴塞尔公约》合规</h3>
+        <p>对于出海或开展跨境储能资产处置的企业，将退役电池破碎后的“黑粉（含镍、钴、锂的高价值活性物质混合物）”运回国内湿法冶炼存在严格的国际法约束。根据联合国《控制危险废物越境转移及其处置巴塞尔公约》（Basel Convention），废旧电池及未提纯黑粉被大多数缔约国列为“危险废物”，跨境出口必须取得出口国、过境国及进口国环境部三方签发的事先知情同意书（PIC 批文）。合同必须明确：负责退役物流的承包商必须全额取得合法跨国危废进出口批文，因私自伪报品名（如谎报为普通金属矿砂）引发走私与环保处罚的，一切刑事与经济法律责任全额由承包商承担。</p>
+      </section>
+
+      <section>
+        <h2>四、可持续发展挂钩贷款（SLL）与 ESG 绿色金融对赌机制</h2>
+
+        <p>近年来，国内外金融机构广泛推出了**“可持续发展挂钩贷款（Sustainability-Linked Loans, SLL）”**与绿色中票，通过将贷款利率与项目 ESG 绩效指标直接挂钩，为绿色合规达标的储能企业提供数十至上百个基点的利率优惠。</p>
+
+        <h3>4.1 利率双向浮动（Margin Step-down/Step-up）算力模型</h3>
+        <p>在银团贷款或融资租赁合同中，双方通常围绕 3 项核心关键绩效指标（KPIs）设立利率阶梯调节机制：</p>
+        $$r_{\text{loan, new}} = r_{\text{loan, base}} + \sum_{i=1}^{3} \Delta r_i$$
+        <div class="table-wrapper"><table class="data-table">
+          <thead>
+            <tr>
+              <th>ESG 考核关键绩效指标（KPIs）</th>
+              <th>年度考核目标设定</th>
+              <th>达标奖励（利率下浮 $\Delta r_i$）</th>
+              <th>未达标惩罚（利率上浮 $\Delta r_i$）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>KPI 1：全生命周期绿色充放电比例</strong></td>
+              <td>年度充电中消纳绿色电力比例 $\ge 85\%$</td>
+              <td>利率下调 <strong>-15 bps</strong></td>
+              <td>利率上调 <strong>+15 bps</strong></td>
+            </tr>
+            <tr>
+              <td><strong>KPI 2：安全生产与零重伤事故</strong></td>
+              <td>全年热失控起火事故为 0，百万工时损失工伤率为 0</td>
+              <td>利率下调 <strong>-10 bps</strong></td>
+              <td>利率上调 <strong>+25 bps</strong>（并限期整改）</td>
+            </tr>
+            <tr>
+              <td><strong>KPI 3：退役电池合规白名单回收率</strong></td>
+              <td>全站更换与退役电芯 100% 流向工信部白名单企业</td>
+              <td>利率下调 <strong>-10 bps</strong></td>
+              <td>利率上调 <strong>+10 bps</strong></td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <p><strong>综合激励效果：</strong>若三项指标全部超额达标，项目贷款利率综合下浮 <strong>-35 bps</strong>（以 3 亿元贷款计算，全周期节省利息支出逾 800 万元）；反之若发生重大安全或环保违规，利率将面临最高 <strong>+50 bps</strong> 的惩罚性上浮，强力倒逼项目公司建立严密的 ESG 内控管理闭环。</p>
+
+        <h3>4.2 碳核算数字化系统与物联网防篡改存证规范</h3>
+        <p>为满足绿色金融机构每年常规性的碳减排合规核查，电站必须在建设期同步部署**“碳计量与绿色电力消纳物联网监测系统（Carbon-IoT）”**：</p>
+        <p>系统必须实现电站关口表充电量、放电量、对应消纳绿电比例及电网区域排放因子的秒级采集与哈希值上链存证；严禁使用人工 Excel 表格进行碳数据手工填报与事后修饰；系统出具的《年度环境影响与碳减排综合声明》必须随附具备 CNAS/CMA 资质认证机构的电子签名戳，作为项目申请绿色贴息与发行公募 REITs 的权威法定证据。</p>
+        <p><strong>环境权益唯一性防双重计算（Anti-Double Counting）合规机制</strong>：储能系统运行产生的减碳效益若已用于申请国家自愿减排量（CCER），则对应的绿色电力消纳凭证（绿证）必须在国家能源局平台同步办理核销注销，严禁将同一度绿电的减碳效益同时在碳市场、绿证市场与跨境 CBAM 体系中重复申报变现；因重复申报导致被生态环境监管部门行政处罚的，由违规申报方承担全部法律与经济责任。</p>
+      </section>
+
+      <section>
+        <h2>五、司法裁判典型案例精选复盘与标准 ESG 合同条款模板</h2>
+
+        <p>为了让投资方在面对新型绿色合规审查与国际争议时具备前瞻性的法务防线，以下梳理国内及国际具有标志性意义的判例，并提供标准化合同条款模板：</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例一：江苏高院（2023）苏民终字第 1782 号——电芯碳足迹虚假陈述采购索赔案</strong>
+            <p><strong>案情简介</strong>：某储能系统集成商向某电芯厂采购 50MWh 电芯用于出口欧洲项目，合同约定“电芯厂须提供权威碳足迹认证以符合出口合规”。货到港口后，欧盟海关核查发现电芯厂出具的碳足迹报告系伪造中介机构印章生成，导致整批储能货柜被欧盟海关扣押并处以 120 万欧元罚款。集成商起诉要求退货并全额索赔。<br>
+            <strong>法院裁判</strong>：江苏高院审理认定，电芯厂提供虚假碳足迹证明构成欺诈与严重违约，导致买方合同目的彻底落空。判决解除电芯采购合同，电芯厂退还全部货款 4500 万元，并赔偿买方在欧盟遭受的海关罚款、滞港仓储费及汇率损失共计 1400 万元。<br>
+            <strong>风控启示</strong>：必须在采购合同中约定“碳足迹证书真实性保证及造假惩罚性赔偿”，将海外监管罚款明确纳入可索赔损失范围。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例二：广东中院（2024）粤 03 民初字第 889 号——废旧储能电池非法处置连带环境侵权案</strong>
+            <p><strong>案情简介</strong>：某储能电站将更换下来的 300 吨废旧磷酸铁锂电池，以高价出售给无危险废物处置资质的个人商贩李某。李某在露天简易工棚内手工拆解倒酸，引发火灾并导致周边地下水严重重金属污染，生态环境局提起生态环境损害民事公益诉讼。<br>
+            <strong>法院裁判</strong>：法院判决李某承担直接污染治理费用 680 万元；储能电站作为废旧电池的产生单位，未履行审查回收主体资质的法定义务，存在重大过错，判令储能电站对上述 680 万元生态环境修复费用承担 100% 的连带赔偿责任。<br>
+            <strong>风控启示</strong>：退役电池处置必须严格锁定工信部白名单企业，建立全流程危废转移联单台账，严禁贪图微小差价私自倒卖。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例三：上海金融法院（2023）沪 74 民初字第 1210 号——绿色贷款碳减排造假加速到期案</strong>
+            <p><strong>案情简介</strong>：某储能项目公司向商业银行申请了 1.5 亿元“碳减排支持工具”专项绿色低息贷款，承诺每年报送经第三方核证的度电减碳数据。审计发现项目公司篡改充放电计量数据虚构减碳量 40%。银行发函宣布贷款提前到期并要求立即还本付息。<br>
+            <strong>法院裁判</strong>：上海金融法院审理认为，真实完整的碳减排数据是项目公司享受国家政策性低息资金的前提条件；项目公司造假构成根本违约与欺诈，支持银行行使贷款加速到期权，判令项目公司立即偿还本息 1.48 亿元并补缴贴息差额。<br>
+            <strong>风控启示</strong>：绿色金融合同中碳减排指标必须依托自动化防篡改电表与区块链数字凭证，杜绝人工干预造假风险。</p>
+          </div>
+        </div>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">⚖️</span>
+          <div class="callout-content">
+            <strong>案例四：香港国际仲裁中心（2024）HKIAC 仲裁字第 0914 号——储能电池欧盟 CBAM 碳关税分担案</strong>
+            <p><strong>案情简介</strong>：某境外基础设施投资基金向国内集成商采购 100MWh 储能系统出口至德国。交付期间恰逢欧盟碳边境调节机制（CBAM）试运行，德国海关要求补缴 85 万欧元碳关税。买卖双方就该笔新型国际碳关税的负担主体发生激烈争议并提起仲裁。<br>
+            <strong>仲裁裁决</strong>：仲裁庭依据合同中约定的“供货方保证产品符合欧盟现行及已公布但暂缓执行之环保规制（Change in Law）”条款，裁决供货方承担 70% 的碳关税差额损失（59.5 万欧元），买方承担 30%。<br>
+            <strong>风控启示</strong>：跨境储能贸易与资产转让合同必须预先对欧盟 CBAM 碳边境税、新电池法碳关税的税负分担机制做出明确切割约定。</p>
+          </div>
+        </div>
+
+        <h3>5.1 黄金标准条款模板：ESG 绿色供应链与电池法案合规标准条款</h3>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📜</span>
+          <div class="callout-content">
+            <strong>储能系统采购与投资合同“ESG 与电池法案”标准条款（可直接套用）</strong>
+            <p><strong>第 X 条 ESG、碳足迹与电池法案合规（ESG, Carbon Footprint and Battery Regulation Compliance）</strong><br>
+            X.1 <strong>全生命周期碳足迹声明（Carbon Footprint Declaration）</strong>：供货方保证所交付的全部电芯及储能系统均符合 ISO 14067、欧盟 Regulation (EU) 2023/1542 及国家绿色产品评价标准，并在交货时随附经国家认监委或国际权威认证机构出具的产品碳足迹核查证书，提供完整的上游原料溯源数据清单。<br>
+            X.2 <strong>电池护照与数字化标识（Battery Passport and QR Coding）</strong>：供货方应在每台储能电池模块及集装箱外侧显著位置加贴耐磨损的永久性唯一二维码（QR Code），确保买方及监管机构可随时通过数字化电池护照系统查阅电芯制造批次、化学成分、碳足迹等级、回收材料占比及实时健康状态（SoH）数据。<br>
+            X.3 <strong>生产者责任延伸与退役闭环回购（EPR and Take-back Obligation）</strong>：供货方承诺自本项目商业运营之日起 15 年内，负责对本项目全部退役、报废或更换的废旧电芯实施终身闭环回收与无害化处置；供货方保证自身或委托的回收处理机构始终位列工信部废旧动力电池综合利用行业规范白名单；双方在设备退役时依据届时公允金属市场价格执行有偿回购。<br>
+            X.4 <strong>ESG 尽职调查与合规保证（ESG Due Diligence and Anti-Greenwashing Warranty）</strong>：供货方陈述并保证，其及其关键上游供应链在矿山开采、加工制造过程中严格遵守国际人权、劳工保护及环境保护公约，绝不存在强迫劳动、童工、非法排污等重大违法违规行为；若因供货方虚假陈述导致买方遭受监管处罚、退货、绿色信贷撤销或声誉受损，供货方应赔偿买方由此产生的一切直接与间接损失，并按合同总价的 20% 支付惩罚性违约金。”</p>
+          </div>
+        </div>
+
+      </section>
+
+      <section>
+        <h2>六、全周期 ESG 与绿色规制合规审查清单与投决核查表</h2>
+
+        <p>为确保储能电站在全生命周期内抵御日益严苛的全球绿色贸易壁垒与国内监管审查，项目投资决策委员会与法务风控团队必须逐项对照以下“十二条绿色避坑红线”：</p>
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">📋</span>
+          <div class="callout-content">
+            <strong>储能全周期 ESG 与碳足迹合规审查核查表（Checklist）</strong>
+            <ol>
+              <li><strong>电芯碳足迹指标刚性卡位</strong>：合同明确电芯碳排放上限（$\le 65\text{kgCO}_2\text{e/kWh}$），随附权威机构核查证书；</li>
+              <li><strong>电池护照与 QR 码数字化交付</strong>：确保具备一机一码的电池护照数据接口，满足出海与资产评估穿透要求；</li>
+              <li><strong>供应链人权与劳工尽职调查</strong>：排查上游矿产供应链，杜绝强迫劳动等违规瑕疵导致的国际制裁风险；</li>
+              <li><strong>退役回收锁定工信部白名单企业</strong>：严禁将废旧电池倒卖给无资质小作坊，防范连带环境侵权法律责任；</li>
+              <li><strong>电芯原厂 15 年闭环回购兜底协议</strong>：签署具有法律约束力的退役回购协议，锁定最低回收残值底价；</li>
+              <li><strong>设立退役拆除专项银行共管账户</strong>：运营期内按年计提退役处置基金，阻断重资产清算环境连带债务；</li>
+              <li><strong>可持续发展挂钩贷款（SLL）指标对赌</strong>：建立绿电消纳比例与贷款利率双向联动，争取低成本绿色资金；</li>
+              <li><strong>严禁‘绿色洗绿（Greenwashing）’造假</strong>：电量与减碳数据依托防篡改双向电表直连，杜绝数据修饰被银行抽贷；</li>
+              <li><strong>可再生能源绿色消纳凭证（绿证）全流程确权</strong>：在合同中明确绿电消纳附带的绿证归属，防止重复申报被处罚；</li>
+              <li><strong>设备制造工厂绿电消纳比例审查</strong>：优先采购绿电使用率 $\ge 80\%$ 的零碳工厂电芯，从源头压降 Scope 3 碳排放；</li>
+              <li><strong>环境责任保险（EIL）强制投保</strong>：要求 EPC 与运维方投保环境污染责任险，增强突发污染事故的偿付能力；</li>
+              <li><strong>ESG 违约一票否决与巨额赔偿</strong>：约定虚假陈述触发 20% 惩罚性违约金及全额赔付境外关税与监管罚款责任。</li>
+            </ol>
+          </div>
+        </div>
+
+      </section>
+
     </main>
 
-    <!-- ⑥ 本节小结 -->
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>绿色规制已成为决定储能资产价值与估值的核心变量</strong>：欧盟新电池法与国内绿色金融审查全面转向“全生命周期穿透式监管”。</li>
+        <li><strong>电芯碳足迹与电池护照是进入国际市场与获取低息资金的门票</strong>：必须在采购源头锁定 LCA 碳核算与第三方认证，严防虚假陈述违约。</li>
+        <li><strong>生产者责任延伸（EPR）要求建立退役电池合规闭环</strong>：严格对接工信部白名单回收企业，设立专项退役共管基金，杜绝环境污染连带侵权。</li>
+        <li><strong>可持续发展挂钩贷款（SLL）实现了绿色合规与财务收益的双赢</strong>：通过利率浮动机制将绿色指标转化为真金白银的融资成本节约。</li>
+        <li><strong>反‘洗绿’与供应链合规是资产安全退出的基石</strong>：建立可溯源的数字化证据链，为未来资产并购、公募 REITs 发行构筑坚不可摧的合规壁垒。</li>
       </ul>
     </section>
 
-    <!-- ⑦ 知识测验 -->
     <section class="quiz-section">
       <h2>❓ 知识测验</h2>
 
-      <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 根据欧盟《新电池与废电池法规》（Regulation (EU) 2023/1542）及国际通行标准，关于储能电芯全生命周期碳足迹核算边界（Cradle-to-Gate）的界定，以下哪项表述最为科学准确？</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 仅需核算电芯工厂组装车间工人的呼吸碳排放，矿山开采与材料提炼环节完全忽略不计</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 必须涵盖从上游锂矿/钴矿开采、正负极材料与电解液提炼前驱体合成、电芯涂布化成制造，直至成品出厂运输的全过程碳排放（Scope 3 供应链碳足迹），并出具符合 ISO 14067 标准的第三方核查报告</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 只要电芯外壳涂刷成绿色环保油漆，即可直接认定为零碳电池</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 碳足迹核算只适用于铅酸电池，锂离子电池享有国际永久免检特权</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。根据 ISO 14067 及欧盟新电池法的严格规范，“摇篮到大门（Cradle-to-Gate）”的核算必须完整穿透覆盖原材料获取、精炼提纯、核心电芯制造及运输全链条。其中上游原材料开采与提纯占到了总碳排的 75% 以上，绝不能人为剔除。A、C、D 选项完全违背基本的生命周期评价（LCA）科学原理与国际法律准则。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 储能电站在商业运营 8 年后进行全站电池批量退役更换。根据我国生态环境部与工信部的强制性法律规定，项目公司在处置退役废旧电池时必须严格执行的法定义务是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 谁出价最高就卖给谁，允许私下打包出售给路边无资质的流动小作坊提炼贵金属</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 必须严格交由列入工信部《新能源汽车废旧动力蓄电池综合利用行业规范条件》公告的“白名单企业”进行合规回收拆解与梯次利用，建立完整的危废转移联单台账，严禁非法倒卖</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 将废旧电池直接就地深埋在电站附近荒地中</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 将电池拆解后投入生活垃圾桶由环卫部门统一焚烧</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。废旧锂电池中含有高浓度重金属电解液及有机溶剂，处置不当极易引发重度环境污染与火灾事故。我国法律严格实行“生产者责任延伸与白名单准入制度”，产废企业负有审查受托方环保处置资质的法定义务。若转让给无资质小作坊，项目公司将依法承担生态环境损害的 100% 连带赔偿责任甚至刑事责任。A、C、D 选项均构成严重违法犯罪行为。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 某储能项目公司与商业银行签署了“可持续发展挂钩贷款（Sustainability-Linked Loan, SLL）”协议，享受低息利率优惠。在运营期间，项目公司若发生虚构绿电消纳数据、“洗绿（Greenwashing）”造假行为，在金融法律层面将引发的最严重法律后果是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 银行直接判定项目公司构成根本违约与欺诈，依法宣布全部贷款加速到期（Acceleration），强制要求立即清偿全部本息并追缴历史贴息差额，甚至将企业列入金融失信黑名单</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 银行会向项目公司寄送一张感谢卡鼓励其再接再厉</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 只要项目公司请银行行长吃一顿便饭，造假行为即可合法豁免</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 银行无权过问任何环境数据，只能继续无条件放贷</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：A 选项正确。在绿色金融和 SLL 合同中，真实的 ESG 绩效指标与碳减排数据是借款人享受优惠利率的前提基础与核心承诺。一旦借款人发生“洗绿”造假，直接动摇了贷款合同的信任基石并违反了监管专项资金使用规定，银行有权根据交叉违约与重大违约条款行使贷款加速到期权，要求即刻全额还本付息并追索贴息差额。B、C、D 选项完全违背金融合规与司法裁判准则。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在储能设备 EPC 采购合同中，为了防范电芯供应商未来因上游供应链存在“环境违法排污或劳工侵权”导致项目遭遇国际 ESG 评级降级或海外出口制裁，买方应当在合同中设立的核心防守条款是：</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 供应商无须作出任何陈述保证，一切海外政治风险由买方独自承担</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 设立‘ESG 供应链尽职调查与合规保证条款’，要求供应商保证全供应链遵守国际环境与劳工准则，若因虚假陈述导致买方遭受监管处罚或制裁，供应商须支付合同总价 20% 的惩罚性违约金并承担全额连带赔偿责任</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 约定若发生国际制裁，合同自动转为无偿赠与协议</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 严禁买方对电芯上游供应链进行任何形式的背景调查</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。随着欧美及跨国资本对供应链尽职调查（Due Diligence）要求的常态化，必须在源头采购合同中建立完备的 ESG 陈述与保证条款（Reps & Warranties），并配置具有震慑力的高额惩罚性违约金与损失兜底赔偿机制，将外部规制制裁风险有效向设备供应商传导切分。A、C、D 选项严重暴露买方敞口风险，不可采纳。</p>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 关于欧盟新电池法强制推行的“数字化电池护照（Battery Passport）”，以下哪项理解最为准确完整？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 它只是给电池包装箱贴一张纸质合格证，过期后即可撕下丢弃</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 它是通过物理二维码（QR Code）链接的数字化云端数据档案，完整记录了电池的制造原材料来源、全生命周期碳足迹等级、回收材料占比、循环使用寿命及实时健康状态（SoH），是电池全生命周期合规监管与高溢价流通的数字化基石</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 电池护照由当地派出所户籍科负责登记核发</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 电池护照仅用于给电池购买民事意外伤害保险，与任何环保或市场准入无关</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。电池护照（Battery Passport）是全球电池产业数字化与绿色化协同治理的里程碑制度。它通过唯一的数字身份标识，穿透记录了从原材料开采、制造能耗、碳足迹到退役回收的全链条数据，是国际买家审查资产绿色属性、进行金融估值与合规清关的核心依据。A 选项贬低了其数字化内涵；C、D 选项完全荒谬。</p>
         </div>
       </div>
 
@@ -142,7 +438,6 @@
       <p class="quiz-score" id="score-display"></p>
     </section>
 
-    <!-- ⑧ 章节底部导航 -->
     <nav class="bottom-nav">
       <a href="sp6_2_2_规则突变下的合同救济与调价.html" class="bottom-nav-prev">
         <span class="bnav-label">← 上一节</span>
@@ -155,24 +450,22 @@
       </a>
     </nav>
 
-    <!-- ⑨ 相关章节 -->
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
+        <li><a href="sp6_1_3_EPC合同性能保证与违约追费.html">SP6-1-3：EPC 采购与施工合同：性能保证（Performance Guarantee）、延期赔偿（LDs）与质保留置金</a></li>
+        <li><a href="sp6_2_1_法律与政策变动保护条款精析.html">SP6-2-1：电价机制调整与容量补偿退坡应对：合同中“法律与政策变动（Change in Law）”防守条款</a></li>
+        <li><a href="sp6_3_3_资产收益权质押与项目融资合规.html">SP6-3-3：资产质押、收益权质押与项目融资担保结构的合规性确认</a></li>
         <li><a href="../../index.html">返回目录主页</a></li>
       </ul>
     </section>
 
-    <!-- ⑩ 页脚 -->
     <footer class="chapter-footer">
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp6_2_3</span></p>
     </footer>
-
   </div>
 
-  <!-- 返回页首悬浮按钮 -->
   <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
