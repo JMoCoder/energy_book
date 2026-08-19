@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>零基础项目测算入门：如何将 MW / MWh 物理指标转化为资本与收入模型 — 项目底层物理-经济测算（零基础起步） | 网储学习手册</title>
-  <meta name="description" content="本节深入剖析零基础项目测算入门：如何将 MW / MWh 物理指标转化为资本与收入模型的核心物理原理、工程应用与实战案例。">
+  <meta name="description" content="本节深入剖析如何将储能项目的兆瓦（MW）与兆瓦时（MWh）物理指标转化为资本性支出（CAPEX）、营业收入与现金流模型，涵盖等效利用小时数折算、物理-财务映射矩阵、100MW/200MWh 共享储能电站测算实战及财务三表雏形构建。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/main.css">
@@ -38,7 +38,7 @@
         <span class="nav-section">零基础项目测算入门：如何将 MW / MWh 物理指标转化为资本与收入模型</span>
       </div>
       <div class="nav-chapter-jump">
-        <a href="sp4_4_3_出险理赔与追偿全流程实务.html" class="nav-prev" title="上一节：出险理赔实务：现场勘查、定损争议解决与保险公司理赔全流程追偿">← 上节</a>
+        <a href="../sp_04/sp4_4_3_出险理赔与追偿全流程实务.html" class="nav-prev" title="上一节：出险理赔实务：现场勘查、定损争议解决与保险公司理赔全流程追偿">← 上节</a>
         <a href="sp5_1_2_CAPEX投资成本全拆解.html" class="nav-next" title="下一节：CAPEX 投资成本全拆解：电池舱、PCS、变压器、EPC 工程、征地与接入费明细">下节 →</a>
       </div>
     </div>
@@ -57,55 +57,438 @@
       </div>
       <div class="chapter-meta">
         <span class="file-id">sp5_1_1</span>
-        <span class="reading-time">⏱ 约25分钟</span>
+        <span class="reading-time">⏱ 约35分钟</span>
         <span class="difficulty">🟢 入门</span>
       </div>
       <h1>零基础项目测算入门：如何将 MW / MWh 物理指标转化为资本与收入模型</h1>
-      <p class="chapter-lead">概括本节核心要点与现实应用价值。</p>
+      <p class="chapter-lead">搭建物理指标与财务指标的桥梁，掌握将兆瓦（MW）与兆瓦时（MWh）转化为资本造价与营业收入的底层测算逻辑。</p>
     </header>
 
     <!-- ③ 学习目标 -->
     <section class="learning-goals">
       <h2>📚 本节学习目标</h2>
       <ul>
-        <li><strong>核心目标一</strong>：明确阐述该概念的基本含义与工程意义。</li>
-        <li><strong>核心目标二</strong>：掌握主要数学公式与定量计算方法。</li>
-        <li><strong>核心目标三</strong>：能结合实际网储工程案例分析与解决实际问题。</li>
+        <li><strong>掌握物理指标的底层逻辑</strong>：能够明确区分兆瓦（MW）与兆瓦时（MWh）的本质差别，并建立关于充放电时长的工程直觉。</li>
+        <li><strong>掌握等效利用小时数的折算方法</strong>：能够将储能电站的循环次数、放电深度等运行物理参数，折算为财务模型中作为收益计算基础的利用小时数。</li>
+        <li><strong>理解物理参数向财务输入变量的映射关系</strong>：掌握将系统综合效率（RTE）、容量衰减等物理指标转化为营业成本、补容准备金等财务变量的对应机制。</li>
+        <li><strong>具备独立构建极简测算模型的能力</strong>：能够以 100MW/200MWh 项目为例，从零推算并填充资产负债表与损益表的关键科目，并计算偿债备付率（DSCR）。</li>
       </ul>
     </section>
 
     <!-- ④ 场景引入 -->
     <section class="scene-intro">
-      <h2>🔥 场景引入：[从具体工程问题/现实案例引入]</h2>
-      <p>在这里撰写 200-400 字的场景引入或现实痛点描述……</p>
+      <h2>🔥 场景引入：投资经理的物理-经济“失联”危机</h2>
+      <p>在一个阳光明媚的下午，某新能源投资集团的投资经理张强正坐在电脑前，对着一份“100MW/200MWh 集中式独立储能电站项目”的工程招标方案发呆。设备厂商的报价单上写着：电池舱报价 0.65 元/Wh，储能变流器（PCS）报价 0.12 元/W；EPC 承包商给出的综合总承包价为 1.0 元/Wh。另一边，集团财务总监在微信上催促：“强子，下周投委会要审这个项目，你赶紧把财务模型做出来，算一下项目的投资内部收益率（IRR）和偿债备付率（DSCR）。还有，我们这 2 亿元的投资，每年充放电套利和容量租赁到底能回多少现金？银行的借款能不能按期还上？”</p>
+      <p>看着满屏幕的 MW、MWh、RTE（系统效率）、DOD（放电深度）等物理名词，张强顿时陷入了沉思：在学校学的财务模型都是直接输入营业收入和运营成本，现在这一堆电学物理参数，到底该怎么一步步翻译成账本上的真金白银？如果直接拿 0.6 元/kWh 的电价差去乘以 200MWh 的电量算收入，会漏掉什么致命的物理损耗？物理指标和财务模型的“鸡同鸭讲”，不仅是张强个人的烦恼，更是所有储能项目开发、投资与资管实务中必须跨越的第一道天堑。本节将带你从零开始，手把手将物理指标解构并重组为标准的财务资本与收入模型。</p>
     </section>
 
     <!-- ⑤ 正文内容 -->
     <main class="chapter-content">
       <section>
-        <h2>一、[主题一]</h2>
-        <p>正文内容（目标 5,000+ 字）……</p>
+        <h2>一、储能项目的物理“双子星”：MW 与 MWh 的本质区别与工程直觉</h2>
+        <p>在涉足储能项目经济测算之前，我们必须首先建立起对储能核心物理指标的扎实直觉。在电力工程和招投标方案中，储能电站的规模通常表示为“XX MW / XX MWh”，例如 100MW / 200MWh。这两个指标被称为储能系统的物理“双子星”，它们分别代表了完全不同的物理维度，在财务测算中也对应着截然不同的资产资本和收入基础。</p>
+        
+        <h3>1.1 功率（MW）的物理本质与工程直觉</h3>
+        <p><strong>兆瓦（Megawatt，MW）</strong>是功率（Power）的单位。功率衡量的是能量流动的“速度”或“率”。简单来说，MW 代表了储能系统在某一瞬间最大能够“吸进去”或者“吐出来”多少电能的能力。</p>
+        <p>从物理定义上来看，1 瓦（W）等于每秒做功 1 焦耳（1 J/s）。而 1 兆瓦（MW）则等于 1,000 千瓦（kW），即 1,000,000 瓦。当一个储能项目被称为“100MW”项目时，意味着该项目所包含的所有电气设备——包括电池电芯的充放电倍率、储能变流器（Power Conversion System，PCS）的并网逆变能力、升压变压器的额定容量以及并网线路的载流量，全部都按照 100 兆瓦的“最高通行速度”进行了匹配设计。在财务测算中，功率（MW）直接关系到电网对电站响应能力的定价，例如辅助服务中的调频容量补偿和共享储能的容量租赁收入，都是以功率为单位进行计价的。</p>
+
+        <h3>1.2 能量容量（MWh）的物理本质与工程直觉</h3>
+        <p><strong>兆瓦时（Megawatt-hour，MWh）</strong>是能量（Energy）的单位。能量衡量的是储电的总量。MWh 代表了储能系统在充满电的状态下，一共装了多少度电。</p>
+        <p>从换算关系来看，1 兆瓦时（MWh）等于 1,000 千瓦时（kWh）。而在中国的电网计费体系和日常生活中，1 千瓦时就等于我们常说的“1 度电”。因此，1 MWh 刚好等于 1,000 度电。如果我们投资建设一个 200MWh 的电站，那么当电池全部充满时，它的内部一共存有 20 万度电。在财务测算中，能量容量（MWh）直接决定了电站单次充电和放电的电量规模，它是电量现货套利和削峰填谷营业收入的物理上限，同时也是采购电池设备和计算建设总资本的核心计价基准。</p>
 
         <div class="callout callout-analogy">
           <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>生活类比：[概念名称]</strong>
-            <p>通过通俗易懂的生活场景类比解释该技术点……</p>
+            <strong>生活类比：储水系统与储能系统的物理对应</strong>
+            <p>为了帮助零基础学习者建立直觉，我们可以将储能电站想象成一个“高山储水站”：</p>
+            <ul>
+              <li><strong>出水水管的管径与阀门开度 $\rightarrow$ 功率（MW）</strong>：水管越粗，阀门开得越大，单位时间内能够流出的水量就越多。即使水箱再大，如果出水管只有针尖大小，在需要大量用水的瞬间也无济于事。这就对应储能系统的额定功率。一个 100MW 的储能系统，就像是装配了超大口径泄洪阀门的水站，能在瞬间释放或吸纳庞大的能量洪流。</li>
+              <li><strong>储水箱的容积 $\rightarrow$ 能量容量（MWh）</strong>：储水箱能够装多少吨水，决定了在不继续进水的情况下，水站最多能持续供水多久。这就是能量容量。一个 200MWh 的电站，就像是一个额定容量为 20 万单位的巨型蓄水池。</li>
+              <li><strong>充放电时长（Duration） $\rightarrow$ 水箱放空所需的时间</strong>：如果蓄水池里装满了 200 单位的水，而我们把出水阀门开到最大，以每小时 100 单位的速度放水，那么水池放空需要 2 小时（$200 \div 100 = 2$ 小时）。这就是储能系统的“2小时系统”。如果我们将阀门关小一倍，以每小时 50 单位的速度放水，则可以持续放电 4 小时（4小时系统）。</li>
+            </ul>
+            <p><strong>结论：MW 决定了项目“救灾”或“抢单”的瞬间爆发力；MWh 则决定了项目“抗旱”或“运转”的持久续航力。</strong></p>
+          </div>
+        </div>
+
+        <h3>1.3 充放电时长（Duration）与电网应用场景细分</h3>
+        <p>在工程实践中，我们将“能量容量 / 额定功率”的比值定义为<strong>充放电时长（时长，Duration）</strong>。不同的应用场景对充放电时长有着完全不同的要求，这直接决定了项目的物理配置和商业收益模型：</p>
+        
+        <p>1. <strong>超短时/短时系统（0.5小时或更短）</strong>：功率大、容量小。主要应用于电网的频率控制。因为电网的频率波动是在几秒甚至几毫秒内发生并恢复的，电池不需要长时间放电，只需迅速“顶上去”撑过难关。典型配置如火电厂联合调频项目，规模多为 20MW/10MWh（0.5小时）或 30MW/15MWh（0.5小时）。此类项目极度依赖辅助服务市场中的频段响应里程补偿（按调节次数和精度计价）。</p>
+        
+        <p>2. <strong>中等时长系统（1–2小时）</strong>：这是目前中国电网侧独立储能和新能源配储的最主流配置。典型规模如 100MW/200MWh（2小时）。它能够在傍晚用电高峰或光伏出力骤降时，以满功率持续放电 2 小时，为电网提供关键的顶峰能力，其收益主要来自“容量租赁”配合“现货差价套利”。</p>
+        
+        <p>3. <strong>长时系统（4小时及以上）</strong>：主要用于大规模的新能源消纳。在西北、华北等风光资源极其丰富的区域（如新疆、内蒙古、青海），为了解决严重的“弃风弃光”问题，政策逐步强制要求新建新能源电站配套 4 小时的储能系统。典型规模如 100MW/400MWh。此类项目的电池舱成本占比极高，测算中需要深度关注电池循环寿命的衰减。</p>
+
+        <div class="callout callout-case">
+          <span class="callout-icon">🏗️</span>
+          <div class="callout-content">
+            <strong>实例：新疆哈密 50MW/200MWh 独立共享储能示范项目</strong>
+            <p>该项目于2023年正式并网投运，是典型的 4 小时共享储能电站。在物理层面上，它在白天光伏大发时以 50MW 的功率连续充电 4 小时，吸收 200MWh（即 20 万度）的廉价光伏电量；在夜间用电负荷回升、无光照时，以 50MW 的满功率向电网放电 4 小时。在经济测算中，这 50MW 的功率作为“额定运力”，以容量租赁的形式租给周边的光伏和风电场，赚取稳定的年租金；而这 200MWh 的电量额度则参与电力现货市场交易，赚取早晚峰谷的差价收益。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>二、[主题二]</h2>
-        <p>正文内容……</p>
+        <h2>二、利用小时数折算：如何把“物理运行时间”翻译成“财务收益基础”</h2>
+        <p>在光伏或风电项目的财务测算中，我们经常使用“年等效利用小时数”来估算发电量（年发电量 = 装机容量 $\times$ 利用小时数）。对于储能项目，将物理充放电行为转化为财务收益的基础，也同样必须通过“等效利用小时数”来进行折算。但是，储能作为一种“控制性资产”，其运行规律与新能源有着本质区别。</p>
 
-        <div class="callout callout-case">
-          <span class="callout-icon">🏗️</span>
+        <h3>2.1 电网调度与储能实际稼动率</h3>
+        <p>风力发电机只要有风就会旋转发电，光伏组件只要有阳光就会输出电流，它们的稼动率主要受自然资源主导。然而，储能电站并不自己产生电能，它只是电能的“搬运工”。这意味着，即使储能电站处于完美的待机状态，如果电网调度中心（调度）没有下达充放电指令，或者市场上的电价差没有达到套利红线，电站就会保持静止状态。</p>
+        <p>因此，储能的等效利用小时数不是指电站并网在线的时间，而是指<strong>电站全年的累积放电量，折算到以额定功率满载放电下的工作时长</strong>。</p>
+
+        <h3>2.2 等效放电利用小时数的计算公式</h3>
+        <div class="key-concept">
+          <h4>📌 核心公式：年等效放电利用小时数</h4>
+          <p>储能电站在一年内的等效放电利用小时数 $T_{\text{util}}$，由年总放电量与电站额定放电功率决定：</p>
+          $$T_{\text{util}} = \frac{E_{\text{discharge\_annual}}}{P_{\text{rated}}}$$
+          <p>其中：</p>
+          <ul>
+            <li>$T_{\text{util}}$：年等效放电利用小时数（小时/年，h/a）；</li>
+            <li>$E_{\text{discharge\_annual}}$：电站一年内输出到电网的总电量（兆瓦时/年，MWh/a）；</li>
+            <li>$P_{\text{rated}}$：电站并网点的额定输出功率（兆瓦，MW）。</li>
+          </ul>
+          <p><strong>工程含义说明</strong>：该公式是财务模型计算“电量套利营业收入”的绝对底层基石。年放电套利营业收入即为 $P_{\text{rated}} \times T_{\text{util}} \times \text{平均上网电价}$。利用小时数直接决定了电量收入的量纲，如果这一物理折算变量出现偏差，整个财务现金流预测将完全失效。</p>
+        </div>
+
+        <h3>2.3 循环次数与利用小时数的等效折算</h3>
+        <p>在日常测算中，我们通常从“日充放电循环次数”（Cycles）出发来推算年利用小时数。例如，对于一个 100MW/200MWh 的 2 小时储能系统：</p>
+        <p>如果电站每天进行 1 次完整的“一充一放”循环，且放电深度为 100%：</p>
+        <ul>
+          <li>单日放电量为：$200\text{ MWh} \times 100\% = 200\text{ MWh}$。</li>
+          <li>单日等效利用小时数为：$200\text{ MWh} \div 100\text{ MW} = 2\text{ 小时}$。</li>
+          <li>假设一年扣除检修、系统调试及电网不调度的天数后，实际运行 330 天，则年等效利用小时数为：$2\text{ 小时/天} \times 330\text{ 天/年} = 660\text{ 小时}$。</li>
+        </ul>
+        <p>如果电站运行于电价较为活跃的区域（如山东、山西现货市场），被调度为“两充两放”，即每天完成 2 次完整的充放电循环：</p>
+        <ul>
+          <li>单日放电量为：$200\text{ MWh} \times 2 = 400\text{ MWh}$。</li>
+          <li>单日等效利用小时数为：$400\text{ MWh} \div 100\text{ MW} = 4\text{ 小时}$。</li>
+          <li>年等效利用小时数为：$4\text{ 小时/天} \times 330\text{ 天/年} = 1,320\text{ 小时}$。</li>
+        </ul>
+
+        <div class="callout callout-analogy">
+          <span class="callout-icon">🔍</span>
           <div class="callout-content">
-            <strong>中国真实案例：[项目/政策名称]</strong>
-            <p>详细分析国内真实网储电站应用或最新政策规章……</p>
+            <strong>类比理解：网约车司机的“有效载客小时”</strong>
+            <p>我们可以把储能电站的等效利用小时数，类比为网约车司机的“有效载客计费时间”：</p>
+            <p>司机老王每天开车上街 12 小时（这相当于电站并网在线 12 小时），在这期间，老王有 5 小时在路边刷手机等单（这相当于储能电站的并网待机），有 3 小时空驶去接客或者去充电（这相当于充电和能量传输损耗），只有 4 小时是车上真正坐着付费乘客在行驶（这相当于等效放电工作时间）。老王一天的收入，只与这 4 小时的“有效载客计费时间”和单价直接相关。至于他开街了 12 小时还是 24 小时，乘客是不会为等待时间买单的。储能电站也是如此，只有发生电量转移的满载工作小时，才是财务模型认可的“收益基础”。</p>
           </div>
         </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-content">
+            <strong>财务预测误区：盲目乐观的“循环水份”</strong>
+            <p>在许多储能项目的可行性研究报告（可研）中，为了使项目投资收益率“看起来很美”以顺利通过集团投委会，评估人员往往会拍脑袋设定“年循环次数为 365 天无休、每日两充两放（即年循环 730 次，折算 2 小时系统为 1460 利用小时）”。</p>
+            <p>然而在实际运行中，受电网线路阻塞、春季或秋季现货市场峰谷电价差收窄、电站计划性停放均衡电池等因素影响，国内许多独立电站的年等效充放电次数仅在 300 到 450 次之间（折算利用小时数为 600 至 900 小时）。在做最底层测算时，必须基于省级电网的历史调度数据和真实的现货价格曲线进行客观折算，切忌为了凑 IRR 而在利用小时数上注水。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>三、物理参数向财务输入变量的映射：如何打破“鸡同鸭讲”的壁垒</h2>
+        <p>在储能项目的前期评估中，工程团队往往拿着一叠包含系统效率、放电深度、日历寿命等物理指标的技术协议；而财务团队则拿着包含固定资产原值、毛利率、资产折旧等科目的财务表格。这两者之间如果不能建立精确的映射，测算结果就会差之毫厘，谬以千里。以下是储能系统四大核心物理指标向财务变量的转化机理：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>物理/工程技术指标</th>
+                <th>物理概念解释</th>
+                <th>对应的财务输入变量</th>
+                <th>财务层面的映射机理与影响</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>额定容量 (MWh)</strong></td>
+                <td>电池充满时所能储存的电量上限</td>
+                <td><strong>CAPEX 投资基准</strong></td>
+                <td>建设期总资本性支出的绝对算力基础，决定了电池设备的采购金额与土建规模。</td>
+              </tr>
+              <tr>
+                <td><strong>放电深度 (DOD)</strong></td>
+                <td>实际放电量占额定容量的比例</td>
+                <td><strong>实际可用电量上限</strong></td>
+                <td>修正每次循环的放电上限。若 DOD 为 90%，200MWh 的电站每次最多只能放 180MWh 的电。</td>
+              </tr>
+              <tr>
+                <td><strong>系统综合效率 (RTE)</strong></td>
+                <td>“放电量 / 充电量”的比例（网侧交流端）</td>
+                <td><strong>充电电费成本修正系数</strong></td>
+                <td>决定充电电费开支。效率为 85% 意味着卖 100 度电，必须买 118 度电，多出的 18 度是“营业成本”。</td>
+              </tr>
+              <tr>
+                <td><strong>年衰减率 (Degradation)</strong></td>
+                <td>电池可用容量随使用年限下降的比例</td>
+                <td><strong>营业收入衰减因子 / 补容费用</strong></td>
+                <td>在不补容时导致后期放电收入逐年减少；若要维持容量，则需在财务 OPEX 中预留“电池补容准备金”。</td>
+              </tr>
+              <tr>
+                <td><strong>辅助用电率 (Aux)</strong></td>
+                <td>温控空调、水泵及站内照明消耗电量占比</td>
+                <td><strong>可变 OPEX 运营费用</strong></td>
+                <td>自用电费损耗。站用电无法上网销售，表现为直接购电支出，扣减可支配现金流。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.1 额定容量（MWh） $\rightarrow$ 建设期 CAPEX 的定价基准</h3>
+        <p>在储能行业，<strong>资本性支出（Capital Expenditure，CAPEX）</strong>通常以单位容量造价来衡量，单位为“元/Wh”或“元/kWh”。</p>
+        <p>以磷酸铁锂电池储能系统为例，目前直流侧电池舱报价约为 0.5–0.7 元/Wh，而包含土建、主变压器、PCS、EMS（能量管理系统，Energy Management System）和网联接入的交流侧综合造价约为 0.8–1.1 元/Wh。如果我们折算到财务模型中：</p>
+        $$1.0\text{ 元/Wh} = 1,000\text{ 元/kWh} = 1,000,000\text{ 元/MWh} = 100\text{ 万元/MWh}$$
+        <p>因此，对于一个 200MWh 的电站，其综合投资预算就是：$200\text{ MWh} \times 100\text{ 万元/MWh} = 2\text{ 亿元}$。物理容量的大小直接决定了这一固定资产的初始入账原值。</p>
+
+        <h3>3.2 放电深度（DOD）与系统综合效率（RTE） $\rightarrow$ 可用电量与购电电费成本</h3>
+        <p><strong>放电深度（Depth of Discharge，DOD）</strong>是电池管理的一个关键指标。锂离子电池如果经常进行 0% 至 100% 的深度充放，会加速内部晶体结构塌陷，导致寿命急剧衰减。因此，项目工程设计中，电池管理系统（Battery Management System，BMS）会将充放电区间限制在 5% 到 95% 之间，即 DOD 设定为 90%。这意味着电站在财务算账时，物理可用容量永远只有额定容量的 90%。</p>
+        
+        <p><strong>系统综合效率（Round-Trip Efficiency，RTE）</strong>是能量守恒定律在财务上的体现。由于电池存在内阻发热、PCS 在交直流转换时存在拓扑损耗、变压器升降压存在铜损铁损，独立电站从电网买入电量（充电端）到向电网卖出电量（放电端），综合效率通常在 82% 至 86% 之间。我们以 85% 来计算，意味着充电 100 度，放电只能收到 85 度的钱。财务上，充电买电的费用是全额支付的，因此 RTE 小于 100% 构成了套利买电的溢价成本。</p>
+
+        <h3>3.3 容量衰减（Degradation）与循环寿命（Cycle Life） $\rightarrow$ 折旧年限与电池补容支出</h3>
+        <p>随着电站每天的充放电循环，电芯内部的活性锂离子会逐渐丧失活性，导致电池的最大可用容量逐年缩水（例如首年衰减 3%–4%，此后每年平稳衰减 1.5%–2%）。</p>
+        <p>对于一个运行期为 20 年的储能电站，如果不进行任何维护，到第 10 年可用容量就会掉到 80% 以下。财务分析师在模型中必须做出决策：</p>
+        <ul>
+          <li><strong>方案 A（不补容）</strong>：接受电站物理容量随时间递减的事实。这意味着在模型第 2 年至第 20 年中，年总放电电量要乘以一个逐渐下降的系数，导致电费套利收入逐年下滑，折旧费用按原值直线计提，后期净利润持续萎缩。</li>
+          <li><strong>方案 B（电池补容，Battery Augmentation）</strong>：为了履行与周边的风电、光伏电站签订的固定容量租赁协议，必须维持 200MWh 的可用容量不变。因此，需要安排在第 5 年和第 10 年，从市场上采购新的电池模组并联进原有的电池舱中。这笔“电池大修与补容支出”通常在财务模型中计入运营期追加 CAPEX，或直接作为大额 OPEX（运营性支出，Operational Expenditure）分摊，极大地消耗当期的自由现金流。</li>
+        </ul>
+
+        <h3>3.4 辅助用电率（Auxiliary Power Consumption Rate） $\rightarrow$ 站用电可变成本</h3>
+        <p>电池对温度极其敏感，最佳工作温度在 20℃–25℃ 之间。为了防止热失控并延缓衰减，现代储能系统广泛采用液冷温控系统。液冷主机的压缩机、冷水泵以及二次控制回路都需要消耗电能。这些不经过网联计量销售的自用电，被称为<strong>辅助用电</strong>或<strong>站用电</strong>。</p>
+        <p>辅助用电率通常占总充电电量的 3%–5%。在测算中，这部分电量需要按工商业电价直接向电网付费（或从放电上网电量中扣除），在财务中记为一项持续发生的可变运维费用。</p>
+      </section>
+
+      <section>
+        <h2>四、实战演练：一个 100MW/200MWh 独立储能电站的资本与收入转化模型</h2>
+        <p>为了让零基础学习者彻底看清物理指标是如何一步步变成财务数字的，我们以华东某省份投资建设的 100MW / 200MWh 独立共享储能电站项目为例，进行全流程的定量推演。</p>
+
+        <h3>4.1 项目基础物理与财务参数设定</h3>
+        <p>该项目总造价（交流侧 EPC 综合单价）设定为 1.0 元/Wh。物理与商业运营参数如下：</p>
+        <ul>
+          <li><strong>额定功率（$P_{\text{rated}}$）</strong>：100 MW</li>
+          <li><strong>额定容量（$C_{\text{nominal}}$）</strong>：200 MWh（即 200,000 kWh）</li>
+          <li><strong>系统综合造价（单价）</strong>：1.0 元/Wh（等效于 1,000 元/kWh）</li>
+          <li><strong>放电深度（$DOD$）</strong>：90%（下限 5%，上限 95%）</li>
+          <li><strong>系统充放电效率（$RTE$）</strong>：85%（包含直流、逆变与变压器损耗）</li>
+          <li><strong>辅助用电率（$Aux$）</strong>：占总充电电量的 3%</li>
+          <li><strong>年运行天数</strong>：330 天（扣除检修、故障待机等）</li>
+          <li><strong>日循环策略</strong>：每日 1 充 1 放（即年循环 330 次）</li>
+          <li><strong>电力市场结算电价（现货或峰谷差价）</strong>：
+            <ul>
+              <li>平均低谷充电电价（$P_{\text{charge}}$）：0.15 元/kWh</li>
+              <li>平均高峰放电电价（$P_{\text{discharge}}$）：0.75 元/kWh</li>
+            </ul>
+          </li>
+          <li><strong>容量租赁商业模式</strong>：向周边风电、光伏电站提供并网配储额度租赁，租金单价为 150 元/kW·年，租赁比例 100%。</li>
+        </ul>
+
+        <h3>4.2 步骤一：物理指标向初始资本支出（CAPEX）转化</h3>
+        <p>项目总投资额是根据额定容量（以Wh为单位）计算的：</p>
+        $$\text{总投资（CAPEX）} = 200\text{ MWh} \times 1,000,000\text{ Wh/MWh} \times 1.0\text{ 元/Wh} = 20,000\text{ 万元}（2.0\text{ 亿元}）$$
+        <p>资本筹措结构为：</p>
+        <ul>
+          <li><strong>资本金（股权投资，Equity）</strong>：占比 20%，即 4,000 万元。这部分由开发商以自有资金注入。</li>
+          <li><strong>长期借款（债务融资，Debt）</strong>：占比 80%，即 16,000 万元。由项目公司向商业银行申请贷款，贷款年利率 4.0%，还款期 10 年，采用每年等额本息还款法。</li>
+        </ul>
+
+        <h3>4.3 步骤二：物理运行参数向年充电与放电电量转化</h3>
+        <p>首先，我们必须引入放电深度（DOD），修正单次循环的物理能量吞吐：</p>
+        $$\text{单次放电量} = 200\text{ MWh} \times 90\% = 180\text{ MWh} = 180,000\text{ kWh}（18\text{ 万度}）$$
+        <p>根据一充一放、年运行 330 天计算，年度累积放电量为：</p>
+        $$E_{\text{discharge\_annual}} = 180,000\text{ kWh} \times 330\text{ 次} = 59,400,000\text{ kWh}（5,940\text{ 万度}）$$
+        <p>接着，利用系统综合效率（RTE），计算为了放出这些电量，电站必须要从电网买入的充电电量：</p>
+        $$E_{\text{charge\_annual}} = \frac{E_{\text{discharge\_annual}}}{RTE} = \frac{59,400,000\text{ kWh}}{0.85} \approx 69,882,353\text{ kWh}（6,988.24\text{ 万度}）$$
+        <p>最后，计算温控和空调系统在运行中消耗的站用电量（辅助用电）：</p>
+        $$E_{\text{aux\_annual}} = E_{\text{charge\_annual}} \times Aux = 69,882,353\text{ kWh} \times 3\% \approx 2,096,471\text{ kWh}（209.65\text{ 万度}）$$
+
+        <h3>4.4 步骤三：物理电量向年度营业收入与成本转化</h3>
+        <p>我们现在可以计算运营期第一年的营业收入和直接营业成本（COGS）：</p>
+        <p>1. <strong>放电上网电费收入</strong>：</p>
+        $$\text{放电上网收入} = 59,400,000\text{ kWh} \times 0.75\text{ 元/kWh} = 4,455\text{ 万元}$$
+        <p>2. <strong>容量租赁收入</strong>：独立储能以功率（kW）为单位对外出租容量：</p>
+        $$\text{年容量租赁收入} = 100\text{ MW} \times 1,000\text{ kW/MW} \times 150\text{ 元/kW·年} = 1,500\text{ 万元}$$
+        <p>这笔租金是独立储能电站的稳定收益，通常不受实际调度循环次数的影响。</p>
+        <p>3. <strong>年度营业收入合计</strong>：</p>
+        $$\text{营业收入（年）} = 4,455\text{ 万元} + 1,500\text{ 万元} = 5,955\text{ 万元}$$
+        <p>4. <strong>充电买电电费支出（营业成本）</strong>：</p>
+        $$\text{充电电费支出} = 69,882,353\text{ kWh} \times 0.15\text{ 元/kWh} = 1,048.24\text{ 万元}$$
+        <p>5. <strong>辅助自用电费支出（营业成本）</strong>：站用电由于是向电网购电，通常也按低谷价或综合电价结算，在此假定与充电价相同，均为 0.15 元/kWh：</p>
+        $$\text{辅助电费支出} = 2,096,471\text{ kWh} \times 0.15\text{ 元/kWh} = 31.45\text{ 万元}$$
+        <p>6. <strong>年度营业成本合计</strong>：</p>
+        $$\text{营业成本（年）} = 1,048.24\text{ 万元} + 31.45\text{ 万元} = 1,079.69\text{ 万元}$$
+        <p>7. <strong>年度毛利额</strong>：</p>
+        $$\text{毛利（年）} = 5,955.00\text{ 万元} - 1,079.69\text{ 万元} = 4,875.31\text{ 万元}$$
+
+        <div class="callout callout-tips">
+          <span class="callout-icon">💡</span>
+          <div class="callout-content">
+            <strong>测算避坑技巧：电价差不等于“纯套利空间”</strong>
+            <p>储能新手在拉模型时，最容易犯的错误是直接将“额定容量”乘以“电价差”来算套利收入。例如直接套用：$20万度 \times (0.75 - 0.15)元 \times 330天 = 3,960万元$。他们会纳闷，为什么专业的测算表里算出来只有 3,375.31 万元，少了将近 600 万元？</p>
+            <p>原因就在于物理损耗的制约：</p>
+            <ol>
+              <li>首先，90% 的放电深度（DOD）使可用电量直接打九折（20万度变成18万度），减少了放电收入；</li>
+              <li>其次，85% 的系统综合效率（RTE）意味着为了卖出 18 万度电，必须购买 21.18 万度电，导致充电电费变高；</li>
+              <li>最后，液冷温控空调消耗了 3% 的站用电，进一步增加了购电开支。</li>
+            </ol>
+            <p><strong>结论：在测算中，必须严格区分“充电买入电量”与“放电售出电量”，并分别挂接不同的物理效率参数，不能图省事用同一电量和价差进行合并计算。</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>五、从零构建你的第一张储能测算极简“资产负债表”与“损益表”</h2>
+        <p>了解了物理-经济转化逻辑后，我们就可以把算出来的数字填入财务的“两张表”中，看看项目期初的资本结构，以及运营期第一年的经营表现和偿债能力。</p>
+
+        <h3>5.1 期初资产负债表（运营期第 0 年底）</h3>
+        <p>资产负债表反映了项目在特定时间点“钱是从哪里借来的，又是流向了什么资产”。在电站并网投产的那一天（第 0 年底），项目尚未开始营业，资产负债表结构极其干净整洁：</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>资产科目 (Assets)</th>
+                <th>金额 (万元)</th>
+                <th>负债与权益科目 (Liabilities & Equity)</th>
+                <th>金额 (万元)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>流动资产合计</strong></td>
+                <td><strong>0.00</strong></td>
+                <td><strong>流动负债合计</strong></td>
+                <td><strong>0.00</strong></td>
+              </tr>
+              <tr>
+                <td><strong>非流动资产合计</strong></td>
+                <td><strong>20,000.00</strong></td>
+                <td><strong>非流动负债合计</strong></td>
+                <td><strong>16,000.00</strong></td>
+              </tr>
+              <tr>
+                <td>其中：固定资产（储能系统、EPC及建安）</td>
+                <td>20,000.00</td>
+                <td>其中：银行长期借款（10年期项目贷）</td>
+                <td>16,000.00</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td><strong>所有者权益合计（实收资本金）</strong></td>
+                <td><strong>4,000.00</strong></td>
+              </tr>
+              <tr>
+                <td><strong>资产总计</strong></td>
+                <td><strong>20,000.00</strong></td>
+                <td><strong>负债与所有者权益总计</strong></td>
+                <td><strong>20,000.00</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.2 运营期第一年损益表（利润表）</h3>
+        <p>损益表反映了项目在一年内“创造了多少收入，扣除成本费用后剩下多少利润”。除了刚才计算的营业收入和营业成本，我们还需要考虑以下财务费用支出：</p>
+        
+        <p>1. <strong>日常运营费用（OPEX）</strong>：包含电站值守人工、固定检修备件、场地租金、设备安全保险以及管理费。通常按初始投资总额的百分比估算，这里取 1.5%/年，即：</p>
+        $$\text{年运营费} = 20,000\text{ 万元} \times 1.5\% = 300\text{ 万元}$$
+        
+        <p>2. <strong>固定资产折旧（Depreciation）</strong>：根据财务准则，电站厂房和储能设备在寿命期内分摊成本。假定整体固定资产折旧年限为 15 年，净残值率取 5%，采用直线折旧法计提：</p>
+        $$\text{年折旧额} = \frac{20,000\text{ 万元} \times (1 - 5\%)}{15\text{ 年}} \approx 1,266.67\text{ 万元}$$
+        
+        <p>3. <strong>财务费用（借款利息支出，Interest）</strong>：银行贷款 1.6 亿元，贷款年利率 4%，还款期 10 年。按等额本息法还款，首年需偿还银行本息共计 1,972.64 万元，其中：</p>
+        <ul>
+          <li>首年利息支出为：$16,000\text{ 万元} \times 4\% = 640.00\text{ 万元}$（计入当期损益表）。</li>
+          <li>首年偿还借款本金为：$1,972.64 - 640.00 = 1,332.64\text{ 万元}$（不计入利润表，但直接冲减资产负债表中的长期借款负债）。</li>
+        </ul>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>损益表科目</th>
+                <th>计算公式与物理/财务逻辑关联</th>
+                <th>第一年金额 (万元)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>一、营业收入</strong></td>
+                <td>放电售电收入 (4455万元) + 容量租赁收入 (1500万元)</td>
+                <td>5,955.00</td>
+              </tr>
+              <tr>
+                <td>减：营业成本 (COGS)</td>
+                <td>充电购电成本 (1048.24万元) + 运行辅助用电 (31.45万元)</td>
+                <td>1,079.69</td>
+              </tr>
+              <tr>
+                <td><strong>二、营业毛利</strong></td>
+                <td>营业收入 - 营业成本</td>
+                <td><strong>4,875.31</strong></td>
+              </tr>
+              <tr>
+                <td>减：日常运营管理费 (OPEX)</td>
+                <td>固定运维、保险、人工及场地租赁（总投资的 1.5%）</td>
+                <td>300.00</td>
+              </tr>
+              <tr>
+                <td><strong>三、息税折旧摊销前利润 (EBITDA)</strong></td>
+                <td>营业毛利 - OPEX （核心现金流表现指标）</td>
+                <td><strong>4,575.31</strong></td>
+              </tr>
+              <tr>
+                <td>减：折旧与摊销 (D&A)</td>
+                <td>初始资产按 15 年直线折旧，残值率 5%</td>
+                <td>1,266.67</td>
+              </tr>
+              <tr>
+                <td><strong>四、营业利润 (EBIT)</strong></td>
+                <td>EBITDA - 折旧与摊销</td>
+                <td><strong>3,308.64</strong></td>
+              </tr>
+              <tr>
+                <td>减：财务费用（利息）</td>
+                <td>首年银行 project loan 未偿本金产生的应付利息</td>
+                <td>640.00</td>
+              </tr>
+              <tr>
+                <td><strong>五、税前利润 (EBT)</strong></td>
+                <td>EBIT - 利息支出</td>
+                <td><strong>2,668.64</strong></td>
+              </tr>
+              <tr>
+                <td>减：所得税 (25%)</td>
+                <td>所得税率 25%（暂不考虑三免三减半等税收优惠）</td>
+                <td>667.16</td>
+              </tr>
+              <tr>
+                <td><strong>六、净利润 (Net Profit)</strong></td>
+                <td>税前利润 - 所得税</td>
+                <td><strong>2,001.48</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.3 现金流分析与还贷能力自查（DSCR）</h3>
+        <p>在财务管理中，<strong>“利润并不等于现金”</strong>。利润表中扣除的 1,266.67 万元折旧费，是根据会计准则分摊的非付现成本，电站期初建设时已经付清，运营期内这笔钱并未流出现金账户。</p>
+        <p>因此，项目实际产生的<strong>经营活动现金流（Operating Cash Flow，OCF）</strong>要比净利润大得多：</p>
+        $$OCF = \text{净利润} + \text{折旧} = 2,001.48\text{ 万元} + 1,266.67\text{ 万元} = 3,268.15\text{ 万元}$$
+        <p>那么，这 3,268.15 万元的现金全部可以给股东分红吗？显然不行。因为电站还欠着银行 1.6 亿元贷款，首年必须优先清偿 1,972.64 万元的本息（其中利息 640 万元已在计算利润时扣除，还本的 1,332.64 万元需在此划扣）。</p>
+        <p>为了衡量项目的财务安全程度，银行会使用一个致命的核心指标：<strong>偿债备付率（Debt Service Coverage Ratio，DSCR）</strong>。它表示项目可用于还本付息的现金对当期应还债务的覆盖倍数：</p>
+        
+        <div class="key-concept">
+          <h4>📌 核心概念：偿债备付率（DSCR）</h4>
+          <p>在储能项目融资测算中，偿债备付率定义为：</p>
+          $$DSCR = \frac{EBITDA - \text{所得税}}{\text{年还本付息额}}$$
+          <p>我们代入本项目第一年的数据进行计算：</p>
+          $$DSCR = \frac{4,575.31\text{ 万元} - 667.16\text{ 万元}}{1,972.64\text{ 万元}} = \frac{3,908.15\text{ 万元}}{1,972.64\text{ 万元}} \approx 1.98$$
+          <p><strong>工程金融红线</strong>：根据中国商业银行对新能源和电站项目的贷款评审要求，项目运营期内的 DSCR 必须在 1.2 至 1.3 以上。本项目首年的 DSCR 达到 1.98，说明首年还款能力极强，发生违约的概率极低，是银行最青睐的高质量信贷资产。</p>
+        </div>
+
+        <p>在扣除银行的等额本息还本（1,332.64 万元）后，项目第一年真正归属于股东的可自由支配的<strong>股权自由现金流（Free Cash Flow to Equity，FCFE）</strong>为：</p>
+        $$FCFE = OCF - \text{本年偿还借款本金} = 3,268.15\text{ 万元} - 1,332.64\text{ 万元} = 1,935.51\text{ 万元}$$
+        <p>这 1,935.51 万元才是可以作为股东红利分配，或者留存在电站账上作为未来应对电池容量衰减、进行资产补容（Augmentation）的专项准备金。这就是物理指标完美转化为财务模型的最终成果。</p>
       </section>
     </main>
 
@@ -113,9 +496,10 @@
     <section class="chapter-summary">
       <h2>📝 本节小结</h2>
       <ul>
-        <li><strong>要点一</strong>：精炼总结核心知识点。</li>
-        <li><strong>要点二</strong>：概括主要计算结论或选型建议。</li>
-        <li><strong>要点三</strong>：复盘工程注意事项。</li>
+        <li><strong>核心物理指标分工</strong>：额定功率（MW）代表系统瞬时吞吐电能的能力，决定容量租赁等功率定价收入；能量容量（MWh）代表充满电时储存的电量，是充放电套利和设备资本开支（CAPEX）计算的物理载体。</li>
+        <li><strong>利用小时数非并网时间</strong>：储能的等效放电利用小时数是由年放电总量折算到额定放电功率下的累积满载时间，与循环次数成正比，受电网调度和市场电价波动强烈制约。</li>
+        <li><strong>物理到财务映射闭环</strong>：必须使用放电深度（DOD）修正实际可用电量，使用系统效率（RTE）及辅助用电率放大充电成本，并在模型中为电池衰减预留补容（Augmentation）支出。</li>
+        <li><strong>净利润不等于可用分红现金</strong>：项目经营现金流由于包含非付现折旧，通常大于净利润；在清偿银行本息后，剩下的股权自由现金流才是可支配红利。偿债备付率（DSCR）应维持在 1.2 以上以规避负债违约风险。</li>
       </ul>
     </section>
 
@@ -125,16 +509,76 @@
 
       <!-- Q1 -->
       <div class="quiz-question" id="q1">
-        <p class="question-text"><strong>1.</strong> [题目一描述]</p>
+        <p class="question-text"><strong>1.</strong> 关于独立储能电站的物理指标 MW 与 MWh 在项目测算中的作用，下列说法正确的是：</p>
         <div class="quiz-options">
-          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. 选项 A</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. 选项 B</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. 选项 C</label>
-          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 选项 D</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="A"> A. MWh 代表系统的最大输出功率，直接决定了电站并网接入线路的造价</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="B"> B. MW 代表电站能够储存的总能量，决定了单次充放电循环的套利电量上限</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="C"> C. MW 决定了电站瞬时吞吐能力，MWh 则作为容量计价基础，直接决定了设备采购的核心资本支出（CAPEX）</label>
+          <label class="quiz-option"><input type="radio" name="q1" value="D"> D. 两者之比（MW/MWh）代表电站的充放电效率，比值越高效率越好</label>
         </div>
         <div class="quiz-answer" id="q1-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：C 选项正确描述了物理参数在项目财务测算中的基准地位。功率（MW）是瞬时能量传输速度，决定了电网接入方案和并网能力；容量（MWh）则是能量总量的量纲，目前电池舱等主要设备报价均以 Wh 为计价基准，因此直接决定了 CAPEX 中设备采购的规模。A 选项将 MWh 错当成功率；B 选项将 MW 错当成能量；D 选项中，两者之比的物理意义是充放电时长的倒数（即充放电倍率，C-rate），而不是电站的充放电效率，电站效率应以百分比形式的系统效率（RTE）衡量。</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q2">
+        <p class="question-text"><strong>2.</strong> 当储能系统的综合效率（RTE）降低时，在其他参数（放电电价、充电电价、放电量）保持不变的前提下，对项目损益表会产生什么直接影响？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q2" value="A"> A. 充电量被迫增加，导致购电电费支出（营业成本）增加，营业利润下降</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="B"> B. 放电上网电量被迫增加，导致电费收入增加，净利润提升</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="C"> C. 运营费用（OPEX）中的固定运维费用大幅降低</label>
+          <label class="quiz-option"><input type="radio" name="q2" value="D"> D. 初始设备原值降低，导致年折旧费用减少</label>
+        </div>
+        <div class="quiz-answer" id="q2-answer" style="display:none">
           <p>✅ <strong>正确答案：A</strong></p>
-          <p>📖 <strong>解析</strong>：100-150 字详细解析……</p>
+          <p>📖 <strong>解析</strong>：A 选项正确。系统综合效率（RTE）代表“售出放电量 / 买入充电量”。当 RTE 下降时，为了放出同样多的电量以保证合同的履行，项目必须从电网买入更多的电，从而导致充电电费（营业成本中的购电费）上升，毛利和营业利润相应下降。B 选项中，由于限制了放电量不变，放电电量并不会增加；C 选项和 D 选项中，RTE 是运行期的电能转换参数，与运营期的固定运维费用（OPEX）以及建设期已发生的固定资产原值（CAPEX/折旧）无直接关联。</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q3">
+        <p class="question-text"><strong>3.</strong> 在项目测算中，如何理解“等效利用小时数”与储能电站“并网待机时间”的关系？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q3" value="A"> A. 并网待机时间越长，表示电站利用小时数越高，套利收入越多</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="B"> B. 等效利用小时数是指年总放电量折算到额定放电功率下的满载时间，与并网待机无必然正相关关系</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="C"> C. 只要每天都有充放电动作，等效利用小时数就必定大于每天的并网时间</label>
+          <label class="quiz-option"><input type="radio" name="q3" value="D"> D. 提高等效利用小时数只需延长电站每日待机备用时长即可</label>
+        </div>
+        <div class="quiz-answer" id="q3-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。等效利用小时数是衡量电量转换效果的指标，本质上是“年放电总量 / 额定功率”推算出的折算时间。储能电站在并网待机时并不发生能量流转，不产生套利电费收入，因此待机时间长并不意味着利用小时数高。A 选项误将待机理解为利用；C 选项中，由于 2 小时储能系统日循环一次仅折算 2 小时等效利用时间，而并网时间通常是 24 小时，因此利用小时数必定小于并网待机时间；D 选项中，延长待机而不被电网调度充放电，完全无法提高利用小时数。</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q4">
+        <p class="question-text"><strong>4.</strong> 在利润表中，折旧费已被扣除。但在测算电站第一年的经营活动现金流（OCF）时，为什么要把折旧费重新“加回”到净利润中？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q4" value="A"> A. 因为折旧费是银行借款利息的一部分，需要单独偿还</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="B"> B. 因为折旧是非付现费用，并未导致本期现金流出，现金仍然保留在项目账上</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="C"> C. 因为加回折旧可以降低项目交纳的所得税额度</label>
+          <label class="quiz-option"><input type="radio" name="q4" value="D"> D. 因为折旧是建设期由 EPC 总承包商支付的费用，不属于运营期开支</label>
+        </div>
+        <div class="quiz-answer" id="q4-answer" style="display:none">
+          <p>✅ <strong>正确答案：B</strong></p>
+          <p>📖 <strong>解析</strong>：B 选项正确。固定资产折旧（Depreciation）是会计分摊方法，用来逐年计提初始建站投资。在运营期各年，折旧并没有伴随真实的现金流出，这部分钱作为现金盈余依然沉淀在电站的项目账户里，因此在以净利润为起点评估经营现金流（OCF）时，必须将非付现的折旧费用加回。A 选项错误，利息和折旧是独立的财务概念；C 选项错误，所得税是基于扣除折旧后的税前利润核定得出的，加回折旧是现金流表的操作，并不改变所得税计税基数；D 选项错误，折旧是业主自身的资产分摊，非 EPC 承包商支付。</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question" id="q5">
+        <p class="question-text"><strong>5.</strong> 某 100MW/200MWh 独立共享储能项目，在还本付息额固定、租赁价格不变的条件下，若由于未能为电池衰减安排补容（Augmentation），导致其放电容量逐年下降，这将直接导致什么后果？</p>
+        <div class="quiz-options">
+          <label class="quiz-option"><input type="radio" name="q5" value="A"> A. 初始 CAPEX 总投资规模逐年自动缩减，项目资产净值提升</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="B"> B. 系统综合效率（RTE）自动大幅提升，充电成本明显下降</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="C"> C. 年放电电量套利营业收入下降，导致 EBITDA 降低，偿债备付率（DSCR）逐年恶化，增加了银行贷款违约风险</label>
+          <label class="quiz-option"><input type="radio" name="q5" value="D"> D. 银行会自动免除每年等额本息中的本金部分还款</label>
+        </div>
+        <div class="quiz-answer" id="q5-answer" style="display:none">
+          <p>✅ <strong>正确答案：C</strong></p>
+          <p>📖 <strong>解析</strong>：C 选项正确。在不进行电池补容（Augmentation）的场景下，电池的老化和衰减会导致其最大装电量（MWh）逐年递减，使得每年的等效放电利用小时数和总放电电量缩水，营业收入下降。由于银行项目贷的还本付息额是固定的，营业现金流（以 EBITDA 为基础）的降低会直接压低项目的偿债备付率（DSCR），使其逼近甚至跌破 1.2 的银行安全红线，引发重大负债违约和资金监管风险。A 选项中初始 CAPEX 已在期初锁定，不可能缩减；B 选项中 RTE 亦随设备老化呈下降趋势，不可能自动提升；D 选项属于不切实际的幻想，银行还本付息具有刚性约束。</p>
         </div>
       </div>
 
@@ -144,7 +588,7 @@
 
     <!-- ⑧ 章节底部导航 -->
     <nav class="bottom-nav">
-      <a href="sp4_4_3_出险理赔与追偿全流程实务.html" class="bottom-nav-prev">
+      <a href="../sp_04/sp4_4_3_出险理赔与追偿全流程实务.html" class="bottom-nav-prev">
         <span class="bnav-label">← 上一节</span>
         <span class="bnav-title">出险理赔实务：现场勘查、定损争议解决与保险公司理赔全流程追偿</span>
       </a>
@@ -159,7 +603,10 @@
     <section class="cross-refs">
       <h2>🔗 相关章节</h2>
       <ul class="cross-ref-list">
-        <li><a href="../../index.html">返回目录主页</a></li>
+        <li><a href="sp5_1_2_CAPEX投资成本全拆解.html">→ sp5_1_2 CAPEX 投资成本全拆解：电池舱、PCS、变压器、EPC 工程、征地与接入费明细</a></li>
+        <li><a href="sp5_1_3_OPEX运营成本与补容预算精算.html">→ sp5_1_3 OPEX 运营成本精算：固定运维费、变动运维费、辅助用电、保险与电池补容预算</a></li>
+        <li><a href="sp5_1_4_多商业模式收益模型搭建.html">→ sp5_1_4 多商业模式收益模型搭建：电量套利、容量租赁与辅助服务的多重组合收益</a></li>
+        <li><a href="sp5_1_5_20年衰减与损耗下现金流推算.html">→ sp5_1_5 20年衰减与损耗下现金流推算：电池衰减、效率衰退与长期收益修正</a></li>
       </ul>
     </section>
 
@@ -168,11 +615,10 @@
       <p>中国网储系统性学习手册 v3.2 &nbsp;|&nbsp; <span class="file-id">sp5_1_1</span></p>
     </footer>
 
-  </div>
+  </div><!-- /page-wrapper -->
 
-  <!-- 返回页首悬浮按钮 -->
-  <button id="btnBackTop" class="btn-back-top" aria-label="返回页首" title="返回页首" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
-
+  <!-- 返回顶端悬浮按钮 -->
+  <button class="btn-back-top" id="btnBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶端">↑</button>
 
   <script src="../../assets/js/quiz.js"></script>
 </body>
