@@ -169,6 +169,33 @@ a:hover { text-decoration: underline; }
 }
 .nav-prev.disabled, .nav-next.disabled { opacity: 0.3; pointer-events: none; }
 
+/* GitHub Star 按钮样式 */
+.nav-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: #24292F;
+  color: #FFFFFF !important;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  font-family: var(--font-ui);
+  text-decoration: none !important;
+  transition: all var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nav-github-link:hover {
+  background: #0969DA;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(9,105,218,0.3);
+  text-decoration: none !important;
+}
+.nav-github-link svg { fill: currentColor; }
+
 /* ── 4. 页面布局容器 ─────────────────────────────────────────────── */
 .page-wrapper {
   max-width: var(--max-width-content);
